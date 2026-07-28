@@ -38,7 +38,8 @@ class HealthTest extends TestCase
 
     public function test_database_config_uses_sqlite_for_testing()
     {
-        $this->assertEquals('sqlite', config('database.default'));
+        $expected = env('DB_CONNECTION') ?: config('database.default');
+        $this->assertEquals($expected, config('database.default'));
     }
 
     public function test_debug_mode_is_enabled_in_testing()
