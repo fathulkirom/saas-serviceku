@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="100 10 200 200" width="100%" height="100%">
+    <defs>
+        <linearGradient id="gradTopIcon" x1="1" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#0052D4" />
+            <stop offset="100%" stop-color="#00C9FF" />
+        </linearGradient>
+        <linearGradient id="gradBottomIcon" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#00C9FF" />
+            <stop offset="100%" stop-color="#10B981" />
+        </linearGradient>
+    </defs>
+
+    <!-- Background Gear Symbol -->
+    <circle cx="200" cy="110" r="50" fill="none" stroke="#E2E8F0" stroke-width="12" stroke-dasharray="19.63 19.63" />
+    <circle cx="200" cy="110" r="35" fill="none" stroke="#E2E8F0" stroke-width="3" />
+
+    <!-- Isometric S Path -->
+    <path d="M 245 65 L 200 50 L 155 65 L 155 95 L 200 110" fill="none" stroke="url(#gradTopIcon)" stroke-width="24" stroke-linejoin="round" stroke-linecap="round" />
+    <path d="M 200 110 L 245 125 L 245 155 L 200 170 L 155 155" fill="none" stroke="url(#gradBottomIcon)" stroke-width="24" stroke-linejoin="round" stroke-linecap="round" />
+
+    <!-- Circuit Nodes -->
+    <circle cx="245" cy="65" r="7" fill="#FFFFFF" stroke="#0052D4" stroke-width="4" />
+    <circle cx="155" cy="155" r="7" fill="#FFFFFF" stroke="#10B981" stroke-width="4" />
+    <circle cx="200" cy="110" r="9" fill="#FFFFFF" stroke="#00C9FF" stroke-width="5" />
+</svg>

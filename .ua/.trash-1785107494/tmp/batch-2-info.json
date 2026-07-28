@@ -1,0 +1,30 @@
+{
+  "batchIndex": 2,
+  "totalBatches": 22,
+  "files": [
+    {
+      "path": "docker/cloudflare/docker-compose.tunnel.yml",
+      "sizeLines": 31,
+      "language": "YAML",
+      "fileCategory": "infra"
+    },
+    {
+      "path": "docker/cloudflare/setup-gdrive.sh",
+      "sizeLines": 64,
+      "language": "Shell",
+      "fileCategory": "script"
+    },
+    {
+      "path": "docker/cloudflare/setup-tunnel.sh",
+      "sizeLines": 79,
+      "language": "Shell",
+      "fileCategory": "script"
+    }
+  ],
+  "batchImportData": {
+    "docker/cloudflare/docker-compose.tunnel.yml": [],
+    "docker/cloudflare/setup-gdrive.sh": [],
+    "docker/cloudflare/setup-tunnel.sh": []
+  },
+  "neighborMap": {}
+}

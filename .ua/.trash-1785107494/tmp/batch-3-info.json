@@ -1,0 +1,51 @@
+{
+  "batchIndex": 3,
+  "totalBatches": 22,
+  "files": [
+    {
+      "path": "docs/ONBOARDING.md",
+      "sizeLines": 304,
+      "language": "Markdown",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/api.md",
+      "sizeLines": 962,
+      "language": "Markdown",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/inventory-workflow.md",
+      "sizeLines": 94,
+      "language": "Markdown",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/service-workflow.md",
+      "sizeLines": 629,
+      "language": "Markdown",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/tampilan-superadmin.md",
+      "sizeLines": 104,
+      "language": "Markdown",
+      "fileCategory": "docs"
+    },
+    {
+      "path": "docs/tampilan-tenant.md",
+      "sizeLines": 794,
+      "language": "Markdown",
+      "fileCategory": "docs"
+    }
+  ],
+  "batchImportData": {
+    "docs/ONBOARDING.md": [],
+    "docs/api.md": [],
+    "docs/inventory-workflow.md": [],
+    "docs/service-workflow.md": [],
+    "docs/tampilan-superadmin.md": [],
+    "docs/tampilan-tenant.md": []
+  },
+  "neighborMap": {}
+}

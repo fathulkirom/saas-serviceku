@@ -1,0 +1,3727 @@
+{
+  "schemaVersion": 1,
+  "algorithm": "louvain",
+  "totalFiles": 408,
+  "totalBatches": 22,
+  "exportsByPath": {
+    "app/Console/Commands/BackupRun.php": [
+      "BackupRun"
+    ],
+    "app/Console/Commands/CheckSubscriptionExpiry.php": [
+      "CheckSubscriptionExpiry"
+    ],
+    "app/Events/ServiceStatusUpdated.php": [
+      "ServiceStatusUpdated"
+    ],
+    "app/Http/Controllers/Admin/AdminAuthController.php": [
+      "AdminAuthController"
+    ],
+    "app/Http/Controllers/Admin/BackupController.php": [
+      "BackupController"
+    ],
+    "app/Http/Controllers/Admin/MonitoringController.php": [
+      "MonitoringController"
+    ],
+    "app/Http/Controllers/Admin/PaymentController.php": [
+      "PaymentController"
+    ],
+    "app/Http/Controllers/Admin/PlanController.php": [
+      "PlanController"
+    ],
+    "app/Http/Controllers/Admin/SuperAdminController.php": [
+      "SuperAdminController"
+    ],
+    "app/Http/Controllers/Admin/SystemSettingsController.php": [
+      "SystemSettingsController"
+    ],
+    "app/Http/Controllers/Admin/TenantManagementController.php": [
+      "TenantManagementController"
+    ],
+    "app/Http/Controllers/Admin/VoucherController.php": [
+      "VoucherController"
+    ],
+    "app/Http/Controllers/Api/ServiceController.php": [
+      "ServiceController"
+    ],
+    "app/Http/Controllers/Api/TrackingController.php": [
+      "TrackingController"
+    ],
+    "app/Http/Controllers/Auth/GoogleLoginController.php": [
+      "GoogleLoginController"
+    ],
+    "app/Http/Controllers/Auth/LoginController.php": [
+      "LoginController"
+    ],
+    "app/Http/Controllers/Auth/RegisteredTenantController.php": [
+      "RegisteredTenantController"
+    ],
+    "app/Http/Controllers/Auth/ResetPasswordController.php": [
+      "ResetPasswordController"
+    ],
+    "app/Http/Controllers/CompanyProfileController.php": [
+      "CompanyProfileController"
+    ],
+    "app/Http/Controllers/Controller.php": [
+      "Controller"
+    ],
+    "app/Http/Controllers/DashboardController.php": [
+      "DashboardController"
+    ],
+    "app/Http/Controllers/DevLoginController.php": [
+      "DevLoginController"
+    ],
+    "app/Http/Controllers/PublicTrackingController.php": [
+      "PublicTrackingController"
+    ],
+    "app/Http/Controllers/Tenant/AttendanceController.php": [
+      "AttendanceController"
+    ],
+    "app/Http/Controllers/Tenant/BillingController.php": [
+      "BillingController"
+    ],
+    "app/Http/Controllers/Tenant/BranchController.php": [
+      "BranchController"
+    ],
+    "app/Http/Controllers/Tenant/CashRegisterController.php": [
+      "CashRegisterController"
+    ],
+    "app/Http/Controllers/Tenant/ChecklistTemplateController.php": [
+      "ChecklistTemplateController"
+    ],
+    "app/Http/Controllers/Tenant/CommissionController.php": [
+      "CommissionController"
+    ],
+    "app/Http/Controllers/Tenant/CustomFieldController.php": [
+      "CustomFieldController"
+    ],
+    "app/Http/Controllers/Tenant/CustomerController.php": [
+      "CustomerController"
+    ],
+    "app/Http/Controllers/Tenant/DailyDepositController.php": [
+      "DailyDepositController"
+    ],
+    "app/Http/Controllers/Tenant/DamagedStockController.php": [
+      "DamagedStockController"
+    ],
+    "app/Http/Controllers/Tenant/DemoController.php": [
+      "DemoController"
+    ],
+    "app/Http/Controllers/Tenant/DriveController.php": [
+      "DriveController"
+    ],
+    "app/Http/Controllers/Tenant/ExpenseController.php": [
+      "ExpenseController"
+    ],
+    "app/Http/Controllers/Tenant/IndentController.php": [
+      "IndentController"
+    ],
+    "app/Http/Controllers/Tenant/InventoryController.php": [
+      "InventoryController"
+    ],
+    "app/Http/Controllers/Tenant/KnowledgeBaseController.php": [
+      "KnowledgeBaseController"
+    ],
+    "app/Http/Controllers/Tenant/MasterDataController.php": [
+      "MasterDataController"
+    ],
+    "app/Http/Controllers/Tenant/MonitoringController.php": [
+      "MonitoringController"
+    ],
+    "app/Http/Controllers/Tenant/PartnerTeknisiController.php": [
+      "PartnerTeknisiController"
+    ],
+    "app/Http/Controllers/Tenant/PickupDeliveryController.php": [
+      "PickupDeliveryController"
+    ],
+    "app/Http/Controllers/Tenant/ProductController.php": [
+      "ProductController"
+    ],
+    "app/Http/Controllers/Tenant/PurchaseController.php": [
+      "PurchaseController"
+    ],
+    "app/Http/Controllers/Tenant/PurchaseReturnController.php": [
+      "PurchaseReturnController"
+    ],
+    "app/Http/Controllers/Tenant/QuickReplyController.php": [
+      "QuickReplyController"
+    ],
+    "app/Http/Controllers/Tenant/ReconciliationController.php": [
+      "ReconciliationController"
+    ],
+    "app/Http/Controllers/Tenant/ReportController.php": [
+      "ReportController"
+    ],
+    "app/Http/Controllers/Tenant/SaleController.php": [
+      "SaleController"
+    ],
+    "app/Http/Controllers/Tenant/SaleInvoiceController.php": [
+      "SaleInvoiceController"
+    ],
+    "app/Http/Controllers/Tenant/SalePaymentController.php": [
+      "SalePaymentController"
+    ],
+    "app/Http/Controllers/Tenant/SaleStoreController.php": [
+      "SaleStoreController"
+    ],
+    "app/Http/Controllers/Tenant/ServiceChecklistController.php": [
+      "ServiceChecklistController"
+    ],
+    "app/Http/Controllers/Tenant/ServiceClaimController.php": [
+      "ServiceClaimController"
+    ],
+    "app/Http/Controllers/Tenant/ServiceController.php": [
+      "ServiceController"
+    ],
+    "app/Http/Controllers/Tenant/ServiceDocumentController.php": [
+      "ServiceDocumentController"
+    ],
+    "app/Http/Controllers/Tenant/ServicePhotoController.php": [
+      "ServicePhotoController"
+    ],
+    "app/Http/Controllers/Tenant/ServiceTransferController.php": [
+      "ServiceTransferController"
+    ],
+    "app/Http/Controllers/Tenant/ServiceWorkflowController.php": [
+      "ServiceWorkflowController"
+    ],
+    "app/Http/Controllers/Tenant/SettingsController.php": [
+      "SettingsController"
+    ],
+    "app/Http/Controllers/Tenant/ShiftController.php": [
+      "ShiftController"
+    ],
+    "app/Http/Controllers/Tenant/SopController.php": [
+      "SopController"
+    ],
+    "app/Http/Controllers/Tenant/StockAllocationController.php": [
+      "StockAllocationController"
+    ],
+    "app/Http/Controllers/Tenant/TaxController.php": [
+      "TaxController"
+    ],
+    "app/Http/Controllers/Tenant/TenantProfileController.php": [
+      "TenantProfileController"
+    ],
+    "app/Http/Controllers/Tenant/UserManagementController.php": [
+      "UserManagementController"
+    ],
+    "app/Http/Controllers/TenantLookupController.php": [
+      "TenantLookupController"
+    ],
+    "app/Http/Controllers/VoucherApplyController.php": [
+      "VoucherApplyController"
+    ],
+    "app/Http/Middleware/AdminAuthenticate.php": [
+      "AdminAuthenticate"
+    ],
+    "app/Http/Middleware/CheckPlanFeature.php": [
+      "CheckPlanFeature"
+    ],
+    "app/Http/Middleware/CheckSubscription.php": [
+      "CheckSubscription"
+    ],
+    "app/Http/Middleware/HandleInertiaRequests.php": [
+      "HandleInertiaRequests"
+    ],
+    "app/Http/Middleware/InitializeTenancyBySession.php": [
+      "InitializeTenancyBySession"
+    ],
+    "app/Http/Middleware/RedirectIfNotTenant.php": [
+      "RedirectIfNotTenant"
+    ],
+    "app/Http/Middleware/SecurityHeaders.php": [
+      "SecurityHeaders"
+    ],
+    "app/Http/Middleware/TrustProxies.php": [
+      "TrustProxies"
+    ],
+    "app/Http/Requests/StoreCustomerRequest.php": [
+      "StoreCustomerRequest"
+    ],
+    "app/Http/Requests/StoreExpenseRequest.php": [
+      "StoreExpenseRequest"
+    ],
+    "app/Http/Requests/StoreSaleRequest.php": [
+      "StoreSaleRequest"
+    ],
+    "app/Http/Requests/StoreServiceRequest.php": [
+      "StoreServiceRequest"
+    ],
+    "app/Jobs/GenerateInvoicePdf.php": [
+      "GenerateInvoicePdf"
+    ],
+    "app/Jobs/SendInvoiceEmail.php": [
+      "SendInvoiceEmail"
+    ],
+    "app/Mail/OtpMail.php": [
+      "OtpMail"
+    ],
+    "app/Mail/WelcomeMail.php": [
+      "WelcomeMail"
+    ],
+    "app/Models/GoogleDriveToken.php": [
+      "GoogleDriveToken"
+    ],
+    "app/Models/Payment.php": [
+      "Payment"
+    ],
+    "app/Models/Plan.php": [
+      "Plan"
+    ],
+    "app/Models/RegistrationVerification.php": [
+      "RegistrationVerification"
+    ],
+    "app/Models/SystemLog.php": [
+      "SystemLog"
+    ],
+    "app/Models/SystemSetting.php": [
+      "SystemSetting"
+    ],
+    "app/Models/Tenant.php": [
+      "Tenant"
+    ],
+    "app/Models/Tenant/ActivityLog.php": [
+      "ActivityLog"
+    ],
+    "app/Models/Tenant/Attendance.php": [
+      "Attendance"
+    ],
+    "app/Models/Tenant/Branch.php": [
+      "Branch"
+    ],
+    "app/Models/Tenant/CashRegister.php": [
+      "CashRegister"
+    ],
+    "app/Models/Tenant/ChecklistItem.php": [
+      "ChecklistItem"
+    ],
+    "app/Models/Tenant/ChecklistTemplate.php": [
+      "ChecklistTemplate"
+    ],
+    "app/Models/Tenant/Commission.php": [
+      "Commission"
+    ],
+    "app/Models/Tenant/CustomField.php": [
+      "CustomField"
+    ],
+    "app/Models/Tenant/CustomFieldValue.php": [
+      "CustomFieldValue"
+    ],
+    "app/Models/Tenant/Customer.php": [
+      "Customer"
+    ],
+    "app/Models/Tenant/DailyDeposit.php": [
+      "DailyDeposit"
+    ],
+    "app/Models/Tenant/DamagedStock.php": [
+      "DamagedStock"
+    ],
+    "app/Models/Tenant/Expense.php": [
+      "Expense"
+    ],
+    "app/Models/Tenant/Indent.php": [
+      "Indent"
+    ],
+    "app/Models/Tenant/InventoryMutation.php": [
+      "InventoryMutation"
+    ],
+    "app/Models/Tenant/KnowledgeBase.php": [
+      "KnowledgeBase"
+    ],
+    "app/Models/Tenant/LoginHistory.php": [
+      "LoginHistory"
+    ],
+    "app/Models/Tenant/MasterData.php": [
+      "MasterData"
+    ],
+    "app/Models/Tenant/MasterLaborService.php": [
+      "MasterLaborService"
+    ],
+    "app/Models/Tenant/PartnerTeknisi.php": [
+      "PartnerTeknisi"
+    ],
+    "app/Models/Tenant/PaymentReconciliation.php": [
+      "PaymentReconciliation"
+    ],
+    "app/Models/Tenant/PickupDelivery.php": [
+      "PickupDelivery"
+    ],
+    "app/Models/Tenant/Product.php": [
+      "Product"
+    ],
+    "app/Models/Tenant/Purchase.php": [
+      "Purchase"
+    ],
+    "app/Models/Tenant/PurchaseItem.php": [
+      "PurchaseItem"
+    ],
+    "app/Models/Tenant/PurchaseReturn.php": [
+      "PurchaseReturn"
+    ],
+    "app/Models/Tenant/PurchaseReturnItem.php": [
+      "PurchaseReturnItem"
+    ],
+    "app/Models/Tenant/QuickReply.php": [
+      "QuickReply"
+    ],
+    "app/Models/Tenant/Sale.php": [
+      "Sale"
+    ],
+    "app/Models/Tenant/SaleItem.php": [
+      "SaleItem"
+    ],
+    "app/Models/Tenant/Service.php": [
+      "Service"
+    ],
+    "app/Models/Tenant/ServiceChecklist.php": [
+      "ServiceChecklist"
+    ],
+    "app/Models/Tenant/ServicePhoto.php": [
+      "ServicePhoto"
+    ],
+    "app/Models/Tenant/ServiceSparepart.php": [
+      "ServiceSparepart"
+    ],
+    "app/Models/Tenant/ServiceTransfer.php": [
+      "ServiceTransfer"
+    ],
+    "app/Models/Tenant/Shift.php": [
+      "Shift"
+    ],
+    "app/Models/Tenant/Sop.php": [
+      "Sop"
+    ],
+    "app/Models/Tenant/SopReadLog.php": [
+      "SopReadLog"
+    ],
+    "app/Models/Tenant/StockAllocation.php": [
+      "StockAllocation"
+    ],
+    "app/Models/Tenant/Supplier.php": [
+      "Supplier"
+    ],
+    "app/Models/Tenant/SystemAlert.php": [
+      "SystemAlert"
+    ],
+    "app/Models/Tenant/TaxSetting.php": [
+      "TaxSetting"
+    ],
+    "app/Models/Tenant/TenantSetting.php": [
+      "TenantSetting"
+    ],
+    "app/Models/Tenant/User.php": [
+      "User"
+    ],
+    "app/Models/Tenant/WaGatewayConfig.php": [
+      "WaGatewayConfig"
+    ],
+    "app/Models/TenantOtp.php": [
+      "TenantOtp"
+    ],
+    "app/Models/TenantStat.php": [
+      "TenantStat"
+    ],
+    "app/Models/User.php": [
+      "User"
+    ],
+    "app/Models/Voucher.php": [
+      "Voucher"
+    ],
+    "app/Notifications/ResetPasswordNotification.php": [
+      "ResetPasswordNotification"
+    ],
+    "app/Notifications/TenantRegistered.php": [
+      "TenantRegistered"
+    ],
+    "app/Policies/ExpensePolicy.php": [
+      "ExpensePolicy"
+    ],
+    "app/Policies/SalePolicy.php": [
+      "SalePolicy"
+    ],
+    "app/Policies/ServicePolicy.php": [
+      "ServicePolicy"
+    ],
+    "app/Providers/AppServiceProvider.php": [
+      "AppServiceProvider"
+    ],
+    "app/Providers/AuthServiceProvider.php": [
+      "AuthServiceProvider"
+    ],
+    "app/Providers/TenancyServiceProvider.php": [
+      "TenancyServiceProvider"
+    ],
+    "app/Services/GoogleDrivePhotoService.php": [
+      "GoogleDrivePhotoService"
+    ],
+    "app/Services/GoogleDriveService.php": [
+      "GoogleDriveService"
+    ],
+    "app/Services/MailConfigService.php": [
+      "MailConfigService"
+    ],
+    "app/Services/PaymentGatewayService.php": [
+      "PaymentGatewayService"
+    ],
+    "bootstrap/app.php": [],
+    "bootstrap/providers.php": [],
+    "database/factories/UserFactory.php": [
+      "UserFactory"
+    ],
+    "database/migrations/0001_01_01_000000_create_users_table.php": [],
+    "database/migrations/0001_01_01_000001_create_cache_table.php": [],
+    "database/migrations/0001_01_01_000002_create_jobs_table.php": [],
+    "database/migrations/2019_09_15_000010_create_tenants_table.php": [
+      "CreateTenantsTable"
+    ],
+    "database/migrations/2019_09_15_000020_create_domains_table.php": [
+      "CreateDomainsTable"
+    ],
+    "database/migrations/2020_05_15_000010_create_tenant_user_impersonation_tokens_table.php": [
+      "CreateTenantUserImpersonationTokensTable"
+    ],
+    "database/migrations/2024_01_01_000001_create_plans_table.php": [],
+    "database/migrations/2024_01_01_000002_create_system_tables.php": [],
+    "database/migrations/2024_01_01_000003_create_tenant_otps_table.php": [],
+    "database/migrations/2024_01_01_000003_create_verification_tables.php": [],
+    "database/migrations/2024_07_18_000001_create_payment_transactions_table.php": [],
+    "database/migrations/2026_07_18_174616_add_promo_fields_to_plans_table.php": [],
+    "database/migrations/2026_07_18_175306_add_business_types_to_plans_table.php": [],
+    "database/migrations/2026_07_18_230325_add_slug_to_tenants_table.php": [],
+    "database/migrations/2026_07_19_040631_create_vouchers_table.php": [],
+    "database/migrations/2026_07_19_041309_add_extra_months_to_vouchers_and_tenants.php": [],
+    "database/migrations/2026_07_20_000001_add_tenant_id_to_vouchers_table.php": [],
+    "database/migrations/2026_07_27_044406_create_google_drive_tokens_table.php": [],
+    "database/migrations/tenant/2024_01_01_000001_create_tenant_core_tables.php": [],
+    "database/migrations/tenant/2024_01_01_000002_create_business_tables.php": [],
+    "database/migrations/tenant/2024_01_01_000003_create_purchases_tables.php": [],
+    "database/migrations/tenant/2024_01_01_000004_create_monitoring_tables.php": [],
+    "database/migrations/tenant/2024_01_01_000005_add_custom_role_to_users.php": [],
+    "database/migrations/tenant/2026_07_19_060001_create_master_tables.php": [],
+    "database/migrations/tenant/2026_07_19_060002_add_missing_columns_to_tenant_tables.php": [],
+    "database/migrations/tenant/2026_07_27_044406_add_google_id_to_tenant_users_table.php": [],
+    "database/migrations/tenant/2026_07_27_044407_add_photo_to_expenses_table.php": [],
+    "database/migrations/tenant/2026_07_27_044407_create_service_photos_table.php": [],
+    "database/migrations/tenant/2026_07_27_044408_create_knowledge_base_table.php": [],
+    "database/migrations/tenant/2026_07_27_044408_create_quick_replies_table.php": [],
+    "database/migrations/tenant/2026_07_27_044408_create_sops_table.php": [],
+    "database/migrations/tenant/2026_07_27_050550_create_damaged_stocks_table.php": [],
+    "database/migrations/tenant/2026_07_27_050550_create_purchase_returns_table.php": [],
+    "database/migrations/tenant/2026_07_27_050551_create_partner_teknisis_table.php": [],
+    "database/migrations/tenant/2026_07_27_050551_create_pickup_deliveries_table.php": [],
+    "database/migrations/tenant/2026_07_27_050552_create_custom_fields_table.php": [],
+    "database/migrations/tenant/2026_07_27_050552_create_tax_settings_table.php": [],
+    "database/migrations/tenant/2026_07_27_050553_create_commissions_table.php": [],
+    "database/migrations/tenant/2026_07_27_050553_create_payment_reconciliations_table.php": [],
+    "database/migrations/tenant/2026_07_27_050553_create_shifts_table.php": [],
+    "database/migrations/tenant/2026_07_27_050554_create_attendances_table.php": [],
+    "database/migrations/tenant/2026_07_27_052155_add_missing_indexes_to_tenant_tables.php": [],
+    "database/seeders/DatabaseSeeder.php": [
+      "DatabaseSeeder"
+    ],
+    "database/seeders/DemoTenantSeeder.php": [
+      "DemoTenantSeeder"
+    ],
+    "database/seeders/MasterDataSeeder.php": [
+      "MasterDataSeeder"
+    ],
+    "database/seeders/PlanSeeder.php": [
+      "PlanSeeder"
+    ],
+    "database/seeders/SystemSettingSeeder.php": [
+      "SystemSettingSeeder"
+    ],
+    "database/seeders/Tenant/DemoDataSeeder.php": [
+      "DemoDataSeeder"
+    ],
+    "database/seeders/TenantSeeder.php": [
+      "TenantSeeder"
+    ],
+    "resources/js/Components/Dropdown.vue": [],
+    "resources/js/Components/DropdownLink.vue": [],
+    "resources/js/Components/EmptyState.vue": [],
+    "resources/js/Components/Logo.vue": [],
+    "resources/js/Components/MobileNavLink.vue": [],
+    "resources/js/Components/NavLink.vue": [],
+    "resources/js/Components/PageHeader.vue": [],
+    "resources/js/Components/StatCard.vue": [],
+    "resources/js/Components/StatusBadge.vue": [],
+    "resources/js/Components/ThemeSwitcher.vue": [],
+    "resources/js/Layouts/AdminLayout.vue": [],
+    "resources/js/Layouts/AuthenticatedLayout.vue": [],
+    "resources/js/Layouts/GuestLayout.vue": [],
+    "resources/js/Layouts/Themes/LayoutNew.vue": [],
+    "resources/js/Pages/Admin/Backup.vue": [],
+    "resources/js/Pages/Admin/CreateTenant.vue": [],
+    "resources/js/Pages/Admin/Dashboard.vue": [],
+    "resources/js/Pages/Admin/EditTenant.vue": [],
+    "resources/js/Pages/Admin/Logs.vue": [],
+    "resources/js/Pages/Admin/Monitoring.vue": [],
+    "resources/js/Pages/Admin/PaymentSettings.vue": [],
+    "resources/js/Pages/Admin/Payments.vue": [],
+    "resources/js/Pages/Admin/Plans.vue": [],
+    "resources/js/Pages/Admin/Settings.vue": [],
+    "resources/js/Pages/Admin/TenantDetail.vue": [],
+    "resources/js/Pages/Admin/TenantManagement.vue": [],
+    "resources/js/Pages/Admin/Vouchers/Create.vue": [],
+    "resources/js/Pages/Admin/Vouchers/Index.vue": [],
+    "resources/js/Pages/Attendances/Index.vue": [],
+    "resources/js/Pages/Attendances/Report.vue": [],
+    "resources/js/Pages/Auth/AdminLogin.vue": [],
+    "resources/js/Pages/Auth/ForgotPassword.vue": [],
+    "resources/js/Pages/Auth/Login.vue": [],
+    "resources/js/Pages/Auth/Register.vue": [],
+    "resources/js/Pages/Auth/RegistrationSuccess.vue": [],
+    "resources/js/Pages/Auth/ResetPassword.vue": [],
+    "resources/js/Pages/Auth/SubdomainLogin.vue": [],
+    "resources/js/Pages/Auth/VerifyOtp.vue": [],
+    "resources/js/Pages/Branches/Create.vue": [],
+    "resources/js/Pages/Branches/Index.vue": [],
+    "resources/js/Pages/Branches/Show.vue": [],
+    "resources/js/Pages/CashRegisters/Index.vue": [],
+    "resources/js/Pages/CashierDashboard.vue": [],
+    "resources/js/Pages/ChecklistTemplates/Index.vue": [],
+    "resources/js/Pages/Commissions/Index.vue": [],
+    "resources/js/Pages/CourierDashboard.vue": [],
+    "resources/js/Pages/CsDashboard.vue": [],
+    "resources/js/Pages/Customers/Create.vue": [],
+    "resources/js/Pages/Customers/Index.vue": [],
+    "resources/js/Pages/Customers/Show.vue": [],
+    "resources/js/Pages/DailyDeposits/Index.vue": [],
+    "resources/js/Pages/Dashboard.vue": [],
+    "resources/js/Pages/Demo/Index.vue": [],
+    "resources/js/Pages/Expenses/Index.vue": [],
+    "resources/js/Pages/Finance/Reconciliation.vue": [],
+    "resources/js/Pages/Indents/Create.vue": [],
+    "resources/js/Pages/Indents/Index.vue": [],
+    "resources/js/Pages/Inventory/DamagedStocks.vue": [],
+    "resources/js/Pages/Inventory/Forecast.vue": [],
+    "resources/js/Pages/Inventory/Mutations.vue": [],
+    "resources/js/Pages/Inventory/ReorderAlerts.vue": [],
+    "resources/js/Pages/KnowledgeBase/Index.vue": [],
+    "resources/js/Pages/Landing/Index.vue": [],
+    "resources/js/Pages/Monitoring/Activities.vue": [],
+    "resources/js/Pages/Monitoring/Index.vue": [],
+    "resources/js/Pages/Monitoring/Logins.vue": [],
+    "resources/js/Pages/Partners/Index.vue": [],
+    "resources/js/Pages/PickupDeliveries/Create.vue": [],
+    "resources/js/Pages/PickupDeliveries/Index.vue": [],
+    "resources/js/Pages/Products/Create.vue": [],
+    "resources/js/Pages/Products/Index.vue": [],
+    "resources/js/Pages/Public/Track.vue": [],
+    "resources/js/Pages/PurchaseReturns/Create.vue": [],
+    "resources/js/Pages/PurchaseReturns/Index.vue": [],
+    "resources/js/Pages/Purchases/Create.vue": [],
+    "resources/js/Pages/Purchases/Index.vue": [],
+    "resources/js/Pages/Purchases/Show.vue": [],
+    "resources/js/Pages/QuickReplies/Index.vue": [],
+    "resources/js/Pages/Reports/Commissions.vue": [],
+    "resources/js/Pages/Reports/CustomerAnalytics.vue": [],
+    "resources/js/Pages/Reports/Finance.vue": [],
+    "resources/js/Pages/Reports/Index.vue": [],
+    "resources/js/Pages/Reports/Inventory.vue": [],
+    "resources/js/Pages/Reports/Productivity.vue": [],
+    "resources/js/Pages/Reports/RevenueComparison.vue": [],
+    "resources/js/Pages/Reports/Sales.vue": [],
+    "resources/js/Pages/Reports/Services.vue": [],
+    "resources/js/Pages/Sales/Create.vue": [],
+    "resources/js/Pages/Sales/Index.vue": [],
+    "resources/js/Pages/Sales/Show.vue": [],
+    "resources/js/Pages/ServiceTransfers/Create.vue": [],
+    "resources/js/Pages/Services/Create.vue": [],
+    "resources/js/Pages/Services/Index.vue": [],
+    "resources/js/Pages/Services/Show.vue": [],
+    "resources/js/Pages/Settings/CustomFields.vue": [],
+    "resources/js/Pages/Settings/DriveConnect.vue": [],
+    "resources/js/Pages/Settings/Index.vue": [],
+    "resources/js/Pages/Shifts/Index.vue": [],
+    "resources/js/Pages/Sops/Index.vue": [],
+    "resources/js/Pages/StockAllocations/Create.vue": [],
+    "resources/js/Pages/StockAllocations/Index.vue": [],
+    "resources/js/Pages/TechnicianDashboard.vue": [],
+    "resources/js/Pages/Tenant/Billing.vue": [],
+    "resources/js/Pages/Tenant/Profile.vue": [],
+    "resources/js/Pages/Tools/QRScanner.vue": [],
+    "resources/js/Pages/Users/Index.vue": [],
+    "resources/js/Pages/Users/MenuAccess.vue": [],
+    "resources/js/Pages/Users/Profile.vue": [],
+    "resources/js/app.js": [],
+    "resources/js/bootstrap.js": [],
+    "resources/js/echo.js": [],
+    "resources/js/ziggy.js": [
+      "Ziggy"
+    ],
+    "resources/css/app.css": [],
+    "resources/css/themes.css": [],
+    "routes/api.php": [],
+    "routes/channels.php": [],
+    "routes/console.php": [],
+    "routes/tenant.php": [],
+    "routes/web.php": [],
+    "tests/Feature/ExampleTest.php": [
+      "ExampleTest"
+    ],
+    "tests/Feature/GoogleDriveServiceTest.php": [
+      "GoogleDriveServiceTest"
+    ],
+    "tests/Feature/HealthTest.php": [
+      "HealthTest"
+    ],
+    "tests/TestCase.php": [
+      "TestCase"
+    ],
+    "tests/Unit/ExampleTest.php": [
+      "ExampleTest"
+    ],
+    "tests/Unit/FormRequestTest.php": [
+      "FormRequestTest"
+    ],
+    "tests/Unit/Models/ExpenseTest.php": [
+      "ExpenseTest"
+    ],
+    "tests/Unit/Models/SaleTest.php": [
+      "SaleTest"
+    ],
+    "tests/Unit/Models/ServiceTest.php": [
+      "ServiceTest"
+    ],
+    "tests/Unit/PolicyTest.php": [
+      "PolicyTest"
+    ],
+    "public/index.php": []
+  },
+  "batches": [
+    {
+      "batchIndex": 1,
+      "files": [
+        {
+          "path": ".editorconfig",
+          "sizeLines": 18,
+          "language": "Config",
+          "fileCategory": "config"
+        },
+        {
+          "path": ".env",
+          "sizeLines": 74,
+          "language": "Config",
+          "fileCategory": "config"
+        },
+        {
+          "path": ".env.example",
+          "sizeLines": 80,
+          "language": "Config",
+          "fileCategory": "config"
+        },
+        {
+          "path": ".env.production",
+          "sizeLines": 53,
+          "language": "Config",
+          "fileCategory": "config"
+        },
+        {
+          "path": ".gitattributes",
+          "sizeLines": 11,
+          "language": "Config",
+          "fileCategory": "config"
+        },
+        {
+          "path": ".gitignore",
+          "sizeLines": 23,
+          "language": "Config",
+          "fileCategory": "config"
+        },
+        {
+          "path": "DISASTER_RECOVERY.md",
+          "sizeLines": 147,
+          "language": "Markdown",
+          "fileCategory": "docs"
+        },
+        {
+          "path": "README.md",
+          "sizeLines": 66,
+          "language": "Markdown",
+          "fileCategory": "docs"
+        },
+        {
+          "path": "artisan",
+          "sizeLines": 15,
+          "language": "PHP",
+          "fileCategory": "script"
+        },
+        {
+          "path": "backup.sh",
+          "sizeLines": 329,
+          "language": "Shell",
+          "fileCategory": "script"
+        },
+        {
+          "path": "composer.json",
+          "sizeLines": 89,
+          "language": "JSON",
+          "fileCategory": "config"
+        },
+        {
+          "path": "composer.lock",
+          "sizeLines": 10835,
+          "language": "JSON",
+          "fileCategory": "config"
+        },
+        {
+          "path": "deploy.sh",
+          "sizeLines": 199,
+          "language": "Shell",
+          "fileCategory": "script"
+        },
+        {
+          "path": "docker-compose.yml",
+          "sizeLines": 97,
+          "language": "YAML",
+          "fileCategory": "infra"
+        },
+        {
+          "path": "package-lock.json",
+          "sizeLines": 7616,
+          "language": "JSON",
+          "fileCategory": "config"
+        },
+        {
+          "path": "package.json",
+          "sizeLines": 27,
+          "language": "JSON",
+          "fileCategory": "config"
+        },
+        {
+          "path": "phpunit.xml",
+          "sizeLines": 33,
+          "language": "XML",
+          "fileCategory": "config"
+        },
+        {
+          "path": "postcss.config.js",
+          "sizeLines": 6,
+          "language": "JavaScript",
+          "fileCategory": "config"
+        },
+        {
+          "path": "serviceku_master",
+          "sizeLines": 37,
+          "language": "SQL",
+          "fileCategory": "data"
+        },
+        {
+          "path": "tailwind.config.js",
+          "sizeLines": 112,
+          "language": "JavaScript",
+          "fileCategory": "config"
+        }
+      ],
+      "batchImportData": {
+        ".editorconfig": [],
+        ".env": [],
+        ".env.example": [],
+        ".env.production": [],
+        ".gitattributes": [],
+        ".gitignore": [],
+        "DISASTER_RECOVERY.md": [],
+        "README.md": [],
+        "artisan": [],
+        "backup.sh": [],
+        "composer.json": [],
+        "composer.lock": [],
+        "deploy.sh": [],
+        "docker-compose.yml": [],
+        "package-lock.json": [],
+        "package.json": [],
+        "phpunit.xml": [],
+        "postcss.config.js": [],
+        "serviceku_master": [],
+        "tailwind.config.js": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 2,
+      "files": [
+        {
+          "path": "config/app.php",
+          "sizeLines": 126,
+          "language": "PHP",
+          "fileCategory": "config"
+        },
+        {
+          "path": "config/auth.php",
+          "sizeLines": 110,
+          "language": "PHP",
+          "fileCategory": "config"
+        },
+        {
+          "path": "config/broadcasting.php",
+          "sizeLines": 82,
+          "language": "PHP",
+          "fileCategory": "config"
+        },
+        {
+          "path": "config/cache.php",
+          "sizeLines": 108,
+          "language": "PHP",
+          "fileCategory": "config"
+        },
+        {
+          "path": "config/database.php",
+          "sizeLines": 173,
+          "language": "PHP",
+          "fileCategory": "config"
+        },
+        {
+          "path": "config/filesystems.php",
+          "sizeLines": 80,
+          "language": "PHP",
+          "fileCategory": "config"
+        },
+        {
+          "path": "config/logging.php",
+          "sizeLines": 132,
+          "language": "PHP",
+          "fileCategory": "config"
+        },
+        {
+          "path": "config/mail.php",
+          "sizeLines": 116,
+          "language": "PHP",
+          "fileCategory": "config"
+        },
+        {
+          "path": "config/queue.php",
+          "sizeLines": 112,
+          "language": "PHP",
+          "fileCategory": "config"
+        },
+        {
+          "path": "config/services.php",
+          "sizeLines": 45,
+          "language": "PHP",
+          "fileCategory": "config"
+        },
+        {
+          "path": "config/session.php",
+          "sizeLines": 217,
+          "language": "PHP",
+          "fileCategory": "config"
+        },
+        {
+          "path": "config/tenancy.php",
+          "sizeLines": 201,
+          "language": "PHP",
+          "fileCategory": "config"
+        }
+      ],
+      "batchImportData": {
+        "config/app.php": [],
+        "config/auth.php": [],
+        "config/broadcasting.php": [],
+        "config/cache.php": [],
+        "config/database.php": [],
+        "config/filesystems.php": [],
+        "config/logging.php": [],
+        "config/mail.php": [],
+        "config/queue.php": [],
+        "config/services.php": [],
+        "config/session.php": [],
+        "config/tenancy.php": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 3,
+      "files": [
+        {
+          "path": "docker/cloudflare/docker-compose.tunnel.yml",
+          "sizeLines": 31,
+          "language": "YAML",
+          "fileCategory": "infra"
+        },
+        {
+          "path": "docker/cloudflare/setup-gdrive.sh",
+          "sizeLines": 64,
+          "language": "Shell",
+          "fileCategory": "script"
+        },
+        {
+          "path": "docker/cloudflare/setup-tunnel.sh",
+          "sizeLines": 79,
+          "language": "Shell",
+          "fileCategory": "script"
+        }
+      ],
+      "batchImportData": {
+        "docker/cloudflare/docker-compose.tunnel.yml": [],
+        "docker/cloudflare/setup-gdrive.sh": [],
+        "docker/cloudflare/setup-tunnel.sh": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 4,
+      "files": [
+        {
+          "path": "docs/ONBOARDING.md",
+          "sizeLines": 304,
+          "language": "Markdown",
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/api.md",
+          "sizeLines": 962,
+          "language": "Markdown",
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/inventory-workflow.md",
+          "sizeLines": 94,
+          "language": "Markdown",
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/service-workflow.md",
+          "sizeLines": 629,
+          "language": "Markdown",
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/tampilan-superadmin.md",
+          "sizeLines": 104,
+          "language": "Markdown",
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/tampilan-tenant.md",
+          "sizeLines": 794,
+          "language": "Markdown",
+          "fileCategory": "docs"
+        }
+      ],
+      "batchImportData": {
+        "docs/ONBOARDING.md": [],
+        "docs/api.md": [],
+        "docs/inventory-workflow.md": [],
+        "docs/service-workflow.md": [],
+        "docs/tampilan-superadmin.md": [],
+        "docs/tampilan-tenant.md": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 5,
+      "files": [
+        {
+          "path": "lang/id/auth.php",
+          "sizeLines": 6,
+          "language": "PHP",
+          "fileCategory": "config"
+        },
+        {
+          "path": "lang/id/pagination.php",
+          "sizeLines": 5,
+          "language": "PHP",
+          "fileCategory": "config"
+        },
+        {
+          "path": "lang/id/passwords.php",
+          "sizeLines": 8,
+          "language": "PHP",
+          "fileCategory": "config"
+        },
+        {
+          "path": "lang/id/validation.php",
+          "sizeLines": 70,
+          "language": "PHP",
+          "fileCategory": "config"
+        }
+      ],
+      "batchImportData": {
+        "lang/id/auth.php": [],
+        "lang/id/pagination.php": [],
+        "lang/id/passwords.php": [],
+        "lang/id/validation.php": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 6,
+      "files": [
+        {
+          "path": "resources/views/app.blade.php",
+          "sizeLines": 24,
+          "language": "Blade",
+          "fileCategory": "markup"
+        },
+        {
+          "path": "resources/views/pos-invoice.blade.php",
+          "sizeLines": 443,
+          "language": "Blade",
+          "fileCategory": "markup"
+        },
+        {
+          "path": "resources/views/repair-tickets.blade.php",
+          "sizeLines": 621,
+          "language": "Blade",
+          "fileCategory": "markup"
+        },
+        {
+          "path": "resources/views/tenant-dashboard.blade.php",
+          "sizeLines": 242,
+          "language": "Blade",
+          "fileCategory": "markup"
+        },
+        {
+          "path": "resources/views/welcome.blade.php",
+          "sizeLines": 549,
+          "language": "Blade",
+          "fileCategory": "markup"
+        }
+      ],
+      "batchImportData": {
+        "resources/views/app.blade.php": [],
+        "resources/views/pos-invoice.blade.php": [],
+        "resources/views/repair-tickets.blade.php": [],
+        "resources/views/tenant-dashboard.blade.php": [],
+        "resources/views/welcome.blade.php": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 7,
+      "files": [
+        {
+          "path": "resources/views/pdfs/checklist-keluar.blade.php",
+          "sizeLines": 117,
+          "language": "Blade",
+          "fileCategory": "markup"
+        },
+        {
+          "path": "resources/views/pdfs/checklist-masuk.blade.php",
+          "sizeLines": 116,
+          "language": "Blade",
+          "fileCategory": "markup"
+        },
+        {
+          "path": "resources/views/pdfs/indent-nota.blade.php",
+          "sizeLines": 132,
+          "language": "Blade",
+          "fileCategory": "markup"
+        },
+        {
+          "path": "resources/views/pdfs/sale-invoice.blade.php",
+          "sizeLines": 141,
+          "language": "Blade",
+          "fileCategory": "markup"
+        },
+        {
+          "path": "resources/views/pdfs/service-receipt.blade.php",
+          "sizeLines": 283,
+          "language": "Blade",
+          "fileCategory": "markup"
+        }
+      ],
+      "batchImportData": {
+        "resources/views/pdfs/checklist-keluar.blade.php": [],
+        "resources/views/pdfs/checklist-masuk.blade.php": [],
+        "resources/views/pdfs/indent-nota.blade.php": [],
+        "resources/views/pdfs/sale-invoice.blade.php": [],
+        "resources/views/pdfs/service-receipt.blade.php": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 8,
+      "files": [
+        {
+          "path": ".vscode/settings.json",
+          "sizeLines": 23,
+          "language": "JSON",
+          "fileCategory": "config"
+        },
+        {
+          "path": "app/Console/Commands/BackupRun.php",
+          "sizeLines": 158,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Console/Commands/CheckSubscriptionExpiry.php",
+          "sizeLines": 50,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Events/ServiceStatusUpdated.php",
+          "sizeLines": 41,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Admin/AdminAuthController.php",
+          "sizeLines": 29,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Admin/BackupController.php",
+          "sizeLines": 240,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Admin/MonitoringController.php",
+          "sizeLines": 137,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Admin/PaymentController.php",
+          "sizeLines": 145,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Admin/PlanController.php",
+          "sizeLines": 98,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Admin/SuperAdminController.php",
+          "sizeLines": 70,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Admin/SystemSettingsController.php",
+          "sizeLines": 94,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Admin/TenantManagementController.php",
+          "sizeLines": 302,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Admin/VoucherController.php",
+          "sizeLines": 101,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Api/ServiceController.php",
+          "sizeLines": 22,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Api/TrackingController.php",
+          "sizeLines": 38,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Auth/GoogleLoginController.php",
+          "sizeLines": 89,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Auth/LoginController.php",
+          "sizeLines": 159,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Auth/RegisteredTenantController.php",
+          "sizeLines": 312,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Auth/ResetPasswordController.php",
+          "sizeLines": 111,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/CompanyProfileController.php",
+          "sizeLines": 51,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Controller.php",
+          "sizeLines": 8,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/DashboardController.php",
+          "sizeLines": 211,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/DevLoginController.php",
+          "sizeLines": 81,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/PublicTrackingController.php",
+          "sizeLines": 70,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/AttendanceController.php",
+          "sizeLines": 59,
+          "language": "PHP",
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        ".vscode/settings.json": [],
+        "app/Console/Commands/BackupRun.php": [],
+        "app/Console/Commands/CheckSubscriptionExpiry.php": [],
+        "app/Events/ServiceStatusUpdated.php": [],
+        "app/Http/Controllers/Admin/AdminAuthController.php": [],
+        "app/Http/Controllers/Admin/BackupController.php": [],
+        "app/Http/Controllers/Admin/MonitoringController.php": [],
+        "app/Http/Controllers/Admin/PaymentController.php": [],
+        "app/Http/Controllers/Admin/PlanController.php": [],
+        "app/Http/Controllers/Admin/SuperAdminController.php": [],
+        "app/Http/Controllers/Admin/SystemSettingsController.php": [],
+        "app/Http/Controllers/Admin/TenantManagementController.php": [],
+        "app/Http/Controllers/Admin/VoucherController.php": [],
+        "app/Http/Controllers/Api/ServiceController.php": [],
+        "app/Http/Controllers/Api/TrackingController.php": [],
+        "app/Http/Controllers/Auth/GoogleLoginController.php": [],
+        "app/Http/Controllers/Auth/LoginController.php": [],
+        "app/Http/Controllers/Auth/RegisteredTenantController.php": [],
+        "app/Http/Controllers/Auth/ResetPasswordController.php": [],
+        "app/Http/Controllers/CompanyProfileController.php": [],
+        "app/Http/Controllers/Controller.php": [],
+        "app/Http/Controllers/DashboardController.php": [],
+        "app/Http/Controllers/DevLoginController.php": [],
+        "app/Http/Controllers/PublicTrackingController.php": [],
+        "app/Http/Controllers/Tenant/AttendanceController.php": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 9,
+      "files": [
+        {
+          "path": "app/Http/Controllers/Tenant/BillingController.php",
+          "sizeLines": 112,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/BranchController.php",
+          "sizeLines": 64,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/CashRegisterController.php",
+          "sizeLines": 100,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/ChecklistTemplateController.php",
+          "sizeLines": 98,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/CommissionController.php",
+          "sizeLines": 38,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/CustomFieldController.php",
+          "sizeLines": 52,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/CustomerController.php",
+          "sizeLines": 69,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/DailyDepositController.php",
+          "sizeLines": 32,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/DamagedStockController.php",
+          "sizeLines": 53,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/DemoController.php",
+          "sizeLines": 103,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/DriveController.php",
+          "sizeLines": 52,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/ExpenseController.php",
+          "sizeLines": 60,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/IndentController.php",
+          "sizeLines": 162,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/InventoryController.php",
+          "sizeLines": 137,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/KnowledgeBaseController.php",
+          "sizeLines": 116,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/MasterDataController.php",
+          "sizeLines": 141,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/MonitoringController.php",
+          "sizeLines": 101,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/PartnerTeknisiController.php",
+          "sizeLines": 53,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/PickupDeliveryController.php",
+          "sizeLines": 60,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/ProductController.php",
+          "sizeLines": 124,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/PurchaseController.php",
+          "sizeLines": 94,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/PurchaseReturnController.php",
+          "sizeLines": 106,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/QuickReplyController.php",
+          "sizeLines": 63,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/ReconciliationController.php",
+          "sizeLines": 45,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/ReportController.php",
+          "sizeLines": 347,
+          "language": "PHP",
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "app/Http/Controllers/Tenant/BillingController.php": [],
+        "app/Http/Controllers/Tenant/BranchController.php": [],
+        "app/Http/Controllers/Tenant/CashRegisterController.php": [],
+        "app/Http/Controllers/Tenant/ChecklistTemplateController.php": [],
+        "app/Http/Controllers/Tenant/CommissionController.php": [],
+        "app/Http/Controllers/Tenant/CustomFieldController.php": [],
+        "app/Http/Controllers/Tenant/CustomerController.php": [],
+        "app/Http/Controllers/Tenant/DailyDepositController.php": [],
+        "app/Http/Controllers/Tenant/DamagedStockController.php": [],
+        "app/Http/Controllers/Tenant/DemoController.php": [],
+        "app/Http/Controllers/Tenant/DriveController.php": [],
+        "app/Http/Controllers/Tenant/ExpenseController.php": [],
+        "app/Http/Controllers/Tenant/IndentController.php": [],
+        "app/Http/Controllers/Tenant/InventoryController.php": [],
+        "app/Http/Controllers/Tenant/KnowledgeBaseController.php": [],
+        "app/Http/Controllers/Tenant/MasterDataController.php": [],
+        "app/Http/Controllers/Tenant/MonitoringController.php": [],
+        "app/Http/Controllers/Tenant/PartnerTeknisiController.php": [],
+        "app/Http/Controllers/Tenant/PickupDeliveryController.php": [],
+        "app/Http/Controllers/Tenant/ProductController.php": [],
+        "app/Http/Controllers/Tenant/PurchaseController.php": [],
+        "app/Http/Controllers/Tenant/PurchaseReturnController.php": [],
+        "app/Http/Controllers/Tenant/QuickReplyController.php": [],
+        "app/Http/Controllers/Tenant/ReconciliationController.php": [],
+        "app/Http/Controllers/Tenant/ReportController.php": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 10,
+      "files": [
+        {
+          "path": "app/Http/Controllers/Tenant/SaleController.php",
+          "sizeLines": 63,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/SaleInvoiceController.php",
+          "sizeLines": 81,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/SalePaymentController.php",
+          "sizeLines": 94,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/SaleStoreController.php",
+          "sizeLines": 186,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/ServiceChecklistController.php",
+          "sizeLines": 32,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/ServiceClaimController.php",
+          "sizeLines": 36,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/ServiceController.php",
+          "sizeLines": 97,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/ServiceDocumentController.php",
+          "sizeLines": 73,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/ServicePhotoController.php",
+          "sizeLines": 57,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/ServiceTransferController.php",
+          "sizeLines": 54,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/ServiceWorkflowController.php",
+          "sizeLines": 192,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/SettingsController.php",
+          "sizeLines": 217,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/ShiftController.php",
+          "sizeLines": 45,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/SopController.php",
+          "sizeLines": 89,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/StockAllocationController.php",
+          "sizeLines": 137,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/TaxController.php",
+          "sizeLines": 40,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/TenantProfileController.php",
+          "sizeLines": 59,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/Tenant/UserManagementController.php",
+          "sizeLines": 217,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/TenantLookupController.php",
+          "sizeLines": 53,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Controllers/VoucherApplyController.php",
+          "sizeLines": 93,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Middleware/AdminAuthenticate.php",
+          "sizeLines": 19,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Middleware/CheckPlanFeature.php",
+          "sizeLines": 48,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Middleware/CheckSubscription.php",
+          "sizeLines": 99,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Middleware/HandleInertiaRequests.php",
+          "sizeLines": 77,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Middleware/InitializeTenancyBySession.php",
+          "sizeLines": 29,
+          "language": "PHP",
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "app/Http/Controllers/Tenant/SaleController.php": [],
+        "app/Http/Controllers/Tenant/SaleInvoiceController.php": [],
+        "app/Http/Controllers/Tenant/SalePaymentController.php": [],
+        "app/Http/Controllers/Tenant/SaleStoreController.php": [],
+        "app/Http/Controllers/Tenant/ServiceChecklistController.php": [],
+        "app/Http/Controllers/Tenant/ServiceClaimController.php": [],
+        "app/Http/Controllers/Tenant/ServiceController.php": [],
+        "app/Http/Controllers/Tenant/ServiceDocumentController.php": [],
+        "app/Http/Controllers/Tenant/ServicePhotoController.php": [],
+        "app/Http/Controllers/Tenant/ServiceTransferController.php": [],
+        "app/Http/Controllers/Tenant/ServiceWorkflowController.php": [],
+        "app/Http/Controllers/Tenant/SettingsController.php": [],
+        "app/Http/Controllers/Tenant/ShiftController.php": [],
+        "app/Http/Controllers/Tenant/SopController.php": [],
+        "app/Http/Controllers/Tenant/StockAllocationController.php": [],
+        "app/Http/Controllers/Tenant/TaxController.php": [],
+        "app/Http/Controllers/Tenant/TenantProfileController.php": [],
+        "app/Http/Controllers/Tenant/UserManagementController.php": [],
+        "app/Http/Controllers/TenantLookupController.php": [],
+        "app/Http/Controllers/VoucherApplyController.php": [],
+        "app/Http/Middleware/AdminAuthenticate.php": [],
+        "app/Http/Middleware/CheckPlanFeature.php": [],
+        "app/Http/Middleware/CheckSubscription.php": [],
+        "app/Http/Middleware/HandleInertiaRequests.php": [],
+        "app/Http/Middleware/InitializeTenancyBySession.php": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 11,
+      "files": [
+        {
+          "path": "app/Http/Middleware/RedirectIfNotTenant.php",
+          "sizeLines": 23,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Middleware/SecurityHeaders.php",
+          "sizeLines": 63,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Middleware/TrustProxies.php",
+          "sizeLines": 20,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Requests/StoreCustomerRequest.php",
+          "sizeLines": 21,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Requests/StoreExpenseRequest.php",
+          "sizeLines": 23,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Requests/StoreSaleRequest.php",
+          "sizeLines": 27,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Http/Requests/StoreServiceRequest.php",
+          "sizeLines": 29,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Jobs/GenerateInvoicePdf.php",
+          "sizeLines": 39,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Jobs/SendInvoiceEmail.php",
+          "sizeLines": 31,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Mail/OtpMail.php",
+          "sizeLines": 39,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Mail/WelcomeMail.php",
+          "sizeLines": 40,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/GoogleDriveToken.php",
+          "sizeLines": 26,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Payment.php",
+          "sizeLines": 136,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Plan.php",
+          "sizeLines": 329,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/RegistrationVerification.php",
+          "sizeLines": 64,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/SystemLog.php",
+          "sizeLines": 46,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/SystemSetting.php",
+          "sizeLines": 29,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant.php",
+          "sizeLines": 198,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/ActivityLog.php",
+          "sizeLines": 47,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/Attendance.php",
+          "sizeLines": 20,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/Branch.php",
+          "sizeLines": 44,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/CashRegister.php",
+          "sizeLines": 47,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/ChecklistItem.php",
+          "sizeLines": 19,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/ChecklistTemplate.php",
+          "sizeLines": 23,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/Commission.php",
+          "sizeLines": 25,
+          "language": "PHP",
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "app/Http/Middleware/RedirectIfNotTenant.php": [],
+        "app/Http/Middleware/SecurityHeaders.php": [],
+        "app/Http/Middleware/TrustProxies.php": [],
+        "app/Http/Requests/StoreCustomerRequest.php": [],
+        "app/Http/Requests/StoreExpenseRequest.php": [],
+        "app/Http/Requests/StoreSaleRequest.php": [],
+        "app/Http/Requests/StoreServiceRequest.php": [],
+        "app/Jobs/GenerateInvoicePdf.php": [],
+        "app/Jobs/SendInvoiceEmail.php": [],
+        "app/Mail/OtpMail.php": [],
+        "app/Mail/WelcomeMail.php": [],
+        "app/Models/GoogleDriveToken.php": [],
+        "app/Models/Payment.php": [],
+        "app/Models/Plan.php": [],
+        "app/Models/RegistrationVerification.php": [],
+        "app/Models/SystemLog.php": [],
+        "app/Models/SystemSetting.php": [],
+        "app/Models/Tenant.php": [],
+        "app/Models/Tenant/ActivityLog.php": [],
+        "app/Models/Tenant/Attendance.php": [],
+        "app/Models/Tenant/Branch.php": [],
+        "app/Models/Tenant/CashRegister.php": [],
+        "app/Models/Tenant/ChecklistItem.php": [],
+        "app/Models/Tenant/ChecklistTemplate.php": [],
+        "app/Models/Tenant/Commission.php": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 12,
+      "files": [
+        {
+          "path": "app/Models/Tenant/CustomField.php",
+          "sizeLines": 20,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/CustomFieldValue.php",
+          "sizeLines": 13,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/Customer.php",
+          "sizeLines": 41,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/DailyDeposit.php",
+          "sizeLines": 31,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/DamagedStock.php",
+          "sizeLines": 23,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/Expense.php",
+          "sizeLines": 57,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/Indent.php",
+          "sizeLines": 56,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/InventoryMutation.php",
+          "sizeLines": 38,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/KnowledgeBase.php",
+          "sizeLines": 32,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/LoginHistory.php",
+          "sizeLines": 35,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/MasterData.php",
+          "sizeLines": 68,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/MasterLaborService.php",
+          "sizeLines": 25,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/PartnerTeknisi.php",
+          "sizeLines": 15,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/PaymentReconciliation.php",
+          "sizeLines": 23,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/PickupDelivery.php",
+          "sizeLines": 30,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/Product.php",
+          "sizeLines": 62,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/Purchase.php",
+          "sizeLines": 42,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/PurchaseItem.php",
+          "sizeLines": 33,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/PurchaseReturn.php",
+          "sizeLines": 37,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/PurchaseReturnItem.php",
+          "sizeLines": 18,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/QuickReply.php",
+          "sizeLines": 28,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/Sale.php",
+          "sizeLines": 91,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/SaleItem.php",
+          "sizeLines": 34,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/Service.php",
+          "sizeLines": 253,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/ServiceChecklist.php",
+          "sizeLines": 37,
+          "language": "PHP",
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "app/Models/Tenant/CustomField.php": [],
+        "app/Models/Tenant/CustomFieldValue.php": [],
+        "app/Models/Tenant/Customer.php": [],
+        "app/Models/Tenant/DailyDeposit.php": [],
+        "app/Models/Tenant/DamagedStock.php": [],
+        "app/Models/Tenant/Expense.php": [],
+        "app/Models/Tenant/Indent.php": [],
+        "app/Models/Tenant/InventoryMutation.php": [],
+        "app/Models/Tenant/KnowledgeBase.php": [],
+        "app/Models/Tenant/LoginHistory.php": [],
+        "app/Models/Tenant/MasterData.php": [],
+        "app/Models/Tenant/MasterLaborService.php": [],
+        "app/Models/Tenant/PartnerTeknisi.php": [],
+        "app/Models/Tenant/PaymentReconciliation.php": [],
+        "app/Models/Tenant/PickupDelivery.php": [],
+        "app/Models/Tenant/Product.php": [],
+        "app/Models/Tenant/Purchase.php": [],
+        "app/Models/Tenant/PurchaseItem.php": [],
+        "app/Models/Tenant/PurchaseReturn.php": [],
+        "app/Models/Tenant/PurchaseReturnItem.php": [],
+        "app/Models/Tenant/QuickReply.php": [],
+        "app/Models/Tenant/Sale.php": [],
+        "app/Models/Tenant/SaleItem.php": [],
+        "app/Models/Tenant/Service.php": [],
+        "app/Models/Tenant/ServiceChecklist.php": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 13,
+      "files": [
+        {
+          "path": "app/Models/Tenant/ServicePhoto.php",
+          "sizeLines": 35,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/ServiceSparepart.php",
+          "sizeLines": 32,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/ServiceTransfer.php",
+          "sizeLines": 36,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/Shift.php",
+          "sizeLines": 18,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/Sop.php",
+          "sizeLines": 47,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/SopReadLog.php",
+          "sizeLines": 30,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/StockAllocation.php",
+          "sizeLines": 47,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/Supplier.php",
+          "sizeLines": 20,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/SystemAlert.php",
+          "sizeLines": 60,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/TaxSetting.php",
+          "sizeLines": 13,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/TenantSetting.php",
+          "sizeLines": 24,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/User.php",
+          "sizeLines": 124,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Tenant/WaGatewayConfig.php",
+          "sizeLines": 26,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/TenantOtp.php",
+          "sizeLines": 79,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/TenantStat.php",
+          "sizeLines": 56,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/User.php",
+          "sizeLines": 48,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Models/Voucher.php",
+          "sizeLines": 111,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Notifications/ResetPasswordNotification.php",
+          "sizeLines": 44,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Notifications/TenantRegistered.php",
+          "sizeLines": 54,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Policies/ExpensePolicy.php",
+          "sizeLines": 22,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Policies/SalePolicy.php",
+          "sizeLines": 27,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Policies/ServicePolicy.php",
+          "sizeLines": 32,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Providers/AppServiceProvider.php",
+          "sizeLines": 44,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Providers/AuthServiceProvider.php",
+          "sizeLines": 23,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Providers/TenancyServiceProvider.php",
+          "sizeLines": 163,
+          "language": "PHP",
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "app/Models/Tenant/ServicePhoto.php": [],
+        "app/Models/Tenant/ServiceSparepart.php": [],
+        "app/Models/Tenant/ServiceTransfer.php": [],
+        "app/Models/Tenant/Shift.php": [],
+        "app/Models/Tenant/Sop.php": [],
+        "app/Models/Tenant/SopReadLog.php": [],
+        "app/Models/Tenant/StockAllocation.php": [],
+        "app/Models/Tenant/Supplier.php": [],
+        "app/Models/Tenant/SystemAlert.php": [],
+        "app/Models/Tenant/TaxSetting.php": [],
+        "app/Models/Tenant/TenantSetting.php": [],
+        "app/Models/Tenant/User.php": [],
+        "app/Models/Tenant/WaGatewayConfig.php": [],
+        "app/Models/TenantOtp.php": [],
+        "app/Models/TenantStat.php": [],
+        "app/Models/User.php": [],
+        "app/Models/Voucher.php": [],
+        "app/Notifications/ResetPasswordNotification.php": [],
+        "app/Notifications/TenantRegistered.php": [],
+        "app/Policies/ExpensePolicy.php": [],
+        "app/Policies/SalePolicy.php": [],
+        "app/Policies/ServicePolicy.php": [],
+        "app/Providers/AppServiceProvider.php": [],
+        "app/Providers/AuthServiceProvider.php": [],
+        "app/Providers/TenancyServiceProvider.php": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 14,
+      "files": [
+        {
+          "path": "app/Services/GoogleDrivePhotoService.php",
+          "sizeLines": 205,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Services/GoogleDriveService.php",
+          "sizeLines": 272,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Services/MailConfigService.php",
+          "sizeLines": 63,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "app/Services/PaymentGatewayService.php",
+          "sizeLines": 176,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "bootstrap/app.php",
+          "sizeLines": 89,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "bootstrap/providers.php",
+          "sizeLines": 7,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/database.sqlite",
+          "sizeLines": 34,
+          "language": "SQL",
+          "fileCategory": "data"
+        },
+        {
+          "path": "database/factories/UserFactory.php",
+          "sizeLines": 44,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/0001_01_01_000000_create_users_table.php",
+          "sizeLines": 49,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/0001_01_01_000001_create_cache_table.php",
+          "sizeLines": 35,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/0001_01_01_000002_create_jobs_table.php",
+          "sizeLines": 57,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/2019_09_15_000010_create_tenants_table.php",
+          "sizeLines": 46,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/2019_09_15_000020_create_domains_table.php",
+          "sizeLines": 37,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/2020_05_15_000010_create_tenant_user_impersonation_tokens_table.php",
+          "sizeLines": 39,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/2024_01_01_000001_create_plans_table.php",
+          "sizeLines": 28,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/2024_01_01_000002_create_system_tables.php",
+          "sizeLines": 58,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/2024_01_01_000003_create_tenant_otps_table.php",
+          "sizeLines": 30,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/2024_01_01_000003_create_verification_tables.php",
+          "sizeLines": 26,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/2024_07_18_000001_create_payment_transactions_table.php",
+          "sizeLines": 39,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/2026_07_18_174616_add_promo_fields_to_plans_table.php",
+          "sizeLines": 30,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/2026_07_18_175306_add_business_types_to_plans_table.php",
+          "sizeLines": 28,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/2026_07_18_230325_add_slug_to_tenants_table.php",
+          "sizeLines": 28,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/2026_07_19_040631_create_vouchers_table.php",
+          "sizeLines": 50,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/2026_07_19_041309_add_extra_months_to_vouchers_and_tenants.php",
+          "sizeLines": 43,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/2026_07_20_000001_add_tenant_id_to_vouchers_table.php",
+          "sizeLines": 35,
+          "language": "PHP",
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "app/Services/GoogleDrivePhotoService.php": [],
+        "app/Services/GoogleDriveService.php": [],
+        "app/Services/MailConfigService.php": [],
+        "app/Services/PaymentGatewayService.php": [],
+        "bootstrap/app.php": [],
+        "bootstrap/providers.php": [],
+        "database/database.sqlite": [],
+        "database/factories/UserFactory.php": [],
+        "database/migrations/0001_01_01_000000_create_users_table.php": [],
+        "database/migrations/0001_01_01_000001_create_cache_table.php": [],
+        "database/migrations/0001_01_01_000002_create_jobs_table.php": [],
+        "database/migrations/2019_09_15_000010_create_tenants_table.php": [],
+        "database/migrations/2019_09_15_000020_create_domains_table.php": [],
+        "database/migrations/2020_05_15_000010_create_tenant_user_impersonation_tokens_table.php": [],
+        "database/migrations/2024_01_01_000001_create_plans_table.php": [],
+        "database/migrations/2024_01_01_000002_create_system_tables.php": [],
+        "database/migrations/2024_01_01_000003_create_tenant_otps_table.php": [],
+        "database/migrations/2024_01_01_000003_create_verification_tables.php": [],
+        "database/migrations/2024_07_18_000001_create_payment_transactions_table.php": [],
+        "database/migrations/2026_07_18_174616_add_promo_fields_to_plans_table.php": [],
+        "database/migrations/2026_07_18_175306_add_business_types_to_plans_table.php": [],
+        "database/migrations/2026_07_18_230325_add_slug_to_tenants_table.php": [],
+        "database/migrations/2026_07_19_040631_create_vouchers_table.php": [],
+        "database/migrations/2026_07_19_041309_add_extra_months_to_vouchers_and_tenants.php": [],
+        "database/migrations/2026_07_20_000001_add_tenant_id_to_vouchers_table.php": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 15,
+      "files": [
+        {
+          "path": "database/migrations/2026_07_27_044406_create_google_drive_tokens_table.php",
+          "sizeLines": 30,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/tenant/2024_01_01_000001_create_tenant_core_tables.php",
+          "sizeLines": 88,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/tenant/2024_01_01_000002_create_business_tables.php",
+          "sizeLines": 217,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/tenant/2024_01_01_000003_create_purchases_tables.php",
+          "sizeLines": 50,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/tenant/2024_01_01_000004_create_monitoring_tables.php",
+          "sizeLines": 74,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/tenant/2024_01_01_000005_add_custom_role_to_users.php",
+          "sizeLines": 22,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/tenant/2026_07_19_060001_create_master_tables.php",
+          "sizeLines": 95,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/tenant/2026_07_19_060002_add_missing_columns_to_tenant_tables.php",
+          "sizeLines": 166,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/tenant/2026_07_27_044406_add_google_id_to_tenant_users_table.php",
+          "sizeLines": 23,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/tenant/2026_07_27_044407_add_photo_to_expenses_table.php",
+          "sizeLines": 22,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/tenant/2026_07_27_044407_create_service_photos_table.php",
+          "sizeLines": 28,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/tenant/2026_07_27_044408_create_knowledge_base_table.php",
+          "sizeLines": 33,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/tenant/2026_07_27_044408_create_quick_replies_table.php",
+          "sizeLines": 29,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/tenant/2026_07_27_044408_create_sops_table.php",
+          "sizeLines": 43,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/tenant/2026_07_27_050550_create_damaged_stocks_table.php",
+          "sizeLines": 31,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/tenant/2026_07_27_050550_create_purchase_returns_table.php",
+          "sizeLines": 44,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/tenant/2026_07_27_050551_create_partner_teknisis_table.php",
+          "sizeLines": 28,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/tenant/2026_07_27_050551_create_pickup_deliveries_table.php",
+          "sizeLines": 34,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/tenant/2026_07_27_050552_create_custom_fields_table.php",
+          "sizeLines": 42,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/tenant/2026_07_27_050552_create_tax_settings_table.php",
+          "sizeLines": 27,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/tenant/2026_07_27_050553_create_commissions_table.php",
+          "sizeLines": 31,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/tenant/2026_07_27_050553_create_payment_reconciliations_table.php",
+          "sizeLines": 32,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/tenant/2026_07_27_050553_create_shifts_table.php",
+          "sizeLines": 26,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/tenant/2026_07_27_050554_create_attendances_table.php",
+          "sizeLines": 31,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/migrations/tenant/2026_07_27_052155_add_missing_indexes_to_tenant_tables.php",
+          "sizeLines": 75,
+          "language": "PHP",
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "database/migrations/2026_07_27_044406_create_google_drive_tokens_table.php": [],
+        "database/migrations/tenant/2024_01_01_000001_create_tenant_core_tables.php": [],
+        "database/migrations/tenant/2024_01_01_000002_create_business_tables.php": [],
+        "database/migrations/tenant/2024_01_01_000003_create_purchases_tables.php": [],
+        "database/migrations/tenant/2024_01_01_000004_create_monitoring_tables.php": [],
+        "database/migrations/tenant/2024_01_01_000005_add_custom_role_to_users.php": [],
+        "database/migrations/tenant/2026_07_19_060001_create_master_tables.php": [],
+        "database/migrations/tenant/2026_07_19_060002_add_missing_columns_to_tenant_tables.php": [],
+        "database/migrations/tenant/2026_07_27_044406_add_google_id_to_tenant_users_table.php": [],
+        "database/migrations/tenant/2026_07_27_044407_add_photo_to_expenses_table.php": [],
+        "database/migrations/tenant/2026_07_27_044407_create_service_photos_table.php": [],
+        "database/migrations/tenant/2026_07_27_044408_create_knowledge_base_table.php": [],
+        "database/migrations/tenant/2026_07_27_044408_create_quick_replies_table.php": [],
+        "database/migrations/tenant/2026_07_27_044408_create_sops_table.php": [],
+        "database/migrations/tenant/2026_07_27_050550_create_damaged_stocks_table.php": [],
+        "database/migrations/tenant/2026_07_27_050550_create_purchase_returns_table.php": [],
+        "database/migrations/tenant/2026_07_27_050551_create_partner_teknisis_table.php": [],
+        "database/migrations/tenant/2026_07_27_050551_create_pickup_deliveries_table.php": [],
+        "database/migrations/tenant/2026_07_27_050552_create_custom_fields_table.php": [],
+        "database/migrations/tenant/2026_07_27_050552_create_tax_settings_table.php": [],
+        "database/migrations/tenant/2026_07_27_050553_create_commissions_table.php": [],
+        "database/migrations/tenant/2026_07_27_050553_create_payment_reconciliations_table.php": [],
+        "database/migrations/tenant/2026_07_27_050553_create_shifts_table.php": [],
+        "database/migrations/tenant/2026_07_27_050554_create_attendances_table.php": [],
+        "database/migrations/tenant/2026_07_27_052155_add_missing_indexes_to_tenant_tables.php": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 16,
+      "files": [
+        {
+          "path": "database/seeders/DatabaseSeeder.php",
+          "sizeLines": 21,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/seeders/DemoTenantSeeder.php",
+          "sizeLines": 465,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/seeders/MasterDataSeeder.php",
+          "sizeLines": 62,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/seeders/PlanSeeder.php",
+          "sizeLines": 124,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/seeders/SystemSettingSeeder.php",
+          "sizeLines": 46,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/seeders/Tenant/DemoDataSeeder.php",
+          "sizeLines": 148,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "database/seeders/TenantSeeder.php",
+          "sizeLines": 17,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "docker/mysql/my.cnf",
+          "sizeLines": 9,
+          "language": "Config",
+          "fileCategory": "config"
+        },
+        {
+          "path": "public/.htaccess",
+          "sizeLines": 25,
+          "language": "Config",
+          "fileCategory": "config"
+        },
+        {
+          "path": "public/images/logo.svg",
+          "sizeLines": 25,
+          "language": "Markup",
+          "fileCategory": "data"
+        },
+        {
+          "path": "public/index.php",
+          "sizeLines": 17,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/css/app.css",
+          "sizeLines": 297,
+          "language": "CSS",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/css/themes.css",
+          "sizeLines": 118,
+          "language": "CSS",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Components/Dropdown.vue",
+          "sizeLines": 51,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Components/DropdownLink.vue",
+          "sizeLines": 20,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Components/EmptyState.vue",
+          "sizeLines": 48,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Components/Logo.vue",
+          "sizeLines": 82,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Components/MobileNavLink.vue",
+          "sizeLines": 18,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Components/NavLink.vue",
+          "sizeLines": 24,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Components/PageHeader.vue",
+          "sizeLines": 58,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Components/StatCard.vue",
+          "sizeLines": 106,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Components/StatusBadge.vue",
+          "sizeLines": 64,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Components/ThemeSwitcher.vue",
+          "sizeLines": 11,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Layouts/AdminLayout.vue",
+          "sizeLines": 91,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Layouts/AuthenticatedLayout.vue",
+          "sizeLines": 147,
+          "language": "Vue",
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "database/seeders/DatabaseSeeder.php": [],
+        "database/seeders/DemoTenantSeeder.php": [],
+        "database/seeders/MasterDataSeeder.php": [],
+        "database/seeders/PlanSeeder.php": [],
+        "database/seeders/SystemSettingSeeder.php": [],
+        "database/seeders/Tenant/DemoDataSeeder.php": [],
+        "database/seeders/TenantSeeder.php": [],
+        "docker/mysql/my.cnf": [],
+        "public/.htaccess": [],
+        "public/images/logo.svg": [],
+        "public/index.php": [],
+        "resources/css/app.css": [],
+        "resources/css/themes.css": [],
+        "resources/js/Components/Dropdown.vue": [],
+        "resources/js/Components/DropdownLink.vue": [],
+        "resources/js/Components/EmptyState.vue": [],
+        "resources/js/Components/Logo.vue": [],
+        "resources/js/Components/MobileNavLink.vue": [],
+        "resources/js/Components/NavLink.vue": [],
+        "resources/js/Components/PageHeader.vue": [],
+        "resources/js/Components/StatCard.vue": [],
+        "resources/js/Components/StatusBadge.vue": [],
+        "resources/js/Components/ThemeSwitcher.vue": [],
+        "resources/js/Layouts/AdminLayout.vue": [],
+        "resources/js/Layouts/AuthenticatedLayout.vue": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 17,
+      "files": [
+        {
+          "path": "resources/js/Layouts/GuestLayout.vue",
+          "sizeLines": 90,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Layouts/Themes/LayoutNew.vue",
+          "sizeLines": 370,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Admin/Backup.vue",
+          "sizeLines": 305,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Admin/CreateTenant.vue",
+          "sizeLines": 116,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Admin/Dashboard.vue",
+          "sizeLines": 218,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Admin/EditTenant.vue",
+          "sizeLines": 321,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Admin/Logs.vue",
+          "sizeLines": 99,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Admin/Monitoring.vue",
+          "sizeLines": 231,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Admin/PaymentSettings.vue",
+          "sizeLines": 201,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Admin/Payments.vue",
+          "sizeLines": 125,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Admin/Plans.vue",
+          "sizeLines": 477,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Admin/Settings.vue",
+          "sizeLines": 198,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Admin/TenantDetail.vue",
+          "sizeLines": 242,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Admin/TenantManagement.vue",
+          "sizeLines": 190,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Admin/Vouchers/Create.vue",
+          "sizeLines": 166,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Admin/Vouchers/Index.vue",
+          "sizeLines": 96,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Attendances/Index.vue",
+          "sizeLines": 35,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Attendances/Report.vue",
+          "sizeLines": 25,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Auth/AdminLogin.vue",
+          "sizeLines": 62,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Auth/ForgotPassword.vue",
+          "sizeLines": 58,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Auth/Login.vue",
+          "sizeLines": 173,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Auth/Register.vue",
+          "sizeLines": 287,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Auth/RegistrationSuccess.vue",
+          "sizeLines": 94,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Auth/ResetPassword.vue",
+          "sizeLines": 88,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Auth/SubdomainLogin.vue",
+          "sizeLines": 138,
+          "language": "Vue",
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "resources/js/Layouts/GuestLayout.vue": [],
+        "resources/js/Layouts/Themes/LayoutNew.vue": [],
+        "resources/js/Pages/Admin/Backup.vue": [],
+        "resources/js/Pages/Admin/CreateTenant.vue": [],
+        "resources/js/Pages/Admin/Dashboard.vue": [],
+        "resources/js/Pages/Admin/EditTenant.vue": [],
+        "resources/js/Pages/Admin/Logs.vue": [],
+        "resources/js/Pages/Admin/Monitoring.vue": [],
+        "resources/js/Pages/Admin/PaymentSettings.vue": [],
+        "resources/js/Pages/Admin/Payments.vue": [],
+        "resources/js/Pages/Admin/Plans.vue": [],
+        "resources/js/Pages/Admin/Settings.vue": [],
+        "resources/js/Pages/Admin/TenantDetail.vue": [],
+        "resources/js/Pages/Admin/TenantManagement.vue": [],
+        "resources/js/Pages/Admin/Vouchers/Create.vue": [],
+        "resources/js/Pages/Admin/Vouchers/Index.vue": [],
+        "resources/js/Pages/Attendances/Index.vue": [],
+        "resources/js/Pages/Attendances/Report.vue": [],
+        "resources/js/Pages/Auth/AdminLogin.vue": [],
+        "resources/js/Pages/Auth/ForgotPassword.vue": [],
+        "resources/js/Pages/Auth/Login.vue": [],
+        "resources/js/Pages/Auth/Register.vue": [],
+        "resources/js/Pages/Auth/RegistrationSuccess.vue": [],
+        "resources/js/Pages/Auth/ResetPassword.vue": [],
+        "resources/js/Pages/Auth/SubdomainLogin.vue": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 18,
+      "files": [
+        {
+          "path": "resources/js/Pages/Auth/VerifyOtp.vue",
+          "sizeLines": 91,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Branches/Create.vue",
+          "sizeLines": 37,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Branches/Index.vue",
+          "sizeLines": 66,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Branches/Show.vue",
+          "sizeLines": 77,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/CashRegisters/Index.vue",
+          "sizeLines": 124,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/CashierDashboard.vue",
+          "sizeLines": 179,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/ChecklistTemplates/Index.vue",
+          "sizeLines": 102,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Commissions/Index.vue",
+          "sizeLines": 27,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/CourierDashboard.vue",
+          "sizeLines": 176,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/CsDashboard.vue",
+          "sizeLines": 172,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Customers/Create.vue",
+          "sizeLines": 68,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Customers/Index.vue",
+          "sizeLines": 117,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Customers/Show.vue",
+          "sizeLines": 83,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/DailyDeposits/Index.vue",
+          "sizeLines": 69,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Dashboard.vue",
+          "sizeLines": 285,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Demo/Index.vue",
+          "sizeLines": 169,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Expenses/Index.vue",
+          "sizeLines": 126,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Finance/Reconciliation.vue",
+          "sizeLines": 45,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Indents/Create.vue",
+          "sizeLines": 59,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Indents/Index.vue",
+          "sizeLines": 73,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Inventory/DamagedStocks.vue",
+          "sizeLines": 40,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Inventory/Forecast.vue",
+          "sizeLines": 24,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Inventory/Mutations.vue",
+          "sizeLines": 96,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Inventory/ReorderAlerts.vue",
+          "sizeLines": 23,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/KnowledgeBase/Index.vue",
+          "sizeLines": 149,
+          "language": "Vue",
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "resources/js/Pages/Auth/VerifyOtp.vue": [],
+        "resources/js/Pages/Branches/Create.vue": [],
+        "resources/js/Pages/Branches/Index.vue": [],
+        "resources/js/Pages/Branches/Show.vue": [],
+        "resources/js/Pages/CashRegisters/Index.vue": [],
+        "resources/js/Pages/CashierDashboard.vue": [],
+        "resources/js/Pages/ChecklistTemplates/Index.vue": [],
+        "resources/js/Pages/Commissions/Index.vue": [],
+        "resources/js/Pages/CourierDashboard.vue": [],
+        "resources/js/Pages/CsDashboard.vue": [],
+        "resources/js/Pages/Customers/Create.vue": [],
+        "resources/js/Pages/Customers/Index.vue": [],
+        "resources/js/Pages/Customers/Show.vue": [],
+        "resources/js/Pages/DailyDeposits/Index.vue": [],
+        "resources/js/Pages/Dashboard.vue": [],
+        "resources/js/Pages/Demo/Index.vue": [],
+        "resources/js/Pages/Expenses/Index.vue": [],
+        "resources/js/Pages/Finance/Reconciliation.vue": [],
+        "resources/js/Pages/Indents/Create.vue": [],
+        "resources/js/Pages/Indents/Index.vue": [],
+        "resources/js/Pages/Inventory/DamagedStocks.vue": [],
+        "resources/js/Pages/Inventory/Forecast.vue": [],
+        "resources/js/Pages/Inventory/Mutations.vue": [],
+        "resources/js/Pages/Inventory/ReorderAlerts.vue": [],
+        "resources/js/Pages/KnowledgeBase/Index.vue": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 19,
+      "files": [
+        {
+          "path": "resources/js/Pages/Landing/Index.vue",
+          "sizeLines": 250,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Monitoring/Activities.vue",
+          "sizeLines": 108,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Monitoring/Index.vue",
+          "sizeLines": 149,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Monitoring/Logins.vue",
+          "sizeLines": 79,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Partners/Index.vue",
+          "sizeLines": 41,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/PickupDeliveries/Create.vue",
+          "sizeLines": 20,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/PickupDeliveries/Index.vue",
+          "sizeLines": 35,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Products/Create.vue",
+          "sizeLines": 80,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Products/Index.vue",
+          "sizeLines": 160,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Public/Track.vue",
+          "sizeLines": 253,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/PurchaseReturns/Create.vue",
+          "sizeLines": 38,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/PurchaseReturns/Index.vue",
+          "sizeLines": 39,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Purchases/Create.vue",
+          "sizeLines": 110,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Purchases/Index.vue",
+          "sizeLines": 68,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Purchases/Show.vue",
+          "sizeLines": 72,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/QuickReplies/Index.vue",
+          "sizeLines": 71,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Reports/Commissions.vue",
+          "sizeLines": 101,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Reports/CustomerAnalytics.vue",
+          "sizeLines": 34,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Reports/Finance.vue",
+          "sizeLines": 102,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Reports/Index.vue",
+          "sizeLines": 19,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Reports/Inventory.vue",
+          "sizeLines": 92,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Reports/Productivity.vue",
+          "sizeLines": 37,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Reports/RevenueComparison.vue",
+          "sizeLines": 35,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Reports/Sales.vue",
+          "sizeLines": 115,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Reports/Services.vue",
+          "sizeLines": 95,
+          "language": "Vue",
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "resources/js/Pages/Landing/Index.vue": [],
+        "resources/js/Pages/Monitoring/Activities.vue": [],
+        "resources/js/Pages/Monitoring/Index.vue": [],
+        "resources/js/Pages/Monitoring/Logins.vue": [],
+        "resources/js/Pages/Partners/Index.vue": [],
+        "resources/js/Pages/PickupDeliveries/Create.vue": [],
+        "resources/js/Pages/PickupDeliveries/Index.vue": [],
+        "resources/js/Pages/Products/Create.vue": [],
+        "resources/js/Pages/Products/Index.vue": [],
+        "resources/js/Pages/Public/Track.vue": [],
+        "resources/js/Pages/PurchaseReturns/Create.vue": [],
+        "resources/js/Pages/PurchaseReturns/Index.vue": [],
+        "resources/js/Pages/Purchases/Create.vue": [],
+        "resources/js/Pages/Purchases/Index.vue": [],
+        "resources/js/Pages/Purchases/Show.vue": [],
+        "resources/js/Pages/QuickReplies/Index.vue": [],
+        "resources/js/Pages/Reports/Commissions.vue": [],
+        "resources/js/Pages/Reports/CustomerAnalytics.vue": [],
+        "resources/js/Pages/Reports/Finance.vue": [],
+        "resources/js/Pages/Reports/Index.vue": [],
+        "resources/js/Pages/Reports/Inventory.vue": [],
+        "resources/js/Pages/Reports/Productivity.vue": [],
+        "resources/js/Pages/Reports/RevenueComparison.vue": [],
+        "resources/js/Pages/Reports/Sales.vue": [],
+        "resources/js/Pages/Reports/Services.vue": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 20,
+      "files": [
+        {
+          "path": "resources/js/Pages/Sales/Create.vue",
+          "sizeLines": 285,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Sales/Index.vue",
+          "sizeLines": 157,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Sales/Show.vue",
+          "sizeLines": 78,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/ServiceTransfers/Create.vue",
+          "sizeLines": 55,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Services/Create.vue",
+          "sizeLines": 224,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Services/Index.vue",
+          "sizeLines": 494,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Services/Show.vue",
+          "sizeLines": 201,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Settings/CustomFields.vue",
+          "sizeLines": 37,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Settings/DriveConnect.vue",
+          "sizeLines": 25,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Settings/Index.vue",
+          "sizeLines": 454,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Shifts/Index.vue",
+          "sizeLines": 31,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Sops/Index.vue",
+          "sizeLines": 101,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/StockAllocations/Create.vue",
+          "sizeLines": 60,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/StockAllocations/Index.vue",
+          "sizeLines": 68,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/TechnicianDashboard.vue",
+          "sizeLines": 138,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Tenant/Billing.vue",
+          "sizeLines": 151,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Tenant/Profile.vue",
+          "sizeLines": 455,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Tools/QRScanner.vue",
+          "sizeLines": 66,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Users/Index.vue",
+          "sizeLines": 154,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Users/MenuAccess.vue",
+          "sizeLines": 181,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/Pages/Users/Profile.vue",
+          "sizeLines": 255,
+          "language": "Vue",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/app.js",
+          "sizeLines": 27,
+          "language": "JavaScript",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/bootstrap.js",
+          "sizeLines": 12,
+          "language": "JavaScript",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/echo.js",
+          "sizeLines": 14,
+          "language": "JavaScript",
+          "fileCategory": "code"
+        },
+        {
+          "path": "resources/js/ziggy.js",
+          "sizeLines": 5,
+          "language": "JavaScript",
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "resources/js/Pages/Sales/Create.vue": [],
+        "resources/js/Pages/Sales/Index.vue": [],
+        "resources/js/Pages/Sales/Show.vue": [],
+        "resources/js/Pages/ServiceTransfers/Create.vue": [],
+        "resources/js/Pages/Services/Create.vue": [],
+        "resources/js/Pages/Services/Index.vue": [],
+        "resources/js/Pages/Services/Show.vue": [],
+        "resources/js/Pages/Settings/CustomFields.vue": [],
+        "resources/js/Pages/Settings/DriveConnect.vue": [],
+        "resources/js/Pages/Settings/Index.vue": [],
+        "resources/js/Pages/Shifts/Index.vue": [],
+        "resources/js/Pages/Sops/Index.vue": [],
+        "resources/js/Pages/StockAllocations/Create.vue": [],
+        "resources/js/Pages/StockAllocations/Index.vue": [],
+        "resources/js/Pages/TechnicianDashboard.vue": [],
+        "resources/js/Pages/Tenant/Billing.vue": [],
+        "resources/js/Pages/Tenant/Profile.vue": [],
+        "resources/js/Pages/Tools/QRScanner.vue": [],
+        "resources/js/Pages/Users/Index.vue": [],
+        "resources/js/Pages/Users/MenuAccess.vue": [],
+        "resources/js/Pages/Users/Profile.vue": [],
+        "resources/js/app.js": [],
+        "resources/js/bootstrap.js": [],
+        "resources/js/echo.js": [],
+        "resources/js/ziggy.js": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 21,
+      "files": [
+        {
+          "path": "resources/views/auth/login.blade.php",
+          "sizeLines": 185,
+          "language": "Blade",
+          "fileCategory": "markup"
+        },
+        {
+          "path": "resources/views/billing/index.blade.php",
+          "sizeLines": 310,
+          "language": "Blade",
+          "fileCategory": "markup"
+        },
+        {
+          "path": "resources/views/customers/index.blade.php",
+          "sizeLines": 380,
+          "language": "Blade",
+          "fileCategory": "markup"
+        },
+        {
+          "path": "resources/views/emails/otp.blade.php",
+          "sizeLines": 37,
+          "language": "Blade",
+          "fileCategory": "markup"
+        },
+        {
+          "path": "resources/views/emails/welcome.blade.php",
+          "sizeLines": 53,
+          "language": "Blade",
+          "fileCategory": "markup"
+        },
+        {
+          "path": "resources/views/inventory/index.blade.php",
+          "sizeLines": 253,
+          "language": "Blade",
+          "fileCategory": "markup"
+        },
+        {
+          "path": "resources/views/layouts/app.blade.php",
+          "sizeLines": 184,
+          "language": "Blade",
+          "fileCategory": "markup"
+        },
+        {
+          "path": "resources/views/pdf/nota.blade.php",
+          "sizeLines": 105,
+          "language": "Blade",
+          "fileCategory": "markup"
+        },
+        {
+          "path": "resources/views/pos/index.blade.php",
+          "sizeLines": 327,
+          "language": "Blade",
+          "fileCategory": "markup"
+        },
+        {
+          "path": "resources/views/settings/index.blade.php",
+          "sizeLines": 338,
+          "language": "Blade",
+          "fileCategory": "markup"
+        },
+        {
+          "path": "resources/views/superadmin/index.blade.php",
+          "sizeLines": 420,
+          "language": "Blade",
+          "fileCategory": "markup"
+        },
+        {
+          "path": "resources/views/tickets/index.blade.php",
+          "sizeLines": 311,
+          "language": "Blade",
+          "fileCategory": "markup"
+        },
+        {
+          "path": "routes/api.php",
+          "sizeLines": 11,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "routes/channels.php",
+          "sizeLines": 7,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "routes/console.php",
+          "sizeLines": 8,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "routes/tenant.php",
+          "sizeLines": 273,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "routes/web.php",
+          "sizeLines": 216,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "tests/Feature/ExampleTest.php",
+          "sizeLines": 11,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "tests/Feature/GoogleDriveServiceTest.php",
+          "sizeLines": 26,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "tests/Feature/HealthTest.php",
+          "sizeLines": 53,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "tests/TestCase.php",
+          "sizeLines": 10,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "tests/Unit/ExampleTest.php",
+          "sizeLines": 16,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "tests/Unit/FormRequestTest.php",
+          "sizeLines": 56,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "tests/Unit/Models/ExpenseTest.php",
+          "sizeLines": 54,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "tests/Unit/Models/SaleTest.php",
+          "sizeLines": 65,
+          "language": "PHP",
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "resources/views/auth/login.blade.php": [],
+        "resources/views/billing/index.blade.php": [],
+        "resources/views/customers/index.blade.php": [],
+        "resources/views/emails/otp.blade.php": [],
+        "resources/views/emails/welcome.blade.php": [],
+        "resources/views/inventory/index.blade.php": [],
+        "resources/views/layouts/app.blade.php": [],
+        "resources/views/pdf/nota.blade.php": [],
+        "resources/views/pos/index.blade.php": [],
+        "resources/views/settings/index.blade.php": [],
+        "resources/views/superadmin/index.blade.php": [],
+        "resources/views/tickets/index.blade.php": [],
+        "routes/api.php": [],
+        "routes/channels.php": [],
+        "routes/console.php": [],
+        "routes/tenant.php": [],
+        "routes/web.php": [],
+        "tests/Feature/ExampleTest.php": [],
+        "tests/Feature/GoogleDriveServiceTest.php": [],
+        "tests/Feature/HealthTest.php": [],
+        "tests/TestCase.php": [],
+        "tests/Unit/ExampleTest.php": [],
+        "tests/Unit/FormRequestTest.php": [],
+        "tests/Unit/Models/ExpenseTest.php": [],
+        "tests/Unit/Models/SaleTest.php": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 22,
+      "files": [
+        {
+          "path": "tests/Unit/Models/ServiceTest.php",
+          "sizeLines": 88,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "tests/Unit/PolicyTest.php",
+          "sizeLines": 59,
+          "language": "PHP",
+          "fileCategory": "code"
+        },
+        {
+          "path": "vite.config.js",
+          "sizeLines": 54,
+          "language": "JavaScript",
+          "fileCategory": "config"
+        }
+      ],
+      "batchImportData": {
+        "tests/Unit/Models/ServiceTest.php": [],
+        "tests/Unit/PolicyTest.php": [],
+        "vite.config.js": []
+      },
+      "neighborMap": {}
+    }
+  ]
+}

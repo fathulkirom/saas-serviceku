@@ -1,0 +1,224 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use App\Models\Tenant\Service;
+use App\Models\Tenant\Product;
+use App\Models\Tenant\Sale;
+use App\Models\Tenant\Customer;
+use App\Models\Tenant\CashRegister;
+use App\Models\Tenant\TenantSetting;
+use App\Models\Tenant\User;
+
+class DashboardController extends Controller
+{
+    public function index()
+    {
+        $user = auth()->user();
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        return match ($user->role) {
+            'technician' => $this->technicianDashboard($user),
+            'cs'         => $this->csDashboard(),
+            'cashier'    => $this->cashierDashboard(),
+            'courier'    => $this->courierDashboard(),
+            default      => $this->ownerDashboard(),
+        };
+    }
+
+    // ========================================================================
+    //  OWNER / ADMIN / MANAGER / HEAD STORE
+    //  Dashboard bisnis penuh: revenue, stok, servis, laporan
+    // ========================================================================
+    private function ownerDashboard()
+    {
+        $tenantId = tenancy()->tenant->id;
+
+        $stats = Cache::remember("dashboard_stats_{$tenantId}", 300, function () {
+            return [
+                'services_today' => Service::whereDate('created_at', today())->count(),
+                'revenue_today'  => Sale::whereDate('created_at', today())->sum('total'),
+                'low_stock'       => Product::whereColumn('stock_quantity', '<=', 'min_stock')->count(),
+                'active_services' => Service::active()->count(),
+            ];
+        });
+
+        $recentServices = Service::with(['customer', 'technician'])
+            ->latest()
+            ->take(5)
+            ->get()
+            ->map(function ($service) {
+                $service->created_at_formatted = $service->created_at->format('d/m/Y H:i');
+                return $service;
+            });
+
+        // Onboarding redirect if new tenant
+        $storeName = TenantSetting::getValue('store_name', '');
+        $hasNoData = Customer::count() === 0 && Service::count() === 0;
+        if ($hasNoData && !$storeName && auth()->user()->isOwner()) {
+            return redirect()->route('onboarding.index');
+        }
+
+        // Hitung breakdown status untuk sidebar
+        $statusCounts = Service::selectRaw('status, count(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
+        return inertia('Dashboard', [
+            'stats'          => $stats,
+            'recentServices' => $recentServices,
+            'statusCounts'   => $statusCounts,
+        ]);
+    }
+
+    // ========================================================================
+    //  TEKNISI
+    //  Hanya melihat servis yang ditugaskan ke dirinya
+    // ========================================================================
+    private function technicianDashboard(User $user)
+    {
+        $myServices = Service::with(['customer', 'technician'])
+            ->where('technician_id', $user->id)
+            ->whereIn('status', [
+                Service::STATUS_MENUNGGU_ALOKASI,
+                Service::STATUS_DITERIMA,
+                Service::STATUS_DIKERJAKAN,
+                Service::STATUS_KONFIRMASI_PELANGGAN,
+                Service::STATUS_KONFIRMASI_INTERNAL,
+                Service::STATUS_INDENT,
+                Service::STATUS_ONPARTNER,
+                Service::STATUS_SIAP_DIAMBIL,
+            ])
+            ->latest()
+            ->take(10)
+            ->get();
+
+        $stats = [
+            'assigned_to_me' => Service::where('technician_id', $user->id)
+                ->whereIn('status', [
+                    Service::STATUS_MENUNGGU_ALOKASI, Service::STATUS_DITERIMA,
+                    Service::STATUS_DIKERJAKAN, Service::STATUS_INDENT,
+                ])->count(),
+            'waiting' => Service::where('technician_id', $user->id)
+                ->where('status', Service::STATUS_MENUNGGU_ALOKASI)->count(),
+            'in_progress' => Service::where('technician_id', $user->id)
+                ->whereIn('status', [Service::STATUS_DITERIMA, Service::STATUS_DIKERJAKAN])->count(),
+            'completed_today' => Service::where('technician_id', $user->id)
+                ->where('status', Service::STATUS_SELESAI)
+                ->whereDate('updated_at', today())->count(),
+        ];
+
+        return inertia('TechnicianDashboard', [
+            'stats'      => $stats,
+            'myServices' => $myServices,
+        ]);
+    }
+
+    // ========================================================================
+    //  CS (CUSTOMER SERVICE)
+    //  Fokus: penerimaan servis, pelanggan, alokasi teknisi
+    // ========================================================================
+    private function csDashboard()
+    {
+        $stats = [
+            'services_today'     => Service::whereDate('created_at', today())->count(),
+            'new_customers_today'=> Customer::whereDate('created_at', today())->count(),
+            'pending_allocation' => Service::where('status', Service::STATUS_MENUNGGU_ALOKASI)->count(),
+            'active_services'    => Service::active()->count(),
+        ];
+
+        $recentServices = Service::with(['customer', 'technician'])
+            ->whereDate('created_at', today())
+            ->latest()
+            ->take(8)
+            ->get();
+
+        $pendingServices = Service::with(['customer'])
+            ->where('status', Service::STATUS_MENUNGGU_ALOKASI)
+            ->latest()
+            ->take(8)
+            ->get();
+
+        return inertia('CsDashboard', [
+            'stats'          => $stats,
+            'recentServices' => $recentServices,
+            'pendingServices'=> $pendingServices,
+        ]);
+    }
+
+    // ========================================================================
+    //  KASIR
+    //  Fokus: penjualan, pembayaran, kas register
+    // ========================================================================
+    private function cashierDashboard()
+    {
+        $stats = [
+            'revenue_today'  => Sale::whereDate('created_at', today())->sum('total'),
+            'paid_sales'     => Sale::whereDate('created_at', today())->paid()->count(),
+            'draft_sales'    => Sale::draft()->count(),
+            'ready_for_pickup'=> Service::readyForPayment()->count(),
+        ];
+
+        $recentSales = Sale::with(['customer'])
+            ->whereDate('created_at', today())
+            ->latest()
+            ->take(8)
+            ->get();
+
+        $pickupServices = Service::with(['customer'])
+            ->readyForPayment()
+            ->latest()
+            ->take(8)
+            ->get();
+
+        $cashRegister = CashRegister::where('user_id', auth()->id())
+            ->where('status', 'open')
+            ->latest()
+            ->first();
+
+        return inertia('CashierDashboard', [
+            'stats'          => $stats,
+            'recentSales'    => $recentSales,
+            'pickupServices' => $pickupServices,
+            'cashRegister'   => $cashRegister,
+        ]);
+    }
+
+    // ========================================================================
+    //  KURIR
+    //  Fokus: pengambilan, pengiriman, servis siap diambil
+    // ========================================================================
+    private function courierDashboard()
+    {
+        $stats = [
+            'ready_for_pickup' => Service::readyForPayment()->count(),
+            'in_progress'      => Service::active()->count(),
+            'completed_today'  => Service::where('status', Service::STATUS_SELESAI)
+                                    ->whereDate('updated_at', today())->count(),
+            'waiting_parts'    => Service::where('status', Service::STATUS_INDENT)->count(),
+        ];
+
+        $pickupServices = Service::with(['customer'])
+            ->readyForPayment()
+            ->latest()
+            ->take(10)
+            ->get();
+
+        $completedServices = Service::with(['customer', 'technician'])
+            ->where('status', Service::STATUS_SELESAI)
+            ->whereDate('updated_at', today())
+            ->latest()
+            ->take(10)
+            ->get();
+
+        return inertia('CourierDashboard', [
+            'stats'             => $stats,
+            'pickupServices'    => $pickupServices,
+            'completedServices' => $completedServices,
+        ]);
+    }
+}

@@ -1,0 +1,97 @@
+services:
+  # ========== MySQL Database ==========
+  mysql:
+    image: mysql:8.0
+    container_name: serviceku-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-serviceku_root_pass}
+      MYSQL_DATABASE: ${DB_DATABASE:-serviceku_master}
+      MYSQL_USER: ${DB_USERNAME:-serviceku}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-serviceku_pass}
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+    networks:
+      - serviceku-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p serviceku_root_pass"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ========== phpMyAdmin (for management) ==========
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: serviceku-phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: serviceku_root_pass
+      UPLOAD_LIMIT: 100M
+    ports:
+      - "8080:80"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - serviceku-network
+
+  # ========== Redis (for queue & cache) ==========
+  redis:
+    image: redis:7-alpine
+    container_name: serviceku-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - serviceku-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ========== Laravel App (optional - via Docker) ==========
+  app:
+    image: serversideup/php:8.2-fpm-nginx
+    container_name: serviceku-app
+    restart: unless-stopped
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: serviceku_master
+      DB_USERNAME: serviceku
+      DB_PASSWORD: serviceku_pass
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    volumes:
+      - ./:/var/www/html
+    ports:
+      - "8000:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - serviceku-network
+
+networks:
+  serviceku-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local

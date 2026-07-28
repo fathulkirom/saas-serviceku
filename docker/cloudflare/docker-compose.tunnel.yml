@@ -1,0 +1,31 @@
+# Cloudflare Tunnel Configuration
+# 
+# Cara penggunaan:
+# 1. Install cloudflared: brew install cloudflare/cloudflare/cloudflared
+# 2. Login: cloudflared tunnel login
+# 3. Buat tunnel: cloudflared tunnel create serviceku
+# 4. Copy credentials file ke folder ini
+# 5. Atur DNS: cloudflared tunnel route dns serviceku app.serviceku.app
+# 6. Jalankan: cloudflared tunnel run serviceku
+#
+# Atau gunakan docker-compose service di bawah:
+
+version: '3.8'
+
+services:
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: serviceku-tunnel
+    restart: unless-stopped
+    command: tunnel run
+    environment:
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+    volumes:
+      - ./credentials:/home/nonroot/.cloudflared
+    networks:
+      - serviceku-network
+
+networks:
+  serviceku-network:
+    external: true
+    name: saas_serviceku-network

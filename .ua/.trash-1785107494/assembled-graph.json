@@ -1,0 +1,3469 @@
+{
+  "project": {
+    "name": "ServiceKU",
+    "languages": [
+      "PHP",
+      "JavaScript",
+      "Vue",
+      "SQL",
+      "CSS"
+    ],
+    "frameworks": [
+      "Laravel 11",
+      "Vue 3",
+      "Inertia.js",
+      "Tailwind CSS"
+    ],
+    "description": "Multi-tenant SaaS platform for repair shop and retail store management in Indonesia",
+    "analyzedAt": "2026-07-27T22:45:00+07:00",
+    "gitCommitHash": "current"
+  },
+  "nodes": [
+    {
+      "id": "file:routes/web.php",
+      "type": "file",
+      "name": "Central Web Routes",
+      "filePath": "routes/web.php",
+      "summary": "Defines all central domain routes: landing page, registration, login, superadmin, public tracking, payment webhooks",
+      "tags": [
+        "routes",
+        "central",
+        "auth",
+        "admin"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:routes/tenant.php",
+      "type": "file",
+      "name": "Tenant Routes",
+      "filePath": "routes/tenant.php",
+      "summary": "All tenant-scoped routes for services, sales, customers, products, inventory, reports, settings, and new features",
+      "tags": [
+        "routes",
+        "tenant",
+        "crud"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:routes/api.php",
+      "type": "file",
+      "name": "API Routes",
+      "filePath": "routes/api.php",
+      "summary": "REST API routes for public tracking and authenticated service access",
+      "tags": [
+        "routes",
+        "api",
+        "rest"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:config/tenancy.php",
+      "type": "config",
+      "name": "Tenancy Config",
+      "filePath": "config/tenancy.php",
+      "summary": "Stancl tenancy configuration: database-per-tenant, domain resolution, bootstrappers, cache isolation",
+      "tags": [
+        "config",
+        "tenancy",
+        "saas"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:config/filesystems.php",
+      "type": "config",
+      "name": "Filesystem Config",
+      "filePath": "config/filesystems.php",
+      "summary": "Filesystem disk configuration: local, public, and S3 with tenant-aware paths",
+      "tags": [
+        "config",
+        "storage",
+        "filesystem"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:config/services.php",
+      "type": "config",
+      "name": "Services Config",
+      "filePath": "config/services.php",
+      "summary": "Third-party service credentials: Postmark, SES, Slack, Google OAuth",
+      "tags": [
+        "config",
+        "services",
+        "oauth"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:config/database.php",
+      "type": "config",
+      "name": "Database Config",
+      "filePath": "config/database.php",
+      "summary": "Database connection configuration for MySQL, SQLite, and Redis",
+      "tags": [
+        "config",
+        "database",
+        "mysql"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:vite.config.js",
+      "type": "config",
+      "name": "Vite Config",
+      "filePath": "vite.config.js",
+      "summary": "Vite build configuration with Laravel plugin, Vue plugin, and PWA support",
+      "tags": [
+        "config",
+        "build",
+        "pwa"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:composer.json",
+      "type": "config",
+      "name": "Composer Config",
+      "filePath": "composer.json",
+      "summary": "PHP dependencies: Laravel 11, stancl/tenancy, Inertia, DomPDF, Google API, Socialite",
+      "tags": [
+        "config",
+        "dependencies",
+        "php"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:package.json",
+      "type": "config",
+      "name": "Package Config",
+      "filePath": "package.json",
+      "summary": "Node dependencies: Vue 3, Inertia, Tailwind, Vite, jsQR",
+      "tags": [
+        "config",
+        "dependencies",
+        "js"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:tailwind.config.js",
+      "type": "config",
+      "name": "Tailwind Config",
+      "filePath": "tailwind.config.js",
+      "summary": "Tailwind CSS configuration for the frontend theme",
+      "tags": [
+        "config",
+        "css",
+        "theme"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Http/Controllers/Auth/LoginController.php",
+      "type": "file",
+      "name": "Login Controller",
+      "filePath": "app/Http/Controllers/Auth/LoginController.php",
+      "summary": "Handles user authentication: store lookup, tenancy initialization, password verification, login history",
+      "tags": [
+        "controller",
+        "auth",
+        "login"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Controllers/Auth/GoogleLoginController.php",
+      "type": "file",
+      "name": "Google Login Controller",
+      "filePath": "app/Http/Controllers/Auth/GoogleLoginController.php",
+      "summary": "Google OAuth authentication via Socialite: redirect, callback, link/unlink Google account",
+      "tags": [
+        "controller",
+        "auth",
+        "oauth",
+        "google"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Controllers/Auth/RegisteredTenantController.php",
+      "type": "file",
+      "name": "Registration Controller",
+      "filePath": "app/Http/Controllers/Auth/RegisteredTenantController.php",
+      "summary": "Multi-step tenant registration with OTP verification, auto-create tenant database",
+      "tags": [
+        "controller",
+        "auth",
+        "registration",
+        "otp"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/ServiceController.php",
+      "type": "file",
+      "name": "Service Controller",
+      "filePath": "app/Http/Controllers/Tenant/ServiceController.php",
+      "summary": "Full service order lifecycle: create, assign technician, accept, start, finish, confirm, cancel, warranty claims, photo uploads",
+      "tags": [
+        "controller",
+        "service",
+        "crud",
+        "workflow"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/SaleController.php",
+      "type": "file",
+      "name": "Sale Controller",
+      "filePath": "app/Http/Controllers/Tenant/SaleController.php",
+      "summary": "POS sales management: create draft, pay draft, edit items, void sale, PDF invoice generation",
+      "tags": [
+        "controller",
+        "sales",
+        "pos",
+        "invoice"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/ExpenseController.php",
+      "type": "file",
+      "name": "Expense Controller",
+      "filePath": "app/Http/Controllers/Tenant/ExpenseController.php",
+      "summary": "Record and list operational expenses with photo upload to Google Drive",
+      "tags": [
+        "controller",
+        "expense",
+        "finance"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/CustomerController.php",
+      "type": "file",
+      "name": "Customer Controller",
+      "filePath": "app/Http/Controllers/Tenant/CustomerController.php",
+      "summary": "Customer CRUD with service history and sales history tracking",
+      "tags": [
+        "controller",
+        "customer",
+        "crud"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/ProductController.php",
+      "type": "file",
+      "name": "Product Controller",
+      "filePath": "app/Http/Controllers/Tenant/ProductController.php",
+      "summary": "Inventory product management with stock tracking and quick stock adjustments",
+      "tags": [
+        "controller",
+        "inventory",
+        "product"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/PurchaseController.php",
+      "type": "file",
+      "name": "Purchase Controller",
+      "filePath": "app/Http/Controllers/Tenant/PurchaseController.php",
+      "summary": "Purchase order management: create purchase from supplier, auto-increment stock",
+      "tags": [
+        "controller",
+        "purchase",
+        "supplier"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/ReportController.php",
+      "type": "file",
+      "name": "Report Controller",
+      "filePath": "app/Http/Controllers/Tenant/ReportController.php",
+      "summary": "Reporting: sales, services, inventory, finance, commissions, productivity, customer analytics, revenue comparison",
+      "tags": [
+        "controller",
+        "reports",
+        "analytics"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/InventoryController.php",
+      "type": "file",
+      "name": "Inventory Controller",
+      "filePath": "app/Http/Controllers/Tenant/InventoryController.php",
+      "summary": "Stock mutations, manual adjustments, reorder alerts, stock forecasting",
+      "tags": [
+        "controller",
+        "inventory",
+        "stock"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/SettingsController.php",
+      "type": "file",
+      "name": "Settings Controller",
+      "filePath": "app/Http/Controllers/Tenant/SettingsController.php",
+      "summary": "Tenant settings: branding, logo, WhatsApp gateway, layout preferences, Google Drive connection",
+      "tags": [
+        "controller",
+        "settings",
+        "config"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/QuickReplyController.php",
+      "type": "file",
+      "name": "Quick Reply Controller",
+      "filePath": "app/Http/Controllers/Tenant/QuickReplyController.php",
+      "summary": "CRUD for predefined quick reply templates for customer communication",
+      "tags": [
+        "controller",
+        "tools",
+        "communication"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/KnowledgeBaseController.php",
+      "type": "file",
+      "name": "Knowledge Base Controller",
+      "filePath": "app/Http/Controllers/Tenant/KnowledgeBaseController.php",
+      "summary": "Knowledge base articles for device troubleshooting with search and filtering",
+      "tags": [
+        "controller",
+        "kb",
+        "knowledge"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/SopController.php",
+      "type": "file",
+      "name": "SOP Controller",
+      "filePath": "app/Http/Controllers/Tenant/SopController.php",
+      "summary": "Standard operating procedures with role targeting, versioning, and read tracking",
+      "tags": [
+        "controller",
+        "sop",
+        "procedures"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/ServicePhotoController.php",
+      "type": "file",
+      "name": "Service Photo Controller",
+      "filePath": "app/Http/Controllers/Tenant/ServicePhotoController.php",
+      "summary": "Upload and manage service photos with Google Drive integration",
+      "tags": [
+        "controller",
+        "photos",
+        "drive"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/DriveController.php",
+      "type": "file",
+      "name": "Google Drive Controller",
+      "filePath": "app/Http/Controllers/Tenant/DriveController.php",
+      "summary": "Google Drive OAuth connection management: connect, callback, status, disconnect",
+      "tags": [
+        "controller",
+        "drive",
+        "oauth",
+        "storage"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/PurchaseReturnController.php",
+      "type": "file",
+      "name": "Purchase Return Controller",
+      "filePath": "app/Http/Controllers/Tenant/PurchaseReturnController.php",
+      "summary": "Purchase return management with auto-decrement stock and inventory mutation logging",
+      "tags": [
+        "controller",
+        "purchase",
+        "return"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/DamagedStockController.php",
+      "type": "file",
+      "name": "Damaged Stock Controller",
+      "filePath": "app/Http/Controllers/Tenant/DamagedStockController.php",
+      "summary": "Record damaged, rejected, or expired stock with inventory adjustment",
+      "tags": [
+        "controller",
+        "inventory",
+        "damage"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/PartnerTeknisiController.php",
+      "type": "file",
+      "name": "Partner Teknisi Controller",
+      "filePath": "app/Http/Controllers/Tenant/PartnerTeknisiController.php",
+      "summary": "Manage external partner technicians for outsourcing repairs",
+      "tags": [
+        "controller",
+        "partner",
+        "technician"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/PickupDeliveryController.php",
+      "type": "file",
+      "name": "Pickup Delivery Controller",
+      "filePath": "app/Http/Controllers/Tenant/PickupDeliveryController.php",
+      "summary": "Schedule pickup and delivery services for customer devices",
+      "tags": [
+        "controller",
+        "logistics",
+        "pickup"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/TaxController.php",
+      "type": "file",
+      "name": "Tax Controller",
+      "filePath": "app/Http/Controllers/Tenant/TaxController.php",
+      "summary": "PPN tax settings: PKP status, NPWP, percentage configuration",
+      "tags": [
+        "controller",
+        "tax",
+        "finance"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/ReconciliationController.php",
+      "type": "file",
+      "name": "Reconciliation Controller",
+      "filePath": "app/Http/Controllers/Tenant/ReconciliationController.php",
+      "summary": "Payment reconciliation: match sales with bank statements",
+      "tags": [
+        "controller",
+        "finance",
+        "reconciliation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/CommissionController.php",
+      "type": "file",
+      "name": "Commission Controller",
+      "filePath": "app/Http/Controllers/Tenant/CommissionController.php",
+      "summary": "Technician commission management: pay individual or bulk commissions",
+      "tags": [
+        "controller",
+        "commission",
+        "finance"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/CustomFieldController.php",
+      "type": "file",
+      "name": "Custom Field Controller",
+      "filePath": "app/Http/Controllers/Tenant/CustomFieldController.php",
+      "summary": "Custom field management for customer, service, and device modules",
+      "tags": [
+        "controller",
+        "settings",
+        "customization"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/AttendanceController.php",
+      "type": "file",
+      "name": "Attendance Controller",
+      "filePath": "app/Http/Controllers/Tenant/AttendanceController.php",
+      "summary": "Employee attendance: clock in/out, status updates, attendance reports",
+      "tags": [
+        "controller",
+        "hr",
+        "attendance"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/ShiftController.php",
+      "type": "file",
+      "name": "Shift Controller",
+      "filePath": "app/Http/Controllers/Tenant/ShiftController.php",
+      "summary": "Employee shift management: name, start/end time per branch",
+      "tags": [
+        "controller",
+        "hr",
+        "shift"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Http/Controllers/Admin/SuperAdminController.php",
+      "type": "file",
+      "name": "Super Admin Dashboard",
+      "filePath": "app/Http/Controllers/Admin/SuperAdminController.php",
+      "summary": "Super admin dashboard with tenant overview, system health, and aggregate statistics",
+      "tags": [
+        "controller",
+        "admin",
+        "dashboard"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Controllers/Admin/TenantManagementController.php",
+      "type": "file",
+      "name": "Tenant Management Controller",
+      "filePath": "app/Http/Controllers/Admin/TenantManagementController.php",
+      "summary": "Full tenant lifecycle: CRUD, suspend, activate, change plan, extend trial, impersonate, reset password",
+      "tags": [
+        "controller",
+        "admin",
+        "tenant",
+        "management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:app/Http/Controllers/Admin/PlanController.php",
+      "type": "file",
+      "name": "Plan Controller",
+      "filePath": "app/Http/Controllers/Admin/PlanController.php",
+      "summary": "Subscription plan CRUD with pricing, promo, features, and default menus",
+      "tags": [
+        "controller",
+        "admin",
+        "plan",
+        "billing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Controllers/Admin/SystemSettingsController.php",
+      "type": "file",
+      "name": "System Settings Controller",
+      "filePath": "app/Http/Controllers/Admin/SystemSettingsController.php",
+      "summary": "Central system settings: app config, registration, maintenance, mail, system logs",
+      "tags": [
+        "controller",
+        "admin",
+        "settings",
+        "config"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Controllers/Admin/MonitoringController.php",
+      "type": "file",
+      "name": "Monitoring Controller",
+      "filePath": "app/Http/Controllers/Admin/MonitoringController.php",
+      "summary": "System monitoring: storage health, backup health, tenant usage, error tracking",
+      "tags": [
+        "controller",
+        "admin",
+        "monitoring",
+        "health"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Controllers/Admin/BackupController.php",
+      "type": "file",
+      "name": "Backup Controller",
+      "filePath": "app/Http/Controllers/Admin/BackupController.php",
+      "summary": "Database backup management with local storage and Google Drive upload",
+      "tags": [
+        "controller",
+        "admin",
+        "backup",
+        "drive"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Controllers/Api/TrackingController.php",
+      "type": "file",
+      "name": "API Tracking Controller",
+      "filePath": "app/Http/Controllers/Api/TrackingController.php",
+      "summary": "Public REST API endpoint for service order tracking by tracking code",
+      "tags": [
+        "controller",
+        "api",
+        "tracking",
+        "public"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Http/Controllers/Api/ServiceController.php",
+      "type": "file",
+      "name": "API Service Controller",
+      "filePath": "app/Http/Controllers/Api/ServiceController.php",
+      "summary": "Authenticated REST API for listing and viewing service orders",
+      "tags": [
+        "controller",
+        "api",
+        "services"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Http/Controllers/PublicTrackingController.php",
+      "type": "file",
+      "name": "Public Tracking Controller",
+      "filePath": "app/Http/Controllers/PublicTrackingController.php",
+      "summary": "Web-based public service tracking page accessible without login",
+      "tags": [
+        "controller",
+        "tracking",
+        "public"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Middleware/HandleInertiaRequests.php",
+      "type": "file",
+      "name": "Inertia Middleware",
+      "filePath": "app/Http/Middleware/HandleInertiaRequests.php",
+      "summary": "Shared Inertia data: auth user, tenant settings, plan access, menus, flash messages",
+      "tags": [
+        "middleware",
+        "inertia",
+        "shared-data"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Middleware/CheckSubscription.php",
+      "type": "file",
+      "name": "Subscription Middleware",
+      "filePath": "app/Http/Middleware/CheckSubscription.php",
+      "summary": "Middleware to check tenant subscription status and enforce plan limits",
+      "tags": [
+        "middleware",
+        "subscription",
+        "billing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Middleware/CheckPlanFeature.php",
+      "type": "file",
+      "name": "Plan Feature Middleware",
+      "filePath": "app/Http/Middleware/CheckPlanFeature.php",
+      "summary": "Granular feature access control per plan and business type",
+      "tags": [
+        "middleware",
+        "plan",
+        "feature-gate"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Middleware/SecurityHeaders.php",
+      "type": "file",
+      "name": "Security Headers Middleware",
+      "filePath": "app/Http/Middleware/SecurityHeaders.php",
+      "summary": "CSP, HSTS, XSS protection, and iframe blocking headers",
+      "tags": [
+        "middleware",
+        "security",
+        "headers"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Providers/TenancyServiceProvider.php",
+      "type": "file",
+      "name": "Tenancy Service Provider",
+      "filePath": "app/Providers/TenancyServiceProvider.php",
+      "summary": "Stancl tenancy integration: events, tenant creation/deletion, route mapping",
+      "tags": [
+        "provider",
+        "tenancy",
+        "events"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Models/Tenant.php",
+      "type": "file",
+      "name": "Tenant Model",
+      "filePath": "app/Models/Tenant.php",
+      "summary": "Central tenant model: lifecycle management, plan assignment, business type, subscription",
+      "tags": [
+        "model",
+        "tenant",
+        "saas",
+        "subscription"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:app/Models/Plan.php",
+      "type": "file",
+      "name": "Plan Model",
+      "filePath": "app/Models/Plan.php",
+      "summary": "Subscription plan model with pricing, promos, features, business types, default menus",
+      "tags": [
+        "model",
+        "plan",
+        "billing",
+        "pricing"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:app/Models/GoogleDriveToken.php",
+      "type": "file",
+      "name": "Google Drive Token Model",
+      "filePath": "app/Models/GoogleDriveToken.php",
+      "summary": "Per-tenant Google Drive OAuth token storage",
+      "tags": [
+        "model",
+        "drive",
+        "oauth"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/SystemSetting.php",
+      "type": "file",
+      "name": "System Setting Model",
+      "filePath": "app/Models/SystemSetting.php",
+      "summary": "Key-value system configuration store with grouping support",
+      "tags": [
+        "model",
+        "config",
+        "settings"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/SystemLog.php",
+      "type": "file",
+      "name": "System Log Model",
+      "filePath": "app/Models/SystemLog.php",
+      "summary": "Audit log for system-level events and errors",
+      "tags": [
+        "model",
+        "logging",
+        "audit"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/Service.php",
+      "type": "file",
+      "name": "Service Model",
+      "filePath": "app/Models/Tenant/Service.php",
+      "summary": "Service order model with 12 status workflow, tracking code, warranty, device info, relationships",
+      "tags": [
+        "model",
+        "service",
+        "workflow",
+        "status"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:app/Models/Tenant/Sale.php",
+      "type": "file",
+      "name": "Sale Model",
+      "filePath": "app/Models/Tenant/Sale.php",
+      "summary": "Sales transaction model: draft/paid/cancel status, payment tracking, service linkage",
+      "tags": [
+        "model",
+        "sales",
+        "pos",
+        "payment"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Models/Tenant/SaleItem.php",
+      "type": "file",
+      "name": "Sale Item Model",
+      "filePath": "app/Models/Tenant/SaleItem.php",
+      "summary": "Line items for sales transactions with product and pricing",
+      "tags": [
+        "model",
+        "sales",
+        "line-item"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/Customer.php",
+      "type": "file",
+      "name": "Customer Model",
+      "filePath": "app/Models/Tenant/Customer.php",
+      "summary": "Customer data with service and sales history relationships",
+      "tags": [
+        "model",
+        "customer",
+        "member"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Models/Tenant/Product.php",
+      "type": "file",
+      "name": "Product Model",
+      "filePath": "app/Models/Tenant/Product.php",
+      "summary": "Inventory product with stock tracking, increase/decrease methods, low stock alerts",
+      "tags": [
+        "model",
+        "inventory",
+        "stock"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Models/Tenant/User.php",
+      "type": "file",
+      "name": "Tenant User Model",
+      "filePath": "app/Models/Tenant/User.php",
+      "summary": "Multi-role user model with 9 roles, permission checks, Google OAuth linkage",
+      "tags": [
+        "model",
+        "auth",
+        "user",
+        "role"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Models/Tenant/Expense.php",
+      "type": "file",
+      "name": "Expense Model",
+      "filePath": "app/Models/Tenant/Expense.php",
+      "summary": "Operational expense tracking with categories, photo support",
+      "tags": [
+        "model",
+        "expense",
+        "finance"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/InventoryMutation.php",
+      "type": "file",
+      "name": "Inventory Mutation Model",
+      "filePath": "app/Models/Tenant/InventoryMutation.php",
+      "summary": "Stock movement tracking: in/out transfers with reference links",
+      "tags": [
+        "model",
+        "inventory",
+        "mutation",
+        "stock"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/Supplier.php",
+      "type": "file",
+      "name": "Supplier Model",
+      "filePath": "app/Models/Tenant/Supplier.php",
+      "summary": "Supplier/vendor management with rating tracking",
+      "tags": [
+        "model",
+        "supplier",
+        "vendor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/Branch.php",
+      "type": "file",
+      "name": "Branch Model",
+      "filePath": "app/Models/Tenant/Branch.php",
+      "summary": "Multi-branch/location management per tenant",
+      "tags": [
+        "model",
+        "branch",
+        "multi-tenant"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/ActivityLog.php",
+      "type": "file",
+      "name": "Activity Log Model",
+      "filePath": "app/Models/Tenant/ActivityLog.php",
+      "summary": "Tenant-level activity audit trail with polymorphic relationships",
+      "tags": [
+        "model",
+        "audit",
+        "activity"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/Indent.php",
+      "type": "file",
+      "name": "Indent Model",
+      "filePath": "app/Models/Tenant/Indent.php",
+      "summary": "Pre-order/indent management with status tracking",
+      "tags": [
+        "model",
+        "indent",
+        "preorder"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/ChecklistTemplate.php",
+      "type": "file",
+      "name": "Checklist Template Model",
+      "filePath": "app/Models/Tenant/ChecklistTemplate.php",
+      "summary": "Service check-in/check-out checklist templates",
+      "tags": [
+        "model",
+        "checklist",
+        "template"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/ServicePhoto.php",
+      "type": "file",
+      "name": "Service Photo Model",
+      "filePath": "app/Models/Tenant/ServicePhoto.php",
+      "summary": "Service order photos with Google Drive URL support",
+      "tags": [
+        "model",
+        "photo",
+        "drive"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/TaxSetting.php",
+      "type": "file",
+      "name": "Tax Setting Model",
+      "filePath": "app/Models/Tenant/TaxSetting.php",
+      "summary": "PPN tax configuration per branch",
+      "tags": [
+        "model",
+        "tax",
+        "ppn"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/Commission.php",
+      "type": "file",
+      "name": "Commission Model",
+      "filePath": "app/Models/Tenant/Commission.php",
+      "summary": "Technician commission tracking per service order",
+      "tags": [
+        "model",
+        "commission",
+        "finance"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/Shift.php",
+      "type": "file",
+      "name": "Shift Model",
+      "filePath": "app/Models/Tenant/Shift.php",
+      "summary": "Employee shift definitions per branch",
+      "tags": [
+        "model",
+        "hr",
+        "shift"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/Attendance.php",
+      "type": "file",
+      "name": "Attendance Model",
+      "filePath": "app/Models/Tenant/Attendance.php",
+      "summary": "Employee attendance: clock in/out with shift assignment",
+      "tags": [
+        "model",
+        "hr",
+        "attendance"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/QuickReply.php",
+      "type": "file",
+      "name": "Quick Reply Model",
+      "filePath": "app/Models/Tenant/QuickReply.php",
+      "summary": "Predefined message templates with soft delete",
+      "tags": [
+        "model",
+        "communication",
+        "template"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/KnowledgeBase.php",
+      "type": "file",
+      "name": "Knowledge Base Model",
+      "filePath": "app/Models/Tenant/KnowledgeBase.php",
+      "summary": "Troubleshooting knowledge base articles",
+      "tags": [
+        "model",
+        "kb",
+        "knowledge"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/Sop.php",
+      "type": "file",
+      "name": "SOP Model",
+      "filePath": "app/Models/Tenant/Sop.php",
+      "summary": "Standard operating procedures with versioning and role targeting",
+      "tags": [
+        "model",
+        "sop",
+        "procedure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/PurchaseReturn.php",
+      "type": "file",
+      "name": "Purchase Return Model",
+      "filePath": "app/Models/Tenant/PurchaseReturn.php",
+      "summary": "Purchase return with auto-generated return numbers",
+      "tags": [
+        "model",
+        "purchase",
+        "return"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/DamagedStock.php",
+      "type": "file",
+      "name": "Damaged Stock Model",
+      "filePath": "app/Models/Tenant/DamagedStock.php",
+      "summary": "Damaged/reject/expired stock tracking",
+      "tags": [
+        "model",
+        "inventory",
+        "damage"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/PartnerTeknisi.php",
+      "type": "file",
+      "name": "Partner Teknisi Model",
+      "filePath": "app/Models/Tenant/PartnerTeknisi.php",
+      "summary": "External repair partner management",
+      "tags": [
+        "model",
+        "partner",
+        "technician"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/PickupDelivery.php",
+      "type": "file",
+      "name": "Pickup Delivery Model",
+      "filePath": "app/Models/Tenant/PickupDelivery.php",
+      "summary": "Scheduled pickup and delivery service",
+      "tags": [
+        "model",
+        "logistics",
+        "pickup"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/PaymentReconciliation.php",
+      "type": "file",
+      "name": "Payment Reconciliation Model",
+      "filePath": "app/Models/Tenant/PaymentReconciliation.php",
+      "summary": "Bank statement reconciliation for sales payments",
+      "tags": [
+        "model",
+        "finance",
+        "reconciliation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/CustomField.php",
+      "type": "file",
+      "name": "Custom Field Model",
+      "filePath": "app/Models/Tenant/CustomField.php",
+      "summary": "Extensible custom fields for customer/service/device",
+      "tags": [
+        "model",
+        "customization",
+        "extension"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Services/GoogleDrivePhotoService.php",
+      "type": "file",
+      "name": "Google Drive Photo Service",
+      "filePath": "app/Services/GoogleDrivePhotoService.php",
+      "summary": "OAuth-based Google Drive file upload service with token refresh, folder management",
+      "tags": [
+        "service",
+        "drive",
+        "upload",
+        "oauth"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:app/Services/MailConfigService.php",
+      "type": "file",
+      "name": "Mail Config Service",
+      "filePath": "app/Services/MailConfigService.php",
+      "summary": "Dynamic mail configuration applied at runtime from system settings",
+      "tags": [
+        "service",
+        "mail",
+        "smtp"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Services/GoogleDriveService.php",
+      "type": "file",
+      "name": "Backup Drive Service",
+      "filePath": "app/Services/GoogleDriveService.php",
+      "summary": "Rclone-based Google Drive backup service for database dumps",
+      "tags": [
+        "service",
+        "backup",
+        "drive",
+        "rclone"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Events/ServiceStatusUpdated.php",
+      "type": "file",
+      "name": "Service Status Event",
+      "filePath": "app/Events/ServiceStatusUpdated.php",
+      "summary": "Broadcast event for real-time service status updates via Reverb WebSocket",
+      "tags": [
+        "event",
+        "broadcast",
+        "realtime",
+        "websocket"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Policies/ServicePolicy.php",
+      "type": "file",
+      "name": "Service Policy",
+      "filePath": "app/Policies/ServicePolicy.php",
+      "summary": "Authorization policy for service operations based on user roles",
+      "tags": [
+        "policy",
+        "auth",
+        "service"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Policies/SalePolicy.php",
+      "type": "file",
+      "name": "Sale Policy",
+      "filePath": "app/Policies/SalePolicy.php",
+      "summary": "Authorization policy for sales operations: view, create, void, update",
+      "tags": [
+        "policy",
+        "auth",
+        "sales"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Policies/ExpensePolicy.php",
+      "type": "file",
+      "name": "Expense Policy",
+      "filePath": "app/Policies/ExpensePolicy.php",
+      "summary": "Authorization policy for expense operations per role",
+      "tags": [
+        "policy",
+        "auth",
+        "expense"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Http/Requests/StoreServiceRequest.php",
+      "type": "file",
+      "name": "Service Form Request",
+      "filePath": "app/Http/Requests/StoreServiceRequest.php",
+      "summary": "Validation rules for service order creation",
+      "tags": [
+        "request",
+        "validation",
+        "service"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Http/Requests/StoreExpenseRequest.php",
+      "type": "file",
+      "name": "Expense Form Request",
+      "filePath": "app/Http/Requests/StoreExpenseRequest.php",
+      "summary": "Validation rules for expense recording with photo upload",
+      "tags": [
+        "request",
+        "validation",
+        "expense"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Http/Requests/StoreCustomerRequest.php",
+      "type": "file",
+      "name": "Customer Form Request",
+      "filePath": "app/Http/Requests/StoreCustomerRequest.php",
+      "summary": "Validation rules for customer creation",
+      "tags": [
+        "request",
+        "validation",
+        "customer"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Http/Requests/StoreSaleRequest.php",
+      "type": "file",
+      "name": "Sale Form Request",
+      "filePath": "app/Http/Requests/StoreSaleRequest.php",
+      "summary": "Validation rules for sales transaction creation",
+      "tags": [
+        "request",
+        "validation",
+        "sales"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:README.md",
+      "type": "document",
+      "name": "Project README",
+      "filePath": "README.md",
+      "summary": "ServiceKU installation and usage documentation",
+      "tags": [
+        "docs",
+        "readme",
+        "setup"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:DISASTER_RECOVERY.md",
+      "type": "document",
+      "name": "Disaster Recovery",
+      "filePath": "DISASTER_RECOVERY.md",
+      "summary": "Disaster recovery procedures and backup restoration guide",
+      "tags": [
+        "docs",
+        "recovery",
+        "backup"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:resources/js/Pages/Services/Create.vue",
+      "type": "file",
+      "name": "Service Create Page",
+      "filePath": "resources/js/Pages/Services/Create.vue",
+      "summary": "Multi-step service creation form with customer, device, checklist, problem description, and photo upload",
+      "tags": [
+        "vue",
+        "page",
+        "service",
+        "form"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:resources/js/Pages/Services/Index.vue",
+      "type": "file",
+      "name": "Service List Page",
+      "filePath": "resources/js/Pages/Services/Index.vue",
+      "summary": "Service order list with status tabs, search, filters, and action modals",
+      "tags": [
+        "vue",
+        "page",
+        "service",
+        "list"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:resources/js/Pages/Services/Show.vue",
+      "type": "file",
+      "name": "Service Detail Page",
+      "filePath": "resources/js/Pages/Services/Show.vue",
+      "summary": "Service detail view with customer info, device data, photos, timeline, and upload",
+      "tags": [
+        "vue",
+        "page",
+        "service",
+        "detail"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:resources/js/Pages/Expenses/Index.vue",
+      "type": "file",
+      "name": "Expenses Page",
+      "filePath": "resources/js/Pages/Expenses/Index.vue",
+      "summary": "Expense recording form with photo upload and expense history table",
+      "tags": [
+        "vue",
+        "page",
+        "expense",
+        "finance"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:resources/js/Pages/Public/Track.vue",
+      "type": "file",
+      "name": "Public Tracking Page",
+      "filePath": "resources/js/Pages/Public/Track.vue",
+      "summary": "Public service order tracking page with timeline, photos, and device info",
+      "tags": [
+        "vue",
+        "page",
+        "tracking",
+        "public"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:resources/js/Pages/Auth/SubdomainLogin.vue",
+      "type": "file",
+      "name": "Tenant Login Page",
+      "filePath": "resources/js/Pages/Auth/SubdomainLogin.vue",
+      "summary": "Tenant login page with email/password auth and Google OAuth button",
+      "tags": [
+        "vue",
+        "page",
+        "auth",
+        "login"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:resources/js/Pages/Settings/Index.vue",
+      "type": "file",
+      "name": "Settings Page",
+      "filePath": "resources/js/Pages/Settings/Index.vue",
+      "summary": "Tenant settings: branding, theme, printer, master data, labor services, Google Drive",
+      "tags": [
+        "vue",
+        "page",
+        "settings",
+        "config"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:resources/js/Pages/Dashboard/Index.vue",
+      "type": "file",
+      "name": "Dashboard Page",
+      "filePath": "resources/js/Pages/Dashboard/Index.vue",
+      "summary": "Main tenant dashboard with key metrics and business overview",
+      "tags": [
+        "vue",
+        "page",
+        "dashboard",
+        "home"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:resources/js/Pages/Sales/Index.vue",
+      "type": "file",
+      "name": "Sales List Page",
+      "filePath": "resources/js/Pages/Sales/Index.vue",
+      "summary": "Sales history with filters, status badges, and pagination",
+      "tags": [
+        "vue",
+        "page",
+        "sales",
+        "list"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:resources/js/Pages/KnowledgeBase/Index.vue",
+      "type": "file",
+      "name": "Knowledge Base Page",
+      "filePath": "resources/js/Pages/KnowledgeBase/Index.vue",
+      "summary": "Knowledge base articles with create form, list, and detail modal",
+      "tags": [
+        "vue",
+        "page",
+        "kb",
+        "knowledge"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:resources/js/Pages/Sops/Index.vue",
+      "type": "file",
+      "name": "SOP Page",
+      "filePath": "resources/js/Pages/Sops/Index.vue",
+      "summary": "SOP management with versioning, role targeting, mandatory read tracking",
+      "tags": [
+        "vue",
+        "page",
+        "sop",
+        "procedures"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:resources/js/Pages/Tools/QRScanner.vue",
+      "type": "file",
+      "name": "QR Scanner Page",
+      "filePath": "resources/js/Pages/Tools/QRScanner.vue",
+      "summary": "Camera-based QR code scanner using jsQR library for service lookup",
+      "tags": [
+        "vue",
+        "page",
+        "qr",
+        "scanner"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:resources/js/Pages/Inventory/ReorderAlerts.vue",
+      "type": "file",
+      "name": "Reorder Alerts Page",
+      "filePath": "resources/js/Pages/Inventory/ReorderAlerts.vue",
+      "summary": "Alerts for products below minimum stock level requiring reorder",
+      "tags": [
+        "vue",
+        "page",
+        "inventory",
+        "alerts"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:resources/js/Pages/Inventory/Forecast.vue",
+      "type": "file",
+      "name": "Stock Forecast Page",
+      "filePath": "resources/js/Pages/Inventory/Forecast.vue",
+      "summary": "Stock forecasting based on 3-month usage history",
+      "tags": [
+        "vue",
+        "page",
+        "inventory",
+        "forecast"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:resources/js/Pages/Commissions/Index.vue",
+      "type": "file",
+      "name": "Commissions Page",
+      "filePath": "resources/js/Pages/Commissions/Index.vue",
+      "summary": "Technician commission list with pay and bulk pay actions",
+      "tags": [
+        "vue",
+        "page",
+        "commission",
+        "finance"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:resources/js/Pages/Attendances/Index.vue",
+      "type": "file",
+      "name": "Attendances Page",
+      "filePath": "resources/js/Pages/Attendances/Index.vue",
+      "summary": "Employee attendance with clock in/out buttons and history table",
+      "tags": [
+        "vue",
+        "page",
+        "hr",
+        "attendance"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:resources/js/Layouts/AuthenticatedLayout.vue",
+      "type": "file",
+      "name": "Authenticated Layout",
+      "filePath": "resources/js/Layouts/AuthenticatedLayout.vue",
+      "summary": "Main app layout with role-based menu system, 4-layer filtering, theme/layout preferences",
+      "tags": [
+        "vue",
+        "layout",
+        "navigation",
+        "menu"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "table:services",
+      "type": "table",
+      "name": "Services Table",
+      "filePath": "database/migrations/tenant/2024_01_01_000002_create_business_tables.php",
+      "summary": "Core service orders table with device info, status workflow, payment tracking, soft deletes",
+      "tags": [
+        "table",
+        "migration",
+        "service"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:sales",
+      "type": "table",
+      "name": "Sales Table",
+      "filePath": "database/migrations/tenant/2024_01_01_000002_create_business_tables.php",
+      "summary": "Sales transactions with payment method, items relationship, service linkage",
+      "tags": [
+        "table",
+        "migration",
+        "sales"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:products",
+      "type": "table",
+      "name": "Products Table",
+      "filePath": "database/migrations/tenant/2024_01_01_000002_create_business_tables.php",
+      "summary": "Inventory products with stock quantity, pricing, and branch isolation",
+      "tags": [
+        "table",
+        "migration",
+        "inventory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:users",
+      "type": "table",
+      "name": "Tenant Users Table",
+      "filePath": "database/migrations/tenant/2024_01_01_000001_create_tenant_core_tables.php",
+      "summary": "Multi-role user accounts with Google OAuth support",
+      "tags": [
+        "table",
+        "migration",
+        "auth"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:google_drive_tokens",
+      "type": "table",
+      "name": "Google Drive Tokens Table",
+      "filePath": "database/migrations/2026_07_27_044406_create_google_drive_tokens_table.php",
+      "summary": "Central table storing per-tenant Google Drive OAuth tokens",
+      "tags": [
+        "table",
+        "migration",
+        "drive",
+        "oauth"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "test:Unit/Models/ServiceTest.php",
+      "type": "file",
+      "name": "Service Model Test",
+      "filePath": "tests/Unit/Models/ServiceTest.php",
+      "summary": "Unit test: service constants, status labels, colors, scopes, soft deletes, fillable",
+      "tags": [
+        "test",
+        "unit",
+        "model",
+        "service"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "test:Unit/Models/ExpenseTest.php",
+      "type": "file",
+      "name": "Expense Model Test",
+      "filePath": "tests/Unit/Models/ExpenseTest.php",
+      "summary": "Unit test: expense categories, fillable, casts, photo URL accessor",
+      "tags": [
+        "test",
+        "unit",
+        "model",
+        "expense"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "test:Unit/Models/SaleTest.php",
+      "type": "file",
+      "name": "Sale Model Test",
+      "filePath": "tests/Unit/Models/SaleTest.php",
+      "summary": "Unit test: sale constants, status checks, fillable, decimal casts",
+      "tags": [
+        "test",
+        "unit",
+        "model",
+        "sale"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "test:Unit/FormRequestTest.php",
+      "type": "file",
+      "name": "Form Request Test",
+      "filePath": "tests/Unit/FormRequestTest.php",
+      "summary": "Unit test: StoreExpenseRequest and StoreCustomerRequest validation rules",
+      "tags": [
+        "test",
+        "unit",
+        "validation",
+        "request"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "test:Unit/PolicyTest.php",
+      "type": "file",
+      "name": "Policy Test",
+      "filePath": "tests/Unit/PolicyTest.php",
+      "summary": "Unit test: authorization policies for service, sale, expense per role",
+      "tags": [
+        "test",
+        "unit",
+        "policy",
+        "auth"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "test:Feature/HealthTest.php",
+      "type": "file",
+      "name": "Application Health Test",
+      "filePath": "tests/Feature/HealthTest.php",
+      "summary": "Feature test: environment config, locale, cache, database settings",
+      "tags": [
+        "test",
+        "feature",
+        "health",
+        "config"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "test:Feature/GoogleDriveServiceTest.php",
+      "type": "file",
+      "name": "Drive Service Test",
+      "filePath": "tests/Feature/GoogleDriveServiceTest.php",
+      "summary": "Feature test: GoogleDrivePhotoService disconnected state handling",
+      "tags": [
+        "test",
+        "feature",
+        "drive",
+        "service"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/TenantStat.php",
+      "type": "file",
+      "name": "Tenant Stat Model",
+      "filePath": "app/Models/TenantStat.php",
+      "summary": "Cached usage statistics per tenant: users, services, sales, products, storage",
+      "tags": [
+        "model",
+        "stats",
+        "tenant"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/SaleStoreController.php",
+      "type": "file",
+      "name": "Sale Store Controller",
+      "filePath": "app/Http/Controllers/Tenant/SaleStoreController.php",
+      "summary": "POS sale creation: store draft, full payment, draft from service, update items",
+      "tags": [
+        "controller",
+        "sales",
+        "store"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/SalePaymentController.php",
+      "type": "file",
+      "name": "Sale Payment Controller",
+      "filePath": "app/Http/Controllers/Tenant/SalePaymentController.php",
+      "summary": "Draft payment processing and void/cancel sale operations",
+      "tags": [
+        "controller",
+        "sales",
+        "payment"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/SaleInvoiceController.php",
+      "type": "file",
+      "name": "Sale Invoice Controller",
+      "filePath": "app/Http/Controllers/Tenant/SaleInvoiceController.php",
+      "summary": "PDF invoice generation and printing for sales transactions",
+      "tags": [
+        "controller",
+        "sales",
+        "pdf"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/ServiceWorkflowController.php",
+      "type": "file",
+      "name": "Service Workflow Controller",
+      "filePath": "app/Http/Controllers/Tenant/ServiceWorkflowController.php",
+      "summary": "Service creation and 11 status workflow transitions",
+      "tags": [
+        "controller",
+        "service",
+        "workflow"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/ServiceChecklistController.php",
+      "type": "file",
+      "name": "Service Checklist Controller",
+      "filePath": "app/Http/Controllers/Tenant/ServiceChecklistController.php",
+      "summary": "Check-in/check-out checklist management for services",
+      "tags": [
+        "controller",
+        "service",
+        "checklist"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/ServiceDocumentController.php",
+      "type": "file",
+      "name": "Service Document Controller",
+      "filePath": "app/Http/Controllers/Tenant/ServiceDocumentController.php",
+      "summary": "Service receipt PDF printing and complete service flow",
+      "tags": [
+        "controller",
+        "service",
+        "pdf"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Controllers/Tenant/ServiceClaimController.php",
+      "type": "file",
+      "name": "Service Claim Controller",
+      "filePath": "app/Http/Controllers/Tenant/ServiceClaimController.php",
+      "summary": "Warranty claim creation from parent service",
+      "tags": [
+        "controller",
+        "service",
+        "warranty"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Http/Controllers/Admin/AdminAuthController.php",
+      "type": "file",
+      "name": "Admin Auth Controller",
+      "filePath": "app/Http/Controllers/Admin/AdminAuthController.php",
+      "summary": "Super admin authentication controller",
+      "tags": [
+        "controller",
+        "admin",
+        "auth"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Http/Controllers/Admin/VoucherController.php",
+      "type": "file",
+      "name": "Voucher Controller",
+      "filePath": "app/Http/Controllers/Admin/VoucherController.php",
+      "summary": "Promo voucher management for super admin",
+      "tags": [
+        "controller",
+        "admin",
+        "voucher"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Controllers/Admin/PaymentController.php",
+      "type": "file",
+      "name": "Admin Payment Controller",
+      "filePath": "app/Http/Controllers/Admin/PaymentController.php",
+      "summary": "Payment management and gateway settings for super admin",
+      "tags": [
+        "controller",
+        "admin",
+        "payment"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Controllers/Auth/ResetPasswordController.php",
+      "type": "file",
+      "name": "Reset Password Controller",
+      "filePath": "app/Http/Controllers/Auth/ResetPasswordController.php",
+      "summary": "Password reset flow with email link",
+      "tags": [
+        "controller",
+        "auth",
+        "password"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Controllers/DashboardController.php",
+      "type": "file",
+      "name": "Tenant Dashboard Controller",
+      "filePath": "app/Http/Controllers/DashboardController.php",
+      "summary": "Tenant dashboard display with key metrics and recent data",
+      "tags": [
+        "controller",
+        "dashboard"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Http/Middleware/AdminAuthenticate.php",
+      "type": "file",
+      "name": "Admin Authenticate Middleware",
+      "filePath": "app/Http/Middleware/AdminAuthenticate.php",
+      "summary": "Authentication guard for super admin routes",
+      "tags": [
+        "middleware",
+        "admin",
+        "auth"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Http/Middleware/InitializeTenancyBySession.php",
+      "type": "file",
+      "name": "Initialize Tenancy Middleware",
+      "filePath": "app/Http/Middleware/InitializeTenancyBySession.php",
+      "summary": "Tenancy initialization from session-based tenant identification",
+      "tags": [
+        "middleware",
+        "tenancy"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Jobs/GenerateInvoicePdf.php",
+      "type": "file",
+      "name": "Generate Invoice Job",
+      "filePath": "app/Jobs/GenerateInvoicePdf.php",
+      "summary": "Background job for PDF invoice generation",
+      "tags": [
+        "job",
+        "pdf",
+        "queue"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Jobs/SendInvoiceEmail.php",
+      "type": "file",
+      "name": "Send Invoice Email Job",
+      "filePath": "app/Jobs/SendInvoiceEmail.php",
+      "summary": "Background job for emailing invoice PDF to customer",
+      "tags": [
+        "job",
+        "email",
+        "queue"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/Purchase.php",
+      "type": "file",
+      "name": "Purchase Model",
+      "filePath": "app/Models/Tenant/Purchase.php",
+      "summary": "Purchase order model with supplier and items",
+      "tags": [
+        "model",
+        "purchase",
+        "supplier"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/Models/Tenant/PurchaseItem.php",
+      "type": "file",
+      "name": "Purchase Item Model",
+      "filePath": "app/Models/Tenant/PurchaseItem.php",
+      "summary": "Purchase order line items",
+      "tags": [
+        "model",
+        "purchase",
+        "line-item"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/ServiceChecklist.php",
+      "type": "file",
+      "name": "Service Checklist Model",
+      "filePath": "app/Models/Tenant/ServiceChecklist.php",
+      "summary": "Service check-in/check-out checklist records",
+      "tags": [
+        "model",
+        "service",
+        "checklist"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/ServiceSparepart.php",
+      "type": "file",
+      "name": "Service Sparepart Model",
+      "filePath": "app/Models/Tenant/ServiceSparepart.php",
+      "summary": "Spare parts used in service orders",
+      "tags": [
+        "model",
+        "service",
+        "sparepart"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/ServiceTransfer.php",
+      "type": "file",
+      "name": "Service Transfer Model",
+      "filePath": "app/Models/Tenant/ServiceTransfer.php",
+      "summary": "Service order transfer between branches",
+      "tags": [
+        "model",
+        "service",
+        "transfer"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/StockAllocation.php",
+      "type": "file",
+      "name": "Stock Allocation Model",
+      "filePath": "app/Models/Tenant/StockAllocation.php",
+      "summary": "Inter-branch stock transfer allocations",
+      "tags": [
+        "model",
+        "inventory",
+        "allocation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/SystemAlert.php",
+      "type": "file",
+      "name": "System Alert Model",
+      "filePath": "app/Models/Tenant/SystemAlert.php",
+      "summary": "System alert/notification records",
+      "tags": [
+        "model",
+        "alert",
+        "notification"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/TenantSetting.php",
+      "type": "file",
+      "name": "Tenant Setting Model",
+      "filePath": "app/Models/Tenant/TenantSetting.php",
+      "summary": "Key-value tenant configuration store",
+      "tags": [
+        "model",
+        "settings",
+        "config"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/WaGatewayConfig.php",
+      "type": "file",
+      "name": "WA Gateway Config Model",
+      "filePath": "app/Models/Tenant/WaGatewayConfig.php",
+      "summary": "WhatsApp gateway configuration per tenant",
+      "tags": [
+        "model",
+        "whatsapp",
+        "gateway"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/MasterData.php",
+      "type": "file",
+      "name": "Master Data Model",
+      "filePath": "app/Models/Tenant/MasterData.php",
+      "summary": "Configurable dropdown options (categories, brands, payment methods)",
+      "tags": [
+        "model",
+        "master-data",
+        "dropdown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/DailyDeposit.php",
+      "type": "file",
+      "name": "Daily Deposit Model",
+      "filePath": "app/Models/Tenant/DailyDeposit.php",
+      "summary": "Daily cash deposit tracking",
+      "tags": [
+        "model",
+        "deposit",
+        "finance"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Models/Tenant/CashRegister.php",
+      "type": "file",
+      "name": "Cash Register Model",
+      "filePath": "app/Models/Tenant/CashRegister.php",
+      "summary": "Cash register shift management",
+      "tags": [
+        "model",
+        "cash",
+        "register"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/Services/PaymentGatewayService.php",
+      "type": "file",
+      "name": "Payment Gateway Service",
+      "filePath": "app/Services/PaymentGatewayService.php",
+      "summary": "Payment gateway integration (Midtrans/Xendit)",
+      "tags": [
+        "service",
+        "payment",
+        "gateway"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:config/app.php",
+      "type": "config",
+      "name": "App Config",
+      "filePath": "config/app.php",
+      "summary": "Laravel application configuration",
+      "tags": [
+        "config",
+        "app"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:config/queue.php",
+      "type": "config",
+      "name": "Queue Config",
+      "filePath": "config/queue.php",
+      "summary": "Queue driver configuration",
+      "tags": [
+        "config",
+        "queue"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:config/broadcasting.php",
+      "type": "config",
+      "name": "Broadcasting Config",
+      "filePath": "config/broadcasting.php",
+      "summary": "Event broadcasting configuration (Reverb/Pusher)",
+      "tags": [
+        "config",
+        "broadcast",
+        "reverb"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:config/auth.php",
+      "type": "config",
+      "name": "Auth Config",
+      "filePath": "config/auth.php",
+      "summary": "Authentication configuration",
+      "tags": [
+        "config",
+        "auth"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:config/session.php",
+      "type": "config",
+      "name": "Session Config",
+      "filePath": "config/session.php",
+      "summary": "Session driver and cookie configuration",
+      "tags": [
+        "config",
+        "session"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:lang/id/validation.php",
+      "type": "config",
+      "name": "ID Validation Lang",
+      "filePath": "lang/id/validation.php",
+      "summary": "Indonesian validation error messages",
+      "tags": [
+        "config",
+        "lang",
+        "id"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:routes/channels.php",
+      "type": "file",
+      "name": "Broadcast Channels",
+      "filePath": "routes/channels.php",
+      "summary": "WebSocket channel authorization routes",
+      "tags": [
+        "routes",
+        "broadcast",
+        "websocket"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:purchases",
+      "type": "table",
+      "name": "Purchases Table",
+      "filePath": "database/migrations/tenant/2024_01_01_000003_create_purchases_tables.php",
+      "summary": "Purchase orders with supplier and status tracking",
+      "tags": [
+        "table",
+        "migration",
+        "purchase"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:service_checklists",
+      "type": "table",
+      "name": "Service Checklists Table",
+      "filePath": "database/migrations/tenant/2024_01_01_000002_create_business_tables.php",
+      "summary": "Service checklist records for check-in/check-out",
+      "tags": [
+        "table",
+        "migration",
+        "checklist"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:stock_allocations",
+      "type": "table",
+      "name": "Stock Allocations Table",
+      "filePath": "database/migrations/tenant/2024_01_01_000002_create_business_tables.php",
+      "summary": "Inter-branch stock transfer allocations",
+      "tags": [
+        "table",
+        "migration",
+        "stock"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:routes/web.php",
+      "target": "file:app/Http/Controllers/Auth/LoginController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/web.php",
+      "target": "file:app/Http/Controllers/Auth/RegisteredTenantController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/web.php",
+      "target": "file:app/Http/Controllers/Admin/SuperAdminController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/web.php",
+      "target": "file:app/Http/Controllers/Admin/TenantManagementController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/web.php",
+      "target": "file:app/Http/Controllers/Admin/PlanController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/web.php",
+      "target": "file:app/Http/Controllers/Admin/SystemSettingsController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/web.php",
+      "target": "file:app/Http/Controllers/Admin/MonitoringController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/web.php",
+      "target": "file:app/Http/Controllers/Admin/BackupController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/web.php",
+      "target": "file:app/Http/Controllers/PublicTrackingController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/web.php",
+      "target": "file:routes/api.php",
+      "type": "imports",
+      "weight": 0.5,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/ServiceController.php",
+      "type": "routes",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/SaleController.php",
+      "type": "routes",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/ExpenseController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/CustomerController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/ProductController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/PurchaseController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/ReportController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/InventoryController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/SettingsController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/QuickReplyController.php",
+      "type": "routes",
+      "weight": 0.6,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/KnowledgeBaseController.php",
+      "type": "routes",
+      "weight": 0.6,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/SopController.php",
+      "type": "routes",
+      "weight": 0.6,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/ServicePhotoController.php",
+      "type": "routes",
+      "weight": 0.6,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/DriveController.php",
+      "type": "routes",
+      "weight": 0.6,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Auth/GoogleLoginController.php",
+      "type": "routes",
+      "weight": 0.6,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/PurchaseReturnController.php",
+      "type": "routes",
+      "weight": 0.6,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/DamagedStockController.php",
+      "type": "routes",
+      "weight": 0.6,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/PartnerTeknisiController.php",
+      "type": "routes",
+      "weight": 0.6,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/PickupDeliveryController.php",
+      "type": "routes",
+      "weight": 0.6,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/TaxController.php",
+      "type": "routes",
+      "weight": 0.6,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/ReconciliationController.php",
+      "type": "routes",
+      "weight": 0.6,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/CommissionController.php",
+      "type": "routes",
+      "weight": 0.6,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/CustomFieldController.php",
+      "type": "routes",
+      "weight": 0.6,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/AttendanceController.php",
+      "type": "routes",
+      "weight": 0.6,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/ShiftController.php",
+      "type": "routes",
+      "weight": 0.6,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/api.php",
+      "target": "file:app/Http/Controllers/Api/TrackingController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/api.php",
+      "target": "file:app/Http/Controllers/Api/ServiceController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Controllers/Tenant/ServiceController.php",
+      "target": "file:app/Models/Tenant/Service.php",
+      "type": "imports",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Controllers/Tenant/ServiceController.php",
+      "target": "file:app/Models/Tenant/ServicePhoto.php",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Controllers/Tenant/SaleController.php",
+      "target": "file:app/Models/Tenant/Sale.php",
+      "type": "imports",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Controllers/Tenant/SaleController.php",
+      "target": "file:app/Models/Tenant/SaleItem.php",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Controllers/Tenant/ExpenseController.php",
+      "target": "file:app/Models/Tenant/Expense.php",
+      "type": "imports",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Controllers/Tenant/ExpenseController.php",
+      "target": "file:app/Services/GoogleDrivePhotoService.php",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Controllers/Tenant/ServicePhotoController.php",
+      "target": "file:app/Services/GoogleDrivePhotoService.php",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Controllers/Tenant/DriveController.php",
+      "target": "file:app/Services/GoogleDrivePhotoService.php",
+      "type": "imports",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Controllers/Tenant/DriveController.php",
+      "target": "file:app/Models/GoogleDriveToken.php",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Controllers/Tenant/ExpenseController.php",
+      "target": "file:app/Models/Tenant/ActivityLog.php",
+      "type": "imports",
+      "weight": 0.6,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Providers/TenancyServiceProvider.php",
+      "target": "file:app/Models/Tenant.php",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Providers/TenancyServiceProvider.php",
+      "target": "config:config/tenancy.php",
+      "type": "configures",
+      "weight": 0.6,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Middleware/HandleInertiaRequests.php",
+      "target": "file:resources/js/Pages/Settings/Index.vue",
+      "type": "configures",
+      "weight": 0.5,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Middleware/CheckSubscription.php",
+      "target": "file:app/Models/Tenant.php",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Middleware/CheckPlanFeature.php",
+      "target": "file:app/Models/Plan.php",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Middleware/SecurityHeaders.php",
+      "target": "config:config/tenancy.php",
+      "type": "depends_on",
+      "weight": 0.5,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Services/GoogleDrivePhotoService.php",
+      "target": "file:app/Models/GoogleDriveToken.php",
+      "type": "imports",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Services/GoogleDrivePhotoService.php",
+      "target": "config:config/services.php",
+      "type": "configures",
+      "weight": 0.6,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Models/Tenant/Service.php",
+      "target": "table:services",
+      "type": "migrates",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Models/Tenant/Sale.php",
+      "target": "table:sales",
+      "type": "migrates",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Models/Tenant/Product.php",
+      "target": "table:products",
+      "type": "migrates",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Models/Tenant/User.php",
+      "target": "table:users",
+      "type": "migrates",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Models/Tenant/ServicePhoto.php",
+      "target": "file:app/Models/Tenant/Service.php",
+      "type": "depends_on",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Models/Tenant/SaleItem.php",
+      "target": "file:app/Models/Tenant/Sale.php",
+      "type": "depends_on",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Models/Tenant/Commission.php",
+      "target": "file:app/Models/Tenant/Service.php",
+      "type": "depends_on",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Models/Tenant/Commission.php",
+      "target": "file:app/Models/Tenant/User.php",
+      "type": "depends_on",
+      "weight": 0.6,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Models/GoogleDriveToken.php",
+      "target": "table:google_drive_tokens",
+      "type": "migrates",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Models/GoogleDriveToken.php",
+      "target": "file:app/Models/Tenant.php",
+      "type": "depends_on",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:resources/js/Layouts/AuthenticatedLayout.vue",
+      "target": "file:resources/js/Pages/Services/Index.vue",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:resources/js/Layouts/AuthenticatedLayout.vue",
+      "target": "file:resources/js/Pages/Settings/Index.vue",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:resources/js/Layouts/AuthenticatedLayout.vue",
+      "target": "file:resources/js/Pages/Expenses/Index.vue",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:resources/js/Layouts/AuthenticatedLayout.vue",
+      "target": "file:resources/js/Pages/Sales/Index.vue",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:resources/js/Layouts/AuthenticatedLayout.vue",
+      "target": "file:resources/js/Pages/KnowledgeBase/Index.vue",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:resources/js/Layouts/AuthenticatedLayout.vue",
+      "target": "file:resources/js/Pages/Sops/Index.vue",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:resources/js/Layouts/AuthenticatedLayout.vue",
+      "target": "file:resources/js/Pages/Dashboard/Index.vue",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:resources/js/Layouts/AuthenticatedLayout.vue",
+      "target": "file:resources/js/Pages/Commissions/Index.vue",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:resources/js/Layouts/AuthenticatedLayout.vue",
+      "target": "file:resources/js/Pages/Attendances/Index.vue",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:resources/js/Layouts/AuthenticatedLayout.vue",
+      "target": "file:resources/js/Pages/Tools/QRScanner.vue",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:resources/js/Layouts/AuthenticatedLayout.vue",
+      "target": "file:resources/js/Pages/Inventory/ReorderAlerts.vue",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:resources/js/Layouts/AuthenticatedLayout.vue",
+      "target": "file:resources/js/Pages/Inventory/Forecast.vue",
+      "type": "contains",
+      "weight": 1,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Controllers/Admin/SuperAdminController.php",
+      "target": "file:app/Models/Tenant.php",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Controllers/Admin/SuperAdminController.php",
+      "target": "file:app/Models/Plan.php",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Controllers/Admin/TenantManagementController.php",
+      "target": "file:app/Models/Tenant.php",
+      "type": "imports",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Controllers/Admin/TenantManagementController.php",
+      "target": "file:app/Models/Plan.php",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Controllers/Admin/PlanController.php",
+      "target": "file:app/Models/Plan.php",
+      "type": "imports",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Controllers/Admin/MonitoringController.php",
+      "target": "file:app/Models/Tenant.php",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Controllers/Admin/BackupController.php",
+      "target": "file:app/Services/GoogleDriveService.php",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Middleware/HandleInertiaRequests.php",
+      "target": "file:resources/js/Layouts/AuthenticatedLayout.vue",
+      "type": "configures",
+      "weight": 0.6,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Controllers/Tenant/ReportController.php",
+      "target": "file:app/Models/Tenant/Sale.php",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Controllers/Tenant/ReportController.php",
+      "target": "file:app/Models/Tenant/Service.php",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Controllers/Tenant/ReportController.php",
+      "target": "file:app/Models/Tenant/Expense.php",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Controllers/Tenant/ReportController.php",
+      "target": "file:app/Models/Tenant/Commission.php",
+      "type": "imports",
+      "weight": 0.6,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Controllers/Tenant/InventoryController.php",
+      "target": "file:app/Models/Tenant/Product.php",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Controllers/Tenant/InventoryController.php",
+      "target": "file:app/Models/Tenant/InventoryMutation.php",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Controllers/Tenant/SettingsController.php",
+      "target": "file:app/Services/GoogleDrivePhotoService.php",
+      "type": "imports",
+      "weight": 0.6,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Controllers/Auth/GoogleLoginController.php",
+      "target": "file:app/Models/Tenant/User.php",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "document:README.md",
+      "target": "file:routes/web.php",
+      "type": "documents",
+      "weight": 0.5,
+      "direction": "forward"
+    },
+    {
+      "source": "document:README.md",
+      "target": "config:config/tenancy.php",
+      "type": "documents",
+      "weight": 0.5,
+      "direction": "forward"
+    },
+    {
+      "source": "config:vite.config.js",
+      "target": "config:tailwind.config.js",
+      "type": "depends_on",
+      "weight": 0.5,
+      "direction": "forward"
+    },
+    {
+      "source": "config:package.json",
+      "target": "config:vite.config.js",
+      "type": "depends_on",
+      "weight": 0.5,
+      "direction": "forward"
+    },
+    {
+      "source": "config:composer.json",
+      "target": "config:config/services.php",
+      "type": "depends_on",
+      "weight": 0.5,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Events/ServiceStatusUpdated.php",
+      "target": "file:app/Http/Controllers/Tenant/ServiceController.php",
+      "type": "publishes",
+      "weight": 0.5,
+      "direction": "forward"
+    },
+    {
+      "source": "test:Unit/Models/ServiceTest.php",
+      "target": "file:app/Models/Tenant/Service.php",
+      "type": "tested_by",
+      "weight": 0.5,
+      "direction": "forward"
+    },
+    {
+      "source": "test:Unit/Models/ExpenseTest.php",
+      "target": "file:app/Models/Tenant/Expense.php",
+      "type": "tested_by",
+      "weight": 0.5,
+      "direction": "forward"
+    },
+    {
+      "source": "test:Unit/Models/SaleTest.php",
+      "target": "file:app/Models/Tenant/Sale.php",
+      "type": "tested_by",
+      "weight": 0.5,
+      "direction": "forward"
+    },
+    {
+      "source": "test:Unit/FormRequestTest.php",
+      "target": "file:app/Http/Requests/StoreExpenseRequest.php",
+      "type": "tested_by",
+      "weight": 0.5,
+      "direction": "forward"
+    },
+    {
+      "source": "test:Unit/FormRequestTest.php",
+      "target": "file:app/Http/Requests/StoreCustomerRequest.php",
+      "type": "tested_by",
+      "weight": 0.5,
+      "direction": "forward"
+    },
+    {
+      "source": "test:Unit/PolicyTest.php",
+      "target": "file:app/Policies/ServicePolicy.php",
+      "type": "tested_by",
+      "weight": 0.5,
+      "direction": "forward"
+    },
+    {
+      "source": "test:Unit/PolicyTest.php",
+      "target": "file:app/Policies/SalePolicy.php",
+      "type": "tested_by",
+      "weight": 0.5,
+      "direction": "forward"
+    },
+    {
+      "source": "test:Unit/PolicyTest.php",
+      "target": "file:app/Policies/ExpensePolicy.php",
+      "type": "tested_by",
+      "weight": 0.5,
+      "direction": "forward"
+    },
+    {
+      "source": "test:Feature/GoogleDriveServiceTest.php",
+      "target": "file:app/Services/GoogleDrivePhotoService.php",
+      "type": "tested_by",
+      "weight": 0.5,
+      "direction": "forward"
+    },
+    {
+      "source": "file:resources/js/Pages/Auth/SubdomainLogin.vue",
+      "target": "file:app/Http/Controllers/Auth/GoogleLoginController.php",
+      "type": "routes",
+      "weight": 0.6,
+      "direction": "forward"
+    },
+    {
+      "source": "file:resources/js/Pages/Services/Create.vue",
+      "target": "file:app/Http/Controllers/Tenant/ServiceController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:resources/js/Pages/Public/Track.vue",
+      "target": "file:app/Http/Controllers/PublicTrackingController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Http/Controllers/Admin/TenantManagementController.php",
+      "target": "file:app/Models/TenantStat.php",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/SaleStoreController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/SalePaymentController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/SaleInvoiceController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/ServiceWorkflowController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/ServiceChecklistController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/ServiceDocumentController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/tenant.php",
+      "target": "file:app/Http/Controllers/Tenant/ServiceClaimController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Jobs/GenerateInvoicePdf.php",
+      "target": "file:app/Models/Tenant/TenantSetting.php",
+      "type": "imports",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Jobs/GenerateInvoicePdf.php",
+      "target": "file:app/Models/Tenant/Sale.php",
+      "type": "imports",
+      "weight": 0.8,
+      "direction": "forward"
+    },
+    {
+      "source": "file:app/Jobs/SendInvoiceEmail.php",
+      "target": "file:app/Jobs/GenerateInvoicePdf.php",
+      "type": "calls",
+      "weight": 0.6,
+      "direction": "forward"
+    },
+    {
+      "source": "table:purchases",
+      "target": "table:products",
+      "type": "depends_on",
+      "weight": 0.5,
+      "direction": "forward"
+    },
+    {
+      "source": "table:stock_allocations",
+      "target": "table:products",
+      "type": "depends_on",
+      "weight": 0.5,
+      "direction": "forward"
+    },
+    {
+      "source": "table:stock_allocations",
+      "target": "table:users",
+      "type": "depends_on",
+      "weight": 0.4,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/web.php",
+      "target": "file:app/Http/Controllers/Admin/AdminAuthController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/web.php",
+      "target": "file:app/Http/Controllers/Admin/VoucherController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/web.php",
+      "target": "file:app/Http/Controllers/Admin/PaymentController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    },
+    {
+      "source": "file:routes/web.php",
+      "target": "file:app/Http/Controllers/Auth/ResetPasswordController.php",
+      "type": "routes",
+      "weight": 0.7,
+      "direction": "forward"
+    }
+  ],
+  "layers": [
+    {
+      "id": "layer:presentation",
+      "name": "Presentation Layer",
+      "description": "Vue 3 frontend pages, layouts, and components served via Inertia.js. Handles all user-facing interfaces for service management, POS, inventory, reports, settings, and tools.",
+      "nodeIds": [
+        "file:resources/js/Layouts/AuthenticatedLayout.vue",
+        "file:resources/js/Pages/Services/Create.vue",
+        "file:resources/js/Pages/Services/Index.vue",
+        "file:resources/js/Pages/Services/Show.vue",
+        "file:resources/js/Pages/Expenses/Index.vue",
+        "file:resources/js/Pages/Public/Track.vue",
+        "file:resources/js/Pages/Auth/SubdomainLogin.vue",
+        "file:resources/js/Pages/Settings/Index.vue",
+        "file:resources/js/Pages/Dashboard/Index.vue",
+        "file:resources/js/Pages/Sales/Index.vue",
+        "file:resources/js/Pages/KnowledgeBase/Index.vue",
+        "file:resources/js/Pages/Sops/Index.vue",
+        "file:resources/js/Pages/Tools/QRScanner.vue",
+        "file:resources/js/Pages/Inventory/ReorderAlerts.vue",
+        "file:resources/js/Pages/Inventory/Forecast.vue",
+        "file:resources/js/Pages/Commissions/Index.vue",
+        "file:resources/js/Pages/Attendances/Index.vue"
+      ]
+    },
+    {
+      "id": "layer:application",
+      "name": "Application Layer",
+      "description": "Laravel HTTP controllers handling request/response logic, validation, authorization, and orchestration. Includes tenant controllers, admin controllers, auth controllers, and API endpoints.",
+      "nodeIds": [
+        "file:routes/web.php",
+        "file:routes/tenant.php",
+        "file:routes/api.php",
+        "file:app/Http/Controllers/Auth/LoginController.php",
+        "file:app/Http/Controllers/Auth/GoogleLoginController.php",
+        "file:app/Http/Controllers/Auth/RegisteredTenantController.php",
+        "file:app/Http/Controllers/Tenant/ServiceController.php",
+        "file:app/Http/Controllers/Tenant/SaleController.php",
+        "file:app/Http/Controllers/Tenant/ExpenseController.php",
+        "file:app/Http/Controllers/Tenant/CustomerController.php",
+        "file:app/Http/Controllers/Tenant/ProductController.php",
+        "file:app/Http/Controllers/Tenant/PurchaseController.php",
+        "file:app/Http/Controllers/Tenant/ReportController.php",
+        "file:app/Http/Controllers/Tenant/InventoryController.php",
+        "file:app/Http/Controllers/Tenant/SettingsController.php",
+        "file:app/Http/Controllers/Tenant/QuickReplyController.php",
+        "file:app/Http/Controllers/Tenant/KnowledgeBaseController.php",
+        "file:app/Http/Controllers/Tenant/SopController.php",
+        "file:app/Http/Controllers/Tenant/ServicePhotoController.php",
+        "file:app/Http/Controllers/Tenant/DriveController.php",
+        "file:app/Http/Controllers/Tenant/PurchaseReturnController.php",
+        "file:app/Http/Controllers/Tenant/DamagedStockController.php",
+        "file:app/Http/Controllers/Tenant/PartnerTeknisiController.php",
+        "file:app/Http/Controllers/Tenant/PickupDeliveryController.php",
+        "file:app/Http/Controllers/Tenant/TaxController.php",
+        "file:app/Http/Controllers/Tenant/ReconciliationController.php",
+        "file:app/Http/Controllers/Tenant/CommissionController.php",
+        "file:app/Http/Controllers/Tenant/CustomFieldController.php",
+        "file:app/Http/Controllers/Tenant/AttendanceController.php",
+        "file:app/Http/Controllers/Tenant/ShiftController.php",
+        "file:app/Http/Controllers/Admin/SuperAdminController.php",
+        "file:app/Http/Controllers/Admin/TenantManagementController.php",
+        "file:app/Http/Controllers/Admin/PlanController.php",
+        "file:app/Http/Controllers/Admin/SystemSettingsController.php",
+        "file:app/Http/Controllers/Admin/MonitoringController.php",
+        "file:app/Http/Controllers/Admin/BackupController.php",
+        "file:app/Http/Controllers/Api/TrackingController.php",
+        "file:app/Http/Controllers/Api/ServiceController.php",
+        "file:app/Http/Controllers/PublicTrackingController.php",
+        "file:app/Http/Middleware/HandleInertiaRequests.php",
+        "file:app/Http/Middleware/CheckSubscription.php",
+        "file:app/Http/Middleware/CheckPlanFeature.php",
+        "file:app/Http/Middleware/SecurityHeaders.php",
+        "file:app/Policies/ServicePolicy.php",
+        "file:app/Policies/SalePolicy.php",
+        "file:app/Policies/ExpensePolicy.php",
+        "file:app/Http/Requests/StoreServiceRequest.php",
+        "file:app/Http/Requests/StoreExpenseRequest.php",
+        "file:app/Http/Requests/StoreCustomerRequest.php",
+        "file:app/Http/Requests/StoreSaleRequest.php",
+        "file:app/Http/Controllers/Tenant/SaleStoreController.php",
+        "file:app/Http/Controllers/Tenant/SalePaymentController.php",
+        "file:app/Http/Controllers/Tenant/SaleInvoiceController.php",
+        "file:app/Http/Controllers/Tenant/ServiceWorkflowController.php",
+        "file:app/Http/Controllers/Tenant/ServiceChecklistController.php",
+        "file:app/Http/Controllers/Tenant/ServiceDocumentController.php",
+        "file:app/Http/Controllers/Tenant/ServiceClaimController.php",
+        "file:app/Http/Controllers/Admin/AdminAuthController.php",
+        "file:app/Http/Controllers/Admin/VoucherController.php",
+        "file:app/Http/Controllers/Admin/PaymentController.php",
+        "file:app/Http/Controllers/Auth/ResetPasswordController.php",
+        "file:app/Http/Controllers/DashboardController.php",
+        "file:app/Http/Middleware/AdminAuthenticate.php",
+        "file:app/Http/Middleware/InitializeTenancyBySession.php",
+        "file:app/Jobs/GenerateInvoicePdf.php",
+        "file:app/Jobs/SendInvoiceEmail.php",
+        "file:routes/channels.php"
+      ]
+    },
+    {
+      "id": "layer:domain",
+      "name": "Domain Layer",
+      "description": "Eloquent models representing business entities and database tables. Central models for tenants, plans, and billing. Tenant models for services, sales, inventory, customers, and all operational data.",
+      "nodeIds": [
+        "file:app/Models/Tenant.php",
+        "file:app/Models/Plan.php",
+        "file:app/Models/GoogleDriveToken.php",
+        "file:app/Models/SystemSetting.php",
+        "file:app/Models/SystemLog.php",
+        "file:app/Models/Tenant/Service.php",
+        "file:app/Models/Tenant/Sale.php",
+        "file:app/Models/Tenant/SaleItem.php",
+        "file:app/Models/Tenant/Customer.php",
+        "file:app/Models/Tenant/Product.php",
+        "file:app/Models/Tenant/User.php",
+        "file:app/Models/Tenant/Expense.php",
+        "file:app/Models/Tenant/InventoryMutation.php",
+        "file:app/Models/Tenant/Supplier.php",
+        "file:app/Models/Tenant/Branch.php",
+        "file:app/Models/Tenant/ActivityLog.php",
+        "file:app/Models/Tenant/Indent.php",
+        "file:app/Models/Tenant/ChecklistTemplate.php",
+        "file:app/Models/Tenant/ServicePhoto.php",
+        "file:app/Models/Tenant/TaxSetting.php",
+        "file:app/Models/Tenant/Commission.php",
+        "file:app/Models/Tenant/Shift.php",
+        "file:app/Models/Tenant/Attendance.php",
+        "file:app/Models/Tenant/QuickReply.php",
+        "file:app/Models/Tenant/KnowledgeBase.php",
+        "file:app/Models/Tenant/Sop.php",
+        "file:app/Models/Tenant/PurchaseReturn.php",
+        "file:app/Models/Tenant/DamagedStock.php",
+        "file:app/Models/Tenant/PartnerTeknisi.php",
+        "file:app/Models/Tenant/PickupDelivery.php",
+        "file:app/Models/Tenant/PaymentReconciliation.php",
+        "file:app/Models/Tenant/CustomField.php",
+        "table:services",
+        "table:sales",
+        "table:products",
+        "table:users",
+        "table:google_drive_tokens",
+        "file:app/Models/TenantStat.php",
+        "file:app/Models/Tenant/Purchase.php",
+        "file:app/Models/Tenant/PurchaseItem.php",
+        "file:app/Models/Tenant/ServiceChecklist.php",
+        "file:app/Models/Tenant/ServiceSparepart.php",
+        "file:app/Models/Tenant/ServiceTransfer.php",
+        "file:app/Models/Tenant/StockAllocation.php",
+        "file:app/Models/Tenant/SystemAlert.php",
+        "file:app/Models/Tenant/TenantSetting.php",
+        "file:app/Models/Tenant/WaGatewayConfig.php",
+        "file:app/Models/Tenant/MasterData.php",
+        "file:app/Models/Tenant/DailyDeposit.php",
+        "file:app/Models/Tenant/CashRegister.php",
+        "table:purchases",
+        "table:service_checklists",
+        "table:stock_allocations"
+      ]
+    },
+    {
+      "id": "layer:infrastructure",
+      "name": "Infrastructure Layer",
+      "description": "System configuration, service providers, third-party integrations, and deployment setup. Includes tenancy config, filesystem, services, database, Vite/PWA, and event broadcasting.",
+      "nodeIds": [
+        "config:config/tenancy.php",
+        "config:config/filesystems.php",
+        "config:config/services.php",
+        "config:config/database.php",
+        "config:vite.config.js",
+        "config:composer.json",
+        "config:package.json",
+        "config:tailwind.config.js",
+        "file:app/Providers/TenancyServiceProvider.php",
+        "file:app/Services/GoogleDrivePhotoService.php",
+        "file:app/Services/MailConfigService.php",
+        "file:app/Services/GoogleDriveService.php",
+        "file:app/Events/ServiceStatusUpdated.php",
+        "document:README.md",
+        "document:DISASTER_RECOVERY.md",
+        "file:app/Services/PaymentGatewayService.php",
+        "config:config/app.php",
+        "config:config/queue.php",
+        "config:config/broadcasting.php",
+        "config:config/auth.php",
+        "config:config/session.php",
+        "config:lang/id/validation.php"
+      ]
+    },
+    {
+      "id": "layer:quality",
+      "name": "Quality Assurance Layer",
+      "description": "Automated tests: unit tests for models, form requests, and policies; feature tests for configuration and services.",
+      "nodeIds": [
+        "test:Unit/Models/ServiceTest.php",
+        "test:Unit/Models/ExpenseTest.php",
+        "test:Unit/Models/SaleTest.php",
+        "test:Unit/FormRequestTest.php",
+        "test:Unit/PolicyTest.php",
+        "test:Feature/HealthTest.php",
+        "test:Feature/GoogleDriveServiceTest.php"
+      ]
+    }
+  ],
+  "tour": [
+    {
+      "order": 1,
+      "title": "Project Overview",
+      "description": "ServiceKU is a multi-tenant SaaS platform for Indonesian repair shop and retail management. Built with Laravel 11 + Vue 3 + Inertia.js. Each tenant gets an isolated database via stancl/tenancy.",
+      "nodeIds": [
+        "document:README.md",
+        "config:config/tenancy.php",
+        "config:composer.json"
+      ]
+    },
+    {
+      "order": 2,
+      "title": "Multi-Tenancy Architecture",
+      "description": "Stancl tenancy with database-per-tenant isolation. The central DB holds tenants, plans, and billing. Each tenant has its own database with 40+ tables for services, sales, inventory, etc.",
+      "nodeIds": [
+        "config:config/tenancy.php",
+        "file:app/Models/Tenant.php",
+        "file:app/Providers/TenancyServiceProvider.php"
+      ]
+    },
+    {
+      "order": 3,
+      "title": "Routes & Navigation",
+      "description": "Central web routes handle landing, registration, and superadmin. Tenant routes handle all business operations. A role-based menu system filters 20+ menu items through 4 authorization layers.",
+      "nodeIds": [
+        "file:routes/web.php",
+        "file:routes/tenant.php",
+        "file:resources/js/Layouts/AuthenticatedLayout.vue"
+      ]
+    },
+    {
+      "order": 4,
+      "title": "Service Order Lifecycle",
+      "description": "The core business flow: service creation with device data → technician assignment → work progress → customer confirmation → pickup → warranty. Supports partner outsourcing, indents, and service transfers between branches.",
+      "nodeIds": [
+        "file:app/Http/Controllers/Tenant/ServiceController.php",
+        "file:app/Models/Tenant/Service.php",
+        "file:resources/js/Pages/Services/Create.vue"
+      ]
+    },
+    {
+      "order": 5,
+      "title": "POS & Sales",
+      "description": "Point-of-sale system supporting direct sales, service-based billing, and indent pre-orders. Features draft workflow, PDF invoice generation, payment tracking, and void/return capability.",
+      "nodeIds": [
+        "file:app/Http/Controllers/Tenant/SaleController.php",
+        "file:app/Models/Tenant/Sale.php",
+        "file:resources/js/Pages/Sales/Index.vue"
+      ]
+    },
+    {
+      "order": 6,
+      "title": "Inventory & Supply Chain",
+      "description": "Full inventory management: product catalog, stock mutations, purchase orders, supplier management, stock transfers between branches, reorder alerts, and stock forecasting.",
+      "nodeIds": [
+        "file:app/Http/Controllers/Tenant/ProductController.php",
+        "file:app/Http/Controllers/Tenant/PurchaseController.php",
+        "file:app/Http/Controllers/Tenant/InventoryController.php"
+      ]
+    },
+    {
+      "order": 7,
+      "title": "Photo Upload & Google Drive",
+      "description": "Service and expense photos upload to Google Drive via OAuth. Photos stored locally first, then synced to tenant's own Google Drive. Upload disabled if Drive is not connected.",
+      "nodeIds": [
+        "file:app/Services/GoogleDrivePhotoService.php",
+        "file:app/Http/Controllers/Tenant/ServicePhotoController.php",
+        "file:app/Http/Controllers/Tenant/DriveController.php"
+      ]
+    },
+    {
+      "order": 8,
+      "title": "Google Login & Authentication",
+      "description": "Google OAuth login via Socialite. Users can log in with Google or link/unlink Google accounts from their profile. Rate-limited login with login history tracking.",
+      "nodeIds": [
+        "file:app/Http/Controllers/Auth/GoogleLoginController.php",
+        "file:resources/js/Pages/Auth/SubdomainLogin.vue",
+        "file:app/Http/Middleware/CheckSubscription.php"
+      ]
+    },
+    {
+      "order": 9,
+      "title": "HR & Operations",
+      "description": "Employee shift management, attendance tracking with clock in/out, technician commission auto-calculation, and pickup/delivery scheduling for customer devices.",
+      "nodeIds": [
+        "file:app/Http/Controllers/Tenant/ShiftController.php",
+        "file:app/Http/Controllers/Tenant/AttendanceController.php",
+        "file:app/Http/Controllers/Tenant/CommissionController.php"
+      ]
+    },
+    {
+      "order": 10,
+      "title": "Reports & Analytics",
+      "description": "Comprehensive reporting: sales, services, inventory, finance, commissions, technician productivity scores, customer analytics with peak hours, and year-over-year revenue comparison.",
+      "nodeIds": [
+        "file:app/Http/Controllers/Tenant/ReportController.php",
+        "file:resources/js/Pages/Dashboard/Index.vue"
+      ]
+    },
+    {
+      "order": 11,
+      "title": "Super Admin Panel",
+      "description": "Central admin for managing all tenants: CRUD, suspend/activate, change plans, extend trials, impersonate login, reset passwords. Also manages subscription plans, backups, system settings, and monitoring.",
+      "nodeIds": [
+        "file:app/Http/Controllers/Admin/TenantManagementController.php",
+        "file:app/Http/Controllers/Admin/PlanController.php",
+        "file:app/Http/Controllers/Admin/SystemSettingsController.php"
+      ]
+    },
+    {
+      "order": 12,
+      "title": "Subscriptions & Billing",
+      "description": "Tiered plans (Basic/Pro/Enterprise) with feature access control per business type. Voucher/promo system, trial management, and payment gateway integration (Midtrans/Xendit).",
+      "nodeIds": [
+        "file:app/Models/Plan.php",
+        "file:app/Http/Middleware/CheckPlanFeature.php"
+      ]
+    },
+    {
+      "order": 13,
+      "title": "Tools & Knowledge Management",
+      "description": "QR code scanner for service lookup, knowledge base for technician troubleshooting, SOPs with mandatory read tracking, quick replies for customer communication, and custom fields for extensibility.",
+      "nodeIds": [
+        "file:resources/js/Pages/Tools/QRScanner.vue",
+        "file:app/Http/Controllers/Tenant/KnowledgeBaseController.php",
+        "file:app/Http/Controllers/Tenant/SopController.php"
+      ]
+    },
+    {
+      "order": 14,
+      "title": "Quality Assurance",
+      "description": "47 passing tests covering models, form requests, policies, application health, and Google Drive service. Tests use SQLite in-memory for fast execution.",
+      "nodeIds": [
+        "test:Unit/Models/ServiceTest.php",
+        "test:Unit/PolicyTest.php",
+        "test:Unit/FormRequestTest.php"
+      ]
+    }
+  ]
+}

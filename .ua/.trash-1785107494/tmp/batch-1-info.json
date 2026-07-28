@@ -1,0 +1,93 @@
+{
+  "batchIndex": 1,
+  "totalBatches": 22,
+  "files": [
+    {
+      "path": "config/app.php",
+      "sizeLines": 126,
+      "language": "PHP",
+      "fileCategory": "config"
+    },
+    {
+      "path": "config/auth.php",
+      "sizeLines": 110,
+      "language": "PHP",
+      "fileCategory": "config"
+    },
+    {
+      "path": "config/broadcasting.php",
+      "sizeLines": 82,
+      "language": "PHP",
+      "fileCategory": "config"
+    },
+    {
+      "path": "config/cache.php",
+      "sizeLines": 108,
+      "language": "PHP",
+      "fileCategory": "config"
+    },
+    {
+      "path": "config/database.php",
+      "sizeLines": 173,
+      "language": "PHP",
+      "fileCategory": "config"
+    },
+    {
+      "path": "config/filesystems.php",
+      "sizeLines": 80,
+      "language": "PHP",
+      "fileCategory": "config"
+    },
+    {
+      "path": "config/logging.php",
+      "sizeLines": 132,
+      "language": "PHP",
+      "fileCategory": "config"
+    },
+    {
+      "path": "config/mail.php",
+      "sizeLines": 116,
+      "language": "PHP",
+      "fileCategory": "config"
+    },
+    {
+      "path": "config/queue.php",
+      "sizeLines": 112,
+      "language": "PHP",
+      "fileCategory": "config"
+    },
+    {
+      "path": "config/services.php",
+      "sizeLines": 45,
+      "language": "PHP",
+      "fileCategory": "config"
+    },
+    {
+      "path": "config/session.php",
+      "sizeLines": 217,
+      "language": "PHP",
+      "fileCategory": "config"
+    },
+    {
+      "path": "config/tenancy.php",
+      "sizeLines": 201,
+      "language": "PHP",
+      "fileCategory": "config"
+    }
+  ],
+  "batchImportData": {
+    "config/app.php": [],
+    "config/auth.php": [],
+    "config/broadcasting.php": [],
+    "config/cache.php": [],
+    "config/database.php": [],
+    "config/filesystems.php": [],
+    "config/logging.php": [],
+    "config/mail.php": [],
+    "config/queue.php": [],
+    "config/services.php": [],
+    "config/session.php": [],
+    "config/tenancy.php": []
+  },
+  "neighborMap": {}
+}
