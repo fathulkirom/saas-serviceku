@@ -121,6 +121,23 @@ backup_database() {
 
     ok "  $TENANT_COUNT database tenant selesai"
 
+    # 4. Backup SQLite tenant files (development/local)
+    local sqlite_dir="$PROJECT_DIR/database"
+    if [ -d "$sqlite_dir" ] && ls "$sqlite_dir"/tenant_*/database.sqlite 2>/dev/null >/dev/null; then
+        info "  Backup SQLite tenant files..."
+        local sqlite_snapshot_dir="$db_dir/sqlite_tenants_$timestamp"
+        mkdir -p "$sqlite_snapshot_dir"
+        for tenant_sqlite in "$sqlite_dir"/tenant_*/database.sqlite; do
+            if [ -f "$tenant_sqlite" ]; then
+                local tenant_name=$(basename "$(dirname "$tenant_sqlite")")
+                cp "$tenant_sqlite" "$sqlite_snapshot_dir/${tenant_name}.sqlite"
+            fi
+        done
+        tar -czf "$db_dir/sqlite_tenants_$timestamp.tar.gz" -C "$db_dir" "sqlite_tenants_$timestamp"
+        rm -rf "$sqlite_snapshot_dir"
+        ok "  SQLite tenant files selesai"
+    fi
+
     # 3. Buat manifest
     local manifest="$db_dir/backup_$timestamp.manifest"
     echo "Backup ServiceKU" > "$manifest"

@@ -1,53 +1,234 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<div align="center">
+  <h1>🔧 ServiceKU</h1>
+  <p><strong>SaaS Multi-Tenant Service Center Management Platform</strong></p>
+  <p>
+    <img src="https://img.shields.io/badge/Laravel-11-red?logo=laravel" alt="Laravel 11">
+    <img src="https://img.shields.io/badge/Vue_3-3.x-brightgreen?logo=vue.js" alt="Vue 3">
+    <img src="https://img.shields.io/badge/Inertia.js-3.x-blue?logo=inertia" alt="Inertia.js">
+    <img src="https://img.shields.io/badge/PHP-8.2+-purple?logo=php" alt="PHP 8.2+">
+    <img src="https://img.shields.io/badge/License-MIT-yellow" alt="License">
+  </p>
+  <p>
+    <a href="https://github.com/fathulkirom/saas-serviceku/actions">
+      <img src="https://github.com/fathulkirom/saas-serviceku/actions/workflows/tests.yml/badge.svg" alt="Tests">
+    </a>
+    <a href="https://github.com/fathulkirom/saas-serviceku/issues">
+      <img src="https://img.shields.io/github/issues/fathulkirom/saas-serviceku" alt="Issues">
+    </a>
+  </p>
+</div>
+
+---
+
+## 📋 Tentang ServiceKU
+
+ServiceKU adalah platform manajemen pusat servis elektronik & handphone berbasis **SaaS Multi-Tenant**. Dibangun dengan **Laravel 11 + Vue 3 (Composition API) + Inertia.js**.
+
+### Fitur Utama
+
+| Modul | Fitur |
+|---|---|
+| 🔧 **Service/Repair** | Ticket lifecycle, foto (Google Drive), spare parts, checklist, transfer antar teknisi |
+| 💰 **POS/Sales** | Cash register, invoice, payment tracking, multi-store |
+| 👥 **Customer** | CRUD, member card, loyalty points, history servis |
+| 📦 **Inventory** | Produk, stock mutation, low stock alert, purchase order, return, stock allocation |
+| 💵 **Finance** | Expenses (dengan foto), daily deposit, commission, reconciliation, tax settings |
+| 🏢 **Multi-Branch** | Multiple cabang, transfer stock antar cabang |
+| 👨‍🔧 **HR** | Shift, absensi, multi-role users (Owner/Admin/CS/Teknisi/Kasir/Kurir) |
+| 📊 **Reporting** | 9 jenis report: sales, services, finance, inventory, commissions, customer analytics, productivity, revenue comparison |
+| 📖 **Knowledge Base** | SOP, quick reply CS, artikel knowledge base |
+| 📱 **WhatsApp** | Notifikasi otomatis via WA Gateway (Fonnte) |
+| 🔍 **Public Tracking** | Pelanggan bisa cek status servis via kode tracking |
+| 🎓 **Onboarding** | Setup wizard untuk tenant baru |
+
+### Pricing Plans
+
+| Plan | Harga | Fitur |
+|---|---|---|
+| **Basic** | Rp 99.000/bulan | Read-only reports, single branch |
+| **Pro** | Rp 199.000/bulan | Full features, multi-branch, transfer stock |
+| **Enterprise** | Rp 499.000/bulan | Semua fitur Pro + prioritas support |
+
+---
+
+## 🏗️ Tech Stack
+
+| Layer | Teknologi |
+|---|---|
+| **Backend** | Laravel 11, PHP 8.2+ |
+| **Frontend** | Vue 3 (Composition API), Inertia.js, Tailwind CSS |
+| **Database (Central)** | MySQL 8.0 |
+| **Database (Tenant)** | SQLite (dev) / MySQL (prod) |
+| **Multi-Tenancy** | stancl/tenancy ^3.10 |
+| **WebSocket** | Laravel Reverb |
+| **API Auth** | Laravel Sanctum |
+| **Social Auth** | Laravel Socialite (Google) |
+| **Queue** | Laravel Queue (sync/redis) |
+| **Storage** | Google Drive API (foto servis) |
+| **WA Gateway** | Fonnte API |
+| **PDF** | barryvdh/laravel-dompdf |
+| **E2E Testing** | Playwright |
+| **CI/CD** | GitHub Actions (Tests, Docker, Deploy) |
+| **Infrastructure** | Docker, Nginx, Redis, Cloudflare Tunnel |
+
+---
+
+## 🚀 Quick Start (Development)
+
+### Prasyarat
+- PHP 8.2+, Composer, Node.js 22+, Docker Desktop
+
+### 1. Clone & Install
+```bash
+git clone https://github.com/fathulkirom/saas-serviceku.git
+cd saas-serviceku
+cp .env.example .env
+composer install
+npm install
+```
+
+### 2. Generate Key
+```bash
+php artisan key:generate
+```
+
+### 3. Setup Database
+```bash
+# Central database
+touch database/database.sqlite
+php artisan migrate
+
+# Tenant database
+php artisan migrate --path=database/migrations/tenant
+
+# Seed master data
+php artisan db:seed --class=MasterDataSeeder
+```
+
+### 4. Buat Tenant
+```bash
+php artisan tinker
+# Di tinker:
+\App\Models\Tenant::create(['id' => 'dev', 'slug' => 'toko-servis-abc', 'data' => ['plan' => 'pro']]);
+# Keluar tinker:
+php artisan tenants:run "php artisan migrate --path=database/migrations/tenant"
+```
+
+### 5. Jalankan
+```bash
+# Terminal 1 - Laravel
+php artisan serve
+
+# Terminal 2 - Vite (frontend)
+npm run dev
+
+# Terminal 3 - Queue (opsional)
+php artisan queue:listen
+```
+
+### Akses
+- **Landing:** http://localhost:8000
+- **Tenant:** http://toko-servis-abc.localhost:8000
+- **Dev Login:** http://toko-servis-abc.localhost:8000/dev-login
+- **Admin:** http://localhost:8000/admin
+
+---
+
+## 🐳 Docker (Production)
+
+```bash
+# Build & start
+docker compose up -d
+
+# Service:
+# - Laravel app: http://localhost:80
+# - phpMyAdmin: http://localhost:8080
+# - Redis: port 6379
+```
+
+Lihat `deploy.sh` untuk deployment penuh.
+
+---
+
+## 🧪 Testing
+
+```bash
+# PHP Tests
+php artisan test
+
+# E2E (Playwright)
+cd e2e && npx playwright test
+
+# Code Style
+vendor/bin/pint --test
+```
+
+### CI/CD (GitHub Actions)
+
+| Workflow | Trigger | Deskripsi |
+|---|---|---|
+| **Tests** | push/PR ke main | PHPUnit + JS Lint + Build |
+| **Docker** | push ke main + tag v* | Build & push Docker image |
+| **Deploy** | push ke main | Auto-deploy via SSH ke server |
+| **CodeQL** | push ke main | Security code scanning |
+
+---
+
+## 📂 Project Structure
+
+```
+├── app/
+│   ├── Http/Controllers/    # 50+ Controllers
+│   │   ├── Auth/            # Login, Register, OTP
+│   │   ├── Admin/           # Superadmin panel
+│   │   └── Tenant/          # Fitur per tenant
+│   ├── Models/              # Central models
+│   │   └── Tenant/          # 43+ Tenant models
+│   ├── Services/            # WhatsApp, Google Drive, Payment
+│   └── Policies/            # Authorization
+├── config/
+│   └── tenancy.php          # Multi-tenant config
+├── database/
+│   ├── migrations/          # Central migrations
+│   │   └── tenant/          # Tenant migrations
+│   └── tenant_*/            # Tenant SQLite databases (dev)
+├── resources/js/
+│   ├── Pages/               # 45+ Vue pages
+│   └── Components/          # 19+ Shared components
+├── routes/
+│   ├── web.php              # Central routes
+│   ├── tenant.php           # Tenant routes
+│   ├── api.php              # API routes
+│   └── admin.php            # Admin routes
+├── tests/
+│   ├── Feature/             # 7 feature tests
+│   └── Unit/                # 3 unit tests
+├── e2e/                     # Playwright E2E tests
+└── docker/                  # Docker config
+```
+
+---
+
+## 🔒 Security
+
+- JWT/Sanctum untuk API
+- Rate limiting di auth (6x/min, OTP 3x/min)
+- Form validation policies
+- Security headers middleware
+- CodeQL analysis di CI
+- Multi-tenant isolation via stancl/tenancy
+
+---
+
+## 📄 License
+
+**MIT License** — Copyright (c) 2026 Fathul Kirom
+
+---
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+  Dibuat dengan ❤️ untuk para pejuang servis elektronik di Indonesia
 </p>
-
-## About Laravel
-
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
-
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
 
 ## Contributing
 

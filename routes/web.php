@@ -147,7 +147,7 @@ Route::get('/admin/login', function () {
 Route::post('/admin/login', [App\Http\Controllers\Admin\AdminAuthController::class, 'login'])->name('admin.login.post');
 
 // ========== PUBLIC TRACKING (Tanpa Login) ==========
-Route::get('/track/{tracking_code}', [App\Http\Controllers\PublicTrackingController::class, 'show'])->name('public.track');
+Route::get('/track/{tracking_code}', [App\Http\Controllers\PublicTrackingController::class, 'show'])->name('public.track')->middleware('throttle:10,1');
 
 // ========== PAYMENT WEBHOOK (public, no auth) ==========
 Route::post('/payment/webhook', [App\Http\Controllers\Admin\PaymentController::class, 'webhook'])->name('payment.webhook');
