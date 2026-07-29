@@ -18,7 +18,10 @@ class CustomerController extends Controller
     public function create()
     {
         $this->authorize('create', Customer::class);
-        return inertia('Customers/Create');
+        return inertia('Customers/Create', [
+            'customFields' => \App\Models\Tenant\CustomField::where('module', 'customer')
+                ->where('is_active', true)->orderBy('ordering')->get(),
+        ]);
     }
 
     public function store(Request $request)
@@ -33,7 +36,10 @@ class CustomerController extends Controller
 
         $validated['branch_id'] = auth()->user()->branch_id;
 
-        Customer::create($validated);
+        $customer = Customer::create($validated);
+
+        // Simpan custom field values
+        $customer->saveCustomFieldValues($request->all());
 
         return redirect()->route('customers.index')->with('success', 'Pelanggan berhasil ditambahkan.');
     }
@@ -82,6 +88,9 @@ class CustomerController extends Controller
         ]);
 
         $customer->update($validated);
+
+        // Simpan custom field values
+        $customer->saveCustomFieldValues($request->all());
 
         return back()->with('success', 'Pelanggan berhasil diperbarui.');
     }

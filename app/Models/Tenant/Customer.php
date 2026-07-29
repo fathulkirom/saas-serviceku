@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Customer extends Model
 {
+    use \App\Models\Tenant\Traits\HasCustomFields;
+
     protected $fillable = [
         'branch_id',
         'name',
@@ -21,6 +23,11 @@ class Customer extends Model
         'is_member' => 'boolean',
         'points' => 'integer',
     ];
+
+    public function customFieldModule(): string
+    {
+        return 'customer';
+    }
 
     public function branch()
     {

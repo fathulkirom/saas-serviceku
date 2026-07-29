@@ -67,6 +67,9 @@ class ServiceWorkflowController extends Controller
             }
         }
 
+        // Simpan custom field values untuk service
+        $service->saveCustomFieldValues($request->all());
+
         ActivityLog::log('created', 'Membuat servis baru #' . $service->id, $service, ['customer_id' => $service->customer_id, 'status' => $status]);
         return redirect()->route('services.show', $service->id)->with('success', 'Servis berhasil dibuat.');
     }

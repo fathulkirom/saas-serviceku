@@ -40,6 +40,13 @@
                     <label class="block text-xs font-semibold text-dark-500 mb-1.5 uppercase tracking-wider">Alamat</label>
                     <textarea v-model="form.address" rows="2" id="address" name="address" class="w-full rounded-lg border text-sm px-3 py-2.5 focus:ring-2 focus:outline-none border-dark-200 text-dark-700 focus:border-blue-500 focus:ring-blue-200 transition-all" placeholder="Alamat lengkap"></textarea>
                 </div>
+
+                <!-- Custom Fields -->
+                <div v-if="customFields.length > 0" class="mb-6 pt-4 border-t">
+                    <h3 class="text-sm font-semibold text-dark-700 mb-3">📋 Informasi Tambahan</h3>
+                    <DynamicFormFields :fields="customFields" :form-data="form.data" />
+                </div>
+
                 <div class="flex justify-end gap-3">
                     <Link :href="route('customers.index')" class="px-5 py-2.5 rounded-lg border text-sm font-semibold text-dark-600 border-dark-200 hover:bg-dark-50 transition-all">Batal</Link>
                     <button type="submit" :disabled="form.processing" class="px-5 py-2.5 rounded-lg text-sm font-bold text-white transition-all hover:shadow-md disabled:opacity-50" style="background: var(--accent-primary);">
@@ -55,6 +62,11 @@
 import { useForm } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import DynamicFormFields from '@/Components/DynamicFormFields.vue';
+
+const props = defineProps({
+    customFields: { type: Array, default: () => [] },
+});
 
 const form = useForm({
     name: '',
@@ -62,6 +74,7 @@ const form = useForm({
     email: '',
     address: '',
     is_member: false,
+    data: {},
 });
 
 const submit = () => form.post(route('customers.store'));

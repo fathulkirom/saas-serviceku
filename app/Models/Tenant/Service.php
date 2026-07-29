@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 class Service extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, \App\Models\Tenant\Traits\HasCustomFields;
 
     protected $fillable = [
         'branch_id',
@@ -175,6 +175,11 @@ class Service extends Model
     public function merek()
     {
         return $this->belongsTo(MasterData::class, 'merek_id');
+    }
+
+    public function customFieldModule(): string
+    {
+        return 'service';
     }
 
     // ========== SCOPES ==========

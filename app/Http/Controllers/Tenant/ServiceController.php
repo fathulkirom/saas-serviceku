@@ -56,6 +56,8 @@ class ServiceController extends Controller
             'arrivalMethods' => MasterData::getByCategory('arrival_method'),
             'equipment' => MasterData::getByCategory('equipment'),
             'driveConnected' => $driveService->isConnected(),
+            'customFields' => \App\Models\Tenant\CustomField::where('module', 'service')
+                ->where('is_active', true)->orderBy('ordering')->get(),
         ]);
     }
 
