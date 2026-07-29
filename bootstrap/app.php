@@ -61,6 +61,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->command('subscription:check')
             ->hourly()
             ->appendOutputTo(storage_path('logs/subscription-check.log'));
+
+        // Cleanup tenant expired > 30 hari (setiap hari jam 02:00)
+        $schedule->command('tenants:cleanup --days=30 --force')
+            ->dailyAt('02:00')
+            ->appendOutputTo(storage_path('logs/tenant-cleanup.log'));
     })
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
@@ -85,6 +90,15 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
+        // Sentry error tracking (non-local only)
+        if (!app()->environment('local')) {
+            $exceptions->report(function (\Throwable $e) {
+                if (app()->bound('sentry')) {
+                    app('sentry')->captureException($e);
+                }
+            });
+        }
+
         $exceptions->respond(function (\Symfony\Component\HttpFoundation\Response $response, \Throwable $exception, Request $request) {
             if (!app()->environment('local') && in_array($response->getStatusCode(), [500, 503, 404, 403])) {
                 return inertia('Errors/' . $response->getStatusCode(), ['status' => $response->getStatusCode()])
