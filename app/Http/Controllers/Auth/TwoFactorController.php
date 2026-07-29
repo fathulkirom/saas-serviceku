@@ -16,35 +16,58 @@ class TwoFactorController extends Controller
     public function challenge()
     {
         $userId = session('two_factor_user_id');
-        if (!$userId) {
+        $tenantId = session('tenant_id');
+        if (!$userId || !$tenantId) {
             return redirect()->route('login');
         }
+
+        // Initialize tenancy
+        $tenant = \App\Models\Tenant::find($tenantId);
+        if (!$tenant) {
+            session()->forget(['two_factor_user_id', 'tenant_id']);
+            return redirect()->route('login');
+        }
+        tenancy()->initialize($tenant);
 
         $user = User::find($userId);
         if (!$user || !$user->hasTwoFactorEnabled()) {
             session()->forget('two_factor_user_id');
+            tenancy()->end();
             return redirect()->route('login');
         }
 
         return inertia('Auth/TwoFactorChallenge', [
             'email' => $user->email,
-            'use_backup' => false,
         ]);
     }
 
     /**
      * Verifikasi kode 2FA (TOTP atau recovery code).
      */
-    public function verify(Request $request)
+    private function getTenantUser(): ?User
     {
         $userId = session('two_factor_user_id');
-        if (!$userId) {
-            return redirect()->route('login');
+        $tenantId = session('tenant_id');
+        if (!$userId || !$tenantId) return null;
+
+        $tenant = \App\Models\Tenant::find($tenantId);
+        if (!$tenant) return null;
+
+        try {
+            tenancy()->initialize($tenant);
+        } catch (\Exception $e) {
+            return null;
         }
 
-        $user = User::find($userId);
-        if (!$user) {
+        return User::find($userId);
+    }
+
+    public function verify(Request $request)
+    {
+        $user = $this->getTenantUser();
+        if (!$user || !$user->hasTwoFactorEnabled()) {
             session()->forget('two_factor_user_id');
+            tenancy()->end();
             return redirect()->route('login');
         }
 
@@ -75,7 +98,7 @@ class TwoFactorController extends Controller
         }
 
         if (!$valid) {
-            return back()->withErrors(['code' => 'Kode verifikasi tidak valid.'])->with('use_backup', $request->filled('use_backup'));
+            return back()->withErrors(['code' => 'Kode verifikasi tidak valid.']);
         }
 
         // Login berhasil
@@ -86,6 +109,7 @@ class TwoFactorController extends Controller
         \App\Models\Tenant\ActivityLog::log('login', "Login 2FA: {$user->name}", $user);
 
         session()->regenerate();
+        session()->put('tenant_id', tenancy()->tenant->id);
 
         return redirect()->intended(route('dashboard'))->with('success', 'Login berhasil.');
     }
@@ -95,12 +119,7 @@ class TwoFactorController extends Controller
      */
     public function sendEmailCode(Request $request)
     {
-        $userId = session('two_factor_user_id');
-        if (!$userId) {
-            return redirect()->route('login');
-        }
-
-        $user = User::find($userId);
+        $user = $this->getTenantUser();
         if (!$user) {
             session()->forget('two_factor_user_id');
             return redirect()->route('login');
@@ -120,12 +139,7 @@ class TwoFactorController extends Controller
      */
     public function verifyEmailCode(Request $request)
     {
-        $userId = session('two_factor_user_id');
-        if (!$userId) {
-            return redirect()->route('login');
-        }
-
-        $user = User::find($userId);
+        $user = $this->getTenantUser();
         if (!$user) {
             session()->forget('two_factor_user_id');
             return redirect()->route('login');
@@ -149,6 +163,7 @@ class TwoFactorController extends Controller
         \App\Models\Tenant\ActivityLog::log('login', "Login 2FA (email): {$user->name}", $user);
 
         session()->regenerate();
+        session()->put('tenant_id', tenancy()->tenant->id);
 
         return redirect()->intended(route('dashboard'))->with('success', 'Login berhasil.');
     }
