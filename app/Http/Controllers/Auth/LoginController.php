@@ -128,6 +128,13 @@ class LoginController extends Controller
             return back()->withErrors(['login' => 'Akun Anda dinonaktifkan.']);
         }
 
+        // Cek 2FA: jika user sudah setup 2FA, redirect ke halaman challenge
+        if ($user->hasTwoFactorEnabled()) {
+            $request->session()->put('two_factor_user_id', $user->id);
+            tenancy()->end();
+            return redirect()->route('two-factor.challenge');
+        }
+
         // Login user
         Auth::guard('web')->login($user, $request->boolean('remember'));
         $request->session()->regenerate();

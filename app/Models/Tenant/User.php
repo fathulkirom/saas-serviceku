@@ -25,11 +25,16 @@ class User extends Authenticatable implements MustVerifyEmail
         'active',
         'google_id',
         'google_avatar',
+        'two_factor_secret',
+        'two_factor_recovery_codes',
+        'two_factor_confirmed_at',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
+        'two_factor_secret',
+        'two_factor_recovery_codes',
     ];
 
     protected $casts = [
@@ -38,7 +43,41 @@ class User extends Authenticatable implements MustVerifyEmail
         'active' => 'boolean',
         'password' => 'hashed',
         'email_verified_at' => 'datetime',
+        'two_factor_confirmed_at' => 'datetime',
     ];
+
+    public function hasTwoFactorEnabled(): bool
+    {
+        return !is_null($this->two_factor_confirmed_at);
+    }
+
+    public function twoFactorQrCodeSvg(): string
+    {
+        $google2fa = app('pragmarx.google2fa');
+        $company = config('app.name');
+        return $google2fa->getQRCodeInline($company, $this->email, $this->two_factor_secret);
+    }
+
+    public function twoFactorRecoveryCodes(): array
+    {
+        return json_decode(decrypt($this->two_factor_recovery_codes), true) ?? [];
+    }
+
+    public function regenerateTwoFactorRecoveryCodes(): void
+    {
+        $codes = [];
+        for ($i = 0; $i < 8; $i++) {
+            $codes[] = strtoupper(
+                implode('-', [
+                    substr(bin2hex(random_bytes(3)), 0, 6),
+                    substr(bin2hex(random_bytes(3)), 0, 6),
+                ])
+            );
+        }
+        $this->forceFill([
+            'two_factor_recovery_codes' => encrypt(json_encode($codes)),
+        ])->save();
+    }
 
     public function branch()
     {
@@ -94,5 +133,13 @@ class User extends Authenticatable implements MustVerifyEmail
     public function sendEmailVerificationNotification(): void
     {
         $this->notify(new \App\Notifications\VerifyEmailNotification);
+    }
+
+    /**
+     * Send 2FA code via email as fallback.
+     */
+    public function sendTwoFactorCodeNotification(string $code): void
+    {
+        $this->notify(new \App\Notifications\TwoFactorCodeNotification($code));
     }
 }

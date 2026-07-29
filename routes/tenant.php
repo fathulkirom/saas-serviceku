@@ -55,6 +55,30 @@ Route::get('/email/verify/{id}/{hash}', [App\Http\Controllers\Auth\EmailVerifica
 Route::post('/email/verification-notification', [App\Http\Controllers\Auth\EmailVerificationController::class, 'resend'])
     ->middleware(['auth', 'throttle:6,1'])->name('tenant.verification.resend');
 
+// ========== 2FA (two-factor authentication) ==========
+Route::get('/two-factor-challenge', [App\Http\Controllers\Auth\TwoFactorController::class, 'challenge'])
+    ->name('two-factor.challenge');
+Route::post('/two-factor-challenge', [App\Http\Controllers\Auth\TwoFactorController::class, 'verify'])
+    ->name('two-factor.verify');
+Route::post('/two-factor-challenge/email', [App\Http\Controllers\Auth\TwoFactorController::class, 'sendEmailCode'])
+    ->name('two-factor.send-email');
+Route::post('/two-factor-challenge/verify-email', [App\Http\Controllers\Auth\TwoFactorController::class, 'verifyEmailCode'])
+    ->name('two-factor.verify-email');
+
+// ========== 2FA SETUP (authenticated) ==========
+Route::middleware(['auth'])->group(function () {
+    Route::get('/two-factor-status', [App\Http\Controllers\Auth\TwoFactorSetupController::class, 'status'])
+        ->name('two-factor.status');
+    Route::post('/two-factor-enable', [App\Http\Controllers\Auth\TwoFactorSetupController::class, 'enable'])
+        ->name('two-factor.enable');
+    Route::post('/two-factor-confirm', [App\Http\Controllers\Auth\TwoFactorSetupController::class, 'confirm'])
+        ->name('two-factor.confirm');
+    Route::post('/two-factor-disable', [App\Http\Controllers\Auth\TwoFactorSetupController::class, 'disable'])
+        ->name('two-factor.disable');
+    Route::post('/two-factor-regenerate-codes', [App\Http\Controllers\Auth\TwoFactorSetupController::class, 'regenerateCodes'])
+        ->name('two-factor.regenerate-codes');
+});
+
 // ========== DEV LOGIN (development only - accessible on tenant subdomain) ==========
 if (app()->environment('local', 'development')) {
     Route::get('/dev-login', App\Http\Controllers\DevLoginController::class)->name('tenant.dev-login');
