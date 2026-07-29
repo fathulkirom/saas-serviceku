@@ -66,6 +66,21 @@ return Application::configure(basePath: dirname(__DIR__))
         $schedule->command('tenants:cleanup --days=30 --force')
             ->dailyAt('02:00')
             ->appendOutputTo(storage_path('logs/tenant-cleanup.log'));
+
+        // Retry failed jobs setiap jam
+        $schedule->command('queue:retry --all')
+            ->hourly()
+            ->appendOutputTo(storage_path('logs/queue-retry.log'));
+
+        // Bersihkan cache setiap hari
+        $schedule->command('cache:clear')
+            ->daily()
+            ->appendOutputTo(storage_path('logs/cache-clear.log'));
+
+        // GC session expired setiap hari
+        $schedule->command('session:gc')
+            ->daily()
+            ->appendOutputTo(storage_path('logs/session-gc.log'));
     })
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
