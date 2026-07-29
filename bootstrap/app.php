@@ -74,6 +74,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'tenant.auth' => RedirectIfNotTenant::class,
             'tenancy.session' => InitializeTenancyBySession::class,
             'admin.auth' => AdminAuthenticate::class,
+            'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         ]);
 
         $middleware->web(append: [

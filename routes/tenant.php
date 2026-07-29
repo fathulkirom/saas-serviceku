@@ -47,6 +47,14 @@ Route::post('/forgot-password', [App\Http\Controllers\Auth\ResetPasswordControll
 Route::get('/reset-password/{token}', [App\Http\Controllers\Auth\ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('/reset-password', [App\Http\Controllers\Auth\ResetPasswordController::class, 'reset'])->name('password.update');
 
+// ========== EMAIL VERIFICATION (semi-public, needs auth but not verified) ==========
+Route::get('/email/verify', [App\Http\Controllers\Auth\EmailVerificationController::class, 'notice'])
+    ->middleware('auth')->name('tenant.verification.notice');
+Route::get('/email/verify/{id}/{hash}', [App\Http\Controllers\Auth\EmailVerificationController::class, 'verify'])
+    ->middleware(['auth', 'signed'])->name('tenant.verification.verify');
+Route::post('/email/verification-notification', [App\Http\Controllers\Auth\EmailVerificationController::class, 'resend'])
+    ->middleware(['auth', 'throttle:6,1'])->name('tenant.verification.resend');
+
 // ========== DEV LOGIN (development only - accessible on tenant subdomain) ==========
 if (app()->environment('local', 'development')) {
     Route::get('/dev-login', App\Http\Controllers\DevLoginController::class)->name('tenant.dev-login');

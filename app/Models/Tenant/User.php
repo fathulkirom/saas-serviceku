@@ -3,11 +3,12 @@
 namespace App\Models\Tenant;
 
 use App\Models\Tenant\Traits\HasRoles;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, Notifiable, HasRoles;
 
@@ -15,6 +16,7 @@ class User extends Authenticatable
         'branch_id',
         'name',
         'email',
+        'email_verified_at',
         'password',
         'role',
         'custom_role',
@@ -35,6 +37,7 @@ class User extends Authenticatable
         'ui_preferences' => 'json',
         'active' => 'boolean',
         'password' => 'hashed',
+        'email_verified_at' => 'datetime',
     ];
 
     public function branch()
@@ -83,5 +86,13 @@ class User extends Authenticatable
     {
         $permissions = $this->custom_permissions ?? [];
         return in_array($permission, $permissions);
+    }
+
+    /**
+     * Override default verification notification.
+     */
+    public function sendEmailVerificationNotification(): void
+    {
+        $this->notify(new \App\Notifications\VerifyEmailNotification);
     }
 }
