@@ -43,7 +43,8 @@ class TenantCleanup extends Command
         $this->warn("📋 Ditemukan {$tenants->count()} tenant expired:");
 
         foreach ($tenants as $tenant) {
-            $this->line("   - {$tenant->tenant_name} ({$tenant->id}) [expired: {$tenant->subscription_ends_at ?? $tenant->trial_ends_at}]");
+            $expiredAt = $tenant->subscription_ends_at ?? $tenant->trial_ends_at;
+            $this->line("   - {$tenant->tenant_name} ({$tenant->id}) [expired: {$expiredAt}]");
         }
 
         if (!$force && !$this->confirm("Yakin ingin menghapus {$tenants->count()} tenant ini?")) {
