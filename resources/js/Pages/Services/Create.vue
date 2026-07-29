@@ -147,6 +147,15 @@
                 </div>
             </div>
 
+            <!-- Custom Fields -->
+            <div v-if="customFields.length > 0" class="bg-white rounded-xl border shadow-sm p-5" style="border-color: var(--border-color);">
+                <h3 class="text-sm font-bold text-dark-900 mb-4 flex items-center gap-2">
+                    <span class="w-6 h-6 rounded flex items-center justify-center text-xs text-white" style="background: var(--accent-primary);">6</span>
+                    Informasi Tambahan
+                </h3>
+                <DynamicFormFields :fields="customFields" :form-data="form" />
+            </div>
+
             <div class="flex justify-end gap-3 pt-2">
                 <Link :href="route('services.index')" class="px-5 py-2.5 rounded-lg border text-sm font-semibold text-dark-600 border-dark-200 hover:bg-dark-50 transition-all">Batal</Link>
                 <button type="submit" :disabled="form.processing" class="px-5 py-2.5 rounded-lg text-sm font-bold text-white transition-all hover:shadow-md disabled:opacity-50" style="background: var(--accent-primary);">
@@ -195,6 +204,7 @@ import { useForm } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import DynamicFormFields from '@/Components/DynamicFormFields.vue';
 
 const props = defineProps({
     customers: { type: Array, default: () => [] },
@@ -205,6 +215,7 @@ const props = defineProps({
     arrivalMethods: { type: Array, default: () => [] },
     equipment: { type: Array, default: () => [] },
     driveConnected: { type: Boolean, default: false },
+    customFields: { type: Array, default: () => [] },
 });
 
 const photoFiles = ref([]);
