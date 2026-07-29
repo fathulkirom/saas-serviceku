@@ -100,7 +100,7 @@ return Application::configure(basePath: dirname(__DIR__))
         }
 
         $exceptions->respond(function (\Symfony\Component\HttpFoundation\Response $response, \Throwable $exception, Request $request) {
-            if (!app()->environment('local') && in_array($response->getStatusCode(), [500, 503, 404, 403])) {
+            if (!app()->environment('local') && in_array($response->getStatusCode(), [500, 503, 404, 403, 419])) {
                 return inertia('Errors/' . $response->getStatusCode(), ['status' => $response->getStatusCode()])
                     ->toResponse($request)
                     ->setStatusCode($response->getStatusCode());

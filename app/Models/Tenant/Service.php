@@ -35,6 +35,9 @@ class Service extends Model
         'is_warranty_claim',
         'parent_service_id',
         'indent_id',
+        'dikerjakan_at',
+        'selesai_at',
+        'cancel_at',
     ];
 
     protected $casts = [
@@ -43,7 +46,15 @@ class Service extends Model
         'kelengkapan' => 'json',
         'warranty_expired_at' => 'datetime',
         'is_warranty_claim' => 'boolean',
+        'dikerjakan_at' => 'datetime',
+        'selesai_at' => 'datetime',
+        'cancel_at' => 'datetime',
     ];
+
+    public function getCompletedAtAttribute()
+    {
+        return $this->selesai_at ?? $this->updated_at;
+    }
 
     // ========== STATUS CONSTANTS ==========
     const STATUS_MENUNGGU_ALOKASI = 'menunggu_alokasi';

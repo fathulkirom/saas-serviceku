@@ -48,6 +48,7 @@ class ServiceWorkflowController extends Controller
             'technician_id' => $technicianId, 'status' => $status,
             'problem_description' => $validated['problem_description'] ?? '',
             'condition_note' => $validated['condition_note'] ?? '',
+            'dikerjakan_at' => $status === Service::STATUS_DIKERJAKAN ? now() : null,
         ]));
 
         if ($request->filled('checklist_template_id')) {
@@ -83,7 +84,10 @@ class ServiceWorkflowController extends Controller
     {
         $this->authorize('start', $service);
         $user = Auth::user();
-        $service->update(['status' => Service::STATUS_DIKERJAKAN]);
+        $service->update([
+            'status' => Service::STATUS_DIKERJAKAN,
+            'dikerjakan_at' => now(),
+        ]);
         ActivityLog::log('started', $user->name . ' mulai mengerjakan servis #' . $service->id, $service);
         return back()->with('success', 'Pekerjaan dimulai.');
     }
@@ -92,7 +96,10 @@ class ServiceWorkflowController extends Controller
     {
         $this->authorize('finish', $service);
         $user = Auth::user();
-        $service->update(['status' => Service::STATUS_SELESAI]);
+        $service->update([
+            'status' => Service::STATUS_SELESAI,
+            'selesai_at' => now(),
+        ]);
         ActivityLog::log('finished', $user->name . ' menyelesaikan pekerjaan servis #' . $service->id, $service);
         return back()->with('success', 'Pekerjaan selesai. Servis siap dibuatkan nota.');
     }
@@ -112,7 +119,10 @@ class ServiceWorkflowController extends Controller
             Service::STATUS_ONPARTNER,
         ];
         if (!in_array($service->status, $allowedCancelStatuses)) return back()->with('error', 'Servis tidak dapat dibatalkan dari status ini.');
-        $service->update(['status' => Service::STATUS_CANCEL]);
+        $service->update([
+            'status' => Service::STATUS_CANCEL,
+            'cancel_at' => now(),
+        ]);
         ActivityLog::log('cancelled', $user->name . ' membatalkan servis #' . $service->id, $service);
         return back()->with('success', 'Servis dibatalkan.');
     }
