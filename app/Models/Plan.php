@@ -169,6 +169,9 @@ class Plan extends Model
             'indents' => 'Indent / Pre-order',
             'cash_register' => 'Manajemen Shift Kasir',
             'master_data' => 'Master Data',
+            'two_factor_auth' => 'Autentikasi 2FA',
+            'email_verification' => 'Verifikasi Email',
+            'custom_fields' => 'Kolom Kustom Form',
         ];
     }
 

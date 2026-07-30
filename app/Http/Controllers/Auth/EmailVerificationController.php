@@ -14,6 +14,10 @@ class EmailVerificationController extends Controller
      */
     public function notice()
     {
+        if (!\App\Services\FeatureFlagService::isEnabled('email_verification')) {
+            return redirect()->intended(route('dashboard'));
+        }
+
         $user = auth()->user();
 
         if ($user->hasVerifiedEmail()) {

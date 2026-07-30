@@ -19,6 +19,9 @@ class CustomFieldController extends Controller
         if (!auth()->user()->canManageCustomFields()) {
             abort(403, 'Anda tidak memiliki izin untuk mengelola custom fields.');
         }
+        if (!\App\Services\FeatureFlagService::isEnabled('custom_fields')) {
+            abort(403, 'Fitur kolom kustom sedang dinonaktifkan oleh admin.');
+        }
         $validated = $request->validate([
             'module' => 'required|in:customer,service,device',
             'label' => 'required|string|max:255',

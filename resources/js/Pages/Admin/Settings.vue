@@ -70,6 +70,30 @@
                 </div>
             </div>
 
+            <!-- FEATURE FLAGS -->
+            <div class="rounded-2xl p-6 mb-6 border" style="background: var(--bg-card); border-color: var(--border-color);">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">🎛️ Feature Flags</h3>
+                <p class="text-sm text-gray-500 mb-4">Aktifkan atau nonaktifkan fitur secara global untuk semua tenant.</p>
+
+                <form @submit.prevent="updateFeatureFlags" class="space-y-3">
+                    <div v-for="(flag, key) in featureFlags" :key="key" class="flex items-center justify-between py-2 border-b border-gray-100">
+                        <div>
+                            <label class="text-sm font-medium text-gray-900">{{ flag.label }}</label>
+                            <p class="text-xs text-gray-500">{{ flag.description }}</p>
+                        </div>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" v-model="featureFlagsForm[key]" class="sr-only peer" />
+                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                        </label>
+                    </div>
+                    <div class="flex justify-end pt-2">
+                        <button type="submit" :disabled="featureFlagsForm.processing" class="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 text-sm">
+                            {{ featureFlagsForm.processing ? 'Menyimpan...' : 'Simpan Feature Flags' }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+
             <!-- EMAIL / SMTP SETTINGS -->
             <div class="rounded-2xl p-6 mb-6 border" style="background: var(--bg-card); border-color: var(--border-color);">
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Email (SMTP)</h3>
@@ -149,6 +173,7 @@ import AdminLayout from '@/Layouts/AdminLayout.vue';
 
 const props = defineProps({
     settings: { type: Object, default: () => ({}) },
+    featureFlags: { type: Object, default: () => ({}) },
 });
 
 const testEmail = ref('');
@@ -164,7 +189,6 @@ const form = useForm({
     default_trial_days: props.settings.registration?.default_trial_days || '14',
     maintenance_mode_bool: props.settings.maintenance?.maintenance_mode === 'true',
     maintenance_message: props.settings.maintenance?.maintenance_message || '',
-    // Mail settings
     mail_driver: props.settings.mail?.mail_driver || 'log',
     mail_host: props.settings.mail?.mail_host || '',
     mail_port: props.settings.mail?.mail_port || '587',
@@ -173,6 +197,12 @@ const form = useForm({
     mail_password: props.settings.mail?.mail_password || '',
     mail_from_address: props.settings.mail?.mail_from_address || 'notifications@serviceku.my.id',
     mail_from_name: props.settings.mail?.mail_from_name || 'ServiceKU',
+});
+
+const featureFlagsForm = useForm({
+    two_factor_auth: props.featureFlags?.two_factor_auth ?? true,
+    email_verification: props.featureFlags?.email_verification ?? false,
+    custom_fields: props.featureFlags?.custom_fields ?? true,
 });
 
 const sendTestEmail = () => {
@@ -192,6 +222,16 @@ const updateSettings = () => {
             registration_open: form.registration_open_bool ? 'true' : 'false',
             require_approval: form.require_approval_bool ? 'true' : 'false',
             maintenance_mode: form.maintenance_mode_bool ? 'true' : 'false',
+        },
+    });
+};
+
+const updateFeatureFlags = () => {
+    featureFlagsForm.post(route('admin.settings.feature-flags'), {
+        data: {
+            feature_two_factor_auth: featureFlagsForm.two_factor_auth ? 'true' : 'false',
+            feature_email_verification: featureFlagsForm.email_verification ? 'true' : 'false',
+            feature_custom_fields: featureFlagsForm.custom_fields ? 'true' : 'false',
         },
     });
 };

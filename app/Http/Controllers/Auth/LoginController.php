@@ -129,7 +129,7 @@ class LoginController extends Controller
         }
 
         // Cek 2FA: jika user sudah setup 2FA, redirect ke halaman challenge
-        if ($user->hasTwoFactorEnabled()) {
+        if ($user->hasTwoFactorEnabled() && \App\Services\FeatureFlagService::isEnabled('two_factor_auth')) {
             $request->session()->put('two_factor_user_id', $user->id);
             tenancy()->end();
             return redirect()->route('two-factor.challenge');

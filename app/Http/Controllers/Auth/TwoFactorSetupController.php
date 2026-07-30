@@ -32,6 +32,10 @@ class TwoFactorSetupController extends Controller
      */
     public function enable()
     {
+        if (!\App\Services\FeatureFlagService::isEnabled('two_factor_auth')) {
+            return response()->json(['errors' => ['message' => ['Fitur 2FA sedang dinonaktifkan oleh admin.']]], 403);
+        }
+
         $user = Auth::user();
         $google2fa = new Google2FA();
 

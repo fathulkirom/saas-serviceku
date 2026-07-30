@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\SystemSetting;
 use App\Models\SystemLog;
+use App\Services\FeatureFlagService;
 use Illuminate\Http\Request;
 
 class SystemSettingsController extends Controller
@@ -17,7 +18,8 @@ class SystemSettingsController extends Controller
                 "registration" => SystemSetting::getGroup("registration"),
                 "maintenance" => SystemSetting::getGroup("maintenance"),
                 "mail" => SystemSetting::getGroup("mail"),
-            ]
+            ],
+            "featureFlags" => FeatureFlagService::all(),
         ]);
     }
 
@@ -57,6 +59,27 @@ class SystemSettingsController extends Controller
         \App\Services\MailConfigService::apply();
         SystemLog::info("System settings updated");
         return back()->with("success", "Pengaturan sistem berhasil disimpan.");
+    }
+
+    /**
+     * Update feature flags.
+     */
+    public function updateFeatureFlags(Request $request)
+    {
+        $validated = $request->validate([
+            'feature_two_factor_auth' => 'required|in:true,false',
+            'feature_email_verification' => 'required|in:true,false',
+            'feature_custom_fields' => 'required|in:true,false',
+        ]);
+
+        foreach ($validated as $key => $value) {
+            SystemSetting::setValue($key, $value, 'features');
+        }
+
+        FeatureFlagService::resetCache();
+        SystemLog::info("Feature flags updated");
+
+        return back()->with("success", "Feature flags berhasil diperbarui.");
     }
 
     public function testMail(Request $request)

@@ -207,6 +207,7 @@ Route::prefix('admin')->name('admin.')->middleware('admin.auth')->group(function
     Route::post('/backup/upload-drive', [BackupController::class, 'uploadToDrive'])->name('backup.upload-drive');
     Route::get('/settings', [SystemSettingsController::class, 'index'])->name('settings');
     Route::post('/settings', [SystemSettingsController::class, 'update'])->name('settings.update');
+    Route::post('/settings/feature-flags', [SystemSettingsController::class, 'updateFeatureFlags'])->name('settings.feature-flags');
     Route::post('/settings/test-mail', [SystemSettingsController::class, 'testMail'])->name('settings.test-mail');
 
     // Monitoring
