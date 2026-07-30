@@ -417,6 +417,7 @@ const props = defineProps({
   demoStats: { type: Object, default: null },
   customFields: { type: [Object, Array], default: null },
   waGateway: { type: Object, default: null },
+  canManageCustomFields: { type: Boolean, default: false },
 });
 
 const activeTab = ref(props.activeTab);
@@ -495,14 +496,19 @@ function applyVoucher() {
   });
 }
 
-const tabs = [
-  { key: 'profil', label: 'Profil' },
-  { key: 'settings', label: 'Referensi' },
-  { key: 'wa', label: 'WA Notifikasi' },
-  { key: 'tagihan', label: 'Tagihan' },
-  { key: 'demo', label: 'Demo' },
-  { key: 'custom-fields', label: 'Kolom Kustom' },
-];
+const tabs = computed(() => {
+  const base = [
+    { key: 'profil', label: 'Profil' },
+    { key: 'settings', label: 'Referensi' },
+    { key: 'wa', label: 'WA Notifikasi' },
+    { key: 'tagihan', label: 'Tagihan' },
+    { key: 'demo', label: 'Demo' },
+  ];
+  if (props.canManageCustomFields) {
+    base.push({ key: 'custom-fields', label: 'Kolom Kustom' });
+  }
+  return base;
+});
 
 const tabLabels = { profil: 'Profil', settings: 'Referensi', wa: 'WA Notifikasi', tagihan: 'Tagihan', demo: 'Demo', 'custom-fields': 'Kolom Kustom' };
 const pageTitle = computed(() => 'Pengaturan — ' + (tabLabels[activeTab.value] || 'Profil'));

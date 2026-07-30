@@ -115,7 +115,11 @@ class SettingController extends Controller
                 'demo_generated_at' => TenantSetting::getValue('demo_generated_at'),
             ],
 
-            'customFields' => fn() => CustomField::where('branch_id', auth()->user()->branch_id)->orderBy('ordering')->get(),
+            'customFields' => fn() => auth()->user()->canManageCustomFields()
+                ? CustomField::where('branch_id', auth()->user()->branch_id)->orderBy('ordering')->get()
+                : [],
+
+            'canManageCustomFields' => auth()->user()->canManageCustomFields(),
 
             'waGateway' => fn() => \App\Models\Tenant\WaGatewayConfig::where('tenant_id', tenancy()->tenant->id)->first(),
         ]);

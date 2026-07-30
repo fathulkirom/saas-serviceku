@@ -16,6 +16,9 @@ class CustomFieldController extends Controller
 
     public function store(Request $request)
     {
+        if (!auth()->user()->canManageCustomFields()) {
+            abort(403, 'Anda tidak memiliki izin untuk mengelola custom fields.');
+        }
         $validated = $request->validate([
             'module' => 'required|in:customer,service,device',
             'label' => 'required|string|max:255',
@@ -31,6 +34,9 @@ class CustomFieldController extends Controller
 
     public function update(Request $request, CustomField $customField)
     {
+        if (!auth()->user()->canManageCustomFields()) {
+            abort(403, 'Anda tidak memiliki izin untuk mengelola custom fields.');
+        }
         $validated = $request->validate([
             'label' => 'required|string|max:255',
             'type' => 'required|in:text,number,dropdown,date,checkbox',
@@ -45,6 +51,9 @@ class CustomFieldController extends Controller
 
     public function destroy(CustomField $customField)
     {
+        if (!auth()->user()->canManageCustomFields()) {
+            abort(403, 'Anda tidak memiliki izin untuk mengelola custom fields.');
+        }
         $customField->values()->delete();
         $customField->delete();
         return back()->with('success', 'Custom field berhasil dihapus.');

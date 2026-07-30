@@ -84,6 +84,20 @@ trait HasRoles
         return $this->isOwner();
     }
 
+    public function canManageCustomFields(): bool
+    {
+        // Owner always can manage custom fields
+        if ($this->isOwner()) return true;
+
+        // Admin/Manager with explicit permission
+        if (in_array($this->role, ['admin', 'manager'])) {
+            $perms = $this->custom_permissions ?? [];
+            return in_array('custom_fields', $perms);
+        }
+
+        return false;
+    }
+
     public function canDeleteUser(): bool
     {
         return $this->isOwner();
