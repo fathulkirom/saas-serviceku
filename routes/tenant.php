@@ -299,6 +299,13 @@ Route::middleware([
     // ========== BILLING / VOUCHER ==========
     Route::get('/billing', [App\Http\Controllers\Tenant\BillingController::class, 'index'])->name('billing.index');
     Route::post('/billing/apply-voucher', [App\Http\Controllers\Tenant\BillingController::class, 'applyVoucher'])->name('billing.apply-voucher');
+    Route::post('/billing/initiate', [App\Http\Controllers\Tenant\PaymentController::class, 'initiate'])->name('payment.initiate');
+    Route::get('/payment/callback', [App\Http\Controllers\Tenant\PaymentController::class, 'callback'])->name('payment.callback');
+    Route::get('/payment/history', [App\Http\Controllers\Tenant\PaymentController::class, 'history'])->name('payment.history');
+    Route::post('/payment/{payment}/confirm-manual', [App\Http\Controllers\Tenant\PaymentController::class, 'confirmManual'])->name('payment.confirm-manual');
+    Route::get('/payment/finish', [App\Http\Controllers\Tenant\PaymentController::class, 'callback'])->name('payment.finish');
+    Route::get('/payment/unfinish', function () { return inertia('Tenant/Payment', ['status' => 'pending']); })->name('payment.unfinish');
+    Route::get('/payment/error', function () { return inertia('Tenant/Payment', ['status' => 'error']); })->name('payment.error');
 
     // ========== SETTINGS / BRANDING ==========
     Route::get('/settings', [App\Http\Controllers\Tenant\SettingsController::class, 'index'])->name('settings.index')->middleware('check.plan.feature:settings');

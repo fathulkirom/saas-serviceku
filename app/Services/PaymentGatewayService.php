@@ -4,7 +4,11 @@ namespace App\Services;
 
 use App\Models\Payment;
 use App\Models\SystemSetting;
+use App\Models\Tenant;
 use Illuminate\Support\Facades\Log;
+use Midtrans\Config as MidtransConfig;
+use Midtrans\Snap as MidtransSnap;
+use Midtrans\Notification as MidtransNotification;
 
 /**
  * Payment Gateway Service
@@ -74,6 +78,21 @@ class PaymentGatewayService
             'expired_at' => now()->addHours(24),
         ]);
 
+        // Jika gateway Midtrans, buat Snap transaction
+        if ($gateway === self::GATEWAY_MIDTRANS) {
+            try {
+                $snapResponse = self::createMidtransSnap($payment, $options);
+                $payment->update([
+                    'gateway_response' => $snapResponse,
+                ]);
+            } catch (\Exception $e) {
+                Log::error('Midtrans Snap failed', [
+                    'invoice' => $payment->invoice_number,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
+
         Log::info('Payment created', [
             'invoice' => $payment->invoice_number,
             'tenant' => $tenantId,
@@ -82,6 +101,98 @@ class PaymentGatewayService
         ]);
 
         return $payment;
+    }
+
+    /**
+     * Inisialisasi konfigurasi Midtrans.
+     */
+    private static function initMidtrans(): void
+    {
+        $config = self::getConfig();
+        MidtransConfig::$serverKey = $config['midtrans_server_key'];
+        MidtransConfig::$clientKey = $config['midtrans_client_key'];
+        MidtransConfig::$isProduction = $config['midtrans_is_production'] === 'true';
+        MidtransConfig::$isSanitized = true;
+        MidtransConfig::$is3ds = true;
+    }
+
+    /**
+     * Buat Snap transaksi di Midtrans.
+     */
+    public static function createMidtransSnap(Payment $payment, array $options = []): array
+    {
+        self::initMidtrans();
+
+        $tenant = Tenant::find($payment->tenant_id);
+        $tenantName = $tenant->tenant_name ?? 'Tenant';
+        $customerEmail = $tenant->email ?? '';
+
+        $params = [
+            'transaction_details' => [
+                'order_id' => $payment->invoice_number,
+                'gross_amount' => (int) $payment->amount,
+            ],
+            'customer_details' => [
+                'first_name' => $tenantName,
+                'email' => $customerEmail,
+            ],
+            'item_details' => [
+                [
+                    'id' => $payment->plan_slug,
+                    'price' => (int) $payment->amount,
+                    'quantity' => 1,
+                    'name' => 'Paket ' . ucfirst($payment->plan_slug),
+                ],
+            ],
+            'callbacks' => [
+                'finish' => $options['redirect_url'] ?? route('payment.finish', ['invoice' => $payment->invoice_number]),
+                'unfinish' => $options['redirect_url'] ?? route('payment.unfinish'),
+                'error' => $options['redirect_url'] ?? route('payment.error'),
+            ],
+        ];
+
+        try {
+            $snapResponse = MidtransSnap::createTransaction($params);
+            return [
+                'token' => $snapResponse->token,
+                'redirect_url' => $snapResponse->redirect_url,
+            ];
+        } catch (\Exception $e) {
+            Log::error('Midtrans Snap API error: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    /**
+     * Dapatkan Snap token untuk pembayaran.
+     */
+    public static function getSnapToken(Payment $payment): ?string
+    {
+        $response = $payment->gateway_response;
+        if (is_array($response) && isset($response['token'])) {
+            return $response['token'];
+        }
+        if (is_string($response)) {
+            $decoded = json_decode($response, true);
+            return $decoded['token'] ?? null;
+        }
+        return null;
+    }
+
+    /**
+     * Dapatkan Snap redirect URL.
+     */
+    public static function getSnapRedirectUrl(Payment $payment): ?string
+    {
+        $response = $payment->gateway_response;
+        if (is_array($response) && isset($response['redirect_url'])) {
+            return $response['redirect_url'];
+        }
+        if (is_string($response)) {
+            $decoded = json_decode($response, true);
+            return $decoded['redirect_url'] ?? null;
+        }
+        return null;
     }
 
     /**
