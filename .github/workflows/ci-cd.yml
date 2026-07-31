@@ -63,6 +63,8 @@ jobs:
           sed -i 's|^# DB_PASSWORD=$|DB_PASSWORD=password|' .env
           php artisan key:generate
           php artisan migrate --force
+          # Landing page butuh data plans agar h1 hero tampil di E2E login test
+          php artisan db:seed --force --class=PlanSeeder
           
       - name: Run Backend Tests (PHPUnit / Multi-Tenancy)
         run: php artisan test
