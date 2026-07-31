@@ -283,6 +283,10 @@ jobs:
   performance-test:
     needs: e2e-tests
     runs-on: ubuntu-latest
+    # Skip jika STAGING_URL masih placeholder (belum ada server staging asli).
+    # env context TERSEDIA di job-level if (beda dengan secrets).
+    # Saat user set STAGING_URL ke URL asli, job ini otomatis aktif.
+    if: ${{ env.STAGING_URL != 'https://staging.serviceku.app' }}
     steps:
       - uses: actions/checkout@v4
       - name: Deploy to Staging (simulasi)
@@ -342,6 +346,9 @@ jobs:
   smoke-test-and-approval:
     needs: [performance-test, security-scan, multi-tenancy-security]
     runs-on: ubuntu-latest
+    # Skip jika STAGING_URL masih placeholder (smoke test & approval butuh
+    # server staging nyata). Saat user set STAGING_URL + APPROVERS, otomatis aktif.
+    if: ${{ env.STAGING_URL != 'https://staging.serviceku.app' }}
     environment:
       name: production-approval   # Environment dengan proteksi manual
       url: https://serviceku.my.id
