@@ -7,9 +7,6 @@ on:
 
 jobs:
   docker:
-    # Hanya jalan jika secret Docker Hub sudah dikonfigurasi.
-    # Jika belum, job di-skip (tidak memunculkan failure di tiap push).
-    if: ${{ secrets.DOCKER_USERNAME != '' && secrets.DOCKER_PASSWORD != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -19,7 +16,11 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      # NOTE: secrets TIDAK bisa dipakai di if: level job, hanya di level step.
+      # Login & push di-skip jika secret Docker Hub belum dikonfigurasi,
+      # sehingga tidak muncul failure noise di tiap push.
       - name: Login to Docker Hub
+        if: ${{ secrets.DOCKER_USERNAME != '' && secrets.DOCKER_PASSWORD != '' }}
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
@@ -35,6 +36,7 @@ jobs:
             type=sha,prefix=
 
       - name: Build and push
+        if: ${{ secrets.DOCKER_USERNAME != '' && secrets.DOCKER_PASSWORD != '' }}
         uses: docker/build-push-action@v5
         with:
           context: .

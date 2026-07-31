@@ -6,9 +6,6 @@ on:
 
 jobs:
   deploy:
-    # Hanya jalan jika secret SSH server sudah dikonfigurasi.
-    # Jika belum, job di-skip (tidak memunculkan failure di tiap push).
-    if: ${{ secrets.DEPLOY_HOST != '' && secrets.DEPLOY_USER != '' && secrets.DEPLOY_KEY != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -36,7 +33,10 @@ jobs:
       - name: Build frontend
         run: npm run build
 
+      # NOTE: secrets TIDAK bisa dipakai di if: level job, hanya di level step.
+      # Deploy di-skip jika secret SSH belum dikonfigurasi (tidak ada failure noise).
       - name: Deploy via SSH
+        if: ${{ secrets.DEPLOY_HOST != '' && secrets.DEPLOY_USER != '' && secrets.DEPLOY_KEY != '' }}
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.DEPLOY_HOST }}

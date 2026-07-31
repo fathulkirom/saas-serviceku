@@ -99,13 +99,15 @@ jobs:
     name: Deploy to Production
     needs: test
     runs-on: ubuntu-latest
-    # Deploy hanya jika test lulus DAN secret SSH sudah dikonfigurasi
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && secrets.SERVER_HOST != '' && secrets.SERVER_USER != '' && secrets.SERVER_SSH_KEY != ''
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
         
+      # NOTE: secrets TIDAK bisa dipakai di if: level job, hanya di level step.
+      # Deploy di-skip jika secret SSH belum dikonfigurasi (tidak ada failure noise).
       - name: Deploy via SSH
+        if: ${{ secrets.SERVER_HOST != '' && secrets.SERVER_USER != '' && secrets.SERVER_SSH_KEY != '' }}
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
