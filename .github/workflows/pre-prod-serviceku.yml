@@ -10,7 +10,10 @@ env:
   # sehingga CI harus pakai PHP 8.4 (bukan 8.2)
   PHP_VERSION: '8.4'
   NODE_VERSION: '20'
-  APP_ENV: staging
+  # NOTE: JANGAN set APP_ENV di sini. Jika diset (mis. 'staging'),
+  # nilai ini bocor ke semua job termasuk unit test & membuat
+  # HealthTest::test_environment_is_set_to_testing gagal.
+  # App env dikontrol via .env.staging (php artisan) & phpunit.xml (force=true).
   DB_CONNECTION: sqlite
   # Central DB (SQLite) — dipakai untuk job migrasi & test di CI
   DB_DATABASE: database/central.sqlite
