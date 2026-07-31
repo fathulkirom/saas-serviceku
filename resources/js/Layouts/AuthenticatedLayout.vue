@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import { usePage, router } from '@inertiajs/vue3';
 import LayoutNew from '@/Layouts/Themes/LayoutNew.vue';
 import { getIcon } from '@/Components/Icons.js';
@@ -55,6 +55,40 @@ const localSidebarHidden = ref(false);
 const planName = computed(() => page.props.tenant?.plan?.name || page.props.auth?.user?.plan || 'Trial');
 const branches = computed(() => page.props.branches || []);
 const currentBranch = computed(() => page.props.currentBranch || null);
+
+// ===== Branding per-tenant (tahap 3.8) =====
+// Terapkan primary_color dari TenantSetting ke CSS variables tema.
+const primaryColor = computed(() => page.props.tenant?.primary_color || '#4F46E5');
+
+function hexToRgba(hex, alpha) {
+    const h = String(hex).replace('#', '');
+    const r = parseInt(h.substring(0, 2), 16) || 79;
+    const g = parseInt(h.substring(2, 4), 16) || 70;
+    const b = parseInt(h.substring(4, 6), 16) || 229;
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function darkenHex(hex, percent) {
+    const h = String(hex).replace('#', '');
+    const num = parseInt(h, 16);
+    const amt = Math.round(2.55 * percent);
+    const r = Math.max(0, (num >> 16) - amt);
+    const g = Math.max(0, ((num >> 8) & 0xff) - amt);
+    const b = Math.max(0, (num & 0xff) - amt);
+    return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
+}
+
+function applyTenantTheme(color) {
+    if (!color) return;
+    const root = document.documentElement;
+    root.style.setProperty('--accent-primary', color);
+    root.style.setProperty('--accent-hover', darkenHex(color, 12));
+    root.style.setProperty('--accent-light', hexToRgba(color, 0.1));
+    root.style.setProperty('--accent-glow', hexToRgba(color, 0.2));
+}
+
+onMounted(() => applyTenantTheme(primaryColor.value));
+watch(primaryColor, (color) => applyTenantTheme(color));
 
 const layoutMap = { 'sidebar': 'modern', 'slim-sidebar': 'slim', 'topbar': 'classic' };
 const uiPrefs = computed(() => page.props.auth.user?.ui_preferences || {});
