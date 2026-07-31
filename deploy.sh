@@ -184,6 +184,13 @@ ssh $SSH_USER@$SSH_HOST "docker exec serviceku-app php artisan db:seed --class=S
 info "Clearing Laravel cache..."
 ssh $SSH_USER@$SSH_HOST "docker exec serviceku-app php artisan optimize:clear" 2>&1
 
+# ========== START QUEUE WORKER (persistent) ==========
+# Tanpa worker, job (GenerateInvoicePdf, SendInvoiceEmail dll) menumpuk di
+# tabel jobs dan tidak pernah diproses. Container restart: unless-stopped.
+info "Starting queue worker (persistent container)..."
+ssh $SSH_USER@$SSH_HOST "cd $REMOTE_DIR && docker compose up -d queue-worker" 2>&1
+ssh $SSH_USER@$SSH_HOST "docker ps --filter name=serviceku-queue --format '{{.Names}} {{.Status}}'" 2>&1
+
 # ========== CHECK STATUS ==========
 echo ""
 echo "=========================================="
