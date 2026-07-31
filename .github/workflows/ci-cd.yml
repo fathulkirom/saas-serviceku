@@ -95,38 +95,6 @@ jobs:
               body: `The CI/CD pipeline failed on commit **${context.sha}**.\n\n### 🔍 Details\n- **Triggered by:** ${context.eventName}\n- **Branch:** ${context.ref}\n- **Action URL:** [View Failed Run](${runUrl})\n\nPlease investigate and fix the failing tests (PHPUnit / Playwright E2E).`
             })
 
-  deploy:
-    name: Deploy to Production
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      # NOTE: context secrets TIDAK tersedia di if: (job maupun step).
-      # Jadi kita pakai guard step yang menulis output, lalu if pada output.
-      - name: Check deploy credentials
-        id: creds
-        run: |
-          if [ -n "${{ secrets.SERVER_HOST }}" ] && [ -n "${{ secrets.SERVER_SSH_KEY }}" ]; then
-            echo "has_creds=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "has_creds=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Deploy via SSH
-        if: steps.creds.outputs.has_creds == 'true'
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.SERVER_HOST }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
-          script: |
-            cd /var/www/saas-serviceku
-            git pull origin main
-            composer install --no-interaction --prefer-dist --optimize-autoloader
-            npm ci
-            npm run build
-            php artisan migrate --force
-            php artisan optimize:clear
+  # NOTE: Job deploy dihapus dari sini — duplikat dengan .github/workflows/deploy.yml.
+  # Jalur deploy tunggal: deploy.yml (immediate SSH deploy) & pre-prod-serviceku.yml
+  # (approval-gated deploy). Biarkan workflow ini test-only agar tidak double-deploy.

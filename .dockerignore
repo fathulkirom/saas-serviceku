@@ -1,0 +1,60 @@
+# ============================================
+# Docker build ignore — jangan masukkan ke image
+# ============================================
+
+# Dependency (di-install ulang di dalam image)
+/vendor
+/node_modules
+
+# Build artifacts frontend (di-build ulang di stage 1)
+/public/build
+/public/hot
+
+# Environment & secrets (jangan di-bake ke image; set saat runtime)
+.env
+.env.*
+!.env.example
+auth.json
+
+# Git & CI
+.git
+.github
+
+# Runtime storage (volume terpisah)
+/storage/*.key
+/storage/logs/*
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/framework/testing/*
+
+# Database lokal & per-tenant
+/database/*.sqlite
+/database/*.sqlite-journal
+/database/tenant_*/
+/database/testing_tenant_*
+
+# Testing & tooling
+/tests
+/e2e
+/test-results
+/playwright-report
+/coverage-report
+/phpunit.xml
+/phpunit.xml.dist
+
+# Script & config deployment
+/deploy.sh
+/backup.sh
+/docker-compose.yml
+/Dockerfile
+.dockerignore
+compose.yaml
+
+# IDE & OS
+/.idea
+/.vscode
+/.fleet
+/.nova
+.DS_Store
+*.log
