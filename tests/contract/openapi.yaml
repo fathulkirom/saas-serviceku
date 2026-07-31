@@ -1,0 +1,130 @@
+openapi: 3.0.3
+info:
+  title: ServiceKU Public API
+  version: 1.0.0
+  description: >-
+    API publik ServiceKU — pelacakan servis (public) dan layanan tenant
+    (wajib autentikasi bearer token).
+servers:
+  - url: https://serviceku.my.id
+paths:
+  /api/track/{trackingCode}:
+    get:
+      operationId: trackService
+      summary: Lacak status servis berdasarkan kode tracking
+      parameters:
+        - name: trackingCode
+          in: path
+          required: true
+          schema:
+            type: string
+            example: TEST123
+      responses:
+        '200':
+          description: Data servis ditemukan (hanya tersedia di subdomain tenant)
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    type: object
+        '404':
+          description: Tenant / servis tidak ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [message]
+                properties:
+                  message:
+                    type: string
+                    example: Tenant not found
+        '500':
+          description: Error internal server
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /api/services:
+    get:
+      operationId: listServices
+      summary: Daftar servis pada tenant (wajib autentikasi)
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Daftar servis (paginate Laravel)
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    type: object
+        '401':
+          description: Tidak terautentikasi
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [message]
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+  /api/services/{service}:
+    get:
+      operationId: showService
+      summary: Detail servis (wajib autentikasi)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: service
+          in: path
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Detail servis lengkap
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    type: object
+        '401':
+          description: Tidak terautentikasi
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [message]
+                properties:
+                  message:
+                    type: string
+                    example: Unauthenticated.
+        '404':
+          description: Servis tidak ditemukan
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Bearer

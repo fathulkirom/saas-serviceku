@@ -1,0 +1,119 @@
+{
+  "info": {
+    "name": "ServiceKU E2E Backend Scenarios",
+    "description": "E2E backend scenarios terhadap environment ServiceKU (production/staging). Dijalankan via Newman.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://serviceku.my.id" }
+  ],
+  "item": [
+    {
+      "name": "Homepage",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": { "raw": "{{baseUrl}}/", "host": ["{{baseUrl}}"], "path": [""] }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Homepage returns 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Homepage is HTML', function () { pm.expect(pm.response.headers.get('content-type')).to.include('text/html'); });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Track service (tenant not found)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/json" }
+        ],
+        "url": { "raw": "{{baseUrl}}/api/track/TEST123", "host": ["{{baseUrl}}"], "path": ["api", "track", "TEST123"] }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Track returns 404 on central domain', function () { pm.response.to.have.status(404); });",
+              "pm.test('Track response is valid JSON with message', function () { var body = pm.response.json(); pm.expect(body.message).to.eql('Tenant not found'); });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "List services (no auth -> 401)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/json" }
+        ],
+        "url": { "raw": "{{baseUrl}}/api/services", "host": ["{{baseUrl}}"], "path": ["api", "services"] }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Services without auth returns 401', function () { pm.response.to.have.status(401); });",
+              "pm.test('Services 401 is JSON with message', function () { var body = pm.response.json(); pm.expect(body.message).to.eql('Unauthenticated.'); });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Show service (no auth -> 401)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/json" }
+        ],
+        "url": { "raw": "{{baseUrl}}/api/services/1", "host": ["{{baseUrl}}"], "path": ["api", "services", "1"] }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Show service without auth returns 401', function () { pm.response.to.have.status(401); });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "CORS headers present",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Origin", "value": "https://app.contoh.com" }
+        ],
+        "url": { "raw": "{{baseUrl}}/api/track/TEST123", "host": ["{{baseUrl}}"], "path": ["api", "track", "TEST123"] }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('CORS allow-origin header present', function () { pm.expect(pm.response.headers.get('access-control-allow-origin')).to.eql('*'); });"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    }
+  ]
+}

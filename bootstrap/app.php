@@ -13,6 +13,7 @@ use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\HandleCors;
 use App\Http\Middleware\EnsureJsonForApi;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 
@@ -126,6 +127,14 @@ return Application::configure(basePath: dirname(__DIR__))
                 }
             });
         }
+
+        $exceptions->render(function (AuthenticationException $e, Request $request) {
+            // Pastikan request ke /api/* tanpa autentikasi selalu 401 JSON,
+            // bukan redirect 302 ke /login (yang 404 di landing page).
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return response()->json(['message' => 'Unauthenticated.'], 401);
+            }
+        });
 
         $exceptions->respond(function (\Symfony\Component\HttpFoundation\Response $response, \Throwable $exception, Request $request) {
             if (!app()->environment('local') && in_array($response->getStatusCode(), [500, 503, 404, 403, 419])) {
