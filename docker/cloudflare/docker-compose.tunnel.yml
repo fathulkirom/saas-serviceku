@@ -1,13 +1,16 @@
-# Cloudflare Tunnel untuk ServiceKU (token-based / remotely managed)
-#
+# Cloudflare Tunnel Configuration
+# 
 # Cara penggunaan:
-# 1. Buat tunnel di dashboard Cloudflare:
-#    Cloudflare Zero Trust -> Networks -> Tunnels -> Create a tunnel
-#    Pilih "Cloudflared" -> "Remotely managed" -> salin token (eyJh...)
-# 2. Salin .env.tunnel.example ke .env lalu isi TUNNEL_TOKEN
-# 3. Atur public hostname di dashboard: serviceku.my.id -> http://serviceku-app:8080
-#    (app berjalan di network serviceku_serviceku-network, port internal 8080)
-# 4. Jalankan: docker compose --env-file .env -f docker-compose.tunnel.yml up -d
+# 1. Install cloudflared: brew install cloudflare/cloudflare/cloudflared
+# 2. Login: cloudflared tunnel login
+# 3. Buat tunnel: cloudflared tunnel create serviceku
+# 4. Copy credentials file ke folder ini
+# 5. Atur DNS: cloudflared tunnel route dns serviceku app.serviceku.app
+# 6. Jalankan: cloudflared tunnel run serviceku
+#
+# Atau gunakan docker-compose service di bawah:
+
+version: '3.8'
 
 services:
   cloudflared:
@@ -17,10 +20,12 @@ services:
     command: tunnel run
     environment:
       - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+    volumes:
+      - ./credentials:/home/nonroot/.cloudflared
     networks:
       - serviceku-network
 
 networks:
   serviceku-network:
     external: true
-    name: serviceku_serviceku-network
+    name: saas_serviceku-network

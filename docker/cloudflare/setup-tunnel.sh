@@ -1,66 +1,79 @@
 #!/bin/bash
 # ==========================================
-# Setup Cloudflare Tunnel (token-based) untuk ServiceKU
+# Setup Cloudflare Tunnel untuk ServiceKU
 # ==========================================
-# Cara pakai:
-#   ./setup-tunnel.sh [domain]
-# Contoh:
-#   ./setup-tunnel.sh serviceku.my.id
-#
-# Prasyarat:
-#   - Tunnel sudah dibuat di dashboard Cloudflare (remotely managed)
-#   - Punya TUNNEL_TOKEN dari dashboard
+# Prasyarat: Docker sudah terinstall
 # ==========================================
 
 set -e
 
-DIR="$(cd "$(dirname "$0")" && pwd)"
-DOMAIN="${1:-serviceku.my.id}"
-
-echo "=========================================="
-echo "  🚀 ServiceKU - Cloudflare Tunnel Setup"
-echo "  🌐 Domain: $DOMAIN"
-echo "=========================================="
+echo "=== ServiceKU - Cloudflare Tunnel Setup ==="
 echo ""
 
-# 1. Cek docker
-if ! command -v docker &> /dev/null; then
-    echo "❌ Docker tidak terinstall."
-    exit 1
+# 1. Cek cloudflared
+if ! command -v cloudflared &> /dev/null; then
+    echo "Menginstall cloudflared..."
+    brew install cloudflare/cloudflare/cloudflared
 fi
 
-# 2. Minta token (diketik langsung di terminal, TIDAK masuk history)
-if [ -n "$TUNNEL_TOKEN" ]; then
-    echo "✅ Menggunakan TUNNEL_TOKEN dari environment."
-else
-    read -s -p "Paste TUNNEL_TOKEN dari dashboard Cloudflare: " TOKEN
-    echo ""
-    if [ -z "$TOKEN" ]; then
-        echo "❌ Token kosong. Batalkan."
-        exit 1
-    fi
-    TUNNEL_TOKEN="$TOKEN"
-fi
+echo "✅ cloudflared terinstall"
 
-# 3. Simpan ke .env (chmod 600 karena berisi secret)
-cat > "$DIR/.env" << EOF
-TUNNEL_TOKEN=$TUNNEL_TOKEN
-EOF
-chmod 600 "$DIR/.env"
-echo "✅ Token disimpan di $DIR/.env (mode 600)"
+# 2. Login ke Cloudflare
+echo ""
+echo "Silakan login ke Cloudflare di browser..."
+cloudflared tunnel login
 
-# 4. Jalankan tunnel container
+# 3. Buat tunnel
+TUNNEL_NAME="serviceku-tunnel"
 echo ""
-echo "Menjalankan tunnel container..."
-cd "$DIR"
-docker compose --env-file .env -f docker-compose.tunnel.yml up -d
+echo "Membuat tunnel '$TUNNEL_NAME'..."
+cloudflared tunnel create $TUNNEL_NAME 2>/dev/null || echo "Tunnel sudah ada"
+
+# 4. Dapatkan Tunnel ID
+TUNNEL_ID=$(cloudflared tunnel list | grep "$TUNNEL_NAME" | awk '{print $1}')
+echo "✅ Tunnel ID: $TUNNEL_ID"
+
+# 5. Buat konfigurasi
+echo ""
+echo "Membuat konfigurasi tunnel..."
+
+# Domain master
+CENTRAL_DOMAIN="admin.serviceku.app"
+
+cat > ~/.cloudflared/$TUNNEL_ID.json << EOL
+{
+  "tunnel": "$TUNNEL_ID",
+  "credentials-file": "/home/nonroot/.cloudflared/$TUNNEL_ID.json",
+  "ingress": [
+    {
+      "hostname": "$CENTRAL_DOMAIN",
+      "service": "http://localhost:8000"
+    },
+    {
+      "service": "http://localhost:8000"
+    }
+  ]
+}
+EOL
+
+# 6. Route DNS
+echo ""
+echo "Route DNS untuk domain tenant..."
+echo "Contoh: Untuk tenant 'tokoku' → tokoku.serviceku.app"
+echo ""
+echo "Jalankan perintah berikut untuk setiap tenant:"
+echo "  cloudflared tunnel route dns $TUNNEL_NAME tokoku.serviceku.app"
+echo "  cloudflared tunnel route dns $TUNNEL_NAME $CENTRAL_DOMAIN"
+
+# 7. Info .env
+echo ""
+echo "=== Tambahkan ke .env ==="
+echo "APP_URL=https://$CENTRAL_DOMAIN"
+echo "TUNNEL_TOKEN=<token-dari-cloudflare>"
 
 echo ""
-echo "=========================================="
-echo "✅ Tunnel '$DOMAIN' berjalan!"
+echo "✅ Selesai! Jalankan tunnel:"
+echo "  cloudflared tunnel run $TUNNEL_NAME"
 echo ""
-echo "⚠️  PASTIKAN di dashboard Cloudflare (tunnel -> Public Hostnames):"
-echo "   Hostname : $DOMAIN"
-echo "   Service  : HTTP -> serviceku-app:8080"
-echo "   (jika gagal, coba HTTP -> 192.168.1.33:8081)"
-echo "=========================================="
+echo "Atau via Docker:"
+echo "  cd docker/cloudflare && docker compose -f docker-compose.tunnel.yml up -d"
