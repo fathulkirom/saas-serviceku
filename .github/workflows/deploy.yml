@@ -6,6 +6,9 @@ on:
 
 jobs:
   deploy:
+    # Hanya jalan jika secret SSH server sudah dikonfigurasi.
+    # Jika belum, job di-skip (tidak memunculkan failure di tiap push).
+    if: ${{ secrets.DEPLOY_HOST != '' && secrets.DEPLOY_USER != '' && secrets.DEPLOY_KEY != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
