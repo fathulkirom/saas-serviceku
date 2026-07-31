@@ -16,11 +16,19 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # NOTE: secrets TIDAK bisa dipakai di if: level job, hanya di level step.
-      # Login & push di-skip jika secret Docker Hub belum dikonfigurasi,
-      # sehingga tidak muncul failure noise di tiap push.
+      # NOTE: context secrets TIDAK tersedia di if: (job maupun step).
+      # Jadi kita pakai guard step yang menulis output, lalu if pada output.
+      - name: Check Docker credentials
+        id: creds
+        run: |
+          if [ -n "${{ secrets.DOCKER_USERNAME }}" ] && [ -n "${{ secrets.DOCKER_PASSWORD }}" ]; then
+            echo "has_creds=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_creds=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Login to Docker Hub
-        if: ${{ secrets.DOCKER_USERNAME != '' && secrets.DOCKER_PASSWORD != '' }}
+        if: steps.creds.outputs.has_creds == 'true'
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
@@ -36,7 +44,7 @@ jobs:
             type=sha,prefix=
 
       - name: Build and push
-        if: ${{ secrets.DOCKER_USERNAME != '' && secrets.DOCKER_PASSWORD != '' }}
+        if: steps.creds.outputs.has_creds == 'true'
         uses: docker/build-push-action@v5
         with:
           context: .

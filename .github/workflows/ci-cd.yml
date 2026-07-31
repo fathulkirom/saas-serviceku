@@ -103,11 +103,20 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-        
-      # NOTE: secrets TIDAK bisa dipakai di if: level job, hanya di level step.
-      # Deploy di-skip jika secret SSH belum dikonfigurasi (tidak ada failure noise).
+
+      # NOTE: context secrets TIDAK tersedia di if: (job maupun step).
+      # Jadi kita pakai guard step yang menulis output, lalu if pada output.
+      - name: Check deploy credentials
+        id: creds
+        run: |
+          if [ -n "${{ secrets.SERVER_HOST }}" ] && [ -n "${{ secrets.SERVER_SSH_KEY }}" ]; then
+            echo "has_creds=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_creds=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Deploy via SSH
-        if: ${{ secrets.SERVER_HOST != '' && secrets.SERVER_USER != '' && secrets.SERVER_SSH_KEY != '' }}
+        if: steps.creds.outputs.has_creds == 'true'
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
