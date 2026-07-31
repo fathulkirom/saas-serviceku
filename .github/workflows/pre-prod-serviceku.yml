@@ -6,7 +6,9 @@ on:
   workflow_dispatch:  # Bisa juga dijalankan manual
 
 env:
-  PHP_VERSION: '8.2'
+  # composer.lock berisi symfony 8.1 yang butuh php >=8.4.1
+  # sehingga CI harus pakai PHP 8.4 (bukan 8.2)
+  PHP_VERSION: '8.4'
   NODE_VERSION: '20'
   APP_ENV: staging
   DB_CONNECTION: sqlite
