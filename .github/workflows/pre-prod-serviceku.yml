@@ -227,6 +227,10 @@ jobs:
           php artisan migrate --force
           php artisan db:seed --force --class=PlanSeeder
 
+      # Frontend harus di-build dulu, kalau tidak: "Vite manifest not found"
+      - name: Build Frontend (Vite)
+        run: npm run build
+
       - run: npx playwright install --with-deps chromium
 
       # Config Playwright berada di e2e/playwright.config.js (baseURL localhost:8000)
