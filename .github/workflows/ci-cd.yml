@@ -32,7 +32,8 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          # composer.lock berisi symfony 8.1 yang butuh php >=8.4.1
+          php-version: '8.4'
           extensions: mbstring, xml, bcmath, pdo, pdo_mysql
           coverage: none
           
@@ -55,6 +56,8 @@ jobs:
           cp .env.example .env
           sed -i 's/DB_CONNECTION=sqlite/DB_CONNECTION=mysql/' .env
           sed -i 's/DB_DATABASE=laravel/DB_DATABASE=testing/' .env
+          sed -i 's/DB_USERNAME=root/DB_USERNAME=root/' .env
+          sed -i 's/DB_PASSWORD=$/DB_PASSWORD=password/' .env
           php artisan key:generate
           php artisan migrate --force
           
@@ -64,8 +67,12 @@ jobs:
       - name: Run Frontend Build & Serve
         run: |
           npm run build
-          php artisan serve --port=8000 &
-          sleep 5
+          # pakai php -S langsung (php artisan serve tidak baca APP_KEY dari .env)
+          php -S 127.0.0.1:8000 -t public public/index.php > /tmp/server.log 2>&1 &
+          for i in $(seq 1 30); do
+            curl -sf http://127.0.0.1:8000 > /dev/null 2>&1 && break
+            sleep 1
+          done
           
       - name: Run E2E Tests (Playwright)
         run: npm run test:e2e
