@@ -78,6 +78,9 @@ rsync -avzO --progress \
     --exclude 'bootstrap/cache/*' \
     --exclude 'public/build' \
     --exclude 'public/hot' \
+    --exclude 'database/tenant_*' \
+    --exclude 'database/testing_tenant_*' \
+    --exclude 'database/*.sqlite*' \
     "$LOCAL_DIR/" "$SSH_USER@$SSH_HOST:$REMOTE_DIR/" || true
 
 info "Copying built assets..."
@@ -138,8 +141,10 @@ info "Installing composer dependencies..."
 ssh $SSH_USER@$SSH_HOST "cd $REMOTE_DIR && cp .env .env.backup 2>/dev/null; docker run --rm -v $REMOTE_DIR:/app composer:latest composer install --no-dev --optimize-autoloader --no-interaction" 2>&1
 
 # ========== GENERATE APP KEY ==========
-info "Generating APP_KEY..."
-ssh $SSH_USER@$SSH_HOST "cd $REMOTE_DIR && docker run --rm -v $REMOTE_DIR:/app composer:latest php artisan key:generate --force" 2>&1
+# Hanya generate jika APP_KEY kosong (jangan rotasi key yang sudah ada,
+# karena akan merusak data terenkripsi & sesi pengguna).
+info "Generating APP_KEY (hanya jika kosong)..."
+ssh $SSH_USER@$SSH_HOST "cd $REMOTE_DIR && if grep -qE '^APP_KEY=[A-Za-z0-9]' .env; then echo 'APP_KEY sudah ada — dipertahankan'; else docker run --rm -v $REMOTE_DIR:/app composer:latest php artisan key:generate --force; fi" 2>&1
 
 # ========== SET PERMISSIONS ==========
 info "Setting permissions..."
@@ -159,7 +164,7 @@ ssh $SSH_USER@$SSH_HOST "cd $REMOTE_DIR && docker run -d --name serviceku-app --
     --network serviceku_serviceku-network \
     -p $APP_PORT:8080 \
     -v $REMOTE_DIR:/var/www/html \
-    serversideup/php:8.2-fpm-nginx" 2>&1
+    serversideup/php:8.4-fpm-nginx" 2>&1
 
 info "Waiting for app container to boot..."
 sleep 5
