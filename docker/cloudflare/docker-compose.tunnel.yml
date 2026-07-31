@@ -5,7 +5,7 @@
 #    Cloudflare Zero Trust -> Networks -> Tunnels -> Create a tunnel
 #    Pilih "Cloudflared" -> "Remotely managed" -> salin token (eyJh...)
 # 2. Salin .env.tunnel.example ke .env lalu isi TUNNEL_TOKEN
-# 3. Atur public hostname di dashboard: service -> http://serviceku-app:8080
+# 3. Atur public hostname di dashboard: serviceku.my.id -> http://serviceku-app:8080
 #    (app berjalan di network serviceku_serviceku-network, port internal 8080)
 # 4. Jalankan: docker compose --env-file .env -f docker-compose.tunnel.yml up -d
 
