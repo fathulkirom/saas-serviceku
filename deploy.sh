@@ -174,6 +174,8 @@ ssh $SSH_USER@$SSH_HOST "cd $REMOTE_DIR && docker run -d --name serviceku-app --
     --network serviceku_serviceku-network \
     -p $APP_PORT:8080 \
     -v $REMOTE_DIR:/var/www/html \
+    -e PHP_OPCACHE_ENABLE=1 \
+    -e PHP_SESSION_COOKIE_SECURE=true \
     serversideup/php:8.4-fpm-nginx" 2>&1
 
 info "Waiting for app container to boot..."
