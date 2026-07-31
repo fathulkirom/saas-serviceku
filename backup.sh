@@ -9,16 +9,23 @@
 #   ./backup.sh --auto             # Backup tanpa konfirmasi
 #   ./backup.sh --restore FILE     # Restore dari file backup
 #
-# Cron (setiap jam 3 pagi):
-#   0 3 * * * /path/to/backup.sh --auto >> /var/log/serviceku-backup.log 2>&1
+# Cron (setiap jam 3 pagi) — jalankan dari HOST (bukan container, karena
+# tidak ada docker CLI di dalam app container):
+#   0 3 * * * /home/kirom/serviceku/backup.sh --auto >> /var/log/serviceku-backup.log 2>&1
+#
+# Catatan: `backup:run` (artisan) di dalam container tidak bisa dump DB
+# (tidak ada docker CLI/mysqldump). Gunakan backup.sh di HOST ini.
 # ==========================================
 
 set -e
 
 # ========== KONFIGURASI ==========
-# Ubah sesuai direktori HDD kamu
-BACKUP_DIR="/Volumes/HDD/Backup/ServiceKU"
-# Alternatif: BACKUP_DIR="/mnt/hdd/Backup/ServiceKU"
+# Default untuk server Linux (kirom@192.168.1.33).
+# Override: BACKUP_DIR=/path ./backup.sh --auto
+BACKUP_DIR="${BACKUP_DIR:-/mnt/hdd/Backup/ServiceKU}"
+# Catatan: pastikan dir bisa ditulis user yang menjalankan backup:
+#   sudo chown -R kirom:www-data /mnt/hdd/Backup/ServiceKU /home/kirom/serviceku/storage
+#   sudo chmod -R g+w /mnt/hdd/Backup/ServiceKU /home/kirom/serviceku/storage
 
 # Konfigurasi Database (baca dari environment, fallback untuk local)
 DB_HOST="${DB_HOST:-127.0.0.1}"
@@ -28,10 +35,10 @@ DB_PASS="${DB_PASSWORD:-serviceku_pass}"
 DB_MASTER="${DB_DATABASE:-serviceku_master}"
 
 # Docker container name
-MYSQL_CONTAINER="serviceku-mysql"
+MYSQL_CONTAINER="${MYSQL_CONTAINER:-serviceku-mysql}"
 
-# Lokasi project
-PROJECT_DIR="/Users/macbook/saas"
+# Lokasi project (server Linux)
+PROJECT_DIR="${PROJECT_DIR:-/home/kirom/serviceku}"
 
 # Berapa hari backup disimpan
 RETENTION_DAYS=30
