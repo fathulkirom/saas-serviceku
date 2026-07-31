@@ -203,13 +203,48 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          coverage: none
+
       - name: Setup Node
         uses: actions/setup-node@v4
-        with: { node-version: '${{ env.NODE_VERSION }}' }
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - run: composer install --prefer-dist --no-progress --no-interaction
       - run: npm ci
+
+      - name: Prepare app & database
+        run: |
+          cp .env.staging .env
+          php artisan key:generate
+          mkdir -p database
+          touch database/central.sqlite
+          php artisan migrate --force
+          php artisan db:seed --force --class=PlanSeeder
+
       - run: npx playwright install --with-deps chromium
 
-      # Config Playwright berada di e2e/playwright.config.js
+      # Config Playwright berada di e2e/playwright.config.js (baseURL localhost:8000)
+      - name: Start Laravel server
+        run: |
+          php artisan serve --host=127.0.0.1 --port=8000 > /tmp/laravel-server.log 2>&1 &
+          echo $! > /tmp/laravel.pid
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:8000 > /dev/null 2>&1; then
+              echo "✅ Server ready after ${i}s"
+              break
+            fi
+            sleep 1
+          done
+          curl -sf http://localhost:8000 > /dev/null 2>&1 || {
+            echo "❌ Server gagal start:"; cat /tmp/laravel-server.log; exit 1;
+          }
+
       - name: Run E2E Tests (Playwright)
         run: npx playwright test --config=e2e/playwright.config.js
         continue-on-error: true
@@ -225,6 +260,10 @@ jobs:
       - name: Fail if E2E failed
         if: steps.e2e.outcome == 'failure'
         run: exit 1
+
+      - name: Stop Laravel server
+        if: always()
+        run: kill $(cat /tmp/laravel.pid) 2>/dev/null || true
 
   # ────────────────────────────────────────
   # 6. Performance & Load Testing
