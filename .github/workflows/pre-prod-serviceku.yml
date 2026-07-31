@@ -234,14 +234,15 @@ jobs:
       - run: npx playwright install --with-deps chromium
 
       # Config Playwright berada di e2e/playwright.config.js (baseURL localhost:8000)
-      # NOTE: pakai 127.0.0.1 (bukan localhost) karena di runner Ubuntu localhost
-      # bisa resolve ke ::1 (IPv6) sedangkan server hanya listen di IPv4.
-      # Wait-loop menerima kode HTTP apa pun (bukan hanya 2xx) karena `curl -f`
-      # akan gagal jika halaman sementara mengembalikan 5xx — kita hanya perlu
-      # memastikan server merespons, lalu biarkan Playwright memvalidasi isinya.
+      # NOTE: pakai `php -S` LANGSUNG, bukan `php artisan serve`. Ada quirk di mana
+      # `php artisan serve` (built-in server via server.php) TIDAK membaca APP_KEY
+      # dari .env -> error "No application encryption key has been specified" (500).
+      # `php -S ... public/index.php` membaca .env dengan benar (sudah terverifikasi).
+      # pakai 127.0.0.1 (bukan localhost) karena di runner Ubuntu localhost bisa
+      # resolve ke ::1 (IPv6) sedangkan server hanya listen di IPv4.
       - name: Start Laravel server
         run: |
-          php artisan serve --host=127.0.0.1 --port=8000 > /tmp/laravel-server.log 2>&1 &
+          php -S 127.0.0.1:8000 -t public public/index.php > /tmp/laravel-server.log 2>&1 &
           echo $! > /tmp/laravel.pid
           for i in $(seq 1 60); do
             code=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8000 2>/dev/null || echo "000")
