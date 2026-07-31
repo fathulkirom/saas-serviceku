@@ -257,7 +257,7 @@ const submitFastCustomer = async () => {
     savingCustomer.value = true;
     try {
         const { default: axios } = await import('axios');
-        const response = await axios.post(route('customers.api-store'), newCustomerForm.value);
+        const response = await axios.post(route('customers.ajax-store'), newCustomerForm.value);
         if (response.data.success && response.data.customer) {
             customerList.value.unshift(response.data.customer);
             form.customer_id = response.data.customer.id;

@@ -123,7 +123,7 @@ Route::middleware([
 
     // ========== CUSTOMERS ==========
     Route::resource('customers', CustomerController::class)->except(['edit'])->middleware('check.plan.feature:customers');
-    Route::post('/customers/api-store', [CustomerController::class, 'storeApi'])->name('customers.api-store')->middleware('check.plan.feature:customers');
+    Route::post('/customers/ajax-store', [CustomerController::class, 'storeApi'])->name('customers.ajax-store')->middleware('check.plan.feature:customers');
     Route::post('/customers/{customer}/register-member', [CustomerController::class, 'registerMember'])->name('customers.register-member')->middleware('check.plan.feature:customers');
 
     // ========== PRODUCTS ==========

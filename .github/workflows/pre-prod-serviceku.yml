@@ -10,9 +10,12 @@ env:
   NODE_VERSION: '20'
   APP_ENV: staging
   DB_CONNECTION: sqlite
-  CENTRAL_DB: database/central.sqlite
-  # Token GitHub untuk membuat Issue dan deployment
-  GH_TOKEN: ${{ secrets.GH_TOKEN }}
+  # Central DB (SQLite) — dipakai untuk job migrasi & test di CI
+  DB_DATABASE: database/central.sqlite
+  # Token GitHub untuk membuat Issue dan deployment.
+  # Default github.token (otomatis); override dengan secret GH_TOKEN jika perlu
+  # permission tambahan (scope issues & workflow).
+  GH_TOKEN: ${{ secrets.GH_TOKEN || github.token }}
   # URL staging (ganti dengan milikmu)
   STAGING_URL: https://staging.serviceku.app
 
@@ -54,17 +57,20 @@ jobs:
       - name: Check .env.staging exists & valid
         run: |
           cp .env.staging .env || (echo "::error::.env.staging missing" && exit 1)
-          if grep -q "changeme\|your-\|null" .env; then
-            echo "::error::.env contains placeholder values!"
+          # Cek placeholder berbahaya (GANTI_/changeme/your-), bukan nilai kosong opsional
+          if grep -qE "changeme|your-|GANTI_|your_password" .env.staging; then
+            echo "::error::.env.staging contains placeholder values!"
             gh issue create --title "[PRE-PROD] Environment variables contain placeholder" --body "File .env.staging masih ada placeholder. Segera isi dengan nilai asli." --label "blocker,environment"
             exit 1
           fi
+          echo "✅ .env.staging valid"
 
-      - name: Lint PHP (Laravel Pint)
-        run: ./vendor/bin/pint --test || true  # warning only
+      - name: Lint PHP (Laravel Pint) — warning only
+        run: ./vendor/bin/pint --test || true
 
-      - name: Lint Frontend (ESLint)
-        run: npx eslint resources/js/ --ext .vue,.js || true
+      # ESLint belum dipasang di project; ganti dengan build check frontend
+      - name: Build Check Frontend (Vite)
+        run: npm run build
 
   # ────────────────────────────────────────
   # 2. Database Migration & Rollback (Central)
@@ -74,20 +80,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Setup PHP & Composer (as before) …
+      - name: Setup PHP & Composer
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ env.PHP_VERSION }}
+          coverage: none
       - run: composer install --prefer-dist --no-progress --no-interaction
       - run: cp .env.staging .env && php artisan key:generate
+      - name: Prepare Central SQLite DB
+        run: |
+          mkdir -p database
+          touch database/central.sqlite
       - name: Run Central Migration
-        run: php artisan migrate --force --database=central
+        run: php artisan migrate --force
       - name: Rollback Central Migration
-        run: php artisan migrate:rollback --force --database=central
-      - name: Migrate again
-        run: php artisan migrate --force --database=central
+        run: php artisan migrate:rollback --force
+      - name: Migrate again (verify downgrade + upgrade cycle)
+        run: php artisan migrate --force
       - name: Seed Central (optional)
-        run: php artisan db:seed --force --class=CentralSeeder || true
+        run: php artisan db:seed --force --class=PlanSeeder || true
 
   # ────────────────────────────────────────
   # 3. Unit & Integration Tests (Central + Tenant)
@@ -97,42 +108,50 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Setup PHP & Node
+      - name: Setup PHP (dengan PCOV untuk coverage)
         uses: shivammathur/setup-php@v2
-        with: { php-version: '${{ env.PHP_VERSION }}' }
-      - uses: actions/setup-node@v4
-        with: { node-version: '${{ env.NODE_VERSION }}' }
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          coverage: pcov
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
       - run: composer install --prefer-dist --no-progress --no-interaction
       - run: npm ci
       - run: cp .env.staging .env && php artisan key:generate
-      - run: php artisan migrate --force --database=central
+      - run: |
+          mkdir -p database
+          touch database/central.sqlite
+          php artisan migrate --force
 
-      - name: Run Backend Tests (PHPUnit)
-        run: php artisan test --parallel --coverage-text
+      - name: Run Backend Tests (PHPUnit + coverage)
+        run: php -d pcov.enabled=1 vendor/bin/phpunit --coverage-text
         continue-on-error: true
         id: backend-test
 
-      - name: Run Frontend Tests (Vitest)
-        run: npx vitest run --coverage
+      # Vitest tidak terpasang di project; pakai build check sebagai smoke frontend
+      - name: Build Check Frontend (Vite)
+        run: npm run build
         continue-on-error: true
-        id: frontend-test
+        id: frontend-build
 
       - name: Create Issue if Backend Tests Fail
         if: steps.backend-test.outcome == 'failure'
         run: |
           gh issue create --title "[TEST] Backend unit/integration failure" \
-            --body "$(tail -50 storage/logs/laravel.log)" \
+            --body "Terjadi kegagalan backend tests. Detail: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
             --label "bug,backend"
 
-      - name: Create Issue if Frontend Tests Fail
-        if: steps.frontend-test.outcome == 'failure'
+      - name: Create Issue if Frontend Build Fails
+        if: steps.frontend-build.outcome == 'failure'
         run: |
-          gh issue create --title "[TEST] Frontend unit/component failure" \
-            --body "Jalankan vitest run untuk detail." \
+          gh issue create --title "[TEST] Frontend build failure" \
+            --body "npm run build gagal. Detail: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
             --label "bug,frontend"
 
       - name: Fail job if any test failed
-        if: steps.backend-test.outcome == 'failure' || steps.frontend-test.outcome == 'failure'
+        if: steps.backend-test.outcome == 'failure' || steps.frontend-build.outcome == 'failure'
         run: exit 1
 
   # ────────────────────────────────────────
@@ -145,28 +164,31 @@ jobs:
       - uses: actions/checkout@v4
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
-        with: { php-version: '${{ env.PHP_VERSION }}' }
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          coverage: none
       - run: composer install --prefer-dist --no-progress --no-interaction
       - run: cp .env.staging .env && php artisan key:generate
-      - run: php artisan migrate --force --database=central
+      - run: |
+          mkdir -p database
+          touch database/central.sqlite
+          php artisan migrate --force
 
-      - name: Multi‑Tenancy Isolation Script
+      # Command tenant:create / tenancy:test-isolation TIDAK ada di project.
+      # Diganti dengan PHPUnit TenantIsolationTest yang sudah dibuat:
+      # tests/Feature/TenantIsolationTest.php (verifikasi isolasi data antar tenant).
+      - name: Multi-Tenancy Isolation Tests (PHPUnit)
+        run: php artisan test --filter=TenantIsolationTest
+        continue-on-error: true
+        id: isolation
+
+      - name: Create Issue on Isolation Breach
+        if: steps.isolation.outcome == 'failure'
         run: |
-          # Buat dua tenant via artisan command (asumsikan ada TenantSeeder)
-          php artisan tenant:create tenantA --domain=tenantA.serviceku.test
-          php artisan tenant:create tenantB --domain=tenantB.serviceku.test
-
-          # Login sebagai Tenant A, simpan token/session
-          # Gunakan curl ke endpoint test atau artisan command untuk testing
-          # Contoh sederhana: cek apakah data tenantA bisa diakses tenantB
-          # (Implementasikan script PHP/Artisan khusus, atau gunakan Dusk/Playwright)
-          # Untuk sekarang kita jalankan perintah custom Artisan
-          php artisan tenancy:test-isolation tenantA tenantB || (
-            gh issue create --title "[SECURITY] Multi‑tenant isolation breach" \
-              --body "Tenant B bisa mengakses data Tenant A. Periksa middleware IdentifyTenant." \
-              --label "blocker,security"
-            exit 1
-          )
+          gh issue create --title "[SECURITY] Multi-tenant isolation breach" \
+            --body "Tenant B bisa mengakses data Tenant A. Jalankan: php artisan test --filter=TenantIsolationTest. Detail: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            --label "blocker,security"
+          exit 1
 
   # ────────────────────────────────────────
   # 5. E2E Tests (Critical User Journeys)
@@ -180,10 +202,11 @@ jobs:
         uses: actions/setup-node@v4
         with: { node-version: '${{ env.NODE_VERSION }}' }
       - run: npm ci
-      - run: npx playwright install --with-deps
+      - run: npx playwright install --with-deps chromium
 
-      - name: Run E2E Tests (Playwright/Cypress)
-        run: npx playwright test --config=playwright.config.ts
+      # Config Playwright berada di e2e/playwright.config.js
+      - name: Run E2E Tests (Playwright)
+        run: npx playwright test --config=e2e/playwright.config.js
         continue-on-error: true
         id: e2e
 
@@ -238,23 +261,24 @@ jobs:
         with: { php-version: '${{ env.PHP_VERSION }}' }
       - run: composer install --prefer-dist --no-progress --no-interaction
 
-      - name: PHP Security Audit (Symfony CLI)
+      # symfony security:check sudah deprecated; pakai composer audit (bawaan Composer 2)
+      - name: PHP Dependency Audit (composer audit)
         run: |
-          curl -sSL https://symfony.com/installer | bash
-          symfony security:check || (
+          composer audit --format=table || (
             gh issue create --title "[SECURITY] PHP dependency vulnerability" \
-              --body "Terdapat kerentanan di composer.lock. Jalankan 'composer update'." \
+              --body "Terdapat kerentanan di composer.lock. Jalankan 'composer audit' untuk detail." \
               --label "security,blocker"
             exit 1
           )
 
       - name: Frontend Dependency Audit
-        run: npm audit --audit-level=high || (
-          gh issue create --title "[SECURITY] NPM high vulnerability" \
-            --body "Segera update package.json. npm audit untuk detail." \
-            --label "security"
-          # tidak exit 1 agar tidak blocking
-        )
+        run: |
+          npm audit --audit-level=high || (
+            gh issue create --title "[SECURITY] NPM high vulnerability" \
+              --body "Segera update package.json. npm audit untuk detail." \
+              --label "security"
+            # tidak exit 1 agar tidak blocking
+          )
 
   # ────────────────────────────────────────
   # 8. Final Smoke Test & Approval Gate
@@ -264,17 +288,17 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: production-approval   # Environment dengan proteksi manual
-      url: https://app.serviceku.id
+      url: https://serviceku.my.id
     steps:
       - name: Smoke Test (Staging)
         run: |
-          curl -f $STAGING_URL/api/health || (gh issue create --title "[SMOKE] Health endpoint down" --label "blocker,staging" && exit 1)
-          curl -f $STAGING_URL || (gh issue create --title "[SMOKE] Homepage not 200" --label "blocker,staging" && exit 1)
+          curl -fsS $STAGING_URL || (gh issue create --title "[SMOKE] Homepage not 200" --label "blocker,staging" && exit 1)
+          curl -fsS $STAGING_URL/api/health || (gh issue create --title "[SMOKE] Health endpoint down" --label "blocker,staging" && exit 1)
 
       - name: Approval Request (manual)
         uses: trstringer/manual-approval@v1
         with:
-          secret: ${{ secrets.GH_TOKEN }}
+          secret: ${{ secrets.GH_TOKEN || github.token }}
           approvers: ${{ secrets.APPROVERS }}
           minimum-approvals: 1
           issue-title: "🚀 Deploy ServiceKU ke Production?"

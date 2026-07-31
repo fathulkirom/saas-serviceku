@@ -10,6 +10,8 @@ use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\InitializeTenancyBySession;
 use App\Http\Middleware\AdminAuthenticate;
 use App\Http\Middleware\SecurityHeaders;
+use App\Http\Middleware\HandleCors;
+use App\Http\Middleware\EnsureJsonForApi;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -17,6 +19,8 @@ use Illuminate\Support\Facades\RateLimiter;
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
+        api: __DIR__.'/../routes/api.php',
+        apiPrefix: 'api',
         commands: __DIR__.'/../routes/console.php',
         channels: __DIR__.'/../routes/channels.php',
         health: '/up',
@@ -90,6 +94,13 @@ return Application::configure(basePath: dirname(__DIR__))
             'tenancy.session' => InitializeTenancyBySession::class,
             'admin.auth' => AdminAuthenticate::class,
             'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+            'cors' => HandleCors::class,
+            'ensure.json' => EnsureJsonForApi::class,
+        ]);
+
+        $middleware->api(append: [
+            EnsureJsonForApi::class,
+            HandleCors::class,
         ]);
 
         $middleware->web(append: [
@@ -103,6 +114,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // CSRF exception untuk webhook payment gateway
         $middleware->validateCsrfTokens(except: [
             'payment/webhook',
+            'customers/ajax-store',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
