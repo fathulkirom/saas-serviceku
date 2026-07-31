@@ -99,10 +99,13 @@ return Application::configure(basePath: dirname(__DIR__))
             'ensure.json' => EnsureJsonForApi::class,
         ]);
 
-        $middleware->api(append: [
-            EnsureJsonForApi::class,
-            HandleCors::class,
-        ]);
+        $middleware->api(
+            prepend: ['throttle:api'], // Laravel 12 tidak lagi menyertakan throttle di grup api
+            append: [
+                EnsureJsonForApi::class,
+                HandleCors::class,
+            ],
+        );
 
         $middleware->web(append: [
             HandleInertiaRequests::class,
