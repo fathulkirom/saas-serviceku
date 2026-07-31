@@ -9,11 +9,13 @@
 .env
 .env.backup
 # Runtime database artifacts (tenant SQLite & testing files)
-/database/tenant_*/
+/database/tenant_*
 /database/testing_tenant_*
 /database/central.sqlite
 /database/database.sqlite
 /database/*.sqlite-journal
+/test-results/
+/playwright-report/
 .env.production
 .phpactor.json
 .phpunit.result.cache
