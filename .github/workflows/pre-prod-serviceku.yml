@@ -283,16 +283,24 @@ jobs:
   performance-test:
     needs: e2e-tests
     runs-on: ubuntu-latest
-    # Skip jika STAGING_URL masih placeholder (belum ada server staging asli).
-    # env context TERSEDIA di job-level if (beda dengan secrets).
-    # Saat user set STAGING_URL ke URL asli, job ini otomatis aktif.
-    if: ${{ env.STAGING_URL != 'https://staging.serviceku.app' }}
     steps:
       - uses: actions/checkout@v4
       - name: Deploy to Staging (simulasi)
         run: echo "Assume staging is already running at $STAGING_URL"
 
+      # NOTE: env context tidak tersedia di job-level if. Pakai guard-step.
+      # Skip k6 jika STAGING_URL masih placeholder (belum ada server staging asli).
+      - name: Check staging configured
+        id: staging
+        run: |
+          if [ "$STAGING_URL" != "https://staging.serviceku.app" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Run k6 Load Test
+        if: steps.staging.outputs.enabled == 'true'
         uses: grafana/k6-action@v0.3.1
         with:
           filename: tests/load/staging-smoke.js
@@ -307,6 +315,12 @@ jobs:
             --body "p95 latency > 500ms atau error rate > 1%. Detail: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
             --label "performance,blocker"
           exit 1
+
+      # Sinkron dengan guard: jika STAGING_URL placeholder, deploy ke staging
+      # tidak terjadi sehingga job dianggap sukses (skip).
+      - name: Skip notice
+        if: steps.staging.outputs.enabled == 'false'
+        run: echo "⚠️ STAGING_URL masih placeholder — performance test di-skip."
 
   # ────────────────────────────────────────
   # 7. Security Scan (SAST + Dependencies)
@@ -346,19 +360,29 @@ jobs:
   smoke-test-and-approval:
     needs: [performance-test, security-scan, multi-tenancy-security]
     runs-on: ubuntu-latest
-    # Skip jika STAGING_URL masih placeholder (smoke test & approval butuh
-    # server staging nyata). Saat user set STAGING_URL + APPROVERS, otomatis aktif.
-    if: ${{ env.STAGING_URL != 'https://staging.serviceku.app' }}
     environment:
       name: production-approval   # Environment dengan proteksi manual
       url: https://serviceku.my.id
     steps:
+      # NOTE: env context tidak tersedia di job-level if. Pakai guard-step.
+      # Smoke test & approval di-skip jika STAGING_URL masih placeholder.
+      - name: Check staging configured
+        id: staging
+        run: |
+          if [ "$STAGING_URL" != "https://staging.serviceku.app" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Smoke Test (Staging)
+        if: steps.staging.outputs.enabled == 'true'
         run: |
           curl -fsS $STAGING_URL || (gh issue create --title "[SMOKE] Homepage not 200" --label "blocker,staging" && exit 1)
           curl -fsS $STAGING_URL/api/health || (gh issue create --title "[SMOKE] Health endpoint down" --label "blocker,staging" && exit 1)
 
       - name: Approval Request (manual)
+        if: steps.staging.outputs.enabled == 'true'
         uses: trstringer/manual-approval@v1
         with:
           secret: ${{ secrets.GH_TOKEN || github.token }}
@@ -368,8 +392,13 @@ jobs:
           issue-body: "Semua tes lolos. Approve untuk melanjutkan deploy."
 
       - name: Deploy to Production
+        if: steps.staging.outputs.enabled == 'true'
         run: |
           echo "Menjalankan deploy ke production..."
           # Contoh deploy via Laravel Forge, Envoyer, atau scp
           # ./vendor/bin/envoyer deploy production --commit=${{ github.sha }}
           gh issue create --title "✅ Production Deployed" --body "Deployment berhasil oleh ${{ github.actor }}." --label "production"
+
+      - name: Skip notice
+        if: steps.staging.outputs.enabled == 'false'
+        run: echo "⚠️ STAGING_URL masih placeholder — smoke test & approval gate di-skip."
