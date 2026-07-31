@@ -17,6 +17,8 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
+            // SQLite: index unique harus dihapus dulu sebelum drop kolom
+            $table->dropUnique('users_google_id_unique');
             $table->dropColumn(['google_id', 'google_avatar']);
         });
     }

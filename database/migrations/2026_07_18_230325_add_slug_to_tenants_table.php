@@ -22,6 +22,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('tenants', function (Blueprint $table) {
+            // SQLite: index harus dihapus dulu sebelum drop kolom,
+            // jika tidak muncul: "error in index tenants_slug_unique after drop column"
+            $table->dropUnique('tenants_slug_unique');
             $table->dropColumn('slug');
         });
     }
