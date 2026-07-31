@@ -105,6 +105,8 @@ APP_KEY=
 APP_URL=https://serviceku.my.id
 
 LOG_CHANNEL=stack
+LOG_STACK=daily
+LOG_DAILY_DAYS=14
 LOG_LEVEL=warning
 
 DB_CONNECTION=mysql
@@ -114,12 +116,15 @@ DB_DATABASE=serviceku_master
 DB_USERNAME=serviceku
 DB_PASSWORD=serviceku_pass
 
-SESSION_DRIVER=file
+SESSION_DRIVER=redis
 SESSION_LIFETIME=120
 SESSION_SECURE_COOKIE=true
 
-CACHE_STORE=file
+CACHE_STORE=redis
 QUEUE_CONNECTION=database
+REDIS_HOST=serviceku-redis
+REDIS_PORT=6379
+REDIS_PASSWORD=null
 
 MAIL_MAILER=log
 MAIL_HOST=smtp.gmail.com
@@ -129,6 +134,11 @@ MAIL_PASSWORD=
 MAIL_ENCRYPTION=tls
 MAIL_FROM_ADDRESS=notifications@serviceku.my.id
 MAIL_FROM_NAME=ServiceKU
+
+# Error monitoring (isi DSN dari dashboard Sentry)
+SENTRY_DSN=
+SENTRY_ENVIRONMENT=production
+SENTRY_SAMPLE_RATE=1.0
 ENVEOF
   echo 'Created new .env file'
 else
