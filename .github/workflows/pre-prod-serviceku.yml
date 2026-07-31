@@ -234,18 +234,21 @@ jobs:
       - run: npx playwright install --with-deps chromium
 
       # Config Playwright berada di e2e/playwright.config.js (baseURL localhost:8000)
+      # NOTE: pakai 127.0.0.1 di wait-loop. Di runner Ubuntu, 'localhost' bisa
+      # resolve ke ::1 (IPv6) sedangkan server hanya listen di 127.0.0.1 (IPv4),
+      # sehingga curl ke 'localhost' gagal walaupun server sudah jalan.
       - name: Start Laravel server
         run: |
           php artisan serve --host=127.0.0.1 --port=8000 > /tmp/laravel-server.log 2>&1 &
           echo $! > /tmp/laravel.pid
           for i in $(seq 1 30); do
-            if curl -sf http://localhost:8000 > /dev/null 2>&1; then
+            if curl -sf http://127.0.0.1:8000 > /dev/null 2>&1; then
               echo "✅ Server ready after ${i}s"
               break
             fi
             sleep 1
           done
-          curl -sf http://localhost:8000 > /dev/null 2>&1 || {
+          curl -sf http://127.0.0.1:8000 > /dev/null 2>&1 || {
             echo "❌ Server gagal start:"; cat /tmp/laravel-server.log; exit 1;
           }
 
