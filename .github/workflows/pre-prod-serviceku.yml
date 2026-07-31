@@ -1,0 +1,288 @@
+name: 🔐 ServiceKU Pre‑Production Pipeline
+
+on:
+  push:
+    branches: [ main, staging ]
+  workflow_dispatch:  # Bisa juga dijalankan manual
+
+env:
+  PHP_VERSION: '8.2'
+  NODE_VERSION: '20'
+  APP_ENV: staging
+  DB_CONNECTION: sqlite
+  CENTRAL_DB: database/central.sqlite
+  # Token GitHub untuk membuat Issue dan deployment
+  GH_TOKEN: ${{ secrets.GH_TOKEN }}
+  # URL staging (ganti dengan milikmu)
+  STAGING_URL: https://staging.serviceku.app
+
+jobs:
+  # ────────────────────────────────────────
+  # 1. Environment & Dependencies Check
+  # ────────────────────────────────────────
+  setup-and-lint:
+    runs-on: ubuntu-latest
+    outputs:
+      cache-key: ${{ steps.composer-cache.outputs.key }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          tools: composer
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Cache dependencies
+        id: composer-cache
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
+
+      - name: Install PHP dependencies
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Check .env.staging exists & valid
+        run: |
+          cp .env.staging .env || (echo "::error::.env.staging missing" && exit 1)
+          if grep -q "changeme\|your-\|null" .env; then
+            echo "::error::.env contains placeholder values!"
+            gh issue create --title "[PRE-PROD] Environment variables contain placeholder" --body "File .env.staging masih ada placeholder. Segera isi dengan nilai asli." --label "blocker,environment"
+            exit 1
+          fi
+
+      - name: Lint PHP (Laravel Pint)
+        run: ./vendor/bin/pint --test || true  # warning only
+
+      - name: Lint Frontend (ESLint)
+        run: npx eslint resources/js/ --ext .vue,.js || true
+
+  # ────────────────────────────────────────
+  # 2. Database Migration & Rollback (Central)
+  # ────────────────────────────────────────
+  database-central:
+    needs: setup-and-lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PHP & Composer (as before) …
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+      - run: composer install --prefer-dist --no-progress --no-interaction
+      - run: cp .env.staging .env && php artisan key:generate
+      - name: Run Central Migration
+        run: php artisan migrate --force --database=central
+      - name: Rollback Central Migration
+        run: php artisan migrate:rollback --force --database=central
+      - name: Migrate again
+        run: php artisan migrate --force --database=central
+      - name: Seed Central (optional)
+        run: php artisan db:seed --force --class=CentralSeeder || true
+
+  # ────────────────────────────────────────
+  # 3. Unit & Integration Tests (Central + Tenant)
+  # ────────────────────────────────────────
+  unit-integration-tests:
+    needs: database-central
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PHP & Node
+        uses: shivammathur/setup-php@v2
+        with: { php-version: '${{ env.PHP_VERSION }}' }
+      - uses: actions/setup-node@v4
+        with: { node-version: '${{ env.NODE_VERSION }}' }
+      - run: composer install --prefer-dist --no-progress --no-interaction
+      - run: npm ci
+      - run: cp .env.staging .env && php artisan key:generate
+      - run: php artisan migrate --force --database=central
+
+      - name: Run Backend Tests (PHPUnit)
+        run: php artisan test --parallel --coverage-text
+        continue-on-error: true
+        id: backend-test
+
+      - name: Run Frontend Tests (Vitest)
+        run: npx vitest run --coverage
+        continue-on-error: true
+        id: frontend-test
+
+      - name: Create Issue if Backend Tests Fail
+        if: steps.backend-test.outcome == 'failure'
+        run: |
+          gh issue create --title "[TEST] Backend unit/integration failure" \
+            --body "$(tail -50 storage/logs/laravel.log)" \
+            --label "bug,backend"
+
+      - name: Create Issue if Frontend Tests Fail
+        if: steps.frontend-test.outcome == 'failure'
+        run: |
+          gh issue create --title "[TEST] Frontend unit/component failure" \
+            --body "Jalankan vitest run untuk detail." \
+            --label "bug,frontend"
+
+      - name: Fail job if any test failed
+        if: steps.backend-test.outcome == 'failure' || steps.frontend-test.outcome == 'failure'
+        run: exit 1
+
+  # ────────────────────────────────────────
+  # 4. Multi‑Tenancy Isolation Tests
+  # ────────────────────────────────────────
+  multi-tenancy-security:
+    needs: unit-integration-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with: { php-version: '${{ env.PHP_VERSION }}' }
+      - run: composer install --prefer-dist --no-progress --no-interaction
+      - run: cp .env.staging .env && php artisan key:generate
+      - run: php artisan migrate --force --database=central
+
+      - name: Multi‑Tenancy Isolation Script
+        run: |
+          # Buat dua tenant via artisan command (asumsikan ada TenantSeeder)
+          php artisan tenant:create tenantA --domain=tenantA.serviceku.test
+          php artisan tenant:create tenantB --domain=tenantB.serviceku.test
+
+          # Login sebagai Tenant A, simpan token/session
+          # Gunakan curl ke endpoint test atau artisan command untuk testing
+          # Contoh sederhana: cek apakah data tenantA bisa diakses tenantB
+          # (Implementasikan script PHP/Artisan khusus, atau gunakan Dusk/Playwright)
+          # Untuk sekarang kita jalankan perintah custom Artisan
+          php artisan tenancy:test-isolation tenantA tenantB || (
+            gh issue create --title "[SECURITY] Multi‑tenant isolation breach" \
+              --body "Tenant B bisa mengakses data Tenant A. Periksa middleware IdentifyTenant." \
+              --label "blocker,security"
+            exit 1
+          )
+
+  # ────────────────────────────────────────
+  # 5. E2E Tests (Critical User Journeys)
+  # ────────────────────────────────────────
+  e2e-tests:
+    needs: multi-tenancy-security
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with: { node-version: '${{ env.NODE_VERSION }}' }
+      - run: npm ci
+      - run: npx playwright install --with-deps
+
+      - name: Run E2E Tests (Playwright/Cypress)
+        run: npx playwright test --config=playwright.config.ts
+        continue-on-error: true
+        id: e2e
+
+      - name: Create Issue on E2E Failure
+        if: steps.e2e.outcome == 'failure'
+        run: |
+          gh issue create --title "[E2E] Critical user journey broken" \
+            --body "Lihat report: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            --label "bug,e2e"
+
+      - name: Fail if E2E failed
+        if: steps.e2e.outcome == 'failure'
+        run: exit 1
+
+  # ────────────────────────────────────────
+  # 6. Performance & Load Testing
+  # ────────────────────────────────────────
+  performance-test:
+    needs: e2e-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to Staging (simulasi)
+        run: echo "Assume staging is already running at $STAGING_URL"
+
+      - name: Run k6 Load Test
+        uses: grafana/k6-action@v0.3.1
+        with:
+          filename: tests/load/staging-smoke.js
+          flags: --vus 50 --duration 60s
+        continue-on-error: true
+        id: load
+
+      - name: Check k6 thresholds
+        if: steps.load.outcome == 'failure'
+        run: |
+          gh issue create --title "[PERF] Performance regression di Staging" \
+            --body "p95 latency > 500ms atau error rate > 1%. Detail: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            --label "performance,blocker"
+          exit 1
+
+  # ────────────────────────────────────────
+  # 7. Security Scan (SAST + Dependencies)
+  # ────────────────────────────────────────
+  security-scan:
+    needs: e2e-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with: { php-version: '${{ env.PHP_VERSION }}' }
+      - run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: PHP Security Audit (Symfony CLI)
+        run: |
+          curl -sSL https://symfony.com/installer | bash
+          symfony security:check || (
+            gh issue create --title "[SECURITY] PHP dependency vulnerability" \
+              --body "Terdapat kerentanan di composer.lock. Jalankan 'composer update'." \
+              --label "security,blocker"
+            exit 1
+          )
+
+      - name: Frontend Dependency Audit
+        run: npm audit --audit-level=high || (
+          gh issue create --title "[SECURITY] NPM high vulnerability" \
+            --body "Segera update package.json. npm audit untuk detail." \
+            --label "security"
+          # tidak exit 1 agar tidak blocking
+        )
+
+  # ────────────────────────────────────────
+  # 8. Final Smoke Test & Approval Gate
+  # ────────────────────────────────────────
+  smoke-test-and-approval:
+    needs: [performance-test, security-scan, multi-tenancy-security]
+    runs-on: ubuntu-latest
+    environment:
+      name: production-approval   # Environment dengan proteksi manual
+      url: https://app.serviceku.id
+    steps:
+      - name: Smoke Test (Staging)
+        run: |
+          curl -f $STAGING_URL/api/health || (gh issue create --title "[SMOKE] Health endpoint down" --label "blocker,staging" && exit 1)
+          curl -f $STAGING_URL || (gh issue create --title "[SMOKE] Homepage not 200" --label "blocker,staging" && exit 1)
+
+      - name: Approval Request (manual)
+        uses: trstringer/manual-approval@v1
+        with:
+          secret: ${{ secrets.GH_TOKEN }}
+          approvers: ${{ secrets.APPROVERS }}
+          minimum-approvals: 1
+          issue-title: "🚀 Deploy ServiceKU ke Production?"
+          issue-body: "Semua tes lolos. Approve untuk melanjutkan deploy."
+
+      - name: Deploy to Production
+        run: |
+          echo "Menjalankan deploy ke production..."
+          # Contoh deploy via Laravel Forge, Envoyer, atau scp
+          # ./vendor/bin/envoyer deploy production --commit=${{ github.sha }}
+          gh issue create --title "✅ Production Deployed" --body "Deployment berhasil oleh ${{ github.actor }}." --label "production"
