@@ -278,6 +278,97 @@ jobs:
         run: kill $(cat /tmp/laravel.pid) 2>/dev/null || true
 
   # ────────────────────────────────────────
+  # 5b. API Contract Tests (Newman + Schemathesis)
+  # ────────────────────────────────────────
+  api-contract-tests:
+    needs: e2e-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          coverage: none
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup Python (Schemathesis)
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - run: composer install --prefer-dist --no-progress --no-interaction
+      - run: npm ci
+
+      - name: Install Newman
+        run: npm install -g newman
+
+      # venv agar aman dari PEP 668 (externally-managed python)
+      - name: Install Schemathesis (venv)
+        run: |
+          python -m venv /tmp/schemathesis-venv
+          /tmp/schemathesis-venv/bin/pip install --quiet schemathesis
+
+      - name: Prepare app & database
+        run: |
+          cp .env.staging .env
+          php artisan key:generate
+          mkdir -p database
+          touch database/central.sqlite
+          php artisan migrate --force
+          php artisan db:seed --force --class=PlanSeeder
+
+      - name: Build Frontend (Vite)
+        run: npm run build
+
+      - name: Start Laravel server
+        run: |
+          php -S 127.0.0.1:8000 -t public public/index.php > /tmp/laravel-server.log 2>&1 &
+          echo $! > /tmp/laravel.pid
+          for i in $(seq 1 60); do
+            code=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8000 2>/dev/null || echo "000")
+            if [ "$code" != "000" ]; then
+              echo "✅ Server siap setelah ${i}s (HTTP $code)"
+              break
+            fi
+            sleep 1
+          done
+          code=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8000 2>/dev/null || echo "000")
+          if [ "$code" = "000" ]; then
+            echo "❌ Server gagal start:"; cat /tmp/laravel-server.log; exit 1;
+          fi
+
+      - name: Run Newman (E2E contract collection)
+        run: newman run tests/contract/serviceku.postman_collection.json --env-var "baseUrl=http://127.0.0.1:8000"
+        continue-on-error: true
+        id: newman
+
+      - name: Run Schemathesis (OpenAPI contract)
+        run: /tmp/schemathesis-venv/bin/schemathesis run tests/contract/openapi.yaml --url http://127.0.0.1:8000 --checks all --max-examples 5
+        continue-on-error: true
+        id: schemathesis
+
+      - name: Create Issue on Contract Failure
+        if: steps.newman.outcome == 'failure' || steps.schemathesis.outcome == 'failure'
+        run: |
+          gh issue create --title "[PRE-PROD] API contract violation" \
+            --body "Contract test gagal. Newman: ${{ steps.newman.outcome }}, Schemathesis: ${{ steps.schemathesis.outcome }}. Detail: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" \
+            --label "bug,api"
+
+      - name: Fail if contract tests failed
+        if: steps.newman.outcome == 'failure' || steps.schemathesis.outcome == 'failure'
+        run: exit 1
+
+      - name: Stop Laravel server
+        if: always()
+        run: kill $(cat /tmp/laravel.pid) 2>/dev/null || true
+
+  # ────────────────────────────────────────
   # 6. Performance & Load Testing
   # ────────────────────────────────────────
   performance-test:
