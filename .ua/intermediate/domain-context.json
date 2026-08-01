@@ -1,0 +1,766 @@
+{
+  "projectRoot": "/Users/macbook/saas",
+  "fileCount": 363,
+  "fileTree": [
+    "app/Console/Commands/BackupRun.php",
+    "app/Console/Commands/CheckSubscriptionExpiry.php",
+    "app/Console/Commands/TenantCleanup.php",
+    "app/Events/ServiceStatusUpdated.php",
+    "app/Http/Controllers/Admin/AdminAuthController.php",
+    "app/Http/Controllers/Admin/BackupController.php",
+    "app/Http/Controllers/Admin/MonitoringController.php",
+    "app/Http/Controllers/Admin/PaymentController.php",
+    "app/Http/Controllers/Admin/PlanController.php",
+    "app/Http/Controllers/Admin/SuperAdminController.php",
+    "app/Http/Controllers/Admin/SystemSettingsController.php",
+    "app/Http/Controllers/Admin/TenantManagementController.php",
+    "app/Http/Controllers/Admin/VoucherController.php",
+    "app/Http/Controllers/Api/ServiceController.php",
+    "app/Http/Controllers/Api/TrackingController.php",
+    "app/Http/Controllers/Auth/EmailVerificationController.php",
+    "app/Http/Controllers/Auth/GoogleLoginController.php",
+    "app/Http/Controllers/Auth/LoginController.php",
+    "app/Http/Controllers/Auth/RegisteredTenantController.php",
+    "app/Http/Controllers/Auth/ResetPasswordController.php",
+    "app/Http/Controllers/Auth/TwoFactorController.php",
+    "app/Http/Controllers/Auth/TwoFactorSetupController.php",
+    "app/Http/Controllers/Tenant/AttendanceController.php",
+    "app/Http/Controllers/Tenant/BillingController.php",
+    "app/Http/Controllers/Tenant/BranchController.php",
+    "app/Http/Controllers/Tenant/CashController.php",
+    "app/Http/Controllers/Tenant/CashRegisterController.php",
+    "app/Http/Controllers/Tenant/ChecklistTemplateController.php",
+    "app/Http/Controllers/Tenant/CommissionController.php",
+    "app/Http/Controllers/Tenant/CustomerController.php",
+    "app/Http/Controllers/Tenant/CustomFieldController.php",
+    "app/Http/Controllers/Tenant/DailyDepositController.php",
+    "app/Http/Controllers/Tenant/DamagedStockController.php",
+    "app/Http/Controllers/Tenant/DemoController.php",
+    "app/Http/Controllers/Tenant/DocumentController.php",
+    "app/Http/Controllers/Tenant/DriveController.php",
+    "app/Http/Controllers/Tenant/ExpenseController.php",
+    "app/Http/Controllers/Tenant/FinanceController.php",
+    "app/Http/Controllers/Tenant/IndentController.php",
+    "app/Http/Controllers/Tenant/InventarisController.php",
+    "app/Http/Controllers/Tenant/InventoryController.php",
+    "app/Http/Controllers/Tenant/KnowledgeBaseController.php",
+    "app/Http/Controllers/Tenant/MasterDataController.php",
+    "app/Http/Controllers/Tenant/MonitoringController.php",
+    "app/Http/Controllers/Tenant/OnboardingController.php",
+    "app/Http/Controllers/Tenant/PartnerTeknisiController.php",
+    "app/Http/Controllers/Tenant/PaymentController.php",
+    "app/Http/Controllers/Tenant/PickupDeliveryController.php",
+    "app/Http/Controllers/Tenant/ProductController.php",
+    "app/Http/Controllers/Tenant/PurchaseController.php",
+    "app/Http/Controllers/Tenant/PurchaseReturnController.php",
+    "app/Http/Controllers/Tenant/QuickReplyController.php",
+    "app/Http/Controllers/Tenant/ReconciliationController.php",
+    "app/Http/Controllers/Tenant/ReportController.php",
+    "app/Http/Controllers/Tenant/SaleController.php",
+    "app/Http/Controllers/Tenant/SaleInvoiceController.php",
+    "app/Http/Controllers/Tenant/SalePaymentController.php",
+    "app/Http/Controllers/Tenant/SaleStoreController.php",
+    "app/Http/Controllers/Tenant/SearchController.php",
+    "app/Http/Controllers/Tenant/ServiceChecklistController.php",
+    "app/Http/Controllers/Tenant/ServiceClaimController.php",
+    "app/Http/Controllers/Tenant/ServiceController.php",
+    "app/Http/Controllers/Tenant/ServiceDocumentController.php",
+    "app/Http/Controllers/Tenant/ServicePhotoController.php",
+    "app/Http/Controllers/Tenant/ServiceToolsController.php",
+    "app/Http/Controllers/Tenant/ServiceTransferController.php",
+    "app/Http/Controllers/Tenant/ServiceWorkflowController.php",
+    "app/Http/Controllers/Tenant/SettingController.php",
+    "app/Http/Controllers/Tenant/SettingsController.php",
+    "app/Http/Controllers/Tenant/ShiftController.php",
+    "app/Http/Controllers/Tenant/SopController.php",
+    "app/Http/Controllers/Tenant/StockAllocationController.php",
+    "app/Http/Controllers/CompanyProfileController.php",
+    "app/Http/Controllers/Controller.php",
+    "app/Http/Controllers/DashboardController.php",
+    "app/Http/Controllers/DevLoginController.php",
+    "app/Http/Controllers/PublicTrackingController.php",
+    "app/Http/Controllers/TenantLookupController.php",
+    "app/Http/Controllers/VoucherApplyController.php",
+    "app/Http/Middleware/AdminAuthenticate.php",
+    "app/Http/Middleware/CheckPlanFeature.php",
+    "app/Http/Middleware/CheckSubscription.php",
+    "app/Http/Middleware/EnsureJsonForApi.php",
+    "app/Http/Middleware/HandleCors.php",
+    "app/Http/Middleware/HandleInertiaRequests.php",
+    "app/Http/Middleware/InitializeTenancyBySession.php",
+    "app/Http/Middleware/RedirectIfNotTenant.php",
+    "app/Http/Middleware/SecurityHeaders.php",
+    "app/Http/Middleware/TrustProxies.php",
+    "app/Http/Requests/Tenant/StoreCustomerRequest.php",
+    "app/Http/Requests/Tenant/StoreExpenseRequest.php",
+    "app/Http/Requests/Tenant/StoreServiceRequest.php",
+    "app/Http/Requests/StoreCustomerRequest.php",
+    "app/Http/Requests/StoreExpenseRequest.php",
+    "app/Http/Requests/StoreSaleRequest.php",
+    "app/Http/Requests/StoreServiceRequest.php",
+    "app/Jobs/GenerateInvoicePdf.php",
+    "app/Jobs/SendInvoiceEmail.php",
+    "app/Mail/OtpMail.php",
+    "app/Mail/WelcomeMail.php",
+    "app/Models/Tenant/Traits/HasCustomFields.php",
+    "app/Models/Tenant/Traits/HasRoles.php",
+    "app/Models/Tenant/ActivityLog.php",
+    "app/Models/Tenant/Attendance.php",
+    "app/Models/Tenant/Branch.php",
+    "app/Models/Tenant/CashRegister.php",
+    "app/Models/Tenant/ChecklistItem.php",
+    "app/Models/Tenant/ChecklistTemplate.php",
+    "app/Models/Tenant/Commission.php",
+    "app/Models/Tenant/Customer.php",
+    "app/Models/Tenant/CustomField.php",
+    "app/Models/Tenant/CustomFieldValue.php",
+    "app/Models/Tenant/DailyDeposit.php",
+    "app/Models/Tenant/DamagedStock.php",
+    "app/Models/Tenant/Expense.php",
+    "app/Models/Tenant/Indent.php",
+    "app/Models/Tenant/InventoryMutation.php",
+    "app/Models/Tenant/KnowledgeBase.php",
+    "app/Models/Tenant/LoginHistory.php",
+    "app/Models/Tenant/MasterData.php",
+    "app/Models/Tenant/MasterLaborService.php",
+    "app/Models/Tenant/PartnerTeknisi.php",
+    "app/Models/Tenant/PaymentReconciliation.php",
+    "app/Models/Tenant/PickupDelivery.php",
+    "app/Models/Tenant/Product.php",
+    "app/Models/Tenant/Purchase.php",
+    "app/Models/Tenant/PurchaseItem.php",
+    "app/Models/Tenant/PurchaseReturn.php",
+    "app/Models/Tenant/PurchaseReturnItem.php",
+    "app/Models/Tenant/QuickReply.php",
+    "app/Models/Tenant/Sale.php",
+    "app/Models/Tenant/SaleItem.php",
+    "app/Models/Tenant/Service.php",
+    "app/Models/Tenant/ServiceChecklist.php",
+    "app/Models/Tenant/ServicePhoto.php",
+    "app/Models/Tenant/ServiceSparepart.php",
+    "app/Models/Tenant/ServiceTransfer.php",
+    "app/Models/Tenant/Shift.php",
+    "app/Models/Tenant/Sop.php",
+    "app/Models/Tenant/SopReadLog.php",
+    "app/Models/Tenant/StockAllocation.php",
+    "app/Models/Tenant/Supplier.php",
+    "app/Models/Tenant/SystemAlert.php",
+    "app/Models/Tenant/TaxSetting.php",
+    "app/Models/Tenant/TenantSetting.php",
+    "app/Models/Tenant/User.php",
+    "app/Models/Tenant/WaGatewayConfig.php",
+    "app/Models/GoogleDriveToken.php",
+    "app/Models/Payment.php",
+    "app/Models/Plan.php",
+    "app/Models/RegistrationVerification.php",
+    "app/Models/SystemLog.php",
+    "app/Models/SystemSetting.php",
+    "app/Models/Tenant.php",
+    "app/Models/TenantOtp.php",
+    "app/Models/TenantStat.php",
+    "app/Models/User.php",
+    "app/Models/Voucher.php",
+    "app/Notifications/ResetPasswordNotification.php",
+    "app/Notifications/TenantRegistered.php",
+    "app/Notifications/TwoFactorCodeNotification.php",
+    "app/Notifications/VerifyEmailNotification.php",
+    "app/Policies/BranchPolicy.php",
+    "app/Policies/CashRegisterPolicy.php",
+    "app/Policies/CustomerPolicy.php",
+    "app/Policies/DailyDepositPolicy.php",
+    "app/Policies/ExpensePolicy.php",
+    "app/Policies/IndentPolicy.php",
+    "app/Policies/InventoryMutationPolicy.php",
+    "app/Policies/ProductPolicy.php",
+    "app/Policies/PurchasePolicy.php",
+    "app/Policies/SalePolicy.php",
+    "app/Policies/ServicePolicy.php",
+    "app/Policies/SupplierPolicy.php",
+    "app/Policies/TenantUserPolicy.php",
+    "app/Providers/AppServiceProvider.php",
+    "app/Providers/AuthServiceProvider.php",
+    "app/Providers/TenancyServiceProvider.php",
+    "app/Services/FeatureFlagService.php",
+    "app/Services/GoogleDrivePhotoService.php",
+    "app/Services/GoogleDriveService.php",
+    "app/Services/MailConfigService.php",
+    "app/Services/PaymentGatewayService.php",
+    "app/Services/WhatsAppService.php",
+    "bootstrap/cache/packages.php",
+    "bootstrap/cache/services.php",
+    "bootstrap/app.php",
+    "bootstrap/providers.php",
+    "config/app.php",
+    "config/auth.php",
+    "config/broadcasting.php",
+    "config/cache.php",
+    "config/database.php",
+    "config/filesystems.php",
+    "config/logging.php",
+    "config/mail.php",
+    "config/queue.php",
+    "config/sentry.php",
+    "config/services.php",
+    "config/session.php",
+    "config/tenancy.php",
+    "database/factories/UserFactory.php",
+    "database/migrations/tenant/2024_01_01_000001_create_tenant_core_tables.php",
+    "database/migrations/tenant/2024_01_01_000002_create_business_tables.php",
+    "database/migrations/tenant/2024_01_01_000003_create_purchases_tables.php",
+    "database/migrations/tenant/2024_01_01_000004_create_monitoring_tables.php",
+    "database/migrations/tenant/2024_01_01_000005_add_custom_role_to_users.php",
+    "database/migrations/tenant/2026_07_19_060001_create_master_tables.php",
+    "database/migrations/tenant/2026_07_19_060002_add_missing_columns_to_tenant_tables.php",
+    "database/migrations/tenant/2026_07_27_044406_add_google_id_to_tenant_users_table.php",
+    "database/migrations/tenant/2026_07_27_044407_add_photo_to_expenses_table.php",
+    "database/migrations/tenant/2026_07_27_044407_create_service_photos_table.php",
+    "database/migrations/tenant/2026_07_27_044408_create_knowledge_base_table.php",
+    "database/migrations/tenant/2026_07_27_044408_create_quick_replies_table.php",
+    "database/migrations/tenant/2026_07_27_044408_create_sops_table.php",
+    "database/migrations/tenant/2026_07_27_050550_create_damaged_stocks_table.php",
+    "database/migrations/tenant/2026_07_27_050550_create_purchase_returns_table.php",
+    "database/migrations/tenant/2026_07_27_050551_create_partner_teknisis_table.php",
+    "database/migrations/tenant/2026_07_27_050551_create_pickup_deliveries_table.php",
+    "database/migrations/tenant/2026_07_27_050552_create_custom_fields_table.php",
+    "database/migrations/tenant/2026_07_27_050552_create_tax_settings_table.php",
+    "database/migrations/tenant/2026_07_27_050553_create_commissions_table.php",
+    "database/migrations/tenant/2026_07_27_050553_create_payment_reconciliations_table.php",
+    "database/migrations/tenant/2026_07_27_050553_create_shifts_table.php",
+    "database/migrations/tenant/2026_07_27_050554_create_attendances_table.php",
+    "database/migrations/tenant/2026_07_27_052155_add_missing_indexes_to_tenant_tables.php",
+    "database/migrations/tenant/2026_07_27_052156_add_member_card_and_points_to_customers.php",
+    "database/migrations/tenant/2026_07_27_224500_change_activity_logs_description_to_text.php",
+    "database/migrations/tenant/2026_07_29_000001_add_timestamps_to_services_table.php",
+    "database/migrations/tenant/2026_07_29_000002_add_email_verified_at_to_tenant_users.php",
+    "database/migrations/tenant/2026_07_29_000003_add_two_factor_to_tenant_users.php",
+    "database/migrations/0001_01_01_000000_create_users_table.php",
+    "database/migrations/0001_01_01_000001_create_cache_table.php",
+    "database/migrations/0001_01_01_000002_create_jobs_table.php",
+    "database/migrations/2019_09_15_000010_create_tenants_table.php",
+    "database/migrations/2019_09_15_000020_create_domains_table.php",
+    "database/migrations/2020_05_15_000010_create_tenant_user_impersonation_tokens_table.php",
+    "database/migrations/2024_01_01_000001_create_plans_table.php",
+    "database/migrations/2024_01_01_000002_create_system_tables.php",
+    "database/migrations/2024_01_01_000003_create_tenant_otps_table.php",
+    "database/migrations/2024_01_01_000003_create_verification_tables.php",
+    "database/migrations/2024_07_18_000001_create_payment_transactions_table.php",
+    "database/migrations/2026_07_18_174616_add_promo_fields_to_plans_table.php",
+    "database/migrations/2026_07_18_175306_add_business_types_to_plans_table.php",
+    "database/migrations/2026_07_18_230325_add_slug_to_tenants_table.php",
+    "database/migrations/2026_07_19_040631_create_vouchers_table.php",
+    "database/migrations/2026_07_19_041309_add_extra_months_to_vouchers_and_tenants.php",
+    "database/migrations/2026_07_20_000001_add_tenant_id_to_vouchers_table.php",
+    "database/migrations/2026_07_27_044406_create_google_drive_tokens_table.php",
+    "database/migrations/2026_07_31_000001_create_personal_access_tokens_table.php",
+    "database/seeders/Tenant/DemoDataSeeder.php",
+    "database/seeders/DatabaseSeeder.php",
+    "database/seeders/DemoDataSeeder.php",
+    "database/seeders/DemoTenantSeeder.php",
+    "database/seeders/MasterDataSeeder.php",
+    "database/seeders/PlanSeeder.php",
+    "database/seeders/SystemSettingSeeder.php",
+    "database/seeders/TenantSeeder.php",
+    "e2e/tests/dashboard.spec.js",
+    "e2e/tests/login.spec.js",
+    "e2e/playwright.config.js",
+    "lang/id/auth.php",
+    "lang/id/pagination.php",
+    "lang/id/passwords.php",
+    "lang/id/validation.php",
+    "public/index.php",
+    "resources/js/Components/Icons.js",
+    "resources/js/Composables/useFormatter.js",
+    "resources/js/Composables/useToast.js",
+    "resources/js/Utils/statusMaps.js",
+    "resources/js/app.js",
+    "resources/views/auth/login.blade.php",
+    "resources/views/billing/index.blade.php",
+    "resources/views/customers/index.blade.php",
+    "resources/views/emails/otp.blade.php",
+    "resources/views/emails/welcome.blade.php",
+    "resources/views/errors/403.blade.php",
+    "resources/views/errors/404.blade.php",
+    "resources/views/errors/500.blade.php",
+    "resources/views/inventory/index.blade.php",
+    "resources/views/layouts/app.blade.php",
+    "resources/views/pdf/nota.blade.php",
+    "resources/views/pdfs/checklist-keluar.blade.php",
+    "resources/views/pdfs/checklist-masuk.blade.php",
+    "resources/views/pdfs/indent-nota.blade.php",
+    "resources/views/pdfs/sale-invoice.blade.php",
+    "resources/views/pdfs/service-receipt.blade.php",
+    "resources/views/pos/index.blade.php",
+    "resources/views/settings/index.blade.php",
+    "resources/views/superadmin/index.blade.php",
+    "resources/views/tickets/index.blade.php",
+    "resources/views/app.blade.php",
+    "resources/views/pos-invoice.blade.php",
+    "resources/views/repair-tickets.blade.php",
+    "resources/views/tenant-dashboard.blade.php",
+    "resources/views/welcome.blade.php",
+    "routes/api.php",
+    "routes/channels.php",
+    "routes/console.php",
+    "routes/tenant.php",
+    "routes/web.php",
+    "storage/framework/views/0436dd15c164b8a817af3055a1fa2cc0.php",
+    "storage/framework/views/1646b56aba630b4a2190a2339d6f43fe.php",
+    "storage/framework/views/210be6146b8d123688a572012a92340d.php",
+    "storage/framework/views/23a39d44dea245d46f250ed2beb72b84.php",
+    "storage/framework/views/39a1c2f0c9cc2262d799ad3090dce7ef.php",
+    "storage/framework/views/3bc8b3dbe4a4491b87730b96d13f02f2.php",
+    "storage/framework/views/460d048349fa6bf5f4c26a6785d8bf9f.php",
+    "storage/framework/views/4c3811c2a9fe401c1206781ebc4a8f2c.php",
+    "storage/framework/views/5f4a13b7487c0413ea9c1eb774d9b2c3.php",
+    "storage/framework/views/63fffff6a721bfbaf5b34101134331f6.php",
+    "storage/framework/views/6978f08f7e403ab1ec93861b262db4e3.php",
+    "storage/framework/views/818a0b8954c599378200627b3c92d86c.php",
+    "storage/framework/views/a6d96cda70f17d80f66f388429e85175.php",
+    "storage/framework/views/a7dd6eb338ebede93f21ae54dad7c766.php",
+    "storage/framework/views/a85aaf676b693a2f79e4e250083d15e0.php",
+    "storage/framework/views/a9639db007450faf0b8e016dcb0102dd.php",
+    "storage/framework/views/b312956e627343914ca14fed79a4bb69.php",
+    "storage/framework/views/c381b3d20d5dade909444be1ac5fae23.php",
+    "storage/framework/views/d1a875a2daa78fa2d7edf54e5d8db441.php",
+    "storage/framework/views/df5f14bb9c0e3cc04e2fccbe8b045b82.php",
+    "storage/framework/views/e9e8e11a24debd5acc4837ee04572864.php",
+    "storage/framework/views/f8a14dcb3a00c6a0c3da35da28157408.php",
+    "storage/framework/views/fa8c454226ba509f7f812abf01b12540.php",
+    "tests/Feature/ApiContractTest.php",
+    "tests/Feature/ExampleTest.php",
+    "tests/Feature/FeatureFlagServiceTest.php",
+    "tests/Feature/GoogleDrivePhotoServiceTest.php",
+    "tests/Feature/GoogleDriveServiceTest.php",
+    "tests/Feature/GoogleDriveTokenTest.php",
+    "tests/Feature/HealthTest.php",
+    "tests/Feature/MailConfigServiceTest.php",
+    "tests/Feature/MailContentTest.php",
+    "tests/Feature/NotificationsTest.php",
+    "tests/Feature/PaymentGatewayServiceTest.php",
+    "tests/Feature/ReportExportTest.php",
+    "tests/Feature/SystemSettingTest.php",
+    "tests/Feature/TenantCustomerTest.php",
+    "tests/Feature/TenantIsolationTest.php",
+    "tests/Feature/TenantOtpTest.php",
+    "tests/Feature/TenantSaleTest.php",
+    "tests/Feature/TenantServiceWorkflowTest.php",
+    "tests/Feature/TenantUserManagementTest.php",
+    "tests/Feature/UploadSecurityTest.php",
+    "tests/Feature/VoucherApplyControllerTest.php",
+    "tests/Feature/WhatsAppServiceTest.php",
+    "tests/load/live-smoke.js",
+    "tests/load/staging-smoke.js",
+    "tests/Unit/Models/ExpenseTest.php",
+    "tests/Unit/Models/PlanTest.php",
+    "tests/Unit/Models/RegistrationVerificationTest.php",
+    "tests/Unit/Models/SaleTest.php",
+    "tests/Unit/Models/ServiceTest.php",
+    "tests/Unit/Models/SystemLogTest.php",
+    "tests/Unit/Models/TenantTest.php",
+    "tests/Unit/Models/VoucherTest.php",
+    "tests/Unit/ExampleTest.php",
+    "tests/Unit/FormRequestTest.php",
+    "tests/Unit/PolicyTest.php",
+    "tests/TestCase.php",
+    "postcss.config.js",
+    "tailwind.config.js",
+    "vite.config.js"
+  ],
+  "entryPoints": [],
+  "fileSignatures": [
+    {
+      "file": "app/Http/Controllers/Tenant/ServiceWorkflowController.php",
+      "exports": [
+        "ServiceWorkflowController"
+      ],
+      "imports": [],
+      "lines": 248,
+      "preview": "<?php\n\nnamespace App\\Http\\Controllers\\Tenant;\n\nuse App\\Http\\Controllers\\Controller;\nuse App\\Models\\Tenant\\Service;\nuse App\\Models\\Tenant\\ActivityLog;\nuse App\\Models\\Tenant\\ServicePhoto;\nuse App\\Services\\GoogleDrivePhotoService;\nuse Illuminate\\Http\\Request;\nuse Illuminate\\Support\\Facades\\Auth;\n\nclass ServiceWorkflowController extends Controller\n{\n    public function store(Request $request)\n    {\n        $this->authorize('create', Service::class);\n\n        $validated = $request->validate([\n       "
+    },
+    {
+      "file": "app/Http/Controllers/Api/ServiceController.php",
+      "exports": [
+        "ServiceController"
+      ],
+      "imports": [],
+      "lines": 22,
+      "preview": "<?php\nnamespace App\\Http\\Controllers\\Api;\nuse App\\Http\\Controllers\\Controller;\nuse App\\Models\\Tenant\\Service;\nuse Illuminate\\Http\\Request;\n\nclass ServiceController extends Controller\n{\n    public function index()\n    {\n        $services = Service::with(['customer', 'technician'])\n            ->where('branch_id', auth()->user()->branch_id)\n            ->latest()->paginate(20);\n        return response()->json(['data' => $services]);\n    }\n\n    public function show(Service $service)\n    {\n        $"
+    },
+    {
+      "file": "tests/Feature/TenantServiceWorkflowTest.php",
+      "exports": [
+        "TenantServiceWorkflowTest"
+      ],
+      "imports": [],
+      "lines": 106,
+      "preview": "<?php\n\nnamespace Tests\\Feature;\n\nuse Tests\\TestCase;\nuse App\\Models\\Tenant\\Service;\nuse App\\Models\\Tenant\\User;\n\nclass TenantServiceWorkflowTest extends TestCase\n{\n    protected function setUp(): void\n    {\n        parent::setUp();\n        $this->setUpTenant();\n    }\n\n    public function test_can_create_service()\n    {\n        $user = $this->createTenantUser(['role' => 'cs']);\n\n        $service = $this->createService(['created_by' => $user->id]);\n\n        $this->assertNotNull($service);\n        "
+    },
+    {
+      "file": "app/Events/ServiceStatusUpdated.php",
+      "exports": [
+        "ServiceStatusUpdated"
+      ],
+      "imports": [],
+      "lines": 41,
+      "preview": "<?php\n\nnamespace App\\Events;\n\nuse Illuminate\\Broadcasting\\Channel;\nuse Illuminate\\Broadcasting\\InteractsWithSockets;\nuse Illuminate\\Broadcasting\\PresenceChannel;\nuse Illuminate\\Broadcasting\\PrivateChannel;\nuse Illuminate\\Contracts\\Broadcasting\\ShouldBroadcast;\nuse Illuminate\\Foundation\\Events\\Dispatchable;\nuse Illuminate\\Queue\\SerializesModels;\n\nclass ServiceStatusUpdated implements ShouldBroadcast\n{\n    use Dispatchable, InteractsWithSockets, SerializesModels;\n\n    public $serviceId;\n    public"
+    },
+    {
+      "file": "app/Http/Controllers/Api/TrackingController.php",
+      "exports": [
+        "TrackingController"
+      ],
+      "imports": [],
+      "lines": 38,
+      "preview": "<?php\nnamespace App\\Http\\Controllers\\Api;\nuse App\\Http\\Controllers\\Controller;\nuse App\\Models\\Tenant\\Service;\nuse Illuminate\\Http\\Request;\n\nclass TrackingController extends Controller\n{\n    public function show($trackingCode)\n    {\n        $host = request()->getHost();\n        $domain = \\Stancl\\Tenancy\\Database\\Models\\Domain::where('domain', $host)->first();\n\n        if (!$domain) {\n            return response()->json(['message' => 'Tenant not found'], 404);\n        }\n\n        try {\n            "
+    },
+    {
+      "file": "app/Http/Controllers/Tenant/ServiceChecklistController.php",
+      "exports": [
+        "ServiceChecklistController"
+      ],
+      "imports": [],
+      "lines": 32,
+      "preview": "<?php\n\nnamespace App\\Http\\Controllers\\Tenant;\n\nuse App\\Http\\Controllers\\Controller;\nuse App\\Models\\Tenant\\Service;\nuse App\\Models\\Tenant\\ActivityLog;\nuse Illuminate\\Http\\Request;\n\nclass ServiceChecklistController extends Controller\n{\n    public function saveChecklist(Request $request, Service $service)\n    {\n        $validated = $request->validate([\n            'checklist_template_id' => 'required|exists:checklist_templates,id',\n            'type' => 'required|in:masuk,keluar',\n            'chec"
+    },
+    {
+      "file": "app/Http/Controllers/Tenant/ServiceClaimController.php",
+      "exports": [
+        "ServiceClaimController"
+      ],
+      "imports": [],
+      "lines": 35,
+      "preview": "<?php\n\nnamespace App\\Http\\Controllers\\Tenant;\n\nuse App\\Http\\Controllers\\Controller;\nuse App\\Models\\Tenant\\Service;\nuse App\\Models\\Tenant\\ActivityLog;\nuse Illuminate\\Http\\Request;\nuse Illuminate\\Support\\Facades\\Auth;\n\nclass ServiceClaimController extends Controller\n{\n    public function createWarrantyClaim(Request $request, Service $parentService)\n    {\n        $this->authorize('create', Service::class);\n        if (!$parentService->isWarrantyValid()) return back()->with('error', 'Garansi servis "
+    },
+    {
+      "file": "app/Http/Controllers/Tenant/ServiceController.php",
+      "exports": [
+        "ServiceController"
+      ],
+      "imports": [],
+      "lines": 134,
+      "preview": "<?php\n\nnamespace App\\Http\\Controllers\\Tenant;\n\nuse App\\Http\\Controllers\\Controller;\nuse App\\Models\\Tenant\\Service;\nuse App\\Models\\Tenant\\Customer;\nuse App\\Models\\Tenant\\ChecklistTemplate;\nuse App\\Models\\Tenant\\Product;\nuse App\\Models\\Tenant\\MasterData;\nuse App\\Services\\GoogleDrivePhotoService;\nuse Illuminate\\Http\\Request;\nclass ServiceController extends Controller\n{\n    public function index(Request $request)\n    {\n        $this->authorize('viewAny', Service::class);\n        $query = Service::wi"
+    },
+    {
+      "file": "app/Http/Controllers/Tenant/ServiceDocumentController.php",
+      "exports": [
+        "ServiceDocumentController"
+      ],
+      "imports": [],
+      "lines": 73,
+      "preview": "<?php\n\nnamespace App\\Http\\Controllers\\Tenant;\n\nuse App\\Http\\Controllers\\Controller;\nuse App\\Models\\Tenant\\Service;\nuse App\\Models\\Tenant\\Product;\nuse App\\Models\\Tenant\\InventoryMutation;\nuse App\\Models\\Tenant\\ActivityLog;\nuse App\\Models\\Tenant\\SystemAlert;\nuse App\\Models\\Tenant\\TenantSetting;\nuse App\\Models\\Tenant\\Commission;\nuse Barryvdh\\DomPDF\\Facade\\Pdf;\nuse Illuminate\\Http\\Request;\nuse Illuminate\\Support\\Facades\\Auth;\n\nclass ServiceDocumentController extends Controller\n{\n    public function "
+    },
+    {
+      "file": "app/Http/Controllers/Tenant/ServicePhotoController.php",
+      "exports": [
+        "ServicePhotoController"
+      ],
+      "imports": [],
+      "lines": 57,
+      "preview": "<?php\n\nnamespace App\\Http\\Controllers\\Tenant;\n\nuse App\\Http\\Controllers\\Controller;\nuse App\\Models\\Tenant\\Service;\nuse App\\Models\\Tenant\\ServicePhoto;\nuse App\\Models\\Tenant\\ActivityLog;\nuse App\\Services\\GoogleDrivePhotoService;\nuse Illuminate\\Http\\Request;\n\nclass ServicePhotoController extends Controller\n{\n    public function store(Request $request, Service $service)\n    {\n        $request->validate([\n            'photos' => 'required|array|max:10',\n            'photos.*' => 'image|mimes:jpg,jpe"
+    },
+    {
+      "file": "app/Http/Controllers/Tenant/ServiceToolsController.php",
+      "exports": [
+        "ServiceToolsController"
+      ],
+      "imports": [],
+      "lines": 59,
+      "preview": "<?php\n\nnamespace App\\Http\\Controllers\\Tenant;\n\nuse App\\Http\\Controllers\\Controller;\nuse App\\Models\\Tenant\\ChecklistTemplate;\nuse App\\Models\\Tenant\\PartnerTeknisi;\nuse App\\Models\\Tenant\\PickupDelivery;\nuse App\\Models\\Tenant\\Indent;\nuse App\\Models\\Tenant\\Service;\nuse App\\Models\\Tenant\\Branch;\nuse Illuminate\\Http\\Request;\nuse Inertia\\Inertia;\nuse Inertia\\Response;\n\nclass ServiceToolsController extends Controller\n{\n    public function index(Request $request): Response\n    {\n        $tab = $request->"
+    },
+    {
+      "file": "app/Http/Controllers/Tenant/ServiceTransferController.php",
+      "exports": [
+        "ServiceTransferController"
+      ],
+      "imports": [],
+      "lines": 43,
+      "preview": "<?php\n\nnamespace App\\Http\\Controllers\\Tenant;\n\nuse App\\Http\\Controllers\\Controller;\nuse App\\Models\\Tenant\\Service;\nuse App\\Models\\Tenant\\Branch;\nuse Illuminate\\Http\\Request;\nuse Illuminate\\Support\\Facades\\Auth;\n\n/** @deprecated Use consolidated controller instead. See FinanceController, CashController, InventarisController, ServiceToolsController, SystemController, DocumentController, SettingController. */\nclass ServiceTransferController extends Controller\n{\n    public function create()\n    {\n  "
+    },
+    {
+      "file": "app/Http/Middleware/EnsureJsonForApi.php",
+      "exports": [
+        "EnsureJsonForApi"
+      ],
+      "imports": [],
+      "lines": 42,
+      "preview": "<?php\n\nnamespace App\\Http\\Middleware;\n\nuse Closure;\nuse Illuminate\\Http\\Request;\nuse Symfony\\Component\\HttpFoundation\\Response;\n\nclass EnsureJsonForApi\n{\n    /**\n     * Handle an incoming request.\n     *\n     * Memastikan semua response dari /api/* prefix selalu berupa JSON,\n     * meskipun request tidak menyertakan Accept: application/json header.\n     * Mencegah HTML error page pada API endpoints.\n     */\n    public function handle(Request $request, Closure $next): Response\n    {\n        // Fo"
+    },
+    {
+      "file": "app/Models/Tenant/MasterLaborService.php",
+      "exports": [
+        "MasterLaborService"
+      ],
+      "imports": [],
+      "lines": 25,
+      "preview": "<?php\n\nnamespace App\\Models\\Tenant;\n\nuse Illuminate\\Database\\Eloquent\\Model;\n\nclass MasterLaborService extends Model\n{\n    protected $fillable = [\n        'branch_id',\n        'name',\n        'cost_price',\n        'selling_price',\n    ];\n\n    protected $casts = [\n        'cost_price' => 'decimal:2',\n        'selling_price' => 'decimal:2',\n    ];\n\n    public function branch()\n    {\n        return $this->belongsTo(Branch::class);\n    }\n}"
+    },
+    {
+      "file": "app/Models/Tenant/Service.php",
+      "exports": [
+        "Service"
+      ],
+      "imports": [],
+      "lines": 276,
+      "preview": "<?php\n\nnamespace App\\Models\\Tenant;\n\nuse Illuminate\\Database\\Eloquent\\Model;\nuse Illuminate\\Database\\Eloquent\\SoftDeletes;\nuse Illuminate\\Support\\Str;\n\nclass Service extends Model\n{\n    use SoftDeletes, \\App\\Models\\Tenant\\Traits\\HasCustomFields;\n\n    protected $fillable = [\n        'branch_id',\n        'customer_id',\n        'created_by',\n        'technician_id',\n        'status',\n        'tracking_code',\n        'posisi_unit',\n        'jalur_kedatangan_id',\n        'kategori_perangkat_id',\n    "
+    },
+    {
+      "file": "app/Models/Tenant/ServiceChecklist.php",
+      "exports": [
+        "ServiceChecklist"
+      ],
+      "imports": [],
+      "lines": 37,
+      "preview": "<?php\n\nnamespace App\\Models\\Tenant;\n\nuse Illuminate\\Database\\Eloquent\\Model;\n\nclass ServiceChecklist extends Model\n{\n    protected $fillable = [\n        'service_id',\n        'checklist_template_id',\n        'template_id',\n        'type',\n        'checked_items',\n        'notes',\n        'note',\n    ];\n\n    protected $casts = [\n        'checked_items' => 'json',\n    ];\n\n    public function service()\n    {\n        return $this->belongsTo(Service::class);\n    }\n\n    public function template()\n    "
+    },
+    {
+      "file": "app/Models/Tenant/ServicePhoto.php",
+      "exports": [
+        "ServicePhoto"
+      ],
+      "imports": [],
+      "lines": 35,
+      "preview": "<?php\n\nnamespace App\\Models\\Tenant;\n\nuse Illuminate\\Database\\Eloquent\\Model;\n\nclass ServicePhoto extends Model\n{\n    protected $fillable = [\n        'service_id',\n        'photo_path',\n        'keterangan',\n        'uploaded_by',\n    ];\n\n    protected $appends = ['photo_url'];\n\n    public function getPhotoUrlAttribute()\n    {\n        if ($this->photo_path && str_starts_with($this->photo_path, 'http')) {\n            return $this->photo_path;\n        }\n        return $this->photo_path ? '/storage/"
+    },
+    {
+      "file": "app/Models/Tenant/ServiceSparepart.php",
+      "exports": [
+        "ServiceSparepart"
+      ],
+      "imports": [],
+      "lines": 32,
+      "preview": "<?php\n\nnamespace App\\Models\\Tenant;\n\nuse Illuminate\\Database\\Eloquent\\Model;\n\nclass ServiceSparepart extends Model\n{\n    protected $fillable = [\n        'service_id',\n        'product_id',\n        'quantity',\n        'unit_price',\n        'subtotal',\n    ];\n\n    protected $casts = [\n        'quantity' => 'integer',\n        'unit_price' => 'decimal:2',\n        'subtotal' => 'decimal:2',\n    ];\n\n    public function service()\n    {\n        return $this->belongsTo(Service::class);\n    }\n\n    public "
+    },
+    {
+      "file": "app/Models/Tenant/ServiceTransfer.php",
+      "exports": [
+        "ServiceTransfer"
+      ],
+      "imports": [],
+      "lines": 36,
+      "preview": "<?php\n\nnamespace App\\Models\\Tenant;\n\nuse Illuminate\\Database\\Eloquent\\Model;\n\nclass ServiceTransfer extends Model\n{\n    protected $fillable = [\n        'service_id',\n        'from_branch_id',\n        'to_branch_id',\n        'note',\n        'transferred_by',\n    ];\n\n    public function service()\n    {\n        return $this->belongsTo(Service::class);\n    }\n\n    public function fromBranch()\n    {\n        return $this->belongsTo(Branch::class, 'from_branch_id');\n    }\n\n    public function toBranch()"
+    },
+    {
+      "file": "routes/api.php",
+      "exports": [],
+      "imports": [],
+      "lines": 27,
+      "preview": "<?php\n\nuse Illuminate\\Support\\Facades\\Route;\nuse App\\Http\\Controllers\\Api\\ServiceController;\nuse App\\Http\\Controllers\\Api\\TrackingController;\n\n/*\n|--------------------------------------------------------------------------\n| API Routes\n|--------------------------------------------------------------------------\n|\n| Semua route di sini otomatis mendapat middleware 'api' yang:\n| - Selalu return JSON response (termasuk error)\n| - Rate limited (60 req/menit)\n| - Tidak membutuhkan CSRF\n|\n| Untuk mengak"
+    },
+    {
+      "file": "tests/Unit/Models/ServiceTest.php",
+      "exports": [
+        "ServiceTest"
+      ],
+      "imports": [],
+      "lines": 88,
+      "preview": "<?php\nnamespace Tests\\Unit\\Models;\nuse Tests\\TestCase;\nuse App\\Models\\Tenant\\Service;\n\nclass ServiceTest extends TestCase\n{\n    public function test_status_constants_are_defined()\n    {\n        $this->assertEquals('menunggu_alokasi', Service::STATUS_MENUNGGU_ALOKASI);\n        $this->assertEquals('diterima', Service::STATUS_DITERIMA);\n        $this->assertEquals('dikerjakan', Service::STATUS_DIKERJAKAN);\n        $this->assertEquals('siap_diambil', Service::STATUS_SIAP_DIAMBIL);\n        $this->ass"
+    },
+    {
+      "file": "app/Console/Commands/BackupRun.php",
+      "exports": [
+        "BackupRun"
+      ],
+      "imports": [],
+      "lines": 167,
+      "preview": "<?php\n\nnamespace App\\Console\\Commands;\n\nuse App\\Models\\SystemSetting;\nuse App\\Models\\SystemLog;\nuse Illuminate\\Console\\Command;\n\nclass BackupRun extends Command\n{\n    protected $signature = 'backup:run {--force : Skip confirmation}';\n    protected $description = 'Jalankan backup database & storage ServiceKU';\n\n    public function handle()\n    {\n        $this->info('=== ServiceKU Backup ===');\n        $this->newLine();\n\n        // Baca konfigurasi dari system settings\n        $backupPath = System"
+    },
+    {
+      "file": "app/Console/Commands/CheckSubscriptionExpiry.php",
+      "exports": [
+        "CheckSubscriptionExpiry"
+      ],
+      "imports": [],
+      "lines": 50,
+      "preview": "<?php\n\nnamespace App\\Console\\Commands;\n\nuse App\\Models\\Tenant;\nuse App\\Models\\SystemLog;\nuse Illuminate\\Console\\Command;\n\nclass CheckSubscriptionExpiry extends Command\n{\n    protected $signature = 'subscription:check';\n    protected $description = 'Cek & auto-expire subscription/trial yang sudah habis';\n\n    public function handle()\n    {\n        $this->info('Memeriksa subscription tenant...');\n        $expired = 0;\n\n        // 1. Expire trial yang sudah habis\n        $trialExpired = Tenant::whe"
+    },
+    {
+      "file": "app/Console/Commands/TenantCleanup.php",
+      "exports": [
+        "TenantCleanup"
+      ],
+      "imports": [],
+      "lines": 111,
+      "preview": "<?php\n\nnamespace App\\Console\\Commands;\n\nuse App\\Models\\Tenant;\nuse App\\Models\\SystemLog;\nuse Illuminate\\Console\\Command;\nuse Illuminate\\Support\\Facades\\DB;\nuse Illuminate\\Support\\Facades\\Storage;\n\nclass TenantCleanup extends Command\n{\n    protected $signature = 'tenants:cleanup\n        {--days=30 : Hapus tenant expired lebih dari N hari yang lalu}\n        {--dry-run : Jalankan simulasi tanpa menghapus}\n        {--force : Hapus tanpa konfirmasi}';\n\n    protected $description = 'Bersihkan tenant e"
+    },
+    {
+      "file": "app/Http/Controllers/Admin/AdminAuthController.php",
+      "exports": [
+        "AdminAuthController"
+      ],
+      "imports": [],
+      "lines": 29,
+      "preview": "<?php\n\nnamespace App\\Http\\Controllers\\Admin;\n\nuse App\\Http\\Controllers\\Controller;\nuse App\\Models\\SystemLog;\nuse Illuminate\\Http\\Request;\nuse Illuminate\\Support\\Facades\\Auth;\n\nclass AdminAuthController extends Controller\n{\n    public function login(Request $request)\n    {\n        $credentials = $request->validate([\n            'email' => 'required|email',\n            'password' => 'required',\n        ]);\n\n        if (Auth::attempt($credentials, $request->boolean('remember'))) {\n            $requ"
+    },
+    {
+      "file": "app/Http/Controllers/Admin/BackupController.php",
+      "exports": [
+        "BackupController"
+      ],
+      "imports": [],
+      "lines": 240,
+      "preview": "<?php\n\nnamespace App\\Http\\Controllers\\Admin;\n\nuse App\\Http\\Controllers\\Controller;\nuse App\\Models\\SystemLog;\nuse App\\Models\\SystemSetting;\nuse App\\Services\\GoogleDriveService;\nuse Illuminate\\Http\\Request;\nuse Illuminate\\Support\\Facades\\Artisan;\n\nclass BackupController extends Controller\n{\n    /**\n     * Tampilkan halaman pengaturan backup.\n     */\n    public function index()\n    {\n        $config = [\n            'backup_path' => SystemSetting::getValue('backup_path', '/mnt/hdd/Backup/ServiceKU')"
+    },
+    {
+      "file": "app/Http/Controllers/Admin/MonitoringController.php",
+      "exports": [
+        "MonitoringController"
+      ],
+      "imports": [],
+      "lines": 137,
+      "preview": "<?php\n\nnamespace App\\Http\\Controllers\\Admin;\n\nuse App\\Http\\Controllers\\Controller;\nuse App\\Models\\Tenant;\nuse App\\Models\\TenantStat;\nuse App\\Models\\SystemLog;\nuse App\\Models\\SystemSetting;\nuse Illuminate\\Http\\Request;\nuse Illuminate\\Support\\Facades\\DB;\n\nclass MonitoringController extends Controller\n{\n    public function index()\n    {\n        $tenants = Tenant::with([\"plan\", \"stats\"])->latest()->get();\n        $aggregate = TenantStat::select(\n            DB::raw(\"COALESCE(SUM(users_count), 0) as "
+    },
+    {
+      "file": "app/Http/Controllers/Admin/PaymentController.php",
+      "exports": [
+        "PaymentController"
+      ],
+      "imports": [],
+      "lines": 145,
+      "preview": "<?php\n\nnamespace App\\Http\\Controllers\\Admin;\n\nuse App\\Http\\Controllers\\Controller;\nuse App\\Models\\Payment;\nuse App\\Models\\Tenant;\nuse App\\Models\\SystemLog;\nuse App\\Services\\PaymentGatewayService;\nuse Illuminate\\Http\\Request;\n\nclass PaymentController extends Controller\n{\n    /**\n     * Daftar semua transaksi pembayaran.\n     */\n    public function index()\n    {\n        $payments = Payment::with('tenant')\n            ->latest()\n            ->paginate(20);\n\n        $stats = [\n            'total_rev"
+    },
+    {
+      "file": "app/Http/Controllers/Admin/PlanController.php",
+      "exports": [
+        "PlanController"
+      ],
+      "imports": [],
+      "lines": 81,
+      "preview": "<?php\n\nnamespace App\\Http\\Controllers\\Admin;\n\nuse App\\Http\\Controllers\\Controller;\nuse App\\Models\\Plan;\nuse App\\Models\\SystemLog;\nuse Illuminate\\Http\\Request;\n\nclass PlanController extends Controller\n{\n    public function index()\n    {\n        $plans = Plan::all()->map(fn($plan) => [\n            'id' => $plan->id,\n            'name' => $plan->name,\n            'slug' => $plan->slug,\n            'description' => $plan->description,\n            'price' => $plan->price,\n            'promo_price' =>"
+    },
+    {
+      "file": "app/Http/Controllers/Admin/SuperAdminController.php",
+      "exports": [
+        "SuperAdminController"
+      ],
+      "imports": [],
+      "lines": 70,
+      "preview": "<?php\n\nnamespace App\\Http\\Controllers\\Admin;\n\nuse App\\Http\\Controllers\\Controller;\nuse App\\Models\\Plan;\nuse App\\Models\\Tenant;\nuse App\\Models\\SystemLog;\nuse App\\Models\\TenantStat;\nuse Illuminate\\Http\\Request;\nuse Illuminate\\Support\\Facades\\DB;\n\nclass SuperAdminController extends Controller\n{\n    public function dashboard()\n    {\n        $stats = [\n            \"total_tenants\" => Tenant::count(),\n            \"active_tenants\" => Tenant::where(\"is_active\", true)->count(),\n            \"trial_tenants\""
+    },
+    {
+      "file": "app/Http/Controllers/Admin/SystemSettingsController.php",
+      "exports": [
+        "SystemSettingsController"
+      ],
+      "imports": [],
+      "lines": 117,
+      "preview": "<?php\n\nnamespace App\\Http\\Controllers\\Admin;\n\nuse App\\Http\\Controllers\\Controller;\nuse App\\Models\\SystemSetting;\nuse App\\Models\\SystemLog;\nuse App\\Services\\FeatureFlagService;\nuse Illuminate\\Http\\Request;\n\nclass SystemSettingsController extends Controller\n{\n    public function index()\n    {\n        return inertia(\"Admin/Settings\", [\n            \"settings\" => [\n                \"general\" => SystemSetting::getGroup(\"general\"),\n                \"registration\" => SystemSetting::getGroup(\"registration\""
+    },
+    {
+      "file": "app/Http/Controllers/Admin/TenantManagementController.php",
+      "exports": [
+        "TenantManagementController"
+      ],
+      "imports": [],
+      "lines": 302,
+      "preview": "<?php\n\nnamespace App\\Http\\Controllers\\Admin;\n\nuse App\\Http\\Controllers\\Controller;\nuse App\\Models\\Plan;\nuse App\\Models\\Tenant;\nuse App\\Models\\SystemLog;\nuse App\\Models\\TenantStat;\nuse Illuminate\\Http\\Request;\nuse Illuminate\\Support\\Facades\\DB;\n\nclass TenantManagementController extends Controller\n{\n    public function index(Request $request)\n    {\n        $query = Tenant::with('plan', 'domains', 'stats');\n\n        if ($request->filled('search')) {\n            $s = $request->search;\n            $q"
+    },
+    {
+      "file": "app/Http/Controllers/Admin/VoucherController.php",
+      "exports": [
+        "VoucherController"
+      ],
+      "imports": [],
+      "lines": 101,
+      "preview": "<?php\n\nnamespace App\\Http\\Controllers\\Admin;\n\nuse App\\Http\\Controllers\\Controller;\nuse App\\Models\\Voucher;\nuse Illuminate\\Http\\Request;\nuse Illuminate\\Support\\Facades\\Auth;\n\nclass VoucherController extends Controller\n{\n    public function index()\n    {\n        $vouchers = Voucher::with('tenant')->orderBy('created_at', 'desc')->paginate(20);\n        return inertia('Admin/Vouchers/Index', [\n            'vouchers' => $vouchers,\n        ]);\n    }\n\n    public function create()\n    {\n        $tenants "
+    },
+    {
+      "file": "app/Http/Controllers/Auth/EmailVerificationController.php",
+      "exports": [
+        "EmailVerificationController"
+      ],
+      "imports": [],
+      "lines": 67,
+      "preview": "<?php\n\nnamespace App\\Http\\Controllers\\Auth;\n\nuse App\\Http\\Controllers\\Controller;\nuse App\\Models\\Tenant\\User;\nuse Illuminate\\Http\\Request;\nuse Illuminate\\Auth\\Events\\Verified;\n\nclass EmailVerificationController extends Controller\n{\n    /**\n     * Tampilkan halaman pemberitahuan verifikasi.\n     */\n    public function notice()\n    {\n        if (!\\App\\Services\\FeatureFlagService::isEnabled('email_verification')) {\n            return redirect()->intended(route('dashboard'));\n        }\n\n        $use"
+    },
+    {
+      "file": "app/Http/Controllers/Auth/GoogleLoginController.php",
+      "exports": [
+        "GoogleLoginController"
+      ],
+      "imports": [],
+      "lines": 93,
+      "preview": "<?php\n\nnamespace App\\Http\\Controllers\\Auth;\n\nuse App\\Http\\Controllers\\Controller;\nuse App\\Models\\Tenant\\User;\nuse App\\Models\\Tenant\\ActivityLog;\nuse App\\Models\\Tenant\\LoginHistory;\nuse Illuminate\\Support\\Facades\\Auth;\nuse Illuminate\\Support\\Str;\nuse Laravel\\Socialite\\Facades\\Socialite;\n\nclass GoogleLoginController extends Controller\n{\n    public function redirect()\n    {\n        if (!config('services.google.client_id')) {\n            return redirect()->route('login')->with('error', 'Login Google"
+    },
+    {
+      "file": "app/Http/Controllers/Auth/LoginController.php",
+      "exports": [
+        "LoginController"
+      ],
+      "imports": [],
+      "lines": 166,
+      "preview": "<?php\n\nnamespace App\\Http\\Controllers\\Auth;\n\nuse App\\Http\\Controllers\\Controller;\nuse App\\Models\\Tenant;\nuse App\\Models\\Tenant\\LoginHistory;\nuse App\\Models\\Tenant\\ActivityLog;\nuse App\\Models\\Tenant\\User;\nuse Illuminate\\Http\\Request;\nuse Illuminate\\Support\\Facades\\Auth;\nuse Illuminate\\Support\\Facades\\Hash;\nuse Stancl\\Tenancy\\Database\\Models\\Domain;\n\nclass LoginController extends Controller\n{\n    public function create()\n    {\n        $appEnv = app()->environment();\n\n        // Jika sudah di subdo"
+    },
+    {
+      "file": "app/Http/Controllers/Auth/RegisteredTenantController.php",
+      "exports": [
+        "RegisteredTenantController"
+      ],
+      "imports": [],
+      "lines": 312,
+      "preview": "<?php\n\nnamespace App\\Http\\Controllers\\Auth;\n\nuse App\\Http\\Controllers\\Controller;\nuse App\\Models\\Plan;\nuse App\\Models\\Tenant;\nuse App\\Models\\RegistrationVerification;\nuse App\\Mail\\OtpMail;\nuse App\\Mail\\WelcomeMail;\nuse Illuminate\\Http\\Request;\nuse Illuminate\\Support\\Facades\\Auth;\nuse Illuminate\\Support\\Facades\\Hash;\nuse Illuminate\\Support\\Facades\\DB;\nuse Illuminate\\Support\\Facades\\Mail;\nuse Illuminate\\Support\\Facades\\Log;\nuse Illuminate\\Support\\Str;\n\nclass RegisteredTenantController extends Cont"
+    },
+    {
+      "file": "app/Http/Controllers/Auth/ResetPasswordController.php",
+      "exports": [
+        "ResetPasswordController"
+      ],
+      "imports": [],
+      "lines": 111,
+      "preview": "<?php\n\nnamespace App\\Http\\Controllers\\Auth;\n\nuse App\\Http\\Controllers\\Controller;\nuse App\\Models\\Tenant\\User;\nuse App\\Notifications\\ResetPasswordNotification;\nuse Illuminate\\Http\\Request;\nuse Illuminate\\Support\\Facades\\DB;\nuse Illuminate\\Support\\Facades\\Hash;\nuse Illuminate\\Support\\Str;\n\nclass ResetPasswordController extends Controller\n{\n    /**\n     * Tampilkan form lupa password.\n     */\n    public function showLinkRequestForm()\n    {\n        return inertia('Auth/ForgotPassword');\n    }\n\n    /"
+    },
+    {
+      "file": "app/Http/Controllers/Auth/TwoFactorController.php",
+      "exports": [
+        "TwoFactorController"
+      ],
+      "imports": [],
+      "lines": 170,
+      "preview": "<?php\n\nnamespace App\\Http\\Controllers\\Auth;\n\nuse App\\Http\\Controllers\\Controller;\nuse App\\Models\\Tenant\\User;\nuse Illuminate\\Http\\Request;\nuse Illuminate\\Support\\Facades\\Auth;\nuse PragmaRX\\Google2FA\\Google2FA;\n\nclass TwoFactorController extends Controller\n{\n    /**\n     * Tampilkan halaman challenge 2FA.\n     */\n    public function challenge()\n    {\n        $userId = session('two_factor_user_id');\n        $tenantId = session('tenant_id');\n        if (!$userId || !$tenantId) {\n            return "
+    },
+    {
+      "file": "app/Http/Controllers/Auth/TwoFactorSetupController.php",
+      "exports": [
+        "TwoFactorSetupController"
+      ],
+      "imports": [],
+      "lines": 112,
+      "preview": "<?php\n\nnamespace App\\Http\\Controllers\\Auth;\n\nuse App\\Http\\Controllers\\Controller;\nuse Illuminate\\Http\\Request;\nuse Illuminate\\Support\\Facades\\Auth;\nuse PragmaRX\\Google2FA\\Google2FA;\n\nclass TwoFactorSetupController extends Controller\n{\n    public function __construct()\n    {\n        $this->middleware('auth');\n    }\n\n    /**\n     * Cek status 2FA user.\n     */\n    public function status()\n    {\n        $user = Auth::user();\n\n        return response()->json([\n            'enabled' => $user->hasTwoF"
+    }
+  ],
+  "metadata": {
+    "package.json": {
+      "name": null,
+      "description": null,
+      "scripts": [
+        "build",
+        "dev",
+        "test:e2e",
+        "test:e2e:ui"
+      ],
+      "dependencies": [
+        "@inertiajs/vue3",
+        "jsqr",
+        "vue",
+        "ziggy-js"
+      ],
+      "devDependencies": [
+        "@playwright/test",
+        "@tailwindcss/forms",
+        "@tailwindcss/typography",
+        "@vitejs/plugin-vue",
+        "autoprefixer",
+        "axios",
+        "concurrently",
+        "laravel-vite-plugin",
+        "playwright",
+        "postcss",
+        "tailwindcss",
+        "vite",
+        "vite-plugin-pwa"
+      ]
+    },
+    "composer.json": "{\n    \"$schema\": \"https://getcomposer.org/schema.json\",\n    \"name\": \"laravel/laravel\",\n    \"type\": \"project\",\n    \"description\": \"The skeleton application for the Laravel framework.\",\n    \"keywords\": [\"laravel\", \"framework\"],\n    \"license\": \"MIT\",\n    \"require\": {\n        \"php\": \"^8.2\",\n        \"barryvdh/laravel-dompdf\": \"^3.1\",\n        \"google/apiclient\": \"^2.19\",\n        \"inertiajs/inertia-laravel\": \"^3.1\",\n        \"laravel/framework\": \"^12.0\",\n        \"laravel/reverb\": \"^1.11\",\n        \"laravel/sanctum\": \"^4.3\",\n        \"laravel/socialite\": \"^5.29\",\n        \"laravel/tinker\": \"^2.9\",\n        \"midtrans/midtrans-php\": \"^2.6\",\n        \"pragmarx/google2fa-laravel\": \"^3.0\",\n        \"sentry/sentry-laravel\": \"^4.27\",\n        \"stancl/tenancy\": \"^3.10\",\n        \"tightenco/ziggy\": \"^2.6\"\n    },\n    \"require-dev\": {\n        \"fakerphp/faker\": \"^1.23\",\n        \"laravel/pail\": \"^1.1\",\n        \"laravel/pint\": \"^1.13\",\n        \"laravel/sail\": \"^1.26\",\n        \"mockery/mockery\": \"^1.6\",\n        \"nuno",
+    "docker-compose.yml": "services:\n  # ========== MySQL Database ==========\n  mysql:\n    image: mysql:8.0\n    container_name: serviceku-mysql\n    restart: unless-stopped\n    environment:\n      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-serviceku_root_pass}\n      MYSQL_DATABASE: ${DB_DATABASE:-serviceku_master}\n      MYSQL_USER: ${DB_USERNAME:-serviceku}\n      MYSQL_PASSWORD: ${DB_PASSWORD:-serviceku_pass}\n    ports:\n      - \"3306:3306\"\n    volumes:\n      - mysql_data:/var/lib/mysql\n      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf\n    networks:\n      - serviceku-network\n    healthcheck:\n      test: [\"CMD\", \"mysqladmin\", \"ping\", \"-h\", \"localhost\", \"-u\", \"root\", \"-p serviceku_root_pass\"]\n      interval: 10s\n      timeout: 5s\n      retries: 5\n\n  # ========== phpMyAdmin (for management) ==========\n  phpmyadmin:\n    image: phpmyadmin:latest\n    container_name: serviceku-phpmyadmin\n    restart: unless-stopped\n    environment:\n      PMA_HOST: mysql\n      PMA_PORT: 3306\n      PMA_USER: root\n      PMA_PASSWORD: s",
+    "README.md": "<div align=\"center\">\n  <h1>\ud83d\udd27 ServiceKU</h1>\n  <p><strong>SaaS Multi-Tenant Service Center Management Platform</strong></p>\n  <p>\n    <img src=\"https://img.shields.io/badge/Laravel-11-red?logo=laravel\" alt=\"Laravel 11\">\n    <img src=\"https://img.shields.io/badge/Vue_3-3.x-brightgreen?logo=vue.js\" alt=\"Vue 3\">\n    <img src=\"https://img.shields.io/badge/Inertia.js-3.x-blue?logo=inertia\" alt=\"Inertia.js\">\n    <img src=\"https://img.shields.io/badge/PHP-8.2+-purple?logo=php\" alt=\"PHP 8.2+\">\n    <img src=\"https://img.shields.io/badge/License-MIT-yellow\" alt=\"License\">\n  </p>\n  <p>\n    <a href=\"https://github.com/fathulkirom/saas-serviceku/actions\">\n      <img src=\"https://github.com/fathulkirom/saas-serviceku/actions/workflows/tests.yml/badge.svg\" alt=\"Tests\">\n    </a>\n    <a href=\"https://github.com/fathulkirom/saas-serviceku/issues\">\n      <img src=\"https://img.shields.io/github/issues/fathulkirom/saas-serviceku\" alt=\"Issues\">\n    </a>\n  </p>\n</div>\n\n---\n\n## \ud83d\udccb Tentang ServiceKU\n\nServiceKU adalah platform manajemen pusat servis elektronik & handphone berbasis **SaaS Multi-Tenant**. Dibangun dengan **Laravel 11 + Vue 3 (Composition API) + Inertia.js**.\n\n### Fitur Utama\n\n| Modul | Fitur |\n|---|---|\n| \ud83d\udd27 **Service/Repair** | Ticket lifecycle, foto (Google Drive), spare parts, checklist, transfer antar teknisi |\n| \ud83d\udcb0 **POS/Sales** | Cash register, invoice, payment tracking, multi-store |\n| \ud83d\udc65 **Customer** | CRUD, member card, loyalty points, history servis |\n| \ud83d\udce6 **Inventory** | Produk, stock mutation, low stock alert, purchase order, return, stock allocation |\n| \ud83d\udcb5 **Finance** | Expenses (dengan foto), daily deposit, commission, reconciliation, tax settings |\n| \ud83c\udfe2 **Multi-Branch** | Multiple cabang, transfer stock antar cabang |\n| \ud83d\udc68\u200d\ud83d\udd27 **HR** | Shift, absensi, multi-role users (Owner/Admin/CS/Teknisi/Kasir/Kurir) |\n| \ud83d\udcca **Reporting** | 9 jenis report: sales, services, finance, inventory, commissions, customer analytics, productivity, revenue comparison |\n| \ud83d\udcd6 **Knowledge Base** | SOP"
+  }
+}

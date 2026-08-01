@@ -2,22 +2,22 @@
   <AuthenticatedLayout>
     <template #header>
       <PageHeader :title="pageTitle" :subtitle="subtitle">
-        <Link
+        <button
           v-if="activeTab === 'kb'"
-          :href="route('knowledge-base.create')"
+          @click="openKbDrawer()"
           class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer"
           style="background: var(--accent-primary);"
         >
           + Artikel KB Baru
-        </Link>
-        <Link
+        </button>
+        <button
           v-if="activeTab === 'sop'"
-          :href="route('sops.create')"
+          @click="openSopDrawer()"
           class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer"
           style="background: var(--accent-primary);"
         >
           + SOP Baru
-        </Link>
+        </button>
         <button
           v-if="activeTab === 'balasan'"
           @click="openReplyModal()"
@@ -42,10 +42,10 @@
             :emptyTitle="'Belum ada artikel KB'"
             :emptyDescription="'Artikel pengetahuan panduan perbaikan servis akan muncul di sini.'"
             :emptyActionLabel="'+ Tambah Artikel KB'"
-            @empty-action="router.visit(route('knowledge-base.create'))"
+            @empty-action="openKbDrawer()"
           >
             <template #cell-title="{ row }">
-              <span class="font-medium text-sm">{{ row.title }}</span>
+              <span class="font-medium text-sm">{{ row.judul }}</span>
               <p class="text-[11px]" style="color: var(--text-muted);">Penulis: {{ row.creator?.name || 'Admin' }}</p>
             </template>
             <template #cell-device_type="{ row }">
@@ -56,8 +56,8 @@
             </template>
             <template #cell-action="{ row }">
               <div class="flex items-center justify-end gap-1">
-                <Link :href="route('knowledge-base.show', row.id)" class="px-2.5 py-1 rounded text-xs font-semibold text-blue-600 border border-blue-200 hover:bg-blue-50">Baca</Link>
-                <Link :href="route('knowledge-base.edit', row.id)" class="px-2.5 py-1 rounded text-xs font-medium border" style="borderColor: var(--border-color); color: var(--accent-primary);">Edit</Link>
+                <button @click="openKbDetail(row)" class="px-2.5 py-1 rounded text-xs font-semibold text-blue-600 border border-blue-200 hover:bg-blue-50">Baca</button>
+                <button @click="openKbDrawer(row)" class="px-2.5 py-1 rounded text-xs font-medium border" style="borderColor: var(--border-color); color: var(--accent-primary);">Edit</button>
                 <button @click="deleteKb(row)" class="px-2.5 py-1 rounded text-xs font-medium text-red-600 border border-red-200 hover:bg-red-50">Hapus</button>
               </div>
             </template>
@@ -79,21 +79,21 @@
             :emptyTitle="'Belum ada data SOP'"
             :emptyDescription="'Dokumen Prosedur Operasional Standar akan muncul setelah ditambahkan.'"
             :emptyActionLabel="'+ Buat SOP Baru'"
-            @empty-action="router.visit(route('sops.create'))"
+            @empty-action="openSopDrawer()"
           >
             <template #cell-title="{ row }">
               <span class="font-medium text-sm">{{ row.title }}</span>
             </template>
             <template #cell-target_role="{ row }">
-              <Badge variant="blue">{{ row.target_role ?? 'Semua Role' }}</Badge>
+              <Badge variant="blue">{{ (row.target_roles ?? []).length ? row.target_roles.join(', ') : 'Semua Role' }}</Badge>
             </template>
             <template #cell-created_at="{ row }">
               {{ formatDate(row.created_at) }}
             </template>
             <template #cell-action="{ row }">
               <div class="flex items-center justify-end gap-1">
-                <Link :href="route('sops.show', row.id)" class="px-2.5 py-1 rounded text-xs font-semibold text-blue-600 border border-blue-200 hover:bg-blue-50">Lihat</Link>
-                <Link :href="route('sops.edit', row.id)" class="px-2.5 py-1 rounded text-xs font-medium border" style="borderColor: var(--border-color); color: var(--accent-primary);">Edit</Link>
+                <button @click="openSopDetail(row)" class="px-2.5 py-1 rounded text-xs font-semibold text-blue-600 border border-blue-200 hover:bg-blue-50">Lihat</button>
+                <button @click="openSopDrawer(row)" class="px-2.5 py-1 rounded text-xs font-medium border" style="borderColor: var(--border-color); color: var(--accent-primary);">Edit</button>
                 <button @click="deleteSop(row)" class="px-2.5 py-1 rounded text-xs font-medium text-red-600 border border-red-200 hover:bg-red-50">Hapus</button>
               </div>
             </template>
@@ -158,12 +158,132 @@
         </div>
       </form>
     </Drawer>
+
+    <!-- DRAWER KNOWLEDGE BASE (TAMBAH / EDIT) -->
+    <Drawer :open="showKbDrawer" :title="editingKb ? 'Edit Artikel KB' : 'Tambah Artikel KB'" @close="showKbDrawer = false" width="520px">
+      <form @submit.prevent="submitKb" class="space-y-4">
+        <div class="space-y-1">
+          <label class="text-xs font-semibold" style="color: var(--text-muted);">Judul *</label>
+          <input v-model="kbForm.judul" type="text" required class="input text-sm" placeholder="Judul artikel" />
+        </div>
+        <div class="grid grid-cols-3 gap-3">
+          <div class="space-y-1">
+            <label class="text-xs font-semibold" style="color: var(--text-muted);">Tipe Device</label>
+            <select v-model="kbForm.device_type" class="input text-sm">
+              <option value="">Umum</option>
+              <option v-for="t in kbDeviceTypes" :key="t" :value="t">{{ t }}</option>
+            </select>
+          </div>
+          <div class="space-y-1">
+            <label class="text-xs font-semibold" style="color: var(--text-muted);">Brand</label>
+            <select v-model="kbForm.device_brand" class="input text-sm">
+              <option value="">-</option>
+              <option v-for="b in kbBrands" :key="b" :value="b">{{ b }}</option>
+            </select>
+          </div>
+          <div class="space-y-1">
+            <label class="text-xs font-semibold" style="color: var(--text-muted);">Model</label>
+            <input v-model="kbForm.device_model" type="text" class="input text-sm" placeholder="e.g. A52" />
+          </div>
+        </div>
+        <div class="space-y-1">
+          <label class="text-xs font-semibold" style="color: var(--text-muted);">Masalah *</label>
+          <textarea v-model="kbForm.masalah" rows="2" required class="input text-sm" placeholder="Gejala / masalah..."></textarea>
+        </div>
+        <div class="space-y-1">
+          <label class="text-xs font-semibold" style="color: var(--text-muted);">Solusi *</label>
+          <textarea v-model="kbForm.solusi" rows="4" required class="input text-sm" placeholder="Langkah solusi..."></textarea>
+        </div>
+        <div class="space-y-1">
+          <label class="text-xs font-semibold" style="color: var(--text-muted);">Lampiran Gambar (opsional)</label>
+          <input type="file" accept="image/*" @change="kbForm.lampiran = $event.target.files[0] || null" class="input text-sm" />
+        </div>
+        <div class="flex justify-end gap-2 pt-3">
+          <button type="button" @click="showKbDrawer = false" class="btn-secondary text-xs">Batal</button>
+          <button type="submit" :disabled="kbForm.processing" class="btn-primary text-xs">
+            {{ kbForm.processing ? 'Menyimpan...' : 'Simpan Artikel' }}
+          </button>
+        </div>
+      </form>
+    </Drawer>
+
+    <!-- DRAWER DETAIL KNOWLEDGE BASE -->
+    <Drawer :open="showKbDetailDrawer" title="Detail Artikel KB" @close="showKbDetailDrawer = false" width="520px">
+      <div v-if="selectedKb" class="space-y-4">
+        <div>
+          <h3 class="text-base font-bold" style="color: var(--text-primary);">{{ selectedKb.judul }}</h3>
+          <p class="text-[11px]" style="color: var(--text-muted);">
+            {{ selectedKb.device_type ?? 'Umum' }}{{ selectedKb.device_brand ? ' / ' + selectedKb.device_brand : '' }}{{ selectedKb.device_model ? ' / ' + selectedKb.device_model : '' }}
+          </p>
+        </div>
+        <div class="rounded-lg border p-3 space-y-2" style="border-color: var(--border-color);">
+          <p class="text-xs font-bold" style="color: var(--text-muted);">Masalah</p>
+          <p class="text-sm whitespace-pre-wrap">{{ selectedKb.masalah }}</p>
+        </div>
+        <div class="rounded-lg border p-3 space-y-2" style="border-color: var(--border-color);">
+          <p class="text-xs font-bold" style="color: var(--text-muted);">Solusi</p>
+          <p class="text-sm whitespace-pre-wrap">{{ selectedKb.solusi }}</p>
+        </div>
+        <div v-if="selectedKb.lampiran" class="space-y-1">
+          <label class="text-xs font-semibold" style="color: var(--text-muted);">Lampiran</label>
+          <a :href="'/storage/' + selectedKb.lampiran" target="_blank" class="text-xs font-bold text-blue-600 hover:underline">Lihat gambar ↗</a>
+        </div>
+      </div>
+    </Drawer>
+
+    <!-- DRAWER SOP (TAMBAH / EDIT) -->
+    <Drawer :open="showSopDrawer" :title="editingSop ? 'Edit SOP' : 'Buat SOP Baru'" @close="showSopDrawer = false" width="520px">
+      <form @submit.prevent="submitSop" class="space-y-4">
+        <div class="space-y-1">
+          <label class="text-xs font-semibold" style="color: var(--text-muted);">Judul SOP *</label>
+          <input v-model="sopForm.title" type="text" required class="input text-sm" placeholder="Judul prosedur" />
+        </div>
+        <div class="space-y-1">
+          <label class="text-xs font-semibold" style="color: var(--text-muted);">Isi Prosedur *</label>
+          <textarea v-model="sopForm.content" rows="6" required class="input text-sm" placeholder="Langkah-langkah prosedur..."></textarea>
+        </div>
+        <div class="space-y-1">
+          <label class="text-xs font-semibold" style="color: var(--text-muted);">Target Role</label>
+          <div class="flex flex-wrap gap-2">
+            <label v-for="r in sopRoles" :key="r" class="inline-flex items-center gap-1.5 text-xs cursor-pointer">
+              <input type="checkbox" :value="r" v-model="sopForm.target_roles" class="w-3.5 h-3.5 rounded accent-purple-600" />
+              {{ r }}
+            </label>
+          </div>
+          <p class="text-[11px]" style="color: var(--text-muted);">Kosongkan jika berlaku untuk semua role.</p>
+        </div>
+        <label class="inline-flex items-center gap-2 text-xs cursor-pointer">
+          <input type="checkbox" v-model="sopForm.is_mandatory" class="w-3.5 h-3.5 rounded accent-purple-600" />
+          Wajib dibaca semua karyawan
+        </label>
+        <div class="flex justify-end gap-2 pt-3">
+          <button type="button" @click="showSopDrawer = false" class="btn-secondary text-xs">Batal</button>
+          <button type="submit" :disabled="sopForm.processing" class="btn-primary text-xs">
+            {{ sopForm.processing ? 'Menyimpan...' : 'Simpan SOP' }}
+          </button>
+        </div>
+      </form>
+    </Drawer>
+
+    <!-- DRAWER DETAIL SOP -->
+    <Drawer :open="showSopDetailDrawer" title="Detail SOP" @close="showSopDetailDrawer = false" width="520px">
+      <div v-if="selectedSop" class="space-y-4">
+        <div class="flex items-start justify-between gap-3">
+          <h3 class="text-base font-bold" style="color: var(--text-primary);">{{ selectedSop.title }}</h3>
+          <Badge variant="blue">{{ (selectedSop.target_roles ?? []).length ? selectedSop.target_roles.join(', ') : 'Semua Role' }}</Badge>
+        </div>
+        <div class="rounded-lg border p-3" style="border-color: var(--border-color);">
+          <p class="text-sm whitespace-pre-wrap">{{ selectedSop.content }}</p>
+        </div>
+        <p class="text-[11px]" style="color: var(--text-muted);">Versi {{ selectedSop.version ?? 1 }} · {{ selectedSop.is_mandatory ? 'Wajib dibaca' : 'Opsional' }}</p>
+      </div>
+    </Drawer>
   </AuthenticatedLayout>
 </template>
 
 <script setup>
 import { computed, ref } from 'vue';
-import { router, Link, useForm } from '@inertiajs/vue3';
+import { router, useForm } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import PageHeader from '@/Components/PageHeader.vue';
 import TabPage from '@/Components/TabPage.vue';
@@ -218,7 +338,7 @@ const deleteReply = (row) => {
 };
 
 const deleteKb = (row) => {
-  if (confirm(`Hapus artikel KB "${row.title}"?`)) {
+  if (confirm(`Hapus artikel KB "${row.judul}"?`)) {
     router.delete(route('knowledge-base.destroy', row.id), { preserveScroll: true });
   }
 };
@@ -227,6 +347,68 @@ const deleteSop = (row) => {
   if (confirm(`Hapus SOP "${row.title}"?`)) {
     router.delete(route('sops.destroy', row.id), { preserveScroll: true });
   }
+};
+
+// ==== Drawer Knowledge Base (tambah / edit) ====
+const showKbDrawer = ref(false);
+const editingKb = ref(null);
+const kbForm = useForm({ judul: '', device_type: '', device_brand: '', device_model: '', masalah: '', solusi: '', lampiran: null });
+
+const openKbDrawer = (row = null) => {
+  editingKb.value = row;
+  if (row) {
+    kbForm.setData({
+      judul: row.judul, device_type: row.device_type || '', device_brand: row.device_brand || '',
+      device_model: row.device_model || '', masalah: row.masalah || '', solusi: row.solusi || '', lampiran: null,
+    });
+  } else {
+    kbForm.reset();
+  }
+  showKbDrawer.value = true;
+};
+
+const submitKb = () => {
+  const url = editingKb.value ? route('knowledge-base.update', editingKb.value.id) : route('knowledge-base.store');
+  const method = editingKb.value ? 'put' : 'post';
+  kbForm[method](url, { preserveScroll: true, onSuccess: () => { showKbDrawer.value = false; } });
+};
+
+// ==== Drawer Detail KB ====
+const showKbDetailDrawer = ref(false);
+const selectedKb = ref(null);
+const openKbDetail = (row) => {
+  selectedKb.value = row;
+  showKbDetailDrawer.value = true;
+};
+
+// ==== Drawer SOP (tambah / edit) ====
+const showSopDrawer = ref(false);
+const editingSop = ref(null);
+const sopForm = useForm({ title: '', content: '', target_roles: [], is_mandatory: false });
+
+const openSopDrawer = (row = null) => {
+  editingSop.value = row;
+  if (row) {
+    sopForm.setData({ title: row.title, content: row.content || '', target_roles: row.target_roles || [], is_mandatory: !!row.is_mandatory });
+  } else {
+    sopForm.reset();
+    sopForm.target_roles = [];
+  }
+  showSopDrawer.value = true;
+};
+
+const submitSop = () => {
+  const url = editingSop.value ? route('sops.update', editingSop.value.id) : route('sops.store');
+  const method = editingSop.value ? 'put' : 'post';
+  sopForm[method](url, { preserveScroll: true, onSuccess: () => { showSopDrawer.value = false; } });
+};
+
+// ==== Drawer Detail SOP ====
+const showSopDetailDrawer = ref(false);
+const selectedSop = ref(null);
+const openSopDetail = (row) => {
+  selectedSop.value = row;
+  showSopDetailDrawer.value = true;
 };
 
 const tabs = [

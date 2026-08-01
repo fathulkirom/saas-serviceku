@@ -194,7 +194,7 @@
               <span class="font-bold">Rp {{ formatNumber(row.total) }}</span>
             </template>
             <template #cell-type="{ row }">
-              <Badge :variant="row.type === 'product' ? 'blue' : 'purple'">{{ row.type === 'product' ? 'Stok Produk' : 'Alat Servis' }}</Badge>
+              <Badge :variant="row.type === 'cash' ? 'green' : 'purple'">{{ row.type === 'cash' ? 'Cash' : 'PO' }}</Badge>
             </template>
             <template #cell-created_at="{ row }">
               {{ formatDate(row.created_at) }}
@@ -233,10 +233,10 @@
             <template #cell-action="{ row }">
               <select @change="updateReturnStatus(row, $event.target.value)" class="text-xs py-1 px-2 rounded border font-semibold bg-white" style="borderColor: var(--border-color);">
                 <option disabled selected>Ubah Status</option>
-                <option value="pending">Pending</option>
-                <option value="approved">Disetujui Supplier</option>
-                <option value="completed">Selesai</option>
-                <option value="rejected">Ditolak</option>
+                <option value="dikirim">Dikirim</option>
+                <option value="diproses_supplier">Diproses Supplier</option>
+                <option value="selesai">Selesai</option>
+                <option value="ditolak">Ditolak</option>
               </select>
             </template>
           </KTable>
@@ -346,7 +346,7 @@
         <div class="grid grid-cols-2 gap-3">
           <div class="space-y-1">
             <label class="text-xs font-semibold" style="color: var(--text-muted);">Tipe</label>
-            <Badge :variant="selectedPurchase.type === 'product' ? 'blue' : 'purple'">{{ selectedPurchase.type === 'product' ? 'Stok Produk' : 'Alat Servis' }}</Badge>
+            <Badge :variant="selectedPurchase.type === 'cash' ? 'green' : 'purple'">{{ selectedPurchase.type === 'cash' ? 'Cash' : 'PO' }}</Badge>
           </div>
           <div class="space-y-1">
             <label class="text-xs font-semibold" style="color: var(--text-muted);">Tanggal</label>

@@ -2,514 +2,2065 @@
   "version": "1.0.0",
   "project": {
     "name": "ServiceKU",
-    "languages": ["PHP", "JavaScript", "Vue", "SQL", "CSS"],
-    "frameworks": ["Laravel 11", "Vue 3", "Inertia.js", "Tailwind CSS"],
-    "description": "Multi-tenant SaaS platform for repair shop and retail store management in Indonesia",
-    "analyzedAt": "2026-07-27T23:30:00+07:00",
-    "gitCommitHash": "current"
+    "languages": [
+      "PHP",
+      "JavaScript",
+      "Vue",
+      "SQL"
+    ],
+    "frameworks": [
+      "Laravel",
+      "Vue 3",
+      "Inertia.js",
+      "Tailwind CSS",
+      "Stancl/Tenancy"
+    ],
+    "description": "ServiceKU adalah aplikasi SaaS multi-tenant untuk manajemen pusat servis (HP/elektronik): penerimaan servis, inventaris, penjualan, keuangan, dan laporan, dengan database per-tenant.",
+    "analyzedAt": "2026-08-01T00:00:00Z",
+    "gitCommitHash": "c41815a"
   },
   "nodes": [
     {
-      "id": "domain:service-order-management",
+      "id": "domain:onboarding-tenancy",
       "type": "domain",
-      "name": "Service Order Management",
-      "summary": "Core business domain handling the full lifecycle of repair service orders: device check-in, technician assignment, repair work, customer confirmation, pickup, and warranty claims. Supports 12 status transitions and partner outsourcing.",
-      "tags": ["repair", "service", "workflow", "warranty"],
-      "complexity": "complex",
+      "name": "Onboarding & Multi-Tenancy",
+      "summary": "Menangani registrasi tenant baru, pemilihan paket, identifikasi subdomain, dan siklus hidup tenant (aktif/trial/suspend).",
+      "tags": [
+        "tenancy",
+        "onboarding",
+        "plan",
+        "subscription"
+      ],
+      "complexity": "moderate",
       "domainMeta": {
-        "entities": ["Service", "ServicePhoto", "ServiceChecklist", "ServiceSparepart", "ServiceTransfer", "ChecklistTemplate"],
-        "businessRules": ["Service travels through 12 statuses in defined workflow", "Warranty claims must reference a paid parent service", "Photos require Google Drive connection"],
-        "crossDomainInteractions": ["Spawns Sales on completion", "Consumes Inventory for spareparts", "Triggers Commission on payment"]
+        "entities": [
+          "Tenant",
+          "Plan",
+          "Domain",
+          "Subscription",
+          "Voucher"
+        ],
+        "businessRules": [
+          "Tenant aktif wajib punya paket aktif",
+          "Subdomain di-reserve (kirom)",
+          "Trial default 14 hari",
+          "Akses ditolak jika tenant non-aktif"
+        ],
+        "crossDomainInteractions": [
+          "Menyiapkan koneksi tenant untuk semua modul",
+          "Login tenant dari Authentication"
+        ]
       }
     },
     {
-      "id": "domain:sales-pos",
+      "id": "domain:authentication",
       "type": "domain",
-      "name": "Sales & Point of Sale",
-      "summary": "Handles all sales transactions: direct POS sales, service-based billing, and indent pre-orders with draft-to-paid workflow, PDF invoice generation, payment tracking, and void/return capability.",
-      "tags": ["sales", "pos", "payment", "invoice"],
-      "complexity": "complex",
+      "name": "Autentikasi & Keamanan",
+      "summary": "Menangani login, reset password, verifikasi email, dan two-factor authentication (2FA) untuk akses tenant.",
+      "tags": [
+        "auth",
+        "2fa",
+        "security",
+        "password"
+      ],
+      "complexity": "moderate",
       "domainMeta": {
-        "entities": ["Sale", "SaleItem", "PriceCatalog"],
-        "businessRules": ["Sales progress via draft -> paid -> cancel", "Stock deducted on paid, restored on void", "PDF invoices generated asynchronously"],
-        "crossDomainInteractions": ["Bills completed Services", "Deducts Inventory on payment", "Triggers Payment Reconciliation"]
+        "entities": [
+          "User",
+          "TwoFactor",
+          "EmailVerification"
+        ],
+        "businessRules": [
+          "Throttle login (throttle:login)",
+          "2FA wajib setelah diaktifkan",
+          "Kode 2FA via email bisa dikirim"
+        ],
+        "crossDomainInteractions": [
+          "Memberi sesi ke semua domain tenant",
+          "Login-as admin dari Superadmin"
+        ]
       }
     },
     {
-      "id": "domain:inventory-supply-chain",
+      "id": "domain:service-operations",
       "type": "domain",
-      "name": "Inventory & Supply Chain",
-      "summary": "Manages product catalog, stock levels, purchase orders from suppliers, supplier management, stock transfers between branches, reorder alerts, stock forecasting, damaged stock tracking, and purchase returns.",
-      "tags": ["inventory", "stock", "supplier", "purchase"],
+      "name": "Operasional Servis",
+      "summary": "Domain inti: alur servis barang dari penerimaan (check-in), pengerjaan, konfirmasi, hingga serah terima, termasuk indent, klaim garansi, dan partner teknisi.",
+      "tags": [
+        "service",
+        "workflow",
+        "technician",
+        "checklist",
+        "warranty"
+      ],
       "complexity": "complex",
       "domainMeta": {
-        "entities": ["Product", "Supplier", "Purchase", "PurchaseItem", "InventoryMutation", "StockAllocation", "DamagedStock", "PurchaseReturn"],
-        "businessRules": ["Stock auto-decremented on sale/service completion", "Low stock alerts when below min_stock", "Forecast based on 3-month usage"],
-        "crossDomainInteractions": ["Supplies spareparts to Services", "Stock deducted by Sales", "Drives Reorder Alerts"]
+        "entities": [
+          "Service",
+          "ServiceStatus",
+          "Customer",
+          "Technician",
+          "Checklist",
+          "WarrantyClaim",
+          "ServicePhoto"
+        ],
+        "businessRules": [
+          "Status servis: pending -> dikerjakan -> indent -> selesai -> siap diambil -> diambil",
+          "Indent menunggu barang sebelum lanjut",
+          "Klaim garansi hanya setelah servis selesai",
+          "Checklist wajib sebelum selesai"
+        ],
+        "crossDomainInteractions": [
+          "Menghasilkan penjualan (Sales) saat servis selesai",
+          "Pakai data Customer",
+          "Mengurangi/menambah Inventaris"
+        ]
       }
     },
     {
-      "id": "domain:finance-accounting",
+      "id": "domain:inventory-sales",
       "type": "domain",
-      "name": "Finance & Accounting",
-      "summary": "Manages operational expenses with photo upload, technician commission auto-calculation, PPN tax configuration, bank payment reconciliation, daily cash deposits, and cash register shift tracking.",
-      "tags": ["finance", "accounting", "tax", "commission"],
-      "complexity": "moderate",
+      "name": "Inventaris & Penjualan",
+      "summary": "Mengelola produk, stok antar cabang, stok rusak, reorder, dan transaksi penjualan (draft, bayar, cetak).",
+      "tags": [
+        "inventory",
+        "product",
+        "stock",
+        "sales",
+        "pos"
+      ],
+      "complexity": "complex",
       "domainMeta": {
-        "entities": ["Expense", "Commission", "TaxSetting", "PaymentReconciliation", "DailyDeposit", "CashRegister"],
-        "businessRules": ["Commissions auto-calculated per completed service", "PPN applies to PKP-registered tenants", "Daily deposits tracked per cashier shift"],
-        "crossDomainInteractions": ["Records commissions from Service completion", "Reconciles payments from Sales", "Tracks expenses for P&L reporting"]
+        "entities": [
+          "Product",
+          "StockAllocation",
+          "InventoryMutation",
+          "DamagedStock",
+          "Sale",
+          "Customer"
+        ],
+        "businessRules": [
+          "Transfer stok wajib cek stok cukup",
+          "Penyesuaian stok mencatat mutasi",
+          "Penjualan dimulai sebagai draft lalu dibayar",
+          "Produk per cabang (branch_id)"
+        ],
+        "crossDomainInteractions": [
+          "Menyuplai produk untuk penjualan servis",
+          "Menghasilkan keuangan (total penjualan)",
+          "Mutasi stok dipakai laporan"
+        ]
       }
     },
     {
-      "id": "domain:hr-operations",
+      "id": "domain:finance-reporting",
       "type": "domain",
-      "name": "HR & Operations",
-      "summary": "Employee management with 9 roles, shift definitions, attendance tracking with clock in/out, and pickup/delivery scheduling for customer devices.",
-      "tags": ["hr", "attendance", "shift", "logistics"],
+      "name": "Keuangan & Laporan",
+      "summary": "Mencatat pengeluaran, pembelian, retur, setoran harian, kas, dan menghasilkan laporan penjualan/servis/inventaris/keuangan.",
+      "tags": [
+        "finance",
+        "purchase",
+        "expense",
+        "report",
+        "cash"
+      ],
       "complexity": "moderate",
       "domainMeta": {
-        "entities": ["User", "Shift", "Attendance", "PickupDelivery"],
-        "businessRules": ["Each user has one of 9 roles with specific permissions", "Attendance tracked per user per day via clock in/out", "Pickup/delivery linked to service orders"],
-        "crossDomainInteractions": ["Users assigned to Services as technicians", "Users clock into CashRegister shifts"]
+        "entities": [
+          "Expense",
+          "Purchase",
+          "PurchaseReturn",
+          "DailyDeposit",
+          "CashRegister",
+          "Tax",
+          "Reconciliation",
+          "Commission"
+        ],
+        "businessRules": [
+          "Pembelian multi-item wajib min 1 item",
+          "Retur mengembalikan stok produk",
+          "Kas harus buka shift sebelum transaksi",
+          "Laporan bisa di-export"
+        ],
+        "crossDomainInteractions": [
+          "Mengonsumsi data penjualan & pembelian",
+          "Setoran harian terkait kas",
+          "Komisi dari servis"
+        ]
       }
     },
     {
-      "id": "domain:platform-administration",
+      "id": "domain:superadmin",
       "type": "domain",
-      "name": "Platform Administration",
-      "summary": "Central SaaS platform management: multi-tenant lifecycle via stancl/tenancy, subscription plans with tiered pricing, promo vouchers, feature gating via 4-layer authorization, system monitoring, backup management, and Google Drive integration.",
-      "tags": ["admin", "saas", "tenancy", "subscription"],
-      "complexity": "complex",
+      "name": "Superadmin (Central)",
+      "summary": "Panel admin pusat untuk mengelola semua tenant, paket, voucher, pembayaran, backup, monitoring, dan log sistem.",
+      "tags": [
+        "admin",
+        "tenant",
+        "plan",
+        "voucher",
+        "backup",
+        "monitoring"
+      ],
+      "complexity": "moderate",
       "domainMeta": {
-        "entities": ["Tenant", "Plan", "Voucher", "GoogleDriveToken", "SystemSetting", "SystemLog", "TenantStat"],
-        "businessRules": ["Each tenant gets an isolated database", "Features controlled by plan + role + custom menus", "Google Drive OAuth per tenant with auto-refresh"],
-        "crossDomainInteractions": ["All tenant domains depend on this platform", "Subscription status gates all tenant operations", "Google Drive stores photos for Services and Expenses"]
+        "entities": [
+          "TenantManagement",
+          "Plan",
+          "Voucher",
+          "Payment",
+          "Backup",
+          "SystemLog"
+        ],
+        "businessRules": [
+          "Hanya admin pusat (kirom.*) yang akses",
+          "Login-as masuk ke tenant tanpa password",
+          "Backup bisa diupload ke Google Drive",
+          "Sync statistik tenant terjadwal"
+        ],
+        "crossDomainInteractions": [
+          "Mengubah status/plan tenant (Onboarding)",
+          "Konfirmasi pembayaran tenant",
+          "Monitoring aktivitas tenant"
+        ]
       }
     },
-
     {
-      "id": "flow:service-order-lifecycle",
+      "id": "flow:landing-registration",
       "type": "flow",
-      "name": "Service Order Lifecycle",
-      "summary": "End-to-end repair service: device check-in with photos and checklists, technician assignment, repair work with progress updates, customer/internal confirmation, pickup completion, and warranty claims.",
-      "tags": ["service", "workflow", "repair"],
-      "complexity": "complex",
-      "domainMeta": { "entryPoint": "POST /services (ServiceWorkflowController@store)", "entryType": "http" }
+      "name": "Registrasi Tenant & Pilih Paket",
+      "summary": "Pengunjung landing memilih paket, mendaftar tenant baru, dan memverifikasi identitas sebelum trial aktif.",
+      "tags": [
+        "onboarding",
+        "register",
+        "plan"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "GET / (landing)",
+        "entryType": "http"
+      }
     },
     {
-      "id": "flow:pos-sales-transaction",
+      "id": "flow:tenant-login-redirect",
       "type": "flow",
-      "name": "POS Sales Transaction",
-      "summary": "Create sales from scratch, from completed services, or from indents. Supports draft workflow with item editing, full payment with stock deduction, PDF invoice generation, and voiding with stock restoration.",
-      "tags": ["sales", "pos", "payment"],
-      "complexity": "complex",
-      "domainMeta": { "entryPoint": "POST /sales (SaleStoreController@store)", "entryType": "http" }
+      "name": "Login Tenant via Subdomain",
+      "summary": "Akses subdomain tenant di-resolve oleh tenancy, lalu diarahkan ke login dan dashboard.",
+      "tags": [
+        "tenancy",
+        "login",
+        "subdomain"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "GET / (subdomain tenant)",
+        "entryType": "http"
+      }
     },
     {
-      "id": "flow:purchase-stocking",
+      "id": "flow:admin-tenant-lifecycle",
       "type": "flow",
-      "name": "Purchase & Stocking",
-      "summary": "Create purchase orders from suppliers, receive stock with auto-increment, return defective items to supplier with auto-decrement, and manage damaged/reject/expired stock.",
-      "tags": ["purchase", "stock", "supplier"],
+      "name": "Admin Mengelola Siklus Hidup Tenant",
+      "summary": "Admin pusat membuat, menonaktifkan, mengubah paket, memperpanjang trial, dan login-as ke tenant.",
+      "tags": [
+        "admin",
+        "tenant",
+        "lifecycle"
+      ],
       "complexity": "moderate",
-      "domainMeta": { "entryPoint": "POST /purchases (PurchaseController@store)", "entryType": "http" }
+      "domainMeta": {
+        "entryPoint": "GET /admin/tenants",
+        "entryType": "http"
+      }
     },
     {
-      "id": "flow:expense-cash-management",
+      "id": "flow:login-2fa",
       "type": "flow",
-      "name": "Expense & Cash Management",
-      "summary": "Record operational expenses with categorized tracking and optional photo attachment. Manage daily cash deposits and cash register shift openings/closings with balance tracking.",
-      "tags": ["expense", "cash", "deposit"],
+      "name": "Login & Verifikasi 2FA",
+      "summary": "User login dengan kredensial, lalu melewati challenge 2FA bila sudah diaktifkan.",
+      "tags": [
+        "auth",
+        "login",
+        "2fa"
+      ],
       "complexity": "moderate",
-      "domainMeta": { "entryPoint": "POST /expenses (ExpenseController@store)", "entryType": "http" }
+      "domainMeta": {
+        "entryPoint": "POST /login",
+        "entryType": "http"
+      }
     },
     {
-      "id": "flow:employee-attendance",
+      "id": "flow:setup-2fa",
       "type": "flow",
-      "name": "Employee Attendance",
-      "summary": "Define work shifts per branch, clock in/out for attendance tracking, generate attendance reports with status filtering (hadir/izin/sakit/alpha).",
-      "tags": ["hr", "attendance", "shift"],
+      "name": "Aktivasi & Kelola 2FA",
+      "summary": "User mengaktifkan 2FA, mengonfirmasi, dan membuat ulang recovery codes.",
+      "tags": [
+        "auth",
+        "2fa",
+        "setup"
+      ],
       "complexity": "simple",
-      "domainMeta": { "entryPoint": "POST /attendances/clock-in (AttendanceController@clockIn)", "entryType": "http" }
+      "domainMeta": {
+        "entryPoint": "GET /two-factor-status",
+        "entryType": "http"
+      }
     },
     {
-      "id": "flow:tenant-onboarding-auth",
+      "id": "flow:password-reset",
       "type": "flow",
-      "name": "Tenant Onboarding & Authentication",
-      "summary": "Register new tenants via OTP verification with auto-created database, login via email/password with tenancy initialization, Google OAuth login, and password reset.",
-      "tags": ["auth", "registration", "tenancy"],
-      "complexity": "complex",
-      "domainMeta": { "entryPoint": "POST /register/send-otp (RegisteredTenantController@sendOtp)", "entryType": "http" }
-    },
-
-    {
-      "id": "step:service-create",
-      "type": "step",
-      "name": "Create Service Order",
-      "summary": "CS/owner creates a service order with customer info, device data, check-in checklist, problem description, and optional photos. Smart technician assignment based on store size.",
-      "tags": ["create", "service"],
-      "complexity": "moderate",
-      "filePath": "app/Http/Controllers/Tenant/ServiceWorkflowController.php"
-    },
-    {
-      "id": "step:service-assign",
-      "type": "step",
-      "name": "Assign Technician",
-      "summary": "Owner manually assigns a technician to a service order, transitioning status from menunggu_alokasi to dikerjakan.",
-      "tags": ["assign", "technician"],
-      "complexity": "simple",
-      "filePath": "app/Http/Controllers/Tenant/ServiceWorkflowController.php"
-    },
-    {
-      "id": "step:service-work",
-      "type": "step",
-      "name": "Perform Repair Work",
-      "summary": "Technician accepts, starts, and completes repair work. Can request reallocation, customer confirmation, or internal approval during the process.",
-      "tags": ["work", "repair", "technician"],
-      "complexity": "moderate",
-      "filePath": "app/Http/Controllers/Tenant/ServiceWorkflowController.php"
-    },
-    {
-      "id": "step:service-confirm",
-      "type": "step",
-      "name": "Customer Confirmation",
-      "summary": "Technician requests customer confirmation or internal approval for repair completion. Owner/CS approves to continue.",
-      "tags": ["confirm", "approval"],
-      "complexity": "simple",
-      "filePath": "app/Http/Controllers/Tenant/ServiceWorkflowController.php"
-    },
-    {
-      "id": "step:service-complete",
-      "type": "step",
-      "name": "Complete & Billing",
-      "summary": "Service marked ready for pickup, then completed via POS sale. Receipt PDF generated. Warranty period starts.",
-      "tags": ["complete", "billing"],
-      "complexity": "moderate",
-      "filePath": "app/Http/Controllers/Tenant/ServiceDocumentController.php"
-    },
-    {
-      "id": "step:service-warranty",
-      "type": "step",
-      "name": "Warranty Claim",
-      "summary": "Create a warranty claim service from a previously completed service within warranty period. Zero-cost service order linked to parent.",
-      "tags": ["warranty", "claim"],
-      "complexity": "simple",
-      "filePath": "app/Http/Controllers/Tenant/ServiceClaimController.php"
-    },
-    {
-      "id": "step:service-photo",
-      "type": "step",
-      "name": "Upload Service Photo",
-      "summary": "Upload photos of device condition during service. Stored in Google Drive if connected, otherwise disabled.",
-      "tags": ["photo", "upload"],
-      "complexity": "simple",
-      "filePath": "app/Http/Controllers/Tenant/ServicePhotoController.php"
-    },
-    {
-      "id": "step:sale-create",
-      "type": "step",
-      "name": "Create Sale Draft",
-      "summary": "Cashier creates a draft sale with customer, items (spareparts/jasa/aksesoris), and optional discount. No stock deducted yet.",
-      "tags": ["create", "draft"],
-      "complexity": "moderate",
-      "filePath": "app/Http/Controllers/Tenant/SaleStoreController.php"
-    },
-    {
-      "id": "step:sale-pay",
-      "type": "step",
-      "name": "Process Payment",
-      "summary": "Complete draft or full payment with selected payment method (cash/transfer/QRIS). Stock deducted for spareparts. Service marked paid. PDF invoice generated async.",
-      "tags": ["pay", "payment"],
-      "complexity": "complex",
-      "filePath": "app/Http/Controllers/Tenant/SalePaymentController.php"
-    },
-    {
-      "id": "step:sale-void",
-      "type": "step",
-      "name": "Void Sale",
-      "summary": "Cancel a paid sale. Stock restored for all items. Inventory mutation logged. Sale marked as cancel.",
-      "tags": ["void", "cancel"],
-      "complexity": "moderate",
-      "filePath": "app/Http/Controllers/Tenant/SalePaymentController.php"
-    },
-    {
-      "id": "step:sale-invoice",
-      "type": "step",
-      "name": "Generate Invoice PDF",
-      "summary": "Background job generates a PDF invoice with tenant branding, paper size config, and item details. Stored in public storage.",
-      "tags": ["invoice", "pdf"],
-      "complexity": "simple",
-      "filePath": "app/Jobs/GenerateInvoicePdf.php"
-    },
-    {
-      "id": "step:sale-draft-from-service",
-      "type": "step",
-      "name": "Draft from Service",
-      "summary": "Auto-create a draft sale from a completed service, copying service charge and spareparts as line items.",
-      "tags": ["service", "draft"],
-      "complexity": "moderate",
-      "filePath": "app/Http/Controllers/Tenant/SaleStoreController.php"
-    },
-    {
-      "id": "step:purchase-order",
-      "type": "step",
-      "name": "Create Purchase Order",
-      "summary": "Create a purchase order from a supplier with items and pricing. Auto-create or select existing supplier.",
-      "tags": ["purchase", "order"],
-      "complexity": "moderate",
-      "filePath": "app/Http/Controllers/Tenant/PurchaseController.php"
-    },
-    {
-      "id": "step:purchase-receive",
-      "type": "step",
-      "name": "Receive Stock",
-      "summary": "Receive purchase items and auto-increment stock quantities. Inventory mutation logged.",
-      "tags": ["receive", "stock"],
-      "complexity": "simple",
-      "filePath": "app/Http/Controllers/Tenant/PurchaseController.php"
-    },
-    {
-      "id": "step:purchase-return",
-      "type": "step",
-      "name": "Return to Supplier",
-      "summary": "Return defective items to supplier. Stock auto-decremented. Status workflow: dikirim -> diproses_supplier -> selesai/ditolak.",
-      "tags": ["return", "supplier"],
-      "complexity": "moderate",
-      "filePath": "app/Http/Controllers/Tenant/PurchaseReturnController.php"
-    },
-    {
-      "id": "step:stock-adjust",
-      "type": "step",
-      "name": "Stock Adjustment",
-      "summary": "Manual stock adjustment for opname: increment or decrement with reason. Mutation logged.",
-      "tags": ["adjust", "opname"],
-      "complexity": "simple",
-      "filePath": "app/Http/Controllers/Tenant/InventoryController.php"
-    },
-    {
-      "id": "step:damaged-stock",
-      "type": "step",
-      "name": "Record Damaged Stock",
-      "summary": "Record damaged, rejected, or expired stock from various sources (pembelian, retur_customer, opname). Auto-decrement stock.",
-      "tags": ["damage", "reject"],
-      "complexity": "simple",
-      "filePath": "app/Http/Controllers/Tenant/DamagedStockController.php"
-    },
-    {
-      "id": "step:reorder-alert",
-      "type": "step",
-      "name": "Reorder Alerts",
-      "summary": "View products where stock_quantity <= min_stock. Triggers reorder notifications.",
-      "tags": ["reorder", "alert"],
-      "complexity": "simple",
-      "filePath": "app/Http/Controllers/Tenant/InventoryController.php"
-    },
-    {
-      "id": "step:stock-forecast",
-      "type": "step",
-      "name": "Stock Forecasting",
-      "summary": "Forecast days until stock empty based on 3-month usage history. Flags items needing restock within 30 days.",
-      "tags": ["forecast", "prediction"],
-      "complexity": "moderate",
-      "filePath": "app/Http/Controllers/Tenant/InventoryController.php"
-    },
-    {
-      "id": "step:expense-record",
-      "type": "step",
-      "name": "Record Expense",
-      "summary": "Record operational expense with description, amount, date, category (operasional/gaji/listrik/sewa/marketing/lainnya), and optional photo.",
-      "tags": ["expense", "record"],
-      "complexity": "simple",
-      "filePath": "app/Http/Controllers/Tenant/ExpenseController.php"
-    },
-    {
-      "id": "step:commission-calc",
-      "type": "step",
-      "name": "Calculate Commission",
-      "summary": "Auto-calculate technician commission per completed service. Tracks pending/paid status.",
-      "tags": ["commission", "auto"],
-      "complexity": "simple",
-      "filePath": "app/Http/Controllers/Tenant/CommissionController.php"
-    },
-    {
-      "id": "step:commission-pay",
-      "type": "step",
-      "name": "Pay Commission",
-      "summary": "Mark commissions as paid individually or in bulk. Records payer and payment timestamp.",
-      "tags": ["pay", "commission"],
-      "complexity": "simple",
-      "filePath": "app/Http/Controllers/Tenant/CommissionController.php"
-    },
-    {
-      "id": "step:reconcile-payment",
-      "type": "step",
-      "name": "Reconcile Payment",
-      "summary": "Match sale payments with bank statements. Track bank name, reference number, and reconciliation status.",
-      "tags": ["reconcile", "bank"],
-      "complexity": "simple",
-      "filePath": "app/Http/Controllers/Tenant/ReconciliationController.php"
-    },
-    {
-      "id": "step:tax-config",
-      "type": "step",
-      "name": "Configure PPN Tax",
-      "summary": "Set PKP/non-PKP status, NPWP number, and PPN percentage (default 11%). Calculate PPN on given amounts.",
-      "tags": ["tax", "ppn"],
-      "complexity": "simple",
-      "filePath": "app/Http/Controllers/Tenant/TaxController.php"
-    },
-    {
-      "id": "step:clock-inout",
-      "type": "step",
-      "name": "Clock In/Out",
-      "summary": "Employees clock in at shift start and clock out at shift end. Records attendance for the day.",
-      "tags": ["attendance", "clock"],
-      "complexity": "simple",
-      "filePath": "app/Http/Controllers/Tenant/AttendanceController.php"
-    },
-    {
-      "id": "step:report-attendance",
-      "type": "step",
-      "name": "Attendance Report",
-      "summary": "Generate attendance reports grouped by employee, showing clock in/out times and status.",
-      "tags": ["report", "attendance"],
-      "complexity": "simple",
-      "filePath": "app/Http/Controllers/Tenant/AttendanceController.php"
-    },
-    {
-      "id": "step:shift-define",
-      "type": "step",
-      "name": "Define Shifts",
-      "summary": "Define employee work shifts per branch with name, start time, and end time.",
-      "tags": ["shift", "schedule"],
-      "complexity": "simple",
-      "filePath": "app/Http/Controllers/Tenant/ShiftController.php"
-    },
-    {
-      "id": "step:register-tenant",
-      "type": "step",
-      "name": "Register Tenant",
-      "summary": "Multi-step registration: form -> send OTP -> verify OTP -> auto-create tenant database with branch, owner user, and default settings.",
-      "tags": ["register", "otp", "tenant"],
-      "complexity": "complex",
-      "filePath": "app/Http/Controllers/Auth/RegisteredTenantController.php"
-    },
-    {
-      "id": "step:login-auth",
-      "type": "step",
-      "name": "Login",
-      "summary": "Email/password login with tenant store lookup, tenancy initialization, rate limiting (6/min), and login history recording.",
-      "tags": ["login", "auth"],
-      "complexity": "moderate",
-      "filePath": "app/Http/Controllers/Auth/LoginController.php"
-    },
-    {
-      "id": "step:google-oauth",
-      "type": "step",
-      "name": "Google OAuth Login",
-      "summary": "Login with Google via Socialite. First-time login links Google account. Can also link/unlink from profile.",
-      "tags": ["oauth", "google"],
-      "complexity": "moderate",
-      "filePath": "app/Http/Controllers/Auth/GoogleLoginController.php"
-    },
-    {
-      "id": "step:reset-password",
-      "type": "step",
       "name": "Reset Password",
-      "summary": "Send password reset email with token. Verify token and set new password.",
-      "tags": ["password", "reset"],
-      "complexity": "moderate",
-      "filePath": "app/Http/Controllers/Auth/ResetPasswordController.php"
+      "summary": "User meminta link reset via email, membuka form, dan mengganti password.",
+      "tags": [
+        "auth",
+        "password",
+        "reset"
+      ],
+      "complexity": "simple",
+      "domainMeta": {
+        "entryPoint": "POST /forgot-password",
+        "entryType": "http"
+      }
     },
     {
-      "id": "step:tenant-lifecycle",
-      "type": "step",
-      "name": "Manage Tenant Lifecycle",
-      "summary": "Super admin manages tenants: CRUD, suspend/activate, change plan, extend trial, impersonate login, reset password, sync stats.",
-      "tags": ["tenant", "admin"],
+      "id": "flow:service-checkin",
+      "type": "flow",
+      "name": "Check-in / Penerimaan Servis",
+      "summary": "CS menerima barang servis, mengisi data pelanggan, dan menugaskan teknisi.",
+      "tags": [
+        "service",
+        "checkin",
+        "customer"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "POST /services",
+        "entryType": "http"
+      }
+    },
+    {
+      "id": "flow:service-workflow",
+      "type": "flow",
+      "name": "Alur Pengerjaan Servis",
+      "summary": "Teknisi mengerjakan servis: terima, mulai, selesai, konfirmasi pelanggan, hingga serah terima.",
+      "tags": [
+        "service",
+        "workflow",
+        "technician"
+      ],
       "complexity": "complex",
-      "filePath": "app/Http/Controllers/Admin/TenantManagementController.php"
+      "domainMeta": {
+        "entryPoint": "POST /services/{service}/accept",
+        "entryType": "http"
+      }
     },
     {
-      "id": "step:plan-crud",
-      "type": "step",
-      "name": "Manage Plans",
-      "summary": "Super admin manages subscription plans: pricing, promos, features, business types, and default menus per role.",
-      "tags": ["plan", "subscription"],
-      "complexity": "moderate",
-      "filePath": "app/Http/Controllers/Admin/PlanController.php"
+      "id": "flow:service-indent",
+      "type": "flow",
+      "name": "Indent (Tunggu Barang) & Resume",
+      "summary": "Servis di-hold menunggu sparepart, lalu dilanjutkan kembali.",
+      "tags": [
+        "service",
+        "indent",
+        "sparepart"
+      ],
+      "complexity": "simple",
+      "domainMeta": {
+        "entryPoint": "POST /services/{service}/indent",
+        "entryType": "http"
+      }
     },
     {
-      "id": "step:voucher-promo",
-      "type": "step",
-      "name": "Manage Vouchers",
-      "summary": "Super admin creates promo voucher codes with discounts, usage limits, and date ranges.",
-      "tags": ["voucher", "promo"],
-      "complexity": "moderate",
-      "filePath": "app/Http/Controllers/Admin/VoucherController.php"
+      "id": "flow:service-warranty",
+      "type": "flow",
+      "name": "Klaim Garansi",
+      "summary": "Pelanggan mengajukan klaim garansi untuk servis yang sudah selesai.",
+      "tags": [
+        "service",
+        "warranty",
+        "claim"
+      ],
+      "complexity": "simple",
+      "domainMeta": {
+        "entryPoint": "POST /services/{service}/warranty-claim",
+        "entryType": "http"
+      }
     },
     {
-      "id": "step:feature-gate",
-      "type": "step",
-      "name": "Feature Gate Check",
-      "summary": "4-layer authorization: plan features -> user role -> custom menu access -> default menus. Applied to every route via middleware.",
-      "tags": ["gate", "authorization"],
+      "id": "flow:product-management",
+      "type": "flow",
+      "name": "Kelola Produk & Stok",
+      "summary": "Tambah produk via drawer, penyesuaian stok cepat, dan catat stok rusak.",
+      "tags": [
+        "inventory",
+        "product",
+        "stock"
+      ],
       "complexity": "moderate",
-      "filePath": "app/Http/Middleware/CheckPlanFeature.php"
+      "domainMeta": {
+        "entryPoint": "POST /products (drawer)",
+        "entryType": "http"
+      }
+    },
+    {
+      "id": "flow:stock-transfer",
+      "type": "flow",
+      "name": "Transfer Stok Antar Cabang",
+      "summary": "Pindahkan stok antar cabang via drawer, lalu konfirmasi/tolak di cabang tujuan.",
+      "tags": [
+        "inventory",
+        "transfer",
+        "branch"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "POST /stock-allocations (drawer)",
+        "entryType": "http"
+      }
+    },
+    {
+      "id": "flow:sales-transaction",
+      "type": "flow",
+      "name": "Transaksi Penjualan (POS)",
+      "summary": "Buat transaksi draft, proses pembayaran, cetak struk, dan void bila batal.",
+      "tags": [
+        "sales",
+        "pos",
+        "payment",
+        "invoice"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "GET /sales/create",
+        "entryType": "http"
+      }
+    },
+    {
+      "id": "flow:purchase-management",
+      "type": "flow",
+      "name": "Pembelian & Retur Stok",
+      "summary": "Catat pembelian dari supplier (multi-item) dan retur barang ke supplier.",
+      "tags": [
+        "finance",
+        "purchase",
+        "return",
+        "supplier"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "POST /purchases (drawer)",
+        "entryType": "http"
+      }
+    },
+    {
+      "id": "flow:daily-finance",
+      "type": "flow",
+      "name": "Pengeluaran, Setoran & Kas",
+      "summary": "Catat pengeluaran operasional, setoran harian, dan buka/tutup shift kasir.",
+      "tags": [
+        "finance",
+        "expense",
+        "deposit",
+        "cash"
+      ],
+      "complexity": "simple",
+      "domainMeta": {
+        "entryPoint": "POST /expenses",
+        "entryType": "http"
+      }
+    },
+    {
+      "id": "flow:reports",
+      "type": "flow",
+      "name": "Laporan & Analitik",
+      "summary": "Menampilkan dan mengekspor laporan penjualan, servis, inventaris, keuangan, komisi, dan produktivitas.",
+      "tags": [
+        "report",
+        "analytics",
+        "export"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "GET /reports",
+        "entryType": "http"
+      }
+    },
+    {
+      "id": "flow:admin-plan-voucher",
+      "type": "flow",
+      "name": "Kelola Paket & Voucher",
+      "summary": "Admin mengelola paket (plan) dan kode promo/voucher.",
+      "tags": [
+        "admin",
+        "plan",
+        "voucher"
+      ],
+      "complexity": "simple",
+      "domainMeta": {
+        "entryPoint": "GET /admin/plans",
+        "entryType": "http"
+      }
+    },
+    {
+      "id": "flow:admin-payment-backup",
+      "type": "flow",
+      "name": "Pembayaran & Backup",
+      "summary": "Admin memverifikasi pembayaran tenant dan menjalankan backup database.",
+      "tags": [
+        "admin",
+        "payment",
+        "backup"
+      ],
+      "complexity": "moderate",
+      "domainMeta": {
+        "entryPoint": "GET /admin/payments",
+        "entryType": "http"
+      }
+    },
+    {
+      "id": "flow:admin-monitoring",
+      "type": "flow",
+      "name": "Monitoring & Log Sistem",
+      "summary": "Admin memantau aktivitas/log tenant dan membersihkan log.",
+      "tags": [
+        "admin",
+        "monitoring",
+        "log"
+      ],
+      "complexity": "simple",
+      "domainMeta": {
+        "entryPoint": "GET /admin/monitoring",
+        "entryType": "http"
+      }
+    },
+    {
+      "id": "step:landing-registration:landing",
+      "type": "step",
+      "name": "Tampilkan Landing & Paket",
+      "summary": "Render halaman welcome dengan daftar paket aktif (Basic/Pro/Enterprise).",
+      "tags": [
+        "landing",
+        "plan"
+      ],
+      "complexity": "simple",
+      "filePath": "routes/web.php",
+      "lineRange": [
+        20,
+        110
+      ]
+    },
+    {
+      "id": "step:landing-registration:register",
+      "type": "step",
+      "name": "Registrasi Tenant",
+      "summary": "User mengisi form register; sistem membuat tenant + domain + admin user.",
+      "tags": [
+        "register",
+        "tenant"
+      ],
+      "complexity": "moderate",
+      "filePath": "app/Http/Controllers/Auth/RegisteredTenantController.php",
+      "lineRange": [
+        21,
+        60
+      ]
+    },
+    {
+      "id": "step:landing-registration:verify",
+      "type": "step",
+      "name": "Verifikasi Email/OTP",
+      "summary": "Verifikasi email atau kode OTP untuk mengaktifkan akun tenant.",
+      "tags": [
+        "verify",
+        "otp",
+        "email"
+      ],
+      "complexity": "moderate",
+      "filePath": "app/Http/Controllers/Auth/EmailVerificationController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:landing-registration:trial",
+      "type": "step",
+      "name": "Aktifkan Trial",
+      "summary": "Tenant mulai dengan masa trial (default 14 hari) dan diarahkan ke onboarding.",
+      "tags": [
+        "trial",
+        "plan"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Tenant/OnboardingController.php",
+      "lineRange": [
+        15,
+        30
+      ]
+    },
+    {
+      "id": "step:tenant-login-redirect:resolve",
+      "type": "step",
+      "name": "Identifikasi Subdomain",
+      "summary": "Tenancy me-resolve domain/subdomain ke tenant yang sesuai.",
+      "tags": [
+        "tenancy",
+        "subdomain"
+      ],
+      "complexity": "moderate",
+      "filePath": "routes/web.php",
+      "lineRange": [
+        20,
+        55
+      ]
+    },
+    {
+      "id": "step:tenant-login-redirect:login",
+      "type": "step",
+      "name": "Login Tenant",
+      "summary": "Autentikasi kredensial user tenant dengan throttle.",
+      "tags": [
+        "login",
+        "auth"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Auth/LoginController.php",
+      "lineRange": [
+        17,
+        40
+      ]
+    },
+    {
+      "id": "step:tenant-login-redirect:dashboard",
+      "type": "step",
+      "name": "Masuk Dashboard",
+      "summary": "Redirect ke dashboard sesuai peran (owner/teknisi/CS/kasir/kurir).",
+      "tags": [
+        "dashboard",
+        "role"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/DashboardController.php",
+      "lineRange": [
+        17,
+        35
+      ]
+    },
+    {
+      "id": "step:admin-tenant-lifecycle:index",
+      "type": "step",
+      "name": "Daftar Tenant",
+      "summary": "Menampilkan semua tenant dengan status & paket.",
+      "tags": [
+        "admin",
+        "tenant"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Admin/TenantManagementController.php",
+      "lineRange": [
+        15,
+        40
+      ]
+    },
+    {
+      "id": "step:admin-tenant-lifecycle:create",
+      "type": "step",
+      "name": "Buat / Ubah Tenant",
+      "summary": "Membuat tenant baru atau mengubah profil tenant dari panel admin.",
+      "tags": [
+        "admin",
+        "tenant"
+      ],
+      "complexity": "moderate",
+      "filePath": "app/Http/Controllers/Admin/TenantManagementController.php",
+      "lineRange": [
+        48,
+        90
+      ]
+    },
+    {
+      "id": "step:admin-tenant-lifecycle:suspend",
+      "type": "step",
+      "name": "Suspend / Aktifkan",
+      "summary": "Menonaktifkan sementara atau mengaktifkan kembali akses tenant.",
+      "tags": [
+        "admin",
+        "suspend"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Admin/TenantManagementController.php",
+      "lineRange": [
+        162,
+        190
+      ]
+    },
+    {
+      "id": "step:admin-tenant-lifecycle:plan",
+      "type": "step",
+      "name": "Ubah Paket / Perpanjang Trial",
+      "summary": "Mengubah paket tenant atau memperpanjang masa trial.",
+      "tags": [
+        "admin",
+        "plan",
+        "trial"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Admin/TenantManagementController.php",
+      "lineRange": [
+        190,
+        230
+      ]
+    },
+    {
+      "id": "step:admin-tenant-lifecycle:login-as",
+      "type": "step",
+      "name": "Login Sebagai Tenant",
+      "summary": "Admin masuk langsung ke sesi tenant tanpa password (untuk bantuan).",
+      "tags": [
+        "admin",
+        "login-as"
+      ],
+      "complexity": "moderate",
+      "filePath": "app/Http/Controllers/Admin/TenantManagementController.php",
+      "lineRange": [
+        230,
+        260
+      ]
+    },
+    {
+      "id": "step:login-2fa:login",
+      "type": "step",
+      "name": "Kirim Kredensial",
+      "summary": "Validasi email & password, throttle percobaan gagal.",
+      "tags": [
+        "login",
+        "auth"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Auth/LoginController.php",
+      "lineRange": [
+        17,
+        40
+      ]
+    },
+    {
+      "id": "step:login-2fa:challenge",
+      "type": "step",
+      "name": "Challenge 2FA",
+      "summary": "Menampilkan challenge 2FA bila user mengaktifkan 2FA.",
+      "tags": [
+        "2fa",
+        "challenge"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Auth/TwoFactorController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:login-2fa:verify",
+      "type": "step",
+      "name": "Verifikasi Kode / Email",
+      "summary": "Memvalidasi kode 2FA (TOTP) atau kode email yang dikirim.",
+      "tags": [
+        "2fa",
+        "verify"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Auth/TwoFactorController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:login-2fa:session",
+      "type": "step",
+      "name": "Sesi Terbentuk",
+      "summary": "Login selesai, user masuk ke dashboard tenant.",
+      "tags": [
+        "auth",
+        "session"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Auth/LoginController.php",
+      "lineRange": [
+        40,
+        60
+      ]
+    },
+    {
+      "id": "step:setup-2fa:status",
+      "type": "step",
+      "name": "Cek Status 2FA",
+      "summary": "Menampilkan status 2FA user (aktif/nonaktif).",
+      "tags": [
+        "2fa",
+        "status"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Auth/TwoFactorSetupController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:setup-2fa:enable",
+      "type": "step",
+      "name": "Aktifkan 2FA",
+      "summary": "Menghasilkan secret & recovery codes untuk user.",
+      "tags": [
+        "2fa",
+        "enable"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Auth/TwoFactorSetupController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:setup-2fa:confirm",
+      "type": "step",
+      "name": "Konfirmasi Kode",
+      "summary": "Mengonfirmasi 2FA dengan kode yang dihasilkan.",
+      "tags": [
+        "2fa",
+        "confirm"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Auth/TwoFactorSetupController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:setup-2fa:regenerate",
+      "type": "step",
+      "name": "Buat Ulang Recovery Codes",
+      "summary": "Membuat ulang recovery codes bila habis/kompromi.",
+      "tags": [
+        "2fa",
+        "codes"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Auth/TwoFactorSetupController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:password-reset:request",
+      "type": "step",
+      "name": "Minta Link Reset",
+      "summary": "User memasukkan email untuk menerima link reset.",
+      "tags": [
+        "password",
+        "reset"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Auth/ResetPasswordController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:password-reset:send",
+      "type": "step",
+      "name": "Kirim Email",
+      "summary": "Sistem mengirim email berisi token reset.",
+      "tags": [
+        "password",
+        "email"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Auth/ResetPasswordController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:password-reset:update",
+      "type": "step",
+      "name": "Ganti Password",
+      "summary": "Validasi token dan menyimpan password baru.",
+      "tags": [
+        "password",
+        "update"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Auth/ResetPasswordController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:service-checkin:create",
+      "type": "step",
+      "name": "Buat Servis (Check-in)",
+      "summary": "CS mencatat barang & keluhan, memilih customer, dan membuat service.",
+      "tags": [
+        "service",
+        "checkin"
+      ],
+      "complexity": "moderate",
+      "filePath": "app/Http/Controllers/Tenant/ServiceWorkflowController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:service-checkin:assign",
+      "type": "step",
+      "name": "Tugaskan Teknisi",
+      "summary": "Menugaskan teknisi dan mencatat cabang.",
+      "tags": [
+        "service",
+        "technician"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Tenant/ServiceWorkflowController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:service-checkin:checklist",
+      "type": "step",
+      "name": "Checklist & Foto",
+      "summary": "Mengisi checklist kondisi barang dan foto pendukung.",
+      "tags": [
+        "service",
+        "checklist",
+        "photo"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Tenant/ServiceChecklistController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:service-workflow:accept",
+      "type": "step",
+      "name": "Terima Servis",
+      "summary": "Teknisi menerima servis masuk antrian pengerjaan.",
+      "tags": [
+        "service",
+        "accept"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Tenant/ServiceWorkflowController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:service-workflow:start",
+      "type": "step",
+      "name": "Mulai Pengerjaan",
+      "summary": "Teknisi mulai mengerjakan servis (status dikerjakan).",
+      "tags": [
+        "service",
+        "start"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Tenant/ServiceWorkflowController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:service-workflow:finish",
+      "type": "step",
+      "name": "Selesaikan Servis",
+      "summary": "Teknisi menandai servis selesai dikerjakan.",
+      "tags": [
+        "service",
+        "finish"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Tenant/ServiceWorkflowController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:service-workflow:confirm",
+      "type": "step",
+      "name": "Konfirmasi Pelanggan/Internal",
+      "summary": "Konfirmasi biaya ke pelanggan atau persetujuan internal.",
+      "tags": [
+        "service",
+        "confirm"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Tenant/ServiceWorkflowController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:service-workflow:complete",
+      "type": "step",
+      "name": "Serah Terima (Complete)",
+      "summary": "Menandai servis selesai & siap diambil pelanggan.",
+      "tags": [
+        "service",
+        "complete"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Tenant/ServiceDocumentController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:service-workflow:receipt",
+      "type": "step",
+      "name": "Cetak Resi/Struk",
+      "summary": "Mencetak resi servis untuk pelanggan.",
+      "tags": [
+        "service",
+        "print",
+        "receipt"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Tenant/ServiceDocumentController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:service-indent:set",
+      "type": "step",
+      "name": "Set Indent",
+      "summary": "Servis di-hold menunggu sparepart, tercatat sebagai indent.",
+      "tags": [
+        "service",
+        "indent"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Tenant/ServiceWorkflowController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:service-indent:resume",
+      "type": "step",
+      "name": "Resume dari Indent",
+      "summary": "Saat barang datang, servis dilanjutkan kembali.",
+      "tags": [
+        "service",
+        "resume"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Tenant/ServiceWorkflowController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:service-warranty:claim",
+      "type": "step",
+      "name": "Buat Klaim Garansi",
+      "summary": "Mencatat klaim garansi untuk servis yang sudah selesai.",
+      "tags": [
+        "service",
+        "warranty"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Tenant/ServiceClaimController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:product-management:create",
+      "type": "step",
+      "name": "Tambah Produk (Drawer)",
+      "summary": "CS/owner menambah produk baru via drawer di halaman Inventaris.",
+      "tags": [
+        "product",
+        "create"
+      ],
+      "complexity": "simple",
+      "filePath": "resources/js/Pages/Inventaris/Index.vue",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:product-management:quickstock",
+      "type": "step",
+      "name": "Penyesuaian Stok Cepat",
+      "summary": "Menyesuaikan stok masuk/keluar/set dan mencatat mutasi.",
+      "tags": [
+        "product",
+        "stock"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Tenant/ProductController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:product-management:damaged",
+      "type": "step",
+      "name": "Catat Stok Rusak",
+      "summary": "Mencatat produk rusak/hilang/expired.",
+      "tags": [
+        "product",
+        "damaged"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Tenant/DamagedStockController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:stock-transfer:allocate",
+      "type": "step",
+      "name": "Buat Transfer (Drawer)",
+      "summary": "Menentukan produk, cabang tujuan, dan jumlah transfer.",
+      "tags": [
+        "transfer",
+        "stock"
+      ],
+      "complexity": "simple",
+      "filePath": "resources/js/Pages/Inventaris/Index.vue",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:stock-transfer:confirm",
+      "type": "step",
+      "name": "Konfirmasi/Tolak",
+      "summary": "Cabang tujuan menerima atau menolak transfer yang pending.",
+      "tags": [
+        "transfer",
+        "confirm"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Tenant/StockAllocationController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:sales-transaction:create",
+      "type": "step",
+      "name": "Buat Transaksi (Draft)",
+      "summary": "Menyusun item penjualan dan menyimpan sebagai draft.",
+      "tags": [
+        "sales",
+        "draft"
+      ],
+      "complexity": "moderate",
+      "filePath": "app/Http/Controllers/Tenant/SaleStoreController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:sales-transaction:pay",
+      "type": "step",
+      "name": "Proses Pembayaran",
+      "summary": "Menerima pembayaran dan menandai penjualan lunas.",
+      "tags": [
+        "sales",
+        "payment"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Tenant/SalePaymentController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:sales-transaction:print",
+      "type": "step",
+      "name": "Cetak Struk",
+      "summary": "Mencetak invoice/struk penjualan.",
+      "tags": [
+        "sales",
+        "print"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Tenant/SaleInvoiceController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:sales-transaction:void",
+      "type": "step",
+      "name": "Void Transaksi",
+      "summary": "Membatalkan transaksi bila terjadi kesalahan.",
+      "tags": [
+        "sales",
+        "void"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Tenant/SalePaymentController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:purchase-management:create",
+      "type": "step",
+      "name": "Buat Pembelian (Drawer)",
+      "summary": "Mencatat pembelian multi-item dari supplier (PO/cash).",
+      "tags": [
+        "purchase",
+        "supplier"
+      ],
+      "complexity": "moderate",
+      "filePath": "resources/js/Pages/Keuangan/Index.vue",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:purchase-management:return",
+      "type": "step",
+      "name": "Buat Retur (Drawer)",
+      "summary": "Mencatat pengembalian barang ke supplier dan mengembalikan stok.",
+      "tags": [
+        "return",
+        "supplier"
+      ],
+      "complexity": "moderate",
+      "filePath": "resources/js/Pages/Keuangan/Index.vue",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:purchase-management:status",
+      "type": "step",
+      "name": "Update Status Retur",
+      "summary": "Memperbarui status retur (dikirim/diproses/selesai/ditolak).",
+      "tags": [
+        "return",
+        "status"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Tenant/PurchaseReturnController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:daily-finance:expense",
+      "type": "step",
+      "name": "Catat Pengeluaran",
+      "summary": "Mencatat pengeluaran operasional per kategori.",
+      "tags": [
+        "expense",
+        "finance"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Tenant/ExpenseController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:daily-finance:deposit",
+      "type": "step",
+      "name": "Setoran Harian",
+      "summary": "Mencatat setoran kas harian.",
+      "tags": [
+        "deposit",
+        "cash"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Tenant/DailyDepositController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:daily-finance:cash",
+      "type": "step",
+      "name": "Buka/Tutup Shift Kasir",
+      "summary": "Membuka dan menutup shift kasir harian.",
+      "tags": [
+        "cash",
+        "shift"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Tenant/CashRegisterController.php",
+      "lineRange": [
+        0,
+        0
+      ]
+    },
+    {
+      "id": "step:reports:view",
+      "type": "step",
+      "name": "Lihat Laporan",
+      "summary": "Menampilkan laporan penjualan, servis, inventaris, keuangan, komisi, produktivitas, analitik pelanggan, perbandingan revenue.",
+      "tags": [
+        "report",
+        "view"
+      ],
+      "complexity": "moderate",
+      "filePath": "app/Http/Controllers/Tenant/ReportController.php",
+      "lineRange": [
+        20,
+        120
+      ]
+    },
+    {
+      "id": "step:reports:export",
+      "type": "step",
+      "name": "Ekspor Laporan",
+      "summary": "Mengekspor laporan sesuai tipe (CSV/Excel).",
+      "tags": [
+        "report",
+        "export"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Tenant/ReportController.php",
+      "lineRange": [
+        120,
+        140
+      ]
+    },
+    {
+      "id": "step:admin-plan-voucher:plan",
+      "type": "step",
+      "name": "Kelola Paket",
+      "summary": "Menambah/mengubah paket dan menu default per peran.",
+      "tags": [
+        "plan",
+        "admin"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Admin/PlanController.php",
+      "lineRange": [
+        12,
+        54
+      ]
+    },
+    {
+      "id": "step:admin-plan-voucher:voucher",
+      "type": "step",
+      "name": "Kelola Voucher",
+      "summary": "Membuat dan mengelola kode promo/voucher.",
+      "tags": [
+        "voucher",
+        "admin"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Admin/VoucherController.php",
+      "lineRange": [
+        12,
+        57
+      ]
+    },
+    {
+      "id": "step:admin-payment-backup:payment",
+      "type": "step",
+      "name": "Verifikasi Pembayaran",
+      "summary": "Mengonfirmasi atau membatalkan pembayaran tenant.",
+      "tags": [
+        "payment",
+        "admin"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Admin/PaymentController.php",
+      "lineRange": [
+        17,
+        60
+      ]
+    },
+    {
+      "id": "step:admin-payment-backup:backup",
+      "type": "step",
+      "name": "Jalankan Backup",
+      "summary": "Menjalankan backup database & upload ke Google Drive.",
+      "tags": [
+        "backup",
+        "admin"
+      ],
+      "complexity": "moderate",
+      "filePath": "app/Http/Controllers/Admin/BackupController.php",
+      "lineRange": [
+        17,
+        60
+      ]
+    },
+    {
+      "id": "step:admin-monitoring:monitor",
+      "type": "step",
+      "name": "Monitoring Tenant",
+      "summary": "Memantau aktivitas, login, dan alert tenant.",
+      "tags": [
+        "monitoring",
+        "admin"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Admin/MonitoringController.php",
+      "lineRange": [
+        15,
+        40
+      ]
+    },
+    {
+      "id": "step:admin-monitoring:logs",
+      "type": "step",
+      "name": "Lihat & Bersihkan Log",
+      "summary": "Menampilkan log sistem dan membersihkannya.",
+      "tags": [
+        "log",
+        "admin"
+      ],
+      "complexity": "simple",
+      "filePath": "app/Http/Controllers/Admin/SystemSettingsController.php",
+      "lineRange": [
+        13,
+        50
+      ]
     }
   ],
   "edges": [
-    { "source": "domain:service-order-management", "target": "flow:service-order-lifecycle", "type": "contains_flow", "direction": "forward", "weight": 1.0 },
-    { "source": "domain:sales-pos", "target": "flow:pos-sales-transaction", "type": "contains_flow", "direction": "forward", "weight": 1.0 },
-    { "source": "domain:inventory-supply-chain", "target": "flow:purchase-stocking", "type": "contains_flow", "direction": "forward", "weight": 1.0 },
-    { "source": "domain:finance-accounting", "target": "flow:expense-cash-management", "type": "contains_flow", "direction": "forward", "weight": 1.0 },
-    { "source": "domain:hr-operations", "target": "flow:employee-attendance", "type": "contains_flow", "direction": "forward", "weight": 1.0 },
-    { "source": "domain:platform-administration", "target": "flow:tenant-onboarding-auth", "type": "contains_flow", "direction": "forward", "weight": 1.0 },
-    { "source": "flow:service-order-lifecycle", "target": "step:service-create", "type": "flow_step", "direction": "forward", "weight": 0.1 },
-    { "source": "flow:service-order-lifecycle", "target": "step:service-assign", "type": "flow_step", "direction": "forward", "weight": 0.2 },
-    { "source": "flow:service-order-lifecycle", "target": "step:service-work", "type": "flow_step", "direction": "forward", "weight": 0.3 },
-    { "source": "flow:service-order-lifecycle", "target": "step:service-photo", "type": "flow_step", "direction": "forward", "weight": 0.35 },
-    { "source": "flow:service-order-lifecycle", "target": "step:service-confirm", "type": "flow_step", "direction": "forward", "weight": 0.4 },
-    { "source": "flow:service-order-lifecycle", "target": "step:service-complete", "type": "flow_step", "direction": "forward", "weight": 0.5 },
-    { "source": "flow:service-order-lifecycle", "target": "step:service-warranty", "type": "flow_step", "direction": "forward", "weight": 0.6 },
-    { "source": "flow:pos-sales-transaction", "target": "step:sale-create", "type": "flow_step", "direction": "forward", "weight": 0.1 },
-    { "source": "flow:pos-sales-transaction", "target": "step:sale-draft-from-service", "type": "flow_step", "direction": "forward", "weight": 0.2 },
-    { "source": "flow:pos-sales-transaction", "target": "step:sale-pay", "type": "flow_step", "direction": "forward", "weight": 0.4 },
-    { "source": "flow:pos-sales-transaction", "target": "step:sale-invoice", "type": "flow_step", "direction": "forward", "weight": 0.5 },
-    { "source": "flow:pos-sales-transaction", "target": "step:sale-void", "type": "flow_step", "direction": "forward", "weight": 0.6 },
-    { "source": "flow:purchase-stocking", "target": "step:purchase-order", "type": "flow_step", "direction": "forward", "weight": 0.1 },
-    { "source": "flow:purchase-stocking", "target": "step:purchase-receive", "type": "flow_step", "direction": "forward", "weight": 0.2 },
-    { "source": "flow:purchase-stocking", "target": "step:purchase-return", "type": "flow_step", "direction": "forward", "weight": 0.3 },
-    { "source": "flow:purchase-stocking", "target": "step:stock-adjust", "type": "flow_step", "direction": "forward", "weight": 0.4 },
-    { "source": "flow:purchase-stocking", "target": "step:damaged-stock", "type": "flow_step", "direction": "forward", "weight": 0.5 },
-    { "source": "flow:purchase-stocking", "target": "step:reorder-alert", "type": "flow_step", "direction": "forward", "weight": 0.6 },
-    { "source": "flow:purchase-stocking", "target": "step:stock-forecast", "type": "flow_step", "direction": "forward", "weight": 0.7 },
-    { "source": "flow:expense-cash-management", "target": "step:expense-record", "type": "flow_step", "direction": "forward", "weight": 0.1 },
-    { "source": "flow:expense-cash-management", "target": "step:tax-config", "type": "flow_step", "direction": "forward", "weight": 0.2 },
-    { "source": "flow:expense-cash-management", "target": "step:reconcile-payment", "type": "flow_step", "direction": "forward", "weight": 0.3 },
-    { "source": "flow:expense-cash-management", "target": "step:commission-calc", "type": "flow_step", "direction": "forward", "weight": 0.4 },
-    { "source": "flow:expense-cash-management", "target": "step:commission-pay", "type": "flow_step", "direction": "forward", "weight": 0.5 },
-    { "source": "flow:employee-attendance", "target": "step:shift-define", "type": "flow_step", "direction": "forward", "weight": 0.1 },
-    { "source": "flow:employee-attendance", "target": "step:clock-inout", "type": "flow_step", "direction": "forward", "weight": 0.2 },
-    { "source": "flow:employee-attendance", "target": "step:report-attendance", "type": "flow_step", "direction": "forward", "weight": 0.3 },
-    { "source": "flow:tenant-onboarding-auth", "target": "step:register-tenant", "type": "flow_step", "direction": "forward", "weight": 0.1 },
-    { "source": "flow:tenant-onboarding-auth", "target": "step:login-auth", "type": "flow_step", "direction": "forward", "weight": 0.2 },
-    { "source": "flow:tenant-onboarding-auth", "target": "step:google-oauth", "type": "flow_step", "direction": "forward", "weight": 0.3 },
-    { "source": "flow:tenant-onboarding-auth", "target": "step:reset-password", "type": "flow_step", "direction": "forward", "weight": 0.4 },
-    { "source": "flow:tenant-onboarding-auth", "target": "step:tenant-lifecycle", "type": "flow_step", "direction": "forward", "weight": 0.5 },
-    { "source": "flow:tenant-onboarding-auth", "target": "step:plan-crud", "type": "flow_step", "direction": "forward", "weight": 0.6 },
-    { "source": "flow:tenant-onboarding-auth", "target": "step:voucher-promo", "type": "flow_step", "direction": "forward", "weight": 0.7 },
-    { "source": "flow:tenant-onboarding-auth", "target": "step:feature-gate", "type": "flow_step", "direction": "forward", "weight": 0.8 },
-    { "source": "domain:service-order-management", "target": "domain:sales-pos", "type": "cross_domain", "direction": "forward", "description": "Completed services create draft sales for billing", "weight": 0.8 },
-    { "source": "domain:service-order-management", "target": "domain:inventory-supply-chain", "type": "cross_domain", "direction": "forward", "description": "Services consume spareparts from inventory", "weight": 0.7 },
-    { "source": "domain:sales-pos", "target": "domain:inventory-supply-chain", "type": "cross_domain", "direction": "forward", "description": "Sales deduct stock and create mutations", "weight": 0.7 },
-    { "source": "domain:sales-pos", "target": "domain:finance-accounting", "type": "cross_domain", "direction": "forward", "description": "Sales drive payment reconciliation and deposits", "weight": 0.6 },
-    { "source": "domain:service-order-management", "target": "domain:finance-accounting", "type": "cross_domain", "direction": "forward", "description": "Completed services trigger commission calculation", "weight": 0.5 },
-    { "source": "domain:hr-operations", "target": "domain:service-order-management", "type": "cross_domain", "direction": "forward", "description": "Technicians assigned to service orders", "weight": 0.6 },
-    { "source": "domain:platform-administration", "target": "domain:service-order-management", "type": "cross_domain", "direction": "forward", "description": "Platform provides Google Drive storage for service photos", "weight": 0.4 },
-    { "source": "domain:platform-administration", "target": "domain:inventory-supply-chain", "type": "cross_domain", "direction": "forward", "description": "Plan feature gates control inventory feature access", "weight": 0.4 },
-    { "source": "domain:service-order-management", "target": "domain:hr-operations", "type": "cross_domain", "direction": "forward", "description": "Schedules pickup/delivery for completed services", "weight": 0.4 }
+    {
+      "source": "domain:onboarding-tenancy",
+      "target": "flow:landing-registration",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:onboarding-tenancy",
+      "target": "flow:tenant-login-redirect",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:onboarding-tenancy",
+      "target": "flow:admin-tenant-lifecycle",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:authentication",
+      "target": "flow:login-2fa",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:authentication",
+      "target": "flow:setup-2fa",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:authentication",
+      "target": "flow:password-reset",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:service-operations",
+      "target": "flow:service-checkin",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:service-operations",
+      "target": "flow:service-workflow",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:service-operations",
+      "target": "flow:service-indent",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:service-operations",
+      "target": "flow:service-warranty",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:inventory-sales",
+      "target": "flow:product-management",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:inventory-sales",
+      "target": "flow:stock-transfer",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:inventory-sales",
+      "target": "flow:sales-transaction",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:finance-reporting",
+      "target": "flow:purchase-management",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:finance-reporting",
+      "target": "flow:daily-finance",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:finance-reporting",
+      "target": "flow:reports",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:superadmin",
+      "target": "flow:admin-plan-voucher",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:superadmin",
+      "target": "flow:admin-payment-backup",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:superadmin",
+      "target": "flow:admin-monitoring",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "flow:landing-registration",
+      "target": "step:landing-registration:landing",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:landing-registration",
+      "target": "step:landing-registration:register",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.4
+    },
+    {
+      "source": "flow:landing-registration",
+      "target": "step:landing-registration:verify",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "flow:landing-registration",
+      "target": "step:landing-registration:trial",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:tenant-login-redirect",
+      "target": "step:tenant-login-redirect:resolve",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.3
+    },
+    {
+      "source": "flow:tenant-login-redirect",
+      "target": "step:tenant-login-redirect:login",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "flow:tenant-login-redirect",
+      "target": "step:tenant-login-redirect:dashboard",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "flow:admin-tenant-lifecycle",
+      "target": "step:admin-tenant-lifecycle:index",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:admin-tenant-lifecycle",
+      "target": "step:admin-tenant-lifecycle:create",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.4
+    },
+    {
+      "source": "flow:admin-tenant-lifecycle",
+      "target": "step:admin-tenant-lifecycle:suspend",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "flow:admin-tenant-lifecycle",
+      "target": "step:admin-tenant-lifecycle:plan",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:admin-tenant-lifecycle",
+      "target": "step:admin-tenant-lifecycle:login-as",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "flow:login-2fa",
+      "target": "step:login-2fa:login",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:login-2fa",
+      "target": "step:login-2fa:challenge",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.4
+    },
+    {
+      "source": "flow:login-2fa",
+      "target": "step:login-2fa:verify",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "flow:login-2fa",
+      "target": "step:login-2fa:session",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:setup-2fa",
+      "target": "step:setup-2fa:status",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:setup-2fa",
+      "target": "step:setup-2fa:enable",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.4
+    },
+    {
+      "source": "flow:setup-2fa",
+      "target": "step:setup-2fa:confirm",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "flow:setup-2fa",
+      "target": "step:setup-2fa:regenerate",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:password-reset",
+      "target": "step:password-reset:request",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.3
+    },
+    {
+      "source": "flow:password-reset",
+      "target": "step:password-reset:send",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "flow:password-reset",
+      "target": "step:password-reset:update",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "flow:service-checkin",
+      "target": "step:service-checkin:create",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.3
+    },
+    {
+      "source": "flow:service-checkin",
+      "target": "step:service-checkin:assign",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "flow:service-checkin",
+      "target": "step:service-checkin:checklist",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "flow:service-workflow",
+      "target": "step:service-workflow:accept",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:service-workflow",
+      "target": "step:service-workflow:start",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.3
+    },
+    {
+      "source": "flow:service-workflow",
+      "target": "step:service-workflow:finish",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.4
+    },
+    {
+      "source": "flow:service-workflow",
+      "target": "step:service-workflow:confirm",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "flow:service-workflow",
+      "target": "step:service-workflow:complete",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "flow:service-workflow",
+      "target": "step:service-workflow:receipt",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "flow:service-indent",
+      "target": "step:service-indent:set",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.4
+    },
+    {
+      "source": "flow:service-indent",
+      "target": "step:service-indent:resume",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:service-warranty",
+      "target": "step:service-warranty:claim",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "flow:product-management",
+      "target": "step:product-management:create",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.3
+    },
+    {
+      "source": "flow:product-management",
+      "target": "step:product-management:quickstock",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "flow:product-management",
+      "target": "step:product-management:damaged",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "flow:stock-transfer",
+      "target": "step:stock-transfer:allocate",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.4
+    },
+    {
+      "source": "flow:stock-transfer",
+      "target": "step:stock-transfer:confirm",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:sales-transaction",
+      "target": "step:sales-transaction:create",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:sales-transaction",
+      "target": "step:sales-transaction:pay",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.4
+    },
+    {
+      "source": "flow:sales-transaction",
+      "target": "step:sales-transaction:print",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "flow:sales-transaction",
+      "target": "step:sales-transaction:void",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:purchase-management",
+      "target": "step:purchase-management:create",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.3
+    },
+    {
+      "source": "flow:purchase-management",
+      "target": "step:purchase-management:return",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "flow:purchase-management",
+      "target": "step:purchase-management:status",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "flow:daily-finance",
+      "target": "step:daily-finance:expense",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.3
+    },
+    {
+      "source": "flow:daily-finance",
+      "target": "step:daily-finance:deposit",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "flow:daily-finance",
+      "target": "step:daily-finance:cash",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "flow:reports",
+      "target": "step:reports:view",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.4
+    },
+    {
+      "source": "flow:reports",
+      "target": "step:reports:export",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:admin-plan-voucher",
+      "target": "step:admin-plan-voucher:plan",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.4
+    },
+    {
+      "source": "flow:admin-plan-voucher",
+      "target": "step:admin-plan-voucher:voucher",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:admin-payment-backup",
+      "target": "step:admin-payment-backup:payment",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.4
+    },
+    {
+      "source": "flow:admin-payment-backup",
+      "target": "step:admin-payment-backup:backup",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "flow:admin-monitoring",
+      "target": "step:admin-monitoring:monitor",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.4
+    },
+    {
+      "source": "flow:admin-monitoring",
+      "target": "step:admin-monitoring:logs",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "domain:onboarding-tenancy",
+      "target": "domain:authentication",
+      "type": "cross_domain",
+      "direction": "forward",
+      "description": "Login tenant dipicu dari subdomain yang di-resolve tenancy",
+      "weight": 0.6
+    },
+    {
+      "source": "domain:onboarding-tenancy",
+      "target": "domain:superadmin",
+      "type": "cross_domain",
+      "direction": "forward",
+      "description": "Admin mengubah status/paket tenant",
+      "weight": 0.6
+    },
+    {
+      "source": "domain:authentication",
+      "target": "domain:service-operations",
+      "type": "cross_domain",
+      "direction": "forward",
+      "description": "Sesi user mengakses modul servis",
+      "weight": 0.5
+    },
+    {
+      "source": "domain:service-operations",
+      "target": "domain:inventory-sales",
+      "type": "cross_domain",
+      "direction": "forward",
+      "description": "Servis selesai menghasilkan penjualan & memakai produk",
+      "weight": 0.7
+    },
+    {
+      "source": "domain:service-operations",
+      "target": "domain:finance-reporting",
+      "type": "cross_domain",
+      "direction": "forward",
+      "description": "Komisi teknisi & biaya servis masuk laporan keuangan",
+      "weight": 0.6
+    },
+    {
+      "source": "domain:inventory-sales",
+      "target": "domain:finance-reporting",
+      "type": "cross_domain",
+      "direction": "forward",
+      "description": "Pembelian/retur & total penjualan menjadi data laporan",
+      "weight": 0.6
+    },
+    {
+      "source": "domain:superadmin",
+      "target": "domain:finance-reporting",
+      "type": "cross_domain",
+      "direction": "forward",
+      "description": "Verifikasi pembayaran tenant",
+      "weight": 0.5
+    }
   ],
   "layers": [],
   "tour": []
