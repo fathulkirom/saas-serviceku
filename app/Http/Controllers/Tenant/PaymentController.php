@@ -156,19 +156,4 @@ class PaymentController extends Controller
 
         return back()->with('success', 'Bukti pembayaran terkirim. Admin akan memverifikasi dalam 1x24 jam.');
     }
-
-    /**
-     * Get payment history for tenant.
-     */
-    public function history()
-    {
-        $tenant = tenancy()->tenant;
-        $payments = Payment::where('tenant_id', $tenant->id)
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
-
-        return inertia('Tenant/PaymentHistory', [
-            'payments' => $payments,
-        ]);
-    }
 }

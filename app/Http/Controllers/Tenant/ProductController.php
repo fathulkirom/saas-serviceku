@@ -55,12 +55,6 @@ class ProductController extends Controller
         return redirect()->route('products.index')->with('success', 'Produk berhasil ditambahkan.');
     }
 
-    public function show(Product $product)
-    {
-        $product->load('mutations');
-        return inertia('Products/Show', ['product' => $product]);
-    }
-
     public function update(Request $request, Product $product)
     {
         $this->authorize('update', $product);

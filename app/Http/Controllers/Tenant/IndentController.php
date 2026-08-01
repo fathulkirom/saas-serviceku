@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Indent;
-use App\Models\Tenant\Customer;
 use App\Models\Tenant\Service;
 use App\Models\Tenant\ActivityLog;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -16,20 +15,6 @@ class IndentController extends Controller
     public function index(Request $request)
     {
         return redirect()->route('servis-tools.index')->with('info', 'Manajemen indent sudah dipindah ke Servis Tools.');
-    }
-
-    public function create(Request $request)
-    {
-        $customers = Customer::orderBy('name')->get();
-        $services = Service::whereIn('status', [Service::STATUS_DIKERJAKAN, Service::STATUS_INDENT])
-            ->with('customer')
-            ->get();
-
-        return inertia('Indents/Create', [
-            'customers' => $customers,
-            'services' => $services,
-            'serviceId' => $request->get('service_id'),
-        ]);
     }
 
     public function store(Request $request)
@@ -66,20 +51,6 @@ class IndentController extends Controller
         return redirect()->route('indents.index')->with('success', 'Inden berhasil dibuat.');
     }
 
-    public function edit(Indent $indent)
-    {
-        $indent->load(['customer', 'service', 'sales', 'branch']);
-        $customers = Customer::orderBy('name')->get();
-        $services = Service::whereIn('status', [Service::STATUS_DIKERJAKAN, Service::STATUS_INDENT])
-            ->with('customer')
-            ->get();
-        return inertia('Indents/Edit', [
-            'indent' => $indent,
-            'customers' => $customers,
-            'services' => $services,
-        ]);
-    }
-
     public function destroy(Indent $indent)
     {
         $this->authorize('delete', $indent);
@@ -92,12 +63,6 @@ class IndentController extends Controller
         $indent->delete();
         ActivityLog::log('indent_deleted', 'Menghapus inden #' . $indent->id, $indent);
         return redirect()->route('indents.index')->with('success', 'Inden berhasil dihapus.');
-    }
-
-    public function show(Indent $indent)
-    {
-        $indent->load(['customer', 'service', 'sales', 'branch']);
-        return inertia('Indents/Show', ['indent' => $indent]);
     }
 
     public function update(Request $request, Indent $indent)

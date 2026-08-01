@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\User;
-use App\Models\Tenant\Branch;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
@@ -12,17 +11,6 @@ use Illuminate\Validation\Rule;
 /** @deprecated Use consolidated controller instead. See FinanceController, CashController, InventarisController, ServiceToolsController, SystemController, DocumentController, SettingController. */
 class UserManagementController extends Controller
 {
-    public function index()
-    {
-        $users = User::with('branch')->latest()->paginate(15);
-        $branches = Branch::where('is_active', true)->get();
-
-        return inertia('Users/Index', [
-            'users' => $users,
-            'branches' => $branches,
-        ]);
-    }
-
     public function store(Request $request)
     {
         $this->authorize('create', User::class);

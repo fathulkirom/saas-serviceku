@@ -177,7 +177,6 @@ Route::prefix('admin')->name('admin.')->middleware('admin.auth')->group(function
     // Plans
     Route::get('/plans', [PlanController::class, 'index'])->name('plans');
     Route::post('/plans', [PlanController::class, 'store'])->name('plans.store');
-    Route::get('/plans/{plan}/edit', [PlanController::class, 'edit'])->name('plans.edit');
     Route::post('/plans/{plan}', [PlanController::class, 'update'])->name('plans.update');
     Route::post('/plans/{plan}/default-menus', [PlanController::class, 'updateDefaultMenus'])->name('plans.default-menus');
 

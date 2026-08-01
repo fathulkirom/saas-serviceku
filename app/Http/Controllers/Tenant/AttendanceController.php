@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Attendance;
-use App\Models\Tenant\Shift;
-use App\Models\Tenant\User;
 use Illuminate\Http\Request;
 
 /** @deprecated Use consolidated controller instead. See FinanceController, CashController, InventarisController, ServiceToolsController, SystemController, DocumentController, SettingController. */
@@ -43,13 +41,5 @@ class AttendanceController extends Controller
         $validated = $request->validate(['status' => 'required|in:hadir,izin,sakit,alpha', 'notes' => 'nullable|string']);
         $attendance->update($validated);
         return back()->with('success', 'Status absensi berhasil diupdate.');
-    }
-
-    public function report()
-    {
-        $attendances = Attendance::with(['user', 'shift'])
-            ->whereHas('user', fn($q) => $q->where('branch_id', auth()->user()->branch_id))
-            ->latest()->get()->groupBy(fn($a) => $a->user->name);
-        return inertia('Attendances/Report', ['attendances' => $attendances]);
     }
 }

@@ -127,7 +127,7 @@ Route::middleware([
     Route::post('/customers/{customer}/register-member', [CustomerController::class, 'registerMember'])->name('customers.register-member')->middleware('check.plan.feature:customers');
 
     // ========== PRODUCTS ==========
-    Route::resource('products', ProductController::class)->except(['edit'])->middleware('check.plan.feature:products');
+    Route::resource('products', ProductController::class)->except(['edit', 'show'])->middleware('check.plan.feature:products');
 
     // ========== SALES ==========
     Route::resource('sales', SaleController::class)->only(['index', 'create', 'show'])->middleware('check.plan.feature:sales');
@@ -140,14 +140,14 @@ Route::middleware([
     Route::post('/sales/{sale}/items', [SaleStoreController::class, 'updateItems'])->name('sales.items.update')->middleware('check.plan.feature:sales');
 
     // ========== INDENTS ==========
-    Route::resource('indents', IndentController::class)->middleware('check.plan.feature:indents');
+    Route::resource('indents', IndentController::class)->except(['create', 'edit', 'show'])->middleware('check.plan.feature:indents');
     Route::get('/indents/{indent}/print', [App\Http\Controllers\Tenant\IndentController::class, 'printNota'])->name('indents.print')->middleware('check.plan.feature:indents');
 
     // ========== BRANCHES (MULTI-CABANG) ==========
-    Route::resource('branches', App\Http\Controllers\Tenant\BranchController::class)->except(['edit'])->middleware('check.plan.feature:multi_branch');
+    Route::resource('branches', App\Http\Controllers\Tenant\BranchController::class)->except(['edit', 'create', 'show'])->middleware('check.plan.feature:multi_branch');
 
     // ========== USERS (MANAJEMEN USER) ==========
-    Route::resource('users', App\Http\Controllers\Tenant\UserManagementController::class)->except(['create', 'edit'])->middleware('check.plan.feature:users');
+    Route::resource('users', App\Http\Controllers\Tenant\UserManagementController::class)->except(['create', 'edit', 'index', 'show'])->middleware('check.plan.feature:users');
 
     // ========== STOCK ALLOCATIONS (TRANSFER STOK) ==========
     Route::resource('stock-allocations', App\Http\Controllers\Tenant\StockAllocationController::class)->except(['edit', 'update'])->middleware('check.plan.feature:transfer_stock');
@@ -158,7 +158,7 @@ Route::middleware([
     Route::resource('expenses', ExpenseController::class)->only(['index', 'store'])->middleware('check.plan.feature:expenses');
 
     // ========== PURCHASE RETURNS ==========
-    Route::resource('purchase-returns', App\Http\Controllers\Tenant\PurchaseReturnController::class)->except(['edit', 'update'])->middleware('check.plan.feature:purchases');
+    Route::resource('purchase-returns', App\Http\Controllers\Tenant\PurchaseReturnController::class)->except(['edit', 'update', 'show'])->middleware('check.plan.feature:purchases');
     Route::post('/purchase-returns/{purchaseReturn}/status', [App\Http\Controllers\Tenant\PurchaseReturnController::class, 'updateStatus'])->name('purchase-returns.status')->middleware('check.plan.feature:purchases');
 
     // ========== DAMAGED STOCKS ==========
@@ -175,7 +175,7 @@ Route::middleware([
     Route::resource('partner-teknisi', App\Http\Controllers\Tenant\PartnerTeknisiController::class)->except(['create', 'edit', 'show'])->middleware('check.plan.feature:services');
 
     // ========== PICKUP & DELIVERY ==========
-    Route::resource('pickup-deliveries', App\Http\Controllers\Tenant\PickupDeliveryController::class)->except(['show', 'edit', 'update'])->middleware('check.plan.feature:services');
+    Route::resource('pickup-deliveries', App\Http\Controllers\Tenant\PickupDeliveryController::class)->except(['show', 'edit', 'update', 'create'])->middleware('check.plan.feature:services');
     Route::post('/pickup-deliveries/{pickupDelivery}/status', [App\Http\Controllers\Tenant\PickupDeliveryController::class, 'updateStatus'])->name('pickup-deliveries.status')->middleware('check.plan.feature:services');
 
     // ========== TAX SETTINGS ==========
@@ -201,7 +201,6 @@ Route::middleware([
     Route::post('/attendances/clock-in', [App\Http\Controllers\Tenant\AttendanceController::class, 'clockIn'])->name('attendances.clock-in');
     Route::post('/attendances/clock-out', [App\Http\Controllers\Tenant\AttendanceController::class, 'clockOut'])->name('attendances.clock-out');
     Route::post('/attendances/{attendance}/status', [App\Http\Controllers\Tenant\AttendanceController::class, 'updateStatus'])->name('attendances.status');
-    Route::get('/attendances/report', [App\Http\Controllers\Tenant\AttendanceController::class, 'report'])->name('attendances.report');
 
     // ========== CUSTOM FIELDS ==========
     Route::resource('custom-fields', App\Http\Controllers\Tenant\CustomFieldController::class)->except(['create', 'edit', 'show'])->middleware('check.plan.feature:settings');
@@ -301,7 +300,6 @@ Route::middleware([
     Route::post('/billing/apply-voucher', [App\Http\Controllers\Tenant\BillingController::class, 'applyVoucher'])->name('billing.apply-voucher');
     Route::post('/billing/initiate', [App\Http\Controllers\Tenant\PaymentController::class, 'initiate'])->name('payment.initiate');
     Route::get('/payment/callback', [App\Http\Controllers\Tenant\PaymentController::class, 'callback'])->name('payment.callback');
-    Route::get('/payment/history', [App\Http\Controllers\Tenant\PaymentController::class, 'history'])->name('payment.history');
     Route::post('/payment/{payment}/confirm-manual', [App\Http\Controllers\Tenant\PaymentController::class, 'confirmManual'])->name('payment.confirm-manual');
     Route::get('/payment/finish', [App\Http\Controllers\Tenant\PaymentController::class, 'callback'])->name('payment.finish');
     Route::get('/payment/unfinish', function () { return inertia('Tenant/Payment', ['status' => 'pending']); })->name('payment.unfinish');
@@ -314,7 +312,6 @@ Route::middleware([
     Route::post('/settings/theme', [App\Http\Controllers\Tenant\SettingsController::class, 'updateTheme'])->name('settings.theme')->middleware('check.plan.feature:settings');
     Route::post('/settings/layout', [App\Http\Controllers\Tenant\SettingsController::class, 'updateLayoutPreferences'])->name('settings.layout.update');
     Route::post('/settings/maintenance', [App\Http\Controllers\Tenant\SettingsController::class, 'updateMaintenance'])->name('settings.maintenance.update')->middleware('check.plan.feature:settings');
-    Route::get('/settings/whatsapp-gateway', [App\Http\Controllers\Tenant\SettingsController::class, 'whatsappGateway'])->name('settings.whatsapp-gateway.show')->middleware('check.plan.feature:settings');
     Route::post('/settings/whatsapp-gateway', [App\Http\Controllers\Tenant\SettingsController::class, 'updateWhatsappGateway'])->name('settings.whatsapp-gateway.update')->middleware('check.plan.feature:settings');
     Route::get('/settings/whatsapp-link', [App\Http\Controllers\Tenant\SettingsController::class, 'getWhatsappLink'])->name('settings.whatsapp-link')->middleware('check.plan.feature:settings');
 

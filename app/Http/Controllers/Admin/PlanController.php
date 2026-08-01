@@ -51,23 +51,6 @@ class PlanController extends Controller
         return back()->with("success", "Plan berhasil ditambahkan.");
     }
 
-    public function edit(Plan $plan)
-    {
-        return inertia('Admin/PlanEdit', [
-            'plan' => array_merge($plan->toArray(), [
-                'features' => $plan->features,
-                'default_menus' => $plan->features['default_menus'] ?? [],
-            ]),
-            'all_menus' => Plan::getAllAvailableMenus(),
-            'role_keys' => Plan::getAvailableRoleKeys(),
-            'role_labels' => [
-                'owner' => 'Owner', 'admin' => 'Admin', 'manager' => 'Manager',
-                'head_store' => 'Kepala Toko', 'cs' => 'CS', 'technician' => 'Teknisi',
-                'cashier' => 'Kasir', 'courier' => 'Kurir',
-            ],
-        ]);
-    }
-
     public function update(Request $request, Plan $plan)
     {
         $validated = $request->validate([

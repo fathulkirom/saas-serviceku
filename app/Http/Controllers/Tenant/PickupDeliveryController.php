@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\PickupDelivery;
-use App\Models\Tenant\Service;
 use App\Models\Tenant\ActivityLog;
 use Illuminate\Http\Request;
 
@@ -14,14 +13,6 @@ class PickupDeliveryController extends Controller
     public function index()
     {
         return redirect()->route('servis-tools.index')->with('info', 'Pickup & delivery sudah dipindah ke Servis Tools.');
-    }
-
-    public function create()
-    {
-        $services = Service::with('customer')
-            ->where('branch_id', auth()->user()->branch_id)
-            ->active()->get();
-        return inertia('PickupDeliveries/Create', ['services' => $services]);
     }
 
     public function store(Request $request)

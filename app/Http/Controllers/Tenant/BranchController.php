@@ -14,11 +14,6 @@ class BranchController extends Controller
         return redirect()->route('sistem.index')->with('info', 'Manajemen cabang sudah dipindah ke Sistem.');
     }
 
-    public function create()
-    {
-        return inertia('Branches/Create');
-    }
-
     public function store(Request $request)
     {
         $this->authorize('create', Branch::class);
@@ -31,12 +26,6 @@ class BranchController extends Controller
         Branch::create($validated);
 
         return redirect()->route('branches.index')->with('success', 'Cabang berhasil ditambahkan.');
-    }
-
-    public function show(Branch $branch)
-    {
-        $branch->loadCount(['users', 'services', 'products', 'sales']);
-        return inertia('Branches/Show', ['branch' => $branch]);
     }
 
     public function update(Request $request, Branch $branch)

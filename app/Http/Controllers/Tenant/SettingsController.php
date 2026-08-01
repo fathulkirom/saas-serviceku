@@ -58,16 +58,6 @@ class SettingsController extends Controller
         return back()->with('success', 'Mode maintenance ' . $status . '.');
     }
 
-    public function whatsappGateway()
-    {
-        $tenantId = tenancy()->tenant->id;
-        $config = WaGatewayConfig::where('tenant_id', $tenantId)->first();
-
-        return inertia('Settings/WhatsAppGateway', [
-            'config' => $config,
-        ]);
-    }
-
     public function updateWhatsappGateway(Request $request)
     {
         $tenantId = tenancy()->tenant->id;

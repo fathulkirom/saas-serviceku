@@ -78,12 +78,6 @@ class PurchaseReturnController extends Controller
         return redirect()->route('purchase-returns.index')->with('success', 'Retur pembelian berhasil dibuat.');
     }
 
-    public function show(PurchaseReturn $purchaseReturn)
-    {
-        $purchaseReturn->load(['purchase', 'supplier', 'items.product', 'creator']);
-        return inertia('PurchaseReturns/Show', ['return' => $purchaseReturn]);
-    }
-
     public function updateStatus(Request $request, PurchaseReturn $purchaseReturn)
     {
         $validated = $request->validate(['status' => 'required|in:dikirim,diproses_supplier,selesai,ditolak']);
