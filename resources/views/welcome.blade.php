@@ -135,6 +135,32 @@
                             Lihat Demo
                         </a>
                     </div>
+
+                    <!-- Cari Toko: setiap toko punya subdomain sendiri -->
+                    <div class="mt-10 w-full max-w-md mx-auto lg:mx-0">
+                        @if ($errors->has('search_value'))
+                            <div class="mb-3 px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/30">
+                                <p class="text-sm text-red-300">{{ $errors->first('search_value') }}</p>
+                            </div>
+                        @endif
+                        <form method="POST" action="/tenant/lookup" class="glass-card rounded-2xl p-2 flex items-center gap-2">
+                            @csrf
+                            <input type="hidden" name="search_type" value="name">
+                            <svg class="w-5 h-5 text-slate-400 ml-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                            <input
+                                type="text"
+                                name="search_value"
+                                value="{{ old('search_value') }}"
+                                placeholder="Sudah punya toko? Cari nama toko Anda..."
+                                required
+                                class="flex-1 bg-transparent text-sm text-white placeholder-slate-400 focus:outline-none"
+                            >
+                            <button type="submit" class="px-5 py-2.5 rounded-xl btn-primary text-white text-sm font-bold whitespace-nowrap">
+                                Cari Toko
+                            </button>
+                        </form>
+                        <p class="text-xs text-slate-500 mt-2">Setiap toko punya subdomain sendiri — kami akan mengarahkan Anda ke halaman login toko tersebut.</p>
+                    </div>
                     <div class="flex items-center justify-center lg:justify-start gap-12 mt-14">
                         <div class="text-center">
                             <p class="text-4xl font-extrabold text-white">500+</p>

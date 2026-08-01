@@ -16,9 +16,9 @@ class TenantLookupController extends Controller
         ]);
 
         $searchType = $request->search_type;
-        $searchValue = $request->search_value;
+        $searchValue = trim((string) $request->search_value);
 
-        // Cari tenant berdasarkan field yang dipilih (case-insensitive)
+        // Pencarian parsial & case-insensitive (bukan exact match)
         $tenants = Tenant::all()->filter(function ($tenant) use ($searchType, $searchValue) {
             $value = match ($searchType) {
                 'name' => $tenant->tenant_name ?? '',
@@ -26,28 +26,45 @@ class TenantLookupController extends Controller
                 'phone' => $tenant->phone ?? ($tenant->data['phone'] ?? ''),
                 default => '',
             };
-            return strtolower(trim($value)) === strtolower(trim($searchValue));
-        });
+            return mb_stripos($value, $searchValue) !== false;
+        })->values();
+
+        $fieldLabel = match ($searchType) {
+            'name' => 'Nama Toko',
+            'email' => 'Email',
+            'phone' => 'No. Telepon',
+        };
 
         if ($tenants->isEmpty()) {
-            $fieldLabel = match ($searchType) {
-                'name' => 'Nama Toko',
-                'email' => 'Email',
-                'phone' => 'No. Telepon',
-            };
             return back()->withErrors([
                 'search_value' => "{$fieldLabel} \"{$searchValue}\" tidak ditemukan.",
             ]);
         }
 
+        // Beberapa toko cocok -> minta user mengetik lebih spesifik
+        if ($tenants->count() > 1) {
+            $names = $tenants->take(5)->pluck('tenant_name')->implode(', ');
+            $suffix = $tenants->count() > 5 ? ', ...' : '';
+            return back()->withErrors([
+                'search_value' => "Ditemukan {$tenants->count()} toko ({$names}{$suffix}). Ketik {$fieldLabel} yang lebih spesifik.",
+            ]);
+        }
+
         $tenant = $tenants->first();
 
-        // Redirect ke subdomain tenant: {slug}.basedomain
-        // Gunakan Inertia::location untuk external redirect
+        // Redirect ke subdomain tenant: {slug}.{centralDomain}/login.
+        // Pakai central domain dari config (bukan getHost) agar benar walaupun
+        // form dikirim dari subdomain tenant (getHost akan mengembalikan subdomain).
         $scheme = $request->getScheme();
-        $baseHost = $request->getHost();
+        $baseHost = str_replace('www.', '', (string) config('tenancy.central_domains.0', 'serviceku.my.id'));
         $subdomainUrl = $scheme . '://' . $tenant->slug . '.' . $baseHost . '/login';
 
-        return Inertia::location($subdomainUrl);
+        // Inertia::location untuk halaman login (SPA); redirect biasa agar form
+        // di landing (Blade, non-Inertia) ikut mengarahkan browser.
+        if ($request->header('X-Inertia')) {
+            return Inertia::location($subdomainUrl);
+        }
+
+        return redirect()->away($subdomainUrl);
     }
 }
