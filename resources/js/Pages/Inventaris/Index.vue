@@ -81,7 +81,6 @@
             <template #cell-action="{ row }">
               <div class="flex items-center justify-end gap-1">
                 <button @click="openQuickStockModal(row)" class="px-2.5 py-1 rounded text-xs font-medium border" style="borderColor: var(--border-color); color: var(--accent-primary);">Adjust</button>
-                <Link :href="route('products.edit', row.id)" class="px-2.5 py-1 rounded text-xs font-medium text-gray-700 border border-gray-200 hover:bg-gray-50">Edit</Link>
               </div>
             </template>
           </KTable>

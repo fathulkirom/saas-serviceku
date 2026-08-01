@@ -13,7 +13,6 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Plus Jakarta Sans', ...defaultTheme.fontFamily.sans],
-                display: ['Cabinet Grotesk', 'Plus Jakarta Sans', ...defaultTheme.fontFamily.sans],
             },
             colors: {
                 premium: {
