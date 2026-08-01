@@ -98,7 +98,7 @@
                     <a href="#contact" class="text-sm font-medium text-slate-300 hover:text-white transition-colors">Kontak</a>
                 </div>
                 <div class="flex items-center gap-4">
-                    <a href="{{ route('login') }}" class="text-sm font-semibold text-slate-300 hover:text-white px-5 py-2.5 rounded-xl transition-colors">Masuk</a>
+                    <a href="{{ route('login.find') }}" class="text-sm font-semibold text-slate-300 hover:text-white px-5 py-2.5 rounded-xl transition-colors">Masuk</a>
                     <a href="{{ route('register') }}" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl btn-primary text-white text-sm font-bold hover:-translate-y-0.5 active:translate-y-0 transition-all">
                         Mulai Trial Gratis
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>

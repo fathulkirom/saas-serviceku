@@ -116,13 +116,6 @@ Route::get('/dev-login', App\Http\Controllers\DevLoginController::class)->name('
 // ========== TENANT LOOKUP (Cari Toko) ==========
 Route::post('/tenant/lookup', [App\Http\Controllers\TenantLookupController::class, '__invoke'])->name('tenant.lookup');
 
-// ========== LOGIN (central) — halaman cari toko ==========
-// LoginController::create menampilkan Auth/Login (pencarian toko) di domain
-// central; saat tenancy aktif (subdomain tenant) menampilkan Auth/SubdomainLogin
-// (form email/password). Route ini diperlukan agar /login tersedia di domain
-// publik (sebelumnya hanya ada di rute tenant -> 404 di central).
-Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'create'])->name('login');
-
 // ========== GOOGLE LOGIN (central - for landing page) ==========
 Route::get('/auth/google/redirect', [App\Http\Controllers\Auth\GoogleLoginController::class, 'redirect'])->name('google.login.central');
 Route::get('/auth/google/callback', [App\Http\Controllers\Auth\GoogleLoginController::class, 'callback'])->name('google.callback.central');
@@ -143,6 +136,10 @@ Route::middleware('guest')->group(function () {
     // Login utama (rate limited: 6x/menit)
     Route::get('login', [LoginController::class, 'create'])->name('login');
     Route::post('login', [LoginController::class, 'store'])->name('login.post')->middleware('throttle:login');
+
+    // Halaman cari toko (central): /login di-shadow oleh route tenant
+    // (PreventAccessFromCentralDomains -> 404 di central), jadi pakai path /masuk.
+    Route::get('masuk', fn () => inertia('Auth/Login', ['app_env' => app()->environment()]))->name('login.find');
 });
 
 Route::post('logout', [LoginController::class, 'destroy'])->name('logout')->middleware('auth');
