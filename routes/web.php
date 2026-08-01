@@ -14,16 +14,8 @@ use App\Http\Controllers\Admin\MonitoringController;
 Route::get('/', function () {
     $host = request()->getHost();
 
-    // Cek apakah akses dari subdomain admin
-    // Mendukung ADMIN_DOMAIN di .env (default: admin.serviceku.my.id)
-    // atau subdomain khusus seperti kirom.serviceku.my.id
-    $adminDomain = env('ADMIN_DOMAIN', 'admin.serviceku.my.id');
-    $isAdminSubdomain = str_starts_with($host, 'admin.')
-        || str_starts_with($host, 'kirom.')
-        || $host === $adminDomain;
-
-    if ($isAdminSubdomain) {
-        // Pastikan ini bukan tenant domain (slug admin/kirom di-reserved)
+    // Akses dari subdomain admin -> redirect ke panel admin
+    if (str_starts_with($host, 'kirom.')) {
         $tenantDomain = \Stancl\Tenancy\Database\Models\Domain::where('domain', $host)->first();
         if (!$tenantDomain) {
             return redirect('/admin');
