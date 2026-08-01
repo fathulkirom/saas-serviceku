@@ -21,12 +21,12 @@
 set -e
 
 # ========== KONFIGURASI ==========
-# Target: HDD server (/mnt/hdd — 1TB). Agar bisa ditulis kirom, fstab harus
-# mount exfat dengan uid=1000,gid=1000 (bukan uid=0). Cara:
-#   sudo sed -i 's|\(/dev/sda1 /mnt/hdd exfat\) uid=0,gid=0|\1 uid=1000,gid=1000|' /etc/fstab
-#   sudo mount -o remount /mnt/hdd
-# (Fallback sementara jika belum remount: BACKUP_DIR=/home/kirom/serviceku/storage/backups)
-BACKUP_DIR="${BACKUP_DIR:-/mnt/hdd/Backup/ServiceKU}"
+# Target: storage/backups (disk sistem) — TERBUKTI BERFUNGSI.
+# Catatan: /mnt/hdd (HDD 1TB exfat) TIDAK bisa dibuat writable utk kirom —
+# driver exfat sistem ini MENGABAIKAN opsi uid/gid/fmask/dmask (tetap root,
+# fmask/dmask 0022). Jadi backup disimpan di storage/backups.
+# Override: BACKUP_DIR=/path ./backup.sh --auto
+BACKUP_DIR="${BACKUP_DIR:-/home/kirom/serviceku/storage/backups}"
 
 # Konfigurasi Database (baca dari environment, fallback untuk local)
 DB_HOST="${DB_HOST:-127.0.0.1}"
