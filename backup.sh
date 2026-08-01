@@ -21,16 +21,12 @@
 set -e
 
 # ========== KONFIGURASI ==========
-# Default: storage/backups (writable oleh kirom setelah chown storage).
-# /mnt/hdd/Backup/ServiceKU TIDAK bisa ditulis user (filesystem exfat,
-# chown tidak berlaku — permission dikontrol mount fmask/dmask). Untuk
-# backup ke HDD, perlu remount exfat dengan izin grup:
-#   sudo mount -o remount,uid=1000,gid=1000,fmask=0113,dmask=0002 /mnt/hdd
-# Override: BACKUP_DIR=/path ./backup.sh --auto
-BACKUP_DIR="${BACKUP_DIR:-/home/kirom/serviceku/storage/backups}"
-# Catatan: pastikan dir bisa ditulis user yang menjalankan backup:
-#   sudo chown -R kirom:www-data /home/kirom/serviceku/storage
-#   sudo chmod -R g+w /home/kirom/serviceku/storage
+# Target: HDD server (/mnt/hdd — 1TB). Agar bisa ditulis kirom, fstab harus
+# mount exfat dengan uid=1000,gid=1000 (bukan uid=0). Cara:
+#   sudo sed -i 's|\(/dev/sda1 /mnt/hdd exfat\) uid=0,gid=0|\1 uid=1000,gid=1000|' /etc/fstab
+#   sudo mount -o remount /mnt/hdd
+# (Fallback sementara jika belum remount: BACKUP_DIR=/home/kirom/serviceku/storage/backups)
+BACKUP_DIR="${BACKUP_DIR:-/mnt/hdd/Backup/ServiceKU}"
 
 # Konfigurasi Database (baca dari environment, fallback untuk local)
 DB_HOST="${DB_HOST:-127.0.0.1}"
