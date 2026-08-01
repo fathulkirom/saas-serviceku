@@ -20,24 +20,22 @@
 
 ---
 
-## 🔧 Langkah 1 — Backup Database (Blocker #1)
+## 🔧 Langkah 1 — Backup Database (Blocker #1) ✅ RESOLVED
 
-> Kenapa manual: backup DB memakai `docker exec mysqldump` yang hanya tersedia **di HOST**,
-> bukan di dalam container app (tidak ada docker CLI / mysqldump di sana).
+> Backup **sudah berfungsi** ke `/home/kirom/serviceku/storage/backups` + cron 03:00 terpasang.
+>
+> ⚠️ **Catatan HDD**: `/mnt/hdd` (exfat) **tidak bisa** dibuat writable untuk kirom —
+> driver exfat sistem ini mengabaikan opsi `uid/gid/fmask/dmask` (dibuktikan dengan mount
+> manual eksplisit; tetap root-owned). Jadi backup disimpan di `storage/backups` (disk sistem).
+> Opsi HDD: jalankan backup sebagai root (butuh sudoers NOPASSWD khusus).
 
-### 1.1 Perbaiki permission direktori backup (sekali saja)
-
-SSH ke server, lalu jalankan:
-
+### 1.1 (selesai) Permission storage
 ```bash
-sudo chown -R kirom:www-data /mnt/hdd/Backup/ServiceKU /home/kirom/serviceku/storage
-sudo chmod -R g+w /mnt/hdd/Backup/ServiceKU /home/kirom/serviceku/storage
+sudo chown -R kirom:www-data /home/kirom/serviceku/storage
+sudo chmod -R g+w /home/kirom/serviceku/storage
 ```
 
-> Ketik password sudo saat diminta. Pastikan tidak ada error.
-
 ### 1.2 Tes backup dari HOST
-
 ```bash
 cd /home/kirom/serviceku && ./backup.sh --auto
 ```
@@ -54,10 +52,9 @@ cd /home/kirom/serviceku && ./backup.sh --auto
 
 **Verifikasi file backup**:
 ```bash
-ls -lh /mnt/hdd/Backup/ServiceKU/databases/ | tail -5
+ls -lh /home/kirom/serviceku/storage/backups/databases/ | tail -5
 ```
 
-> Jika gagal `mkdir(): Permission denied` → ulangi Langkah 1.1.
 > Jika error lain, catat pesannya dan kirim ke saya.
 
 ### 1.3 Pasang cron host (backup otomatis tiap 03:00)
