@@ -14,11 +14,18 @@ use App\Http\Controllers\Admin\MonitoringController;
 Route::get('/', function () {
     $host = request()->getHost();
 
-    // Cek apakah akses dari subdomain admin (kirom.*)
-    if (str_starts_with($host, 'kirom.')) {
-        // Cek apakah ini tenant domain (harusnya tidak, karena slug 'kirom' di-reserved)
-        $adminDomain = \Stancl\Tenancy\Database\Models\Domain::where('domain', $host)->first();
-        if (!$adminDomain) {
+    // Cek apakah akses dari subdomain admin
+    // Mendukung ADMIN_DOMAIN di .env (default: admin.serviceku.my.id)
+    // atau subdomain khusus seperti kirom.serviceku.my.id
+    $adminDomain = env('ADMIN_DOMAIN', 'admin.serviceku.my.id');
+    $isAdminSubdomain = str_starts_with($host, 'admin.')
+        || str_starts_with($host, 'kirom.')
+        || $host === $adminDomain;
+
+    if ($isAdminSubdomain) {
+        // Pastikan ini bukan tenant domain (slug admin/kirom di-reserved)
+        $tenantDomain = \Stancl\Tenancy\Database\Models\Domain::where('domain', $host)->first();
+        if (!$tenantDomain) {
             return redirect('/admin');
         }
     }
