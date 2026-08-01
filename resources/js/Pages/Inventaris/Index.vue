@@ -1,243 +1,279 @@
 <template>
   <AuthenticatedLayout>
-    <template #header>
-      <PageHeader :title="pageTitle" :subtitle="subtitle">
-        <div v-if="activeTab === 'stok'" class="flex items-center gap-2">
-          <button
-            @click="openQuickStockModal()"
-            class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold border transition-all hover:bg-gray-50 cursor-pointer"
-            style="borderColor: var(--border-color); color: var(--text-primary);"
-          >
-            ⚡ Penyesuaian Stok
+    <!-- Header CRM Style -->
+    <div class="px-6 sm:px-8 py-6 bg-white border-b border-zinc-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 sticky top-0 z-20">
+      <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center border border-emerald-100">
+              <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+          </div>
+          <div>
+              <h1 class="text-2xl font-bold text-zinc-900 tracking-tight">{{ pageTitle }}</h1>
+              <p class="text-sm text-zinc-500 font-medium mt-0.5">{{ subtitle }}</p>
+          </div>
+      </div>
+      
+      <!-- Action Buttons -->
+      <div class="flex flex-wrap items-center gap-2">
+        <div v-if="activeTab === 'stok'" class="flex gap-2">
+          <button @click="openQuickStockModal()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-700 text-sm font-semibold rounded-xl transition-all shadow-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+            Adjust Stok
           </button>
-          <button
-            @click="openProductDrawer()"
-            class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer"
-            style="background: var(--accent-primary);"
-          >
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+          <button @click="openProductDrawer()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
             Produk Baru
           </button>
         </div>
 
-        <button
-          v-if="activeTab === 'transfer'"
-          @click="openTransferDrawer()"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer"
-          style="background: var(--accent-primary);"
-        >
-          + Transfer Stok
+        <button v-if="activeTab === 'transfer'" @click="openTransferDrawer()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
+          Transfer Stok
         </button>
 
-        <button
-          v-if="activeTab === 'rusak'"
-          @click="openDamagedModal()"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer"
-          style="background: var(--accent-primary);"
-        >
-          + Catat Stok Rusak
+        <button v-if="activeTab === 'rusak'" @click="openDamagedModal()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+          Catat Stok Rusak
         </button>
 
-        <Link
-          v-if="activeTab === 'reorder' || activeTab === 'forecast'"
-          :href="route('keuangan.index', { tab: 'pembelian' })"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer"
-          style="background: var(--accent-primary);"
-        >
-          + Buat Pembelian Stok
+        <Link v-if="activeTab === 'reorder' || activeTab === 'forecast'" :href="route('keuangan.index', { tab: 'pembelian' })" class="inline-flex items-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+          Order Pembelian
         </Link>
-      </PageHeader>
-    </template>
-
-    <TabPage :tabs="tabs" v-model="activeTab" @update:model-value="switchTab">
+      </div>
+    </div>
+    
+    <div class="p-6 max-w-[1400px] mx-auto w-full">
+      <TabPage :tabs="tabs" v-model="activeTab" @update:model-value="switchTab">
       <!-- STOK PRODUK -->
       <template #stok>
-        <div class="space-y-6">
-          <Skeleton v-if="!products" type="table" :count="5" />
+        <div class="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden mt-6">
+          <Skeleton v-if="!products" type="table" :count="5" class="p-6" />
           <KTable
             v-else
             :columns="stockColumns"
             :rows="products?.data ?? []"
             :emptyTitle="'Belum ada data produk'"
-            :emptyDescription="'Data produk akan muncul setelah ditambahkan.'"
+            :emptyDescription="'Mulai kelola inventaris dengan menambahkan produk pertama Anda.'"
             :emptyActionLabel="'+ Tambah Produk Baru'"
             @empty-action="openProductDrawer()"
           >
             <template #cell-name="{ row }">
-              <span class="font-medium text-sm">{{ row.name }}</span>
-              <p class="text-[11px]" style="color: var(--text-muted);">SKU: {{ row.sku || '-' }} | Kategori: {{ row.category?.name || '-' }}</p>
+              <div class="flex items-center gap-3 py-1">
+                <div class="w-10 h-10 rounded-lg bg-zinc-100 flex items-center justify-center text-zinc-500 font-bold text-sm">
+                  {{ row.name.substring(0, 2).toUpperCase() }}
+                </div>
+                <div>
+                    <span class="font-bold text-zinc-900">{{ row.name }}</span>
+                    <div class="flex items-center gap-2 mt-0.5">
+                        <span class="text-xs text-zinc-500 font-mono">{{ row.sku || 'No SKU' }}</span>
+                        <span class="w-1 h-1 rounded-full bg-zinc-300"></span>
+                        <span class="text-xs text-zinc-500">{{ row.category?.name || 'Uncategorized' }}</span>
+                    </div>
+                </div>
+              </div>
             </template>
             <template #cell-stock_quantity="{ row }">
-              <span class="font-bold" :style="{ color: row.stock_quantity <= row.min_stock ? 'var(--text-danger)' : 'var(--text-primary)' }">
-                {{ formatNumber(row.stock_quantity ?? 0) }} {{ row.unit?.name || '' }}
-              </span>
+              <div class="flex items-center gap-2">
+                  <div class="w-2 h-2 rounded-full" :class="row.stock_quantity <= row.min_stock ? 'bg-red-500' : 'bg-emerald-500'"></div>
+                  <span class="font-bold text-zinc-900">
+                    {{ formatNumber(row.stock_quantity ?? 0) }} <span class="text-zinc-500 font-normal text-xs">{{ row.unit?.name || 'pcs' }}</span>
+                  </span>
+              </div>
             </template>
             <template #cell-price="{ row }">
-              Rp {{ formatNumber(row.price) }}
+              <span class="font-semibold text-zinc-700">Rp {{ formatNumber(row.price) }}</span>
             </template>
             <template #cell-min_stock="{ row }">
-              {{ formatNumber(row.min_stock ?? 0) }}
+              <span class="text-zinc-500">{{ formatNumber(row.min_stock ?? 0) }}</span>
             </template>
             <template #cell-action="{ row }">
-              <div class="flex items-center justify-end gap-1">
-                <button @click="openQuickStockModal(row)" class="px-2.5 py-1 rounded text-xs font-medium border" style="borderColor: var(--border-color); color: var(--accent-primary);">Adjust</button>
+              <div class="flex items-center justify-end">
+                <button @click="openQuickStockModal(row)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 hover:text-indigo-600 hover:border-indigo-200 transition-all shadow-sm">
+                    Adjust
+                </button>
               </div>
             </template>
           </KTable>
-
-          <Pagination :meta="products" />
+          <div class="p-4 border-t border-zinc-200 bg-zinc-50/50">
+              <Pagination :meta="products" />
+          </div>
         </div>
       </template>
 
       <!-- TRANSFER STOK -->
       <template #transfer>
-        <div class="space-y-6">
-          <Skeleton v-if="!allocations" type="table" :count="5" />
+        <div class="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden mt-6">
+          <Skeleton v-if="!allocations" type="table" :count="5" class="p-6" />
           <KTable
             v-else
             :columns="transferColumns"
             :rows="allocations?.data ?? []"
             :emptyTitle="'Belum ada transfer stok'"
-            :emptyDescription="'Data transfer stok antar cabang akan muncul setelah ditambahkan.'"
+            :emptyDescription="'Data pemindahan stok antar cabang akan tercatat di sini.'"
             :emptyActionLabel="'+ Transfer Stok Baru'"
             @empty-action="openTransferDrawer()"
           >
             <template #cell-product_name="{ row }">
-              <span class="font-medium">{{ row.product?.name ?? '-' }}</span>
+              <span class="font-bold text-zinc-900">{{ row.product?.name ?? '-' }}</span>
             </template>
             <template #cell-from_branch="{ row }">
-              {{ row.from_branch?.name ?? '-' }}
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-zinc-100 text-zinc-700 text-xs font-medium">
+                  {{ row.from_branch?.name ?? '-' }}
+              </span>
             </template>
             <template #cell-to_branch="{ row }">
-              {{ row.to_branch?.name ?? '-' }}
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-zinc-100 text-zinc-700 text-xs font-medium">
+                  {{ row.to_branch?.name ?? '-' }}
+              </span>
             </template>
             <template #cell-quantity="{ row }">
-              <span class="font-bold text-xs">{{ formatNumber(row.quantity) }}</span>
+              <span class="font-bold text-zinc-900">{{ formatNumber(row.quantity) }}</span>
             </template>
             <template #cell-status="{ row }">
               <Badge :status="row.status">{{ row.status }}</Badge>
             </template>
             <template #cell-action="{ row }">
-              <div v-if="row.status === 'pending'" class="flex items-center justify-end gap-1">
-                <button @click="confirmTransfer(row)" class="px-2.5 py-1 rounded text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700">Terima</button>
-                <button @click="rejectTransfer(row)" class="px-2.5 py-1 rounded text-xs font-semibold text-red-600 border border-red-200 hover:bg-red-50">Tolak</button>
+              <div v-if="row.status === 'pending'" class="flex items-center justify-end gap-2">
+                <button @click="rejectTransfer(row)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white border border-red-200 text-red-600 hover:bg-red-50 transition-all">Tolak</button>
+                <button @click="confirmTransfer(row)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 text-white hover:bg-emerald-700 transition-all shadow-sm">Terima</button>
               </div>
             </template>
           </KTable>
-
-          <Pagination :meta="allocations" />
+          <div class="p-4 border-t border-zinc-200 bg-zinc-50/50">
+              <Pagination :meta="allocations" />
+          </div>
         </div>
       </template>
 
       <!-- STOK RUSAK -->
       <template #rusak>
-        <div class="space-y-6">
-          <Skeleton v-if="!damagedStocks" type="table" :count="5" />
+        <div class="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden mt-6">
+          <Skeleton v-if="!damagedStocks" type="table" :count="5" class="p-6" />
           <KTable
             v-else
             :columns="damagedColumns"
             :rows="damagedStocks?.data ?? []"
             :emptyTitle="'Belum ada stok rusak'"
-            :emptyDescription="'Data stok rusak akan muncul setelah ditambahkan.'"
+            :emptyDescription="'Pencatatan barang rusak/hilang/expired akan muncul di sini.'"
             :emptyActionLabel="'+ Catat Stok Rusak'"
             @empty-action="openDamagedModal()"
           >
             <template #cell-product_name="{ row }">
-              <span class="font-medium">{{ row.product?.name ?? '-' }}</span>
+              <span class="font-bold text-zinc-900">{{ row.product?.name ?? '-' }}</span>
             </template>
             <template #cell-type="{ row }">
-              <Badge :variant="row.type === 'damaged' ? 'red' : 'orange'">{{ row.type === 'damaged' ? 'Rusak' : 'Hilang / Expired' }}</Badge>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold" :class="row.type === 'damaged' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700'">
+                  {{ row.type === 'damaged' ? 'Rusak / Fisik' : 'Hilang / Expired' }}
+              </span>
             </template>
             <template #cell-quantity="{ row }">
-              <span class="font-bold text-xs text-red-600">{{ formatNumber(row.quantity) }}</span>
+              <span class="font-bold text-red-600">-{{ formatNumber(row.quantity) }}</span>
             </template>
             <template #cell-created_at="{ row }">
-              {{ formatDate(row.created_at) }}
+              <span class="text-zinc-500">{{ formatDate(row.created_at) }}</span>
             </template>
           </KTable>
-
-          <Pagination :meta="damagedStocks" />
+          <div class="p-4 border-t border-zinc-200 bg-zinc-50/50">
+              <Pagination :meta="damagedStocks" />
+          </div>
         </div>
       </template>
 
       <!-- RIWAYAT MUTASI STOK -->
       <template #mutasi>
-        <div class="space-y-6">
+        <div class="space-y-6 mt-6">
           <Skeleton v-if="!mutations" type="table" :count="5" />
           <template v-else>
-            <KCard title="Filter Mutasi">
-              <div class="flex flex-wrap items-center gap-3">
-                <select v-model="localMutationFilters.product_id" @change="applyMutationFilter" class="text-xs font-semibold rounded-lg border px-3 py-2 bg-white text-gray-700 focus:ring-2 focus:ring-blue-200 focus:border-blue-500 focus:outline-none" style="border-color: var(--border-color);">
-                  <option value="">Semua Produk</option>
-                  <option v-for="product in mutationProducts" :key="product.id" :value="product.id">{{ product.name }}</option>
-                </select>
-                <select v-model="localMutationFilters.mutation_type" @change="applyMutationFilter" class="text-xs font-semibold rounded-lg border px-3 py-2 bg-white text-gray-700 focus:ring-2 focus:ring-blue-200 focus:border-blue-500 focus:outline-none" style="border-color: var(--border-color);">
-                  <option value="">Semua Tipe</option>
-                  <option value="masuk">Masuk</option>
-                  <option value="keluar">Keluar</option>
-                  <option value="transfer">Transfer</option>
-                  <option value="rusak">Rusak</option>
-                </select>
-                <button @click="resetMutationFilter" class="px-3 py-2 rounded-lg text-xs font-semibold border border-gray-200 text-gray-500 hover:bg-gray-100 transition-all bg-white">
-                  ↺ Reset
+            <div class="bg-white p-4 rounded-2xl border border-zinc-200 shadow-sm flex flex-wrap items-center gap-3">
+                <div class="flex-1 min-w-[200px]">
+                    <select v-model="localMutationFilters.product_id" @change="applyMutationFilter" class="w-full text-sm font-medium rounded-xl border border-zinc-300 px-4 py-2 bg-white text-zinc-700 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all">
+                    <option value="">Semua Produk</option>
+                    <option v-for="product in mutationProducts" :key="product.id" :value="product.id">{{ product.name }}</option>
+                    </select>
+                </div>
+                <div class="w-48">
+                    <select v-model="localMutationFilters.mutation_type" @change="applyMutationFilter" class="w-full text-sm font-medium rounded-xl border border-zinc-300 px-4 py-2 bg-white text-zinc-700 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all">
+                    <option value="">Semua Tipe Mutasi</option>
+                    <option value="masuk">Masuk (In)</option>
+                    <option value="keluar">Keluar (Out)</option>
+                    <option value="transfer">Transfer</option>
+                    <option value="rusak">Rusak</option>
+                    </select>
+                </div>
+                <button @click="resetMutationFilter" class="px-4 py-2 rounded-xl text-sm font-semibold border border-zinc-200 text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 transition-all bg-white shadow-sm">
+                Reset Filter
                 </button>
-              </div>
-            </KCard>
+            </div>
 
-            <KTable
-              :columns="mutationColumns"
-              :rows="mutations?.data ?? []"
-              :emptyTitle="'Belum ada riwayat mutasi'"
-              :emptyDescription="'Riwayat mutasi stok akan muncul setelah ada perubahan.'"
-            >
-              <template #cell-product_name="{ row }">
-                <span class="font-medium">{{ row.product?.name ?? '-' }}</span>
-              </template>
-              <template #cell-type="{ row }">
-                <Badge :variant="row.type === 'masuk' || row.type === 'in' ? 'green' : row.type === 'keluar' || row.type === 'out' ? 'red' : 'blue'">{{ row.type }}</Badge>
-              </template>
-              <template #cell-quantity="{ row }">
-                <span class="font-bold text-xs">{{ formatNumber(row.quantity) }}</span>
-              </template>
-              <template #cell-created_at="{ row }">
-                {{ formatDate(row.created_at) }}
-              </template>
-            </KTable>
-
-            <Pagination :meta="mutations" />
+            <div class="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden">
+                <KTable
+                :columns="mutationColumns"
+                :rows="mutations?.data ?? []"
+                :emptyTitle="'Belum ada riwayat mutasi'"
+                :emptyDescription="'Riwayat pergerakan stok (masuk/keluar) akan dicatat otomatis.'"
+                >
+                <template #cell-product_name="{ row }">
+                    <span class="font-bold text-zinc-900">{{ row.product?.name ?? '-' }}</span>
+                </template>
+                <template #cell-type="{ row }">
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold capitalize" 
+                          :class="{
+                              'bg-emerald-50 text-emerald-700 border border-emerald-200': row.type === 'masuk' || row.type === 'in',
+                              'bg-red-50 text-red-700 border border-red-200': row.type === 'keluar' || row.type === 'out',
+                              'bg-blue-50 text-blue-700 border border-blue-200': row.type !== 'masuk' && row.type !== 'in' && row.type !== 'keluar' && row.type !== 'out'
+                          }">
+                        {{ row.type }}
+                    </span>
+                </template>
+                <template #cell-quantity="{ row }">
+                    <span class="font-bold" :class="(row.type === 'masuk' || row.type === 'in') ? 'text-emerald-600' : 'text-zinc-900'">
+                        {{ (row.type === 'masuk' || row.type === 'in') ? '+' : '' }}{{ formatNumber(row.quantity) }}
+                    </span>
+                </template>
+                <template #cell-created_at="{ row }">
+                    <span class="text-zinc-500">{{ formatDate(row.created_at) }}</span>
+                </template>
+                </KTable>
+                <div class="p-4 border-t border-zinc-200 bg-zinc-50/50">
+                    <Pagination :meta="mutations" />
+                </div>
+            </div>
           </template>
         </div>
       </template>
 
       <!-- REORDER ALERTS -->
       <template #reorder>
-        <div class="space-y-6">
-          <Skeleton v-if="!reorderAlerts" type="table" :count="5" />
+        <div class="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden mt-6">
+          <Skeleton v-if="!reorderAlerts" type="table" :count="5" class="p-6" />
           <KTable
             v-else
             :columns="reorderColumns"
             :rows="reorderAlerts?.data ?? reorderAlerts ?? []"
-            :emptyTitle="'Tidak ada peringatan reorder'"
-            :emptyDescription="'Semua stok produk mencukupi.'"
+            :emptyTitle="'Stok Aman'"
+            :emptyDescription="'Semua produk masih di atas batas minimum stok.'"
           >
             <template #cell-name="{ row }">
-              <span class="font-medium">{{ row.name ?? row.product?.name }}</span>
+              <span class="font-bold text-zinc-900">{{ row.name ?? row.product?.name }}</span>
             </template>
             <template #cell-stock_quantity="{ row }">
-              <span class="font-bold text-red-600">{{ formatNumber(row.stock_quantity ?? 0) }}</span>
+              <span class="font-bold text-red-600 text-lg">{{ formatNumber(row.stock_quantity ?? 0) }}</span>
             </template>
             <template #cell-min_stock="{ row }">
-              {{ formatNumber(row.min_stock ?? 0) }}
+              <span class="text-zinc-500">{{ formatNumber(row.min_stock ?? 0) }}</span>
             </template>
             <template #cell-status="{ row }">
-              <Badge :status="row.stock_quantity <= row.min_stock ? 'habis' : 'menipis'">
-                {{ row.stock_quantity <= row.min_stock ? 'Perlu Restock' : 'Stok Menipis' }}
-              </Badge>
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800">
+                  <span class="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse"></span>
+                  {{ row.stock_quantity <= 0 ? 'Habis Total' : 'Perlu Restock' }}
+              </span>
             </template>
             <template #cell-action="{ row }">
-              <Link :href="route('keuangan.index', { tab: 'pembelian' })" class="px-2.5 py-1 rounded text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700">
-                Order Pembelian
-              </Link>
+              <div class="flex justify-end">
+                  <Link :href="route('keuangan.index', { tab: 'pembelian' })" class="px-4 py-2 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-sm transition-all">
+                    Buat PO (Pembelian)
+                  </Link>
+              </div>
             </template>
           </KTable>
         </div>
@@ -245,66 +281,82 @@
 
       <!-- STOK FORECASTING -->
       <template #forecast>
-        <div class="space-y-6">
-          <Skeleton v-if="!forecast" type="table" :count="5" />
+        <div class="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden mt-6">
+          <Skeleton v-if="!forecast" type="table" :count="5" class="p-6" />
           <KTable
             v-else
             :columns="forecastColumns"
             :rows="forecast?.data ?? forecast ?? []"
             :emptyTitle="'Belum ada data forecast'"
-            :emptyDescription="'Data forecast stok akan muncul setelah ada data pemakaian.'"
+            :emptyDescription="'Prediksi stok akan muncul setelah ada pola penjualan yang cukup.'"
           >
             <template #cell-name="{ row }">
-              <span class="font-medium">{{ row.name ?? row.product?.name }}</span>
+              <span class="font-bold text-zinc-900">{{ row.name ?? row.product?.name }}</span>
             </template>
             <template #cell-stock="{ row }">
-              {{ formatNumber(row.stock ?? row.stock_quantity ?? 0) }}
+              <span class="font-medium text-zinc-700">{{ formatNumber(row.stock ?? row.stock_quantity ?? 0) }}</span>
             </template>
             <template #cell-monthly_usage="{ row }">
-              {{ formatNumber(row.monthly_usage ?? 0) }} / bulan
+              <span class="text-zinc-500">{{ formatNumber(row.monthly_usage ?? 0) }} / bulan</span>
             </template>
             <template #cell-days_until_empty="{ row }">
-              <span :style="{ color: (row.days_until_empty ?? 999) < 14 ? 'var(--text-danger)' : 'var(--text-secondary)' }" class="font-bold">
-                {{ formatNumber(row.days_until_empty ?? 0) }} hari
+              <span class="font-bold px-2.5 py-1 rounded-md text-xs" :class="(row.days_until_empty ?? 999) < 14 ? 'bg-red-50 text-red-700' : 'bg-zinc-100 text-zinc-700'">
+                Estimasi {{ formatNumber(row.days_until_empty ?? 0) }} hari
               </span>
             </template>
             <template #cell-needs_restock="{ row }">
-              <Badge :variant="row.needs_restock ? 'red' : 'green'">{{ row.needs_restock ? 'Perlu Restock' : 'Stok Aman' }}</Badge>
+              <Badge :variant="row.needs_restock ? 'red' : 'green'">{{ row.needs_restock ? 'Siap-siap Restock' : 'Aman' }}</Badge>
             </template>
           </KTable>
         </div>
       </template>
     </TabPage>
+    </div>
 
     <!-- DRAWER PENYESUAIAN STOK CEPAT -->
-    <Drawer :open="showQuickStockDrawer" title="Penyesuaian Stok Cepat" @close="showQuickStockDrawer = false" width="420px">
-      <form @submit.prevent="submitQuickStock" class="space-y-4">
-        <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Pilih Produk *</label>
-          <select v-model="quickStockForm.product_id" required class="input text-sm">
+    <Drawer :open="showQuickStockDrawer" title="Penyesuaian Stok Manual" @close="showQuickStockDrawer = false" width="460px">
+      <form @submit.prevent="submitQuickStock" class="p-6 space-y-5">
+        <div>
+          <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Pilih Produk <span class="text-red-500">*</span></label>
+          <select v-model="quickStockForm.product_id" required class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all">
             <option value="" disabled>-- Pilih Produk --</option>
-            <option v-for="p in (products?.data ?? [])" :key="p.id" :value="p.id">{{ p.name }} (Stok Saat Ini: {{ p.stock_quantity }})</option>
+            <option v-for="p in (products?.data ?? [])" :key="p.id" :value="p.id">{{ p.name }} (Stok: {{ p.stock_quantity }})</option>
           </select>
         </div>
-        <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Tipe Penyesuaian *</label>
-          <select v-model="quickStockForm.type" required class="input text-sm">
-            <option value="in">Stok Masuk (+)</option>
-            <option value="out">Stok Keluar (-)</option>
-            <option value="set">Set Total Stok</option>
-          </select>
+        <div>
+          <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Tipe Penyesuaian <span class="text-red-500">*</span></label>
+          <div class="grid grid-cols-3 gap-2">
+              <label class="cursor-pointer">
+                  <input type="radio" v-model="quickStockForm.type" value="in" class="peer sr-only" />
+                  <div class="px-3 py-2 text-center rounded-lg border border-zinc-200 text-xs font-semibold text-zinc-500 peer-checked:bg-emerald-50 peer-checked:text-emerald-700 peer-checked:border-emerald-200 transition-all">
+                      + Masuk
+                  </div>
+              </label>
+              <label class="cursor-pointer">
+                  <input type="radio" v-model="quickStockForm.type" value="out" class="peer sr-only" />
+                  <div class="px-3 py-2 text-center rounded-lg border border-zinc-200 text-xs font-semibold text-zinc-500 peer-checked:bg-red-50 peer-checked:text-red-700 peer-checked:border-red-200 transition-all">
+                      - Keluar
+                  </div>
+              </label>
+              <label class="cursor-pointer">
+                  <input type="radio" v-model="quickStockForm.type" value="set" class="peer sr-only" />
+                  <div class="px-3 py-2 text-center rounded-lg border border-zinc-200 text-xs font-semibold text-zinc-500 peer-checked:bg-indigo-50 peer-checked:text-indigo-700 peer-checked:border-indigo-200 transition-all">
+                      = Set Total
+                  </div>
+              </label>
+          </div>
         </div>
-        <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Jumlah Unit *</label>
-          <input v-model="quickStockForm.quantity" type="number" min="1" required class="input text-sm" />
+        <div>
+          <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Jumlah Unit <span class="text-red-500">*</span></label>
+          <input v-model="quickStockForm.quantity" type="number" min="1" required class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" />
         </div>
-        <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Alasan / Catatan</label>
-          <textarea v-model="quickStockForm.notes" rows="2" placeholder="e.g. Hasil Stock Opname / Penyesuaian..." class="input text-sm"></textarea>
+        <div>
+          <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Alasan / Catatan</label>
+          <textarea v-model="quickStockForm.notes" rows="2" placeholder="e.g. Hasil Stock Opname" class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all resize-none"></textarea>
         </div>
-        <div class="flex justify-end gap-2 pt-3">
-          <button type="button" @click="showQuickStockDrawer = false" class="btn-secondary text-xs">Batal</button>
-          <button type="submit" :disabled="quickStockForm.processing" class="btn-primary text-xs">
+        <div class="flex justify-end gap-3 pt-4 border-t border-zinc-100">
+          <button type="button" @click="showQuickStockDrawer = false" class="px-5 py-2.5 rounded-xl border border-zinc-300 text-zinc-700 text-sm font-bold hover:bg-zinc-50 transition-all">Batal</button>
+          <button type="submit" :disabled="quickStockForm.processing" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold shadow-sm transition-all disabled:opacity-50">
             {{ quickStockForm.processing ? 'Menyimpan...' : 'Simpan Stok' }}
           </button>
         </div>
@@ -312,84 +364,93 @@
     </Drawer>
 
     <!-- DRAWER CATAT STOK RUSAK -->
-    <Drawer :open="showDamagedDrawer" title="Catat Stok Rusak / Expired" @close="showDamagedDrawer = false" width="420px">
-      <form @submit.prevent="submitDamagedStock" class="space-y-4">
-        <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Pilih Produk *</label>
-          <select v-model="damagedForm.product_id" required class="input text-sm">
+    <Drawer :open="showDamagedDrawer" title="Catat Stok Rusak / Hilang" @close="showDamagedDrawer = false" width="460px">
+      <form @submit.prevent="submitDamagedStock" class="p-6 space-y-5">
+        <div>
+          <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Pilih Produk <span class="text-red-500">*</span></label>
+          <select v-model="damagedForm.product_id" required class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all">
             <option value="" disabled>-- Pilih Produk --</option>
             <option v-for="p in mutationProducts" :key="p.id" :value="p.id">{{ p.name }}</option>
           </select>
         </div>
-        <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Kategori Kerusakan *</label>
-          <select v-model="damagedForm.type" required class="input text-sm">
-            <option value="damaged">Rusak / Fisik</option>
-            <option value="lost">Hilang / Cacat</option>
-            <option value="expired">Expired / Cacat Pabrik</option>
+        <div>
+          <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Kategori Kerusakan <span class="text-red-500">*</span></label>
+          <select v-model="damagedForm.type" required class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all">
+            <option value="damaged">Fisik Rusak</option>
+            <option value="lost">Hilang (Cacat)</option>
+            <option value="expired">Expired / Kadaluarsa</option>
           </select>
         </div>
-        <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Jumlah Unit Rusak *</label>
-          <input v-model="damagedForm.quantity" type="number" min="1" required class="input text-sm" />
+        <div>
+          <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Jumlah Unit <span class="text-red-500">*</span></label>
+          <input v-model="damagedForm.quantity" type="number" min="1" required class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" />
         </div>
-        <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Keterangan Kerusakan</label>
-          <textarea v-model="damagedForm.notes" rows="2" placeholder="Detail kerusakan fisik..." class="input text-sm"></textarea>
+        <div>
+          <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Keterangan Tambahan</label>
+          <textarea v-model="damagedForm.notes" rows="2" placeholder="Detail kerusakan fisik..." class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all resize-none"></textarea>
         </div>
-        <div class="flex justify-end gap-2 pt-3">
-          <button type="button" @click="showDamagedDrawer = false" class="btn-secondary text-xs">Batal</button>
-          <button type="submit" :disabled="damagedForm.processing" class="btn-primary text-xs">
-            {{ damagedForm.processing ? 'Menyimpan...' : 'Simpan' }}
+        <div class="flex justify-end gap-3 pt-4 border-t border-zinc-100">
+          <button type="button" @click="showDamagedDrawer = false" class="px-5 py-2.5 rounded-xl border border-zinc-300 text-zinc-700 text-sm font-bold hover:bg-zinc-50 transition-all">Batal</button>
+          <button type="submit" :disabled="damagedForm.processing" class="px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-bold shadow-sm transition-all disabled:opacity-50">
+            {{ damagedForm.processing ? 'Mencatat...' : 'Simpan Data' }}
           </button>
         </div>
       </form>
     </Drawer>
 
     <!-- DRAWER TAMBAH PRODUK BARU -->
-    <Drawer :open="showProductDrawer" title="Tambah Produk Baru" @close="showProductDrawer = false" width="460px">
-      <form @submit.prevent="submitProduct" class="space-y-4">
-        <div class="grid grid-cols-2 gap-3">
-          <div class="space-y-1">
-            <label class="text-xs font-semibold" style="color: var(--text-muted);">Nama Produk *</label>
-            <input v-model="productForm.name" type="text" required class="input text-sm" placeholder="e.g. Oli Mesin 1L" />
+    <Drawer :open="showProductDrawer" title="Tambah Produk Baru" @close="showProductDrawer = false" width="500px">
+      <form @submit.prevent="submitProduct" class="p-6 space-y-5">
+        <div class="grid grid-cols-2 gap-4">
+          <div class="col-span-2">
+            <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Nama Produk <span class="text-red-500">*</span></label>
+            <input v-model="productForm.name" type="text" required class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" placeholder="Contoh: Oli Mesin Yamalube 1L" />
           </div>
-          <div class="space-y-1">
-            <label class="text-xs font-semibold" style="color: var(--text-muted);">Kode / SKU</label>
-            <input v-model="productForm.code" type="text" class="input text-sm" placeholder="e.g. SKU-001" />
+          <div class="col-span-1">
+            <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Kode / SKU</label>
+            <input v-model="productForm.code" type="text" class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" placeholder="YML-001" />
           </div>
-        </div>
-        <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Deskripsi</label>
-          <textarea v-model="productForm.description" rows="2" class="input text-sm" placeholder="Deskripsi singkat produk..."></textarea>
-        </div>
-        <div class="grid grid-cols-3 gap-3">
-          <div class="space-y-1">
-            <label class="text-xs font-semibold" style="color: var(--text-muted);">Satuan</label>
-            <input v-model="productForm.unit" type="text" class="input text-sm" placeholder="e.g. pcs" />
-          </div>
-          <div class="space-y-1">
-            <label class="text-xs font-semibold" style="color: var(--text-muted);">Harga Modal</label>
-            <input v-model="productForm.cost_price" type="number" min="0" class="input text-sm" />
-          </div>
-          <div class="space-y-1">
-            <label class="text-xs font-semibold" style="color: var(--text-muted);">Harga Jual *</label>
-            <input v-model="productForm.selling_price" type="number" min="0" class="input text-sm" />
+          <div class="col-span-1">
+            <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Satuan</label>
+            <input v-model="productForm.unit" type="text" class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" placeholder="pcs, botol, liter" />
           </div>
         </div>
-        <div class="grid grid-cols-2 gap-3">
-          <div class="space-y-1">
-            <label class="text-xs font-semibold" style="color: var(--text-muted);">Stok Awal</label>
-            <input v-model="productForm.stock_quantity" type="number" min="0" class="input text-sm" />
+        <div>
+          <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Deskripsi Produk</label>
+          <textarea v-model="productForm.description" rows="2" class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all resize-none" placeholder="Opsional..."></textarea>
+        </div>
+        
+        <div class="bg-zinc-50 p-4 rounded-xl border border-zinc-200 grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Harga Beli/Modal</label>
+            <div class="relative">
+                <span class="absolute left-3 top-2.5 text-zinc-400 text-sm">Rp</span>
+                <input v-model="productForm.cost_price" type="number" min="0" class="w-full pl-9 rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" />
+            </div>
           </div>
-          <div class="space-y-1">
-            <label class="text-xs font-semibold" style="color: var(--text-muted);">Stok Minimum</label>
-            <input v-model="productForm.min_stock" type="number" min="0" class="input text-sm" />
+          <div>
+            <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Harga Jual <span class="text-red-500">*</span></label>
+            <div class="relative">
+                <span class="absolute left-3 top-2.5 text-zinc-400 text-sm">Rp</span>
+                <input v-model="productForm.selling_price" type="number" min="0" required class="w-full pl-9 rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" />
+            </div>
           </div>
         </div>
-        <div class="flex justify-end gap-2 pt-3">
-          <button type="button" @click="showProductDrawer = false" class="btn-secondary text-xs">Batal</button>
-          <button type="submit" :disabled="productForm.processing" class="btn-primary text-xs">
+
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Stok Awal</label>
+            <input v-model="productForm.stock_quantity" type="number" min="0" class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" />
+          </div>
+          <div>
+            <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Batas Minimum (Alert)</label>
+            <input v-model="productForm.min_stock" type="number" min="0" class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" />
+          </div>
+        </div>
+        
+        <div class="flex justify-end gap-3 pt-4 border-t border-zinc-100">
+          <button type="button" @click="showProductDrawer = false" class="px-5 py-2.5 rounded-xl border border-zinc-300 text-zinc-700 text-sm font-bold hover:bg-zinc-50 transition-all">Batal</button>
+          <button type="submit" :disabled="productForm.processing" class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold shadow-sm transition-all disabled:opacity-50">
             {{ productForm.processing ? 'Menyimpan...' : 'Simpan Produk' }}
           </button>
         </div>
@@ -397,30 +458,39 @@
     </Drawer>
 
     <!-- DRAWER TRANSFER STOK ANTAR CABANG -->
-    <Drawer :open="showTransferDrawer" title="Transfer Stok Antar Cabang" @close="showTransferDrawer = false" width="420px">
-      <form @submit.prevent="submitTransfer" class="space-y-4">
-        <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Produk *</label>
-          <select v-model="transferForm.product_id" required class="input text-sm">
+    <Drawer :open="showTransferDrawer" title="Transfer Stok Antar Cabang" @close="showTransferDrawer = false" width="460px">
+      <form @submit.prevent="submitTransfer" class="p-6 space-y-5">
+        <div>
+          <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Pilih Produk <span class="text-red-500">*</span></label>
+          <select v-model="transferForm.product_id" required class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all">
             <option value="" disabled>-- Pilih Produk --</option>
-            <option v-for="p in (products?.data ?? [])" :key="p.id" :value="p.id">{{ p.name }} (Stok: {{ p.stock_quantity }})</option>
+            <option v-for="p in (products?.data ?? [])" :key="p.id" :value="p.id">{{ p.name }} (Stok saat ini: {{ p.stock_quantity }})</option>
           </select>
         </div>
-        <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Tujuan Cabang *</label>
-          <select v-model="transferForm.to_branch_id" required class="input text-sm">
-            <option value="" disabled>-- Pilih Cabang Tujuan --</option>
-            <option v-for="b in branches" :key="b.id" :value="b.id">{{ b.name }}</option>
-          </select>
+        <div class="flex items-center gap-2">
+            <div class="flex-1">
+                <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Cabang Asal</label>
+                <input type="text" disabled value="Cabang Saat Ini" class="w-full rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-500 bg-zinc-50" />
+            </div>
+            <div class="mt-6 text-zinc-400">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </div>
+            <div class="flex-1">
+                <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Cabang Tujuan <span class="text-red-500">*</span></label>
+                <select v-model="transferForm.to_branch_id" required class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all">
+                    <option value="" disabled>-- Tujuan --</option>
+                    <option v-for="b in branches" :key="b.id" :value="b.id">{{ b.name }}</option>
+                </select>
+            </div>
         </div>
-        <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Jumlah Transfer *</label>
-          <input v-model="transferForm.quantity" type="number" min="1" required class="input text-sm" />
+        <div>
+          <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Jumlah Transfer <span class="text-red-500">*</span></label>
+          <input v-model="transferForm.quantity" type="number" min="1" required class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" />
         </div>
-        <div class="flex justify-end gap-2 pt-3">
-          <button type="button" @click="showTransferDrawer = false" class="btn-secondary text-xs">Batal</button>
-          <button type="submit" :disabled="transferForm.processing" class="btn-primary text-xs">
-            {{ transferForm.processing ? 'Menyimpan...' : 'Transfer Stok' }}
+        <div class="flex justify-end gap-3 pt-4 border-t border-zinc-100">
+          <button type="button" @click="showTransferDrawer = false" class="px-5 py-2.5 rounded-xl border border-zinc-300 text-zinc-700 text-sm font-bold hover:bg-zinc-50 transition-all">Batal</button>
+          <button type="submit" :disabled="transferForm.processing" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold shadow-sm transition-all disabled:opacity-50">
+            {{ transferForm.processing ? 'Memproses...' : 'Transfer Stok' }}
           </button>
         </div>
       </form>

@@ -60,14 +60,14 @@ const props = defineProps({
   iconBg: { type: String, default: '' },
   subtext: { type: String, default: '' },
   trend: { type: Number, default: undefined },
-  color: { type: String, default: 'purple' },
+  color: { type: String, default: 'primary' },
   clickable: { type: Boolean, default: false },
   padded: { type: Boolean, default: true },
   variant: { type: String, default: 'default' },
 });
 
 const colorMap = {
-  purple: { hex: 'var(--accent-primary)', light: 'var(--accent-light)' },
+  primary: { hex: 'var(--accent-primary)', light: 'var(--accent-light)' },
   cyan: { hex: '#06b6d4', light: 'rgba(6,182,212,0.1)' },
   green: { hex: 'var(--success)', light: 'var(--success-bg)' },
   orange: { hex: 'var(--warning)', light: 'var(--warning-bg)' },
@@ -76,8 +76,8 @@ const colorMap = {
   pink: { hex: '#ec4899', light: 'rgba(236,72,153,0.1)' },
 };
 
-const colorHex = computed(() => colorMap[props.color]?.hex || colorMap.purple.hex);
-const colorLight = computed(() => colorMap[props.color]?.light || colorMap.purple.light);
+const colorHex = computed(() => colorMap[props.color]?.hex || colorMap.primary.hex);
+const colorLight = computed(() => colorMap[props.color]?.light || colorMap.primary.light);
 
 const computedIconBg = computed(() => {
   if (props.iconBg) return { background: props.iconBg };

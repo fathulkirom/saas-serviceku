@@ -5,13 +5,25 @@ namespace App\Http\Controllers\Tenant;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class CustomerController extends Controller
 {
     public function index()
     {
         $this->authorize('viewAny', Customer::class);
-        $customers = Customer::with('branch')->latest()->paginate(15);
+        $userBranchId = auth()->user()?->branch_id;
+
+        $query = Customer::with('branch');
+
+        if ($userBranchId) {
+            $query->where(function ($q) use ($userBranchId) {
+                $q->where('branch_id', $userBranchId)
+                    ->orWhereNull('branch_id');
+            });
+        }
+
+        $customers = $query->latest()->paginate(15);
         return inertia('Customers/Index', ['customers' => $customers]);
     }
 
@@ -67,6 +79,7 @@ class CustomerController extends Controller
     public function show(Customer $customer)
     {
         $this->authorize('view', $customer);
+        $this->ensureCustomerBranchAccess($customer);
         $customer->load(['services' => function ($q) {
             $q->latest()->take(10);
         }, 'sales' => function ($q) {
@@ -79,6 +92,7 @@ class CustomerController extends Controller
     public function update(Request $request, Customer $customer)
     {
         $this->authorize('update', $customer);
+        $this->ensureCustomerBranchAccess($customer);
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'phone' => 'nullable|string|max:20',
@@ -98,6 +112,7 @@ class CustomerController extends Controller
     public function registerMember(Customer $customer)
     {
         $this->authorize('update', $customer);
+        $this->ensureCustomerBranchAccess($customer);
         if (!$customer->card_number) {
             $year = date('y');
             $customer->update([
@@ -114,7 +129,23 @@ class CustomerController extends Controller
     public function destroy(Customer $customer)
     {
         $this->authorize('delete', $customer);
+        $this->ensureCustomerBranchAccess($customer);
         $customer->delete();
         return redirect()->route('customers.index')->with('success', 'Pelanggan berhasil dihapus.');
+    }
+
+    private function ensureCustomerBranchAccess(Customer $customer): void
+    {
+        $userBranchId = auth()->user()?->branch_id;
+
+        if (!$userBranchId || !$customer->branch_id) {
+            return;
+        }
+
+        if ((string) $customer->branch_id !== (string) $userBranchId) {
+            throw ValidationException::withMessages([
+                'customer' => 'Pelanggan tidak berada pada cabang aktif Anda.',
+            ]);
+        }
     }
 }

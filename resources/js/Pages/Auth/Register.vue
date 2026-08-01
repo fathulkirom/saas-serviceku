@@ -1,173 +1,201 @@
 <template>
     <GuestLayout>
         <!-- Step 1: Pilih Paket -->
-        <div v-if="step === 'plan'">
-            <h2 class="text-xl font-bold text-dark-900 mb-2 text-center">Pilih Paket Langganan</h2>
-            <p class="text-sm text-dark-400 mb-6 text-center">Mulai trial gratis atau pilih paket yang sesuai</p>
+        <div v-if="step === 'plan'" class="w-full max-w-[600px] mx-auto">
+            <div class="text-center mb-8">
+                <h2 class="text-2xl font-black text-zinc-900 mb-2 tracking-tight">Pilih Paket Langganan</h2>
+                <p class="text-sm font-medium text-zinc-500">Mulai trial gratis atau pilih paket yang paling sesuai dengan kebutuhan toko Anda.</p>
+            </div>
 
-            <div class="grid gap-4">
+            <div class="grid gap-5">
                 <div v-for="p in plans" :key="p.id"
                     @click="selectPlan(p)"
-                    class="p-4 rounded-xl border-2 cursor-pointer transition-all"
+                    class="p-5 rounded-2xl border-2 cursor-pointer transition-all duration-200 bg-white"
                     :class="selectedPlan?.id === p.id
-                        ? 'border-premium-500 bg-premium-50 shadow-premium-sm'
-                        : 'border-dark-200 hover:border-premium-200 hover:shadow-sm'">
+                        ? 'border-zinc-900 shadow-md ring-4 ring-zinc-900/5'
+                        : 'border-zinc-200 hover:border-zinc-400 hover:shadow-sm'">
 
                     <div class="flex justify-between items-start">
                         <div>
-                            <h3 class="font-semibold text-dark-900">{{ p.name }}</h3>
+                            <h3 class="text-lg font-bold text-zinc-900">{{ p.name }}</h3>
                             <div class="flex items-baseline gap-2 mt-1">
                                 <template v-if="p.is_promo_active">
-                                    <span class="text-xs text-dark-400 line-through">Rp {{ formatNumber(p.price) }}</span>
-                                    <span class="text-2xl font-bold text-accent-700">Rp {{ formatNumber(p.promo_price) }}</span>
-                                    <span class="px-1.5 py-0.5 text-[10px] font-bold bg-accent-50 text-accent-700 rounded">DISKON {{ p.discount_percent }}%</span>
+                                    <span class="text-xs font-semibold text-zinc-400 line-through">Rp {{ formatNumber(p.price) }}</span>
+                                    <span class="text-2xl font-black text-zinc-900 tracking-tight">Rp {{ formatNumber(p.promo_price) }}</span>
+                                    <span class="px-2 py-0.5 text-[10px] font-black bg-red-50 text-red-600 rounded-md tracking-wider">DISKON {{ p.discount_percent }}%</span>
                                 </template>
                                 <template v-else-if="p.slug === 'trial'">
-                                    <span class="text-2xl font-bold text-success-700">Gratis</span>
+                                    <span class="text-2xl font-black text-emerald-600 tracking-tight">Gratis</span>
                                 </template>
                                 <template v-else>
-                                    <span class="text-2xl font-bold text-premium-600">Rp {{ formatNumber(p.price) }}</span>
+                                    <span class="text-2xl font-black text-zinc-900 tracking-tight">Rp {{ formatNumber(p.price) }}</span>
                                 </template>
-                                <span class="text-xs text-dark-400">/bln</span>
+                                <span class="text-xs font-bold text-zinc-400">/bln</span>
                             </div>
                         </div>
-                        <span v-if="p.slug === 'trial'" class="px-2 py-1 text-[10px] font-semibold bg-success-50 text-success-700 rounded-full whitespace-nowrap">
-                            Trial {{ p.trial_days }} hari
+                        <span v-if="p.slug === 'trial'" class="px-2.5 py-1 text-[10px] font-black tracking-wider bg-emerald-50 text-emerald-700 rounded-full whitespace-nowrap uppercase">
+                            Trial {{ p.trial_days }} Hari
                         </span>
                     </div>
 
-                    <p v-if="p.description" class="text-xs text-dark-400 mt-2">{{ p.description }}</p>
+                    <p v-if="p.description" class="text-sm font-medium text-zinc-500 mt-3">{{ p.description }}</p>
 
-                    <div class="flex flex-wrap gap-1.5 mt-3">
+                    <div class="flex flex-wrap gap-2 mt-4">
                         <span v-for="(level, key) in featureSummary(p.features)" :key="key"
-                            class="px-2 py-0.5 text-[10px] rounded-full"
-                            :class="level === 'full' ? 'bg-success-50 text-success-700' : 'bg-dark-50 text-dark-400'">
+                            class="px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-md border"
+                            :class="level === 'full' ? 'bg-indigo-50 text-indigo-700 border-indigo-100' : 'bg-zinc-50 text-zinc-500 border-zinc-200'">
                             {{ featureLabels[key] || key }}
                         </span>
                     </div>
 
-                    <button type="button"
-                        class="mt-3 w-full py-2 text-sm font-medium rounded-lg transition"
-                        :class="selectedPlan?.id === p.id
-                            ? 'bg-premium-600 text-white'
-                            : 'bg-premium-50 text-premium-700 hover:bg-premium-100'">
-                        {{ selectedPlan?.id === p.id ? '✓ Dipilih' : 'Pilih Paket' }}
-                    </button>
+                    <div class="mt-5 pt-4 border-t border-zinc-100">
+                        <button type="button"
+                            class="w-full py-2.5 text-sm font-bold rounded-xl transition-colors flex items-center justify-center gap-2"
+                            :class="selectedPlan?.id === p.id
+                                ? 'bg-zinc-900 text-white'
+                                : 'bg-zinc-100 text-zinc-600 group-hover:bg-zinc-200'">
+                            <svg v-if="selectedPlan?.id === p.id" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                            {{ selectedPlan?.id === p.id ? 'Paket Dipilih' : 'Pilih Paket Ini' }}
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- Step 2: Form Registrasi -->
-        <div v-else>
-            <div class="mb-6">
-                <button @click="step = 'plan'" class="text-sm text-premium-600 hover:text-premium-500 mb-4 flex items-center gap-1 font-semibold">
-                    ← Ganti Paket
+        <div v-else class="w-full">
+            <div class="mb-8">
+                <button @click="step = 'plan'" class="text-xs font-bold text-zinc-500 hover:text-zinc-900 mb-4 flex items-center gap-1 transition-colors uppercase tracking-wider">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                    Ganti Paket
                 </button>
-                <h2 class="text-xl font-bold text-dark-900">Lengkapi Data</h2>
-                <p class="text-sm text-dark-400 mt-1">
-                    Paket: <strong>{{ selectedPlan?.name }}</strong>
-                    <template v-if="selectedPlan?.slug === 'trial'">
-                        <span class="text-success-700 ml-1">(Gratis {{ selectedPlan.trial_days }} hari)</span>
-                    </template>
-                    <template v-else>
-                        <span class="text-premium-600 ml-1">
-                            (Rp {{ formatNumber(selectedPlan?.effective_price || selectedPlan?.price) }}/bln)
-                        </span>
-                    </template>
-                </p>
+                <h2 class="text-2xl font-black text-zinc-900 tracking-tight">Lengkapi Data Toko</h2>
+                <div class="mt-2 p-3 bg-zinc-50 border border-zinc-200 rounded-xl flex items-center gap-2">
+                    <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <p class="text-sm font-medium text-zinc-700">
+                        Paket terpilih: <span class="font-bold text-zinc-900">{{ selectedPlan?.name }}</span>
+                        <template v-if="selectedPlan?.slug === 'trial'">
+                            <span class="text-emerald-600 font-bold ml-1">(Gratis {{ selectedPlan.trial_days }} hari)</span>
+                        </template>
+                        <template v-else>
+                            <span class="text-zinc-500 ml-1">
+                                (Rp {{ formatNumber(selectedPlan?.effective_price || selectedPlan?.price) }}/bln)
+                            </span>
+                        </template>
+                    </p>
+                </div>
             </div>
 
-            <form @submit.prevent="submit">
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-dark-600 mb-1">Nama Toko</label>
+            <form @submit.prevent="submit" class="space-y-5">
+                <div>
+                    <label class="block text-sm font-bold text-zinc-900 mb-2">Nama Toko</label>
                     <input v-model="form.tenant_name" type="text" required
-                        class="input-premium"
-                        placeholder="Contoh: Toko Servis ABC" />
-                    <p v-if="form.errors.tenant_name" class="mt-1 text-sm text-accent-700">{{ form.errors.tenant_name }}</p>
+                        class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
+                        placeholder="Contoh: Servis Maju Jaya" />
+                    <p v-if="form.errors.tenant_name" class="mt-1.5 text-xs font-semibold text-red-600">{{ form.errors.tenant_name }}</p>
                 </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-dark-600 mb-1">Nama Pemilik</label>
+                
+                <div>
+                    <label class="block text-sm font-bold text-zinc-900 mb-2">Nama Pemilik</label>
                     <input v-model="form.name" type="text" required
-                        class="input-premium"
+                        class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
                         placeholder="Nama lengkap pemilik" />
-                    <p v-if="form.errors.name" class="mt-1 text-sm text-accent-700">{{ form.errors.name }}</p>
+                    <p v-if="form.errors.name" class="mt-1.5 text-xs font-semibold text-red-600">{{ form.errors.name }}</p>
                 </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-dark-600 mb-1">Email</label>
-                    <input v-model="form.email" type="email" required
-                        class="input-premium"
-                        placeholder="owner@email.com" />
-                    <p v-if="form.errors.email" class="mt-1 text-sm text-accent-700">{{ form.errors.email }}</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-sm font-bold text-zinc-900 mb-2">Email</label>
+                        <input v-model="form.email" type="email" required
+                            class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
+                            placeholder="owner@email.com" />
+                        <p v-if="form.errors.email" class="mt-1.5 text-xs font-semibold text-red-600">{{ form.errors.email }}</p>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold text-zinc-900 mb-2">No. Telepon / WhatsApp</label>
+                        <input v-model="form.phone" type="text"
+                            class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
+                            placeholder="0812..." />
+                        <p v-if="form.errors.phone" class="mt-1.5 text-xs font-semibold text-red-600">{{ form.errors.phone }}</p>
+                    </div>
                 </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-dark-600 mb-1">No. Telepon</label>
-                    <input v-model="form.phone" type="text"
-                        class="input-premium" />
-                    <p v-if="form.errors.phone" class="mt-1 text-sm text-accent-700">{{ form.errors.phone }}</p>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-dark-600 mb-1">Tipe Bisnis</label>
+
+                <div>
+                    <label class="block text-sm font-bold text-zinc-900 mb-2">Tipe Bisnis</label>
                     <select v-model="form.business_type"
-                        class="input-premium">
+                        class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm">
                         <option v-if="filteredBusinessTypes.length === 0" value="">Pilih tipe bisnis...</option>
                         <option v-for="(label, key) in filteredBusinessTypes" :key="key" :value="key">{{ label }}</option>
                     </select>
-                    <p v-if="form.errors.business_type" class="mt-1 text-sm text-accent-700">{{ form.errors.business_type }}</p>
-                    <p v-if="!filteredBusinessTypes.length" class="mt-1 text-xs text-accent-600">Semua tipe bisnis didukung untuk paket ini.</p>
+                    <p v-if="form.errors.business_type" class="mt-1.5 text-xs font-semibold text-red-600">{{ form.errors.business_type }}</p>
+                    <p v-if="!filteredBusinessTypes.length" class="mt-1.5 text-xs font-medium text-zinc-500">Semua tipe bisnis didukung untuk paket ini.</p>
                 </div>
 
                 <!-- Voucher Code -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-dark-600 mb-1.5">Kode Promo <span class="text-xs text-dark-400">(opsional)</span></label>
+                <div>
+                    <label class="block text-sm font-bold text-zinc-900 mb-2">Kode Promo <span class="text-xs font-medium text-zinc-400 font-normal">(opsional)</span></label>
                     <div class="flex gap-2">
                         <input v-model="voucherCode" type="text"
-                            class="input-premium flex-1 uppercase tracking-wider"
+                            class="flex-1 px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-bold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm uppercase tracking-wider"
                             placeholder="Masukkan kode promo"
                             @input="voucherStatus = null" />
                         <button type="button" @click="applyVoucher"
-                            class="btn-premium-secondary text-sm whitespace-nowrap"
+                            class="px-6 py-3 rounded-xl bg-white border border-zinc-300 text-zinc-900 text-sm font-bold shadow-sm hover:bg-zinc-50 transition-colors disabled:opacity-50"
                             :disabled="voucherLoading || !voucherCode">
-                            {{ voucherLoading ? '...' : 'Pakai' }}
+                            {{ voucherLoading ? '...' : 'Gunakan' }}
                         </button>
                     </div>
                     <!-- Voucher Success -->
-                    <div v-if="voucherStatus?.valid" class="mt-2 p-3 bg-success-50 border border-success-200 rounded-lg">
-                        <p class="text-xs font-semibold text-success-700">✅ {{ voucherStatus.message }}</p>
-                        <p v-if="voucherStatus.discount > 0" class="text-xs text-success-600 mt-1">
-                            Harga: Rp {{ formatNumber(voucherStatus.original_price) }} → <strong>Rp {{ formatNumber(voucherStatus.final_price) }}</strong>
+                    <div v-if="voucherStatus?.valid" class="mt-3 p-4 bg-emerald-50 border border-emerald-100 rounded-xl">
+                        <p class="text-sm font-bold text-emerald-800 flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            {{ voucherStatus.message }}
                         </p>
-                        <p v-if="voucherStatus.extra_months" class="text-xs text-success-600 mt-0.5">
+                        <p v-if="voucherStatus.discount > 0" class="text-xs font-medium text-emerald-600 mt-2">
+                            Harga: <span class="line-through">Rp {{ formatNumber(voucherStatus.original_price) }}</span> → <strong class="text-emerald-700">Rp {{ formatNumber(voucherStatus.final_price) }}</strong>
+                        </p>
+                        <p v-if="voucherStatus.extra_months" class="text-xs font-bold text-emerald-600 mt-1">
                             🎁 + {{ voucherStatus.extra_months }} bulan gratis langganan
                         </p>
                     </div>
                     <!-- Voucher Error -->
-                    <div v-else-if="voucherStatus?.message" class="mt-2 p-2.5 bg-accent-50 border border-accent-200 rounded-lg">
-                        <p class="text-xs font-semibold text-accent-700">✕ {{ voucherStatus.message }}</p>
+                    <div v-else-if="voucherStatus?.message" class="mt-3 p-3 bg-red-50 border border-red-100 rounded-xl">
+                        <p class="text-sm font-bold text-red-800">✕ {{ voucherStatus.message }}</p>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="mb-4">
-                    <label class="block text-sm font-medium text-dark-600 mb-1">Password</label>
-                    <input v-model="form.password" type="password" required minlength="8"
-                        class="input-premium" />
-                    <p v-if="form.errors.password" class="mt-1 text-sm text-accent-700">{{ form.errors.password }}</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t border-zinc-100">
+                    <div>
+                        <label class="block text-sm font-bold text-zinc-900 mb-2">Password Akun</label>
+                        <input v-model="form.password" type="password" required minlength="8"
+                            class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
+                            placeholder="Minimal 8 karakter" />
+                        <p v-if="form.errors.password" class="mt-1.5 text-xs font-semibold text-red-600">{{ form.errors.password }}</p>
                     </div>
-                    <div class="mb-4">
-                    <label class="block text-sm font-medium text-dark-600 mb-1">Konfirmasi Password</label>
-                    <input v-model="form.password_confirmation" type="password" required minlength="8"
-                        class="input-premium" />
+                    <div>
+                        <label class="block text-sm font-bold text-zinc-900 mb-2">Konfirmasi Password</label>
+                        <input v-model="form.password_confirmation" type="password" required minlength="8"
+                            class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
+                            placeholder="Ulangi password" />
                     </div>
                 </div>
-                <div class="flex items-center justify-between mt-6 pt-4 border-t">
-                    <Link :href="route('login')" class="text-sm text-premium-600 hover:text-premium-500 font-semibold">
-                        Sudah punya akun? Login
-                    </Link>
+
+                <div class="pt-6">
                     <button type="submit"
-                        class="btn-premium-primary disabled:opacity-50 font-medium"
+                        class="w-full flex items-center justify-center px-6 py-4 rounded-xl bg-zinc-900 text-white text-base font-black tracking-wide shadow-md hover:bg-zinc-800 focus:ring-2 focus:ring-offset-2 focus:ring-zinc-900 transition-all disabled:opacity-70"
                         :disabled="form.processing">
-                        {{ form.processing ? 'Mendaftarkan...' : 'Daftar Sekarang' }}
+                        <svg v-if="form.processing" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                        {{ form.processing ? 'Sedang Memproses...' : 'Daftar Sekarang' }}
                     </button>
+                    
+                    <div class="text-center mt-6">
+                        <p class="text-sm font-medium text-zinc-500">Sudah memiliki akun? 
+                            <Link :href="route('login')" class="text-indigo-600 hover:text-indigo-700 font-bold ml-1">Masuk ke Dasbor</Link>
+                        </p>
+                    </div>
                 </div>
             </form>
         </div>

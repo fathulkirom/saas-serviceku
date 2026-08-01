@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Tenant;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\PurchaseReturn;
 use App\Models\Tenant\PurchaseReturnItem;
+use App\Models\Tenant\Purchase;
 use App\Models\Tenant\Product;
 use App\Models\Tenant\InventoryMutation;
 use App\Models\Tenant\ActivityLog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 /** @deprecated Use consolidated controller instead. See FinanceController, CashController, InventarisController, ServiceToolsController, SystemController, DocumentController, SettingController. */
 class PurchaseReturnController extends Controller
@@ -20,6 +23,8 @@ class PurchaseReturnController extends Controller
 
     public function store(Request $request)
     {
+        $user = Auth::user();
+
         $validated = $request->validate([
             'purchase_id' => 'nullable|exists:purchases,id',
             'supplier_id' => 'required|exists:suppliers,id',
@@ -40,6 +45,14 @@ class PurchaseReturnController extends Controller
         ]);
 
         foreach ($validated['items'] as $item) {
+            $product = Product::findOrFail($item['product_id']);
+
+            if ($user->branch_id && $product->branch_id && (string) $product->branch_id !== (string) $user->branch_id) {
+                throw ValidationException::withMessages([
+                    'items' => 'Produk ' . $product->name . ' bukan milik cabang aktif.',
+                ]);
+            }
+
             PurchaseReturnItem::create([
                 'purchase_return_id' => $return->id,
                 'product_id' => $item['product_id'],
@@ -67,6 +80,15 @@ class PurchaseReturnController extends Controller
 
     public function updateStatus(Request $request, PurchaseReturn $purchaseReturn)
     {
+        $user = Auth::user();
+
+        if ($purchaseReturn->purchase_id) {
+            $purchase = Purchase::find($purchaseReturn->purchase_id);
+            if ($purchase && $user->branch_id && (string) $purchase->branch_id !== (string) $user->branch_id) {
+                return back()->with('error', 'Retur pembelian tidak berada pada cabang aktif.');
+            }
+        }
+
         $validated = $request->validate(['status' => 'required|in:dikirim,diproses_supplier,selesai,ditolak']);
         $purchaseReturn->update(['status' => $validated['status']]);
         ActivityLog::log('purchase_return', 'Update status retur: ' . $purchaseReturn->return_number . ' -> ' . $validated['status']);

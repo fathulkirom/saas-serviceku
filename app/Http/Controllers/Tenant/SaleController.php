@@ -17,8 +17,16 @@ class SaleController extends Controller
 
     public function create(Request $request)
     {
-        return redirect()->route('keuangan.index', ['tab' => 'penjualan'])
-            ->with('info', 'Buat penjualan melalui menu Keuangan.');
+        $products = \App\Models\Tenant\Product::where('stock_quantity', '>', 0)
+            ->where('branch_id', auth()->user()->branch_id)
+            ->get();
+            
+        $customers = \App\Models\Tenant\Customer::all();
+
+        return \Inertia\Inertia::render('Sales/Create', [
+            'products' => $products,
+            'customers' => $customers,
+        ]);
     }
 
     public function show(Sale $sale)

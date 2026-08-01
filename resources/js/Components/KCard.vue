@@ -1,14 +1,14 @@
 <template>
     <div
         :class="[
-            'rounded-xl border shadow-sm transition-all',
+            'rounded-2xl border border-zinc-200 bg-white shadow-sm transition-all',
             paddingClass,
             hoverClass,
         ]"
         :style="cardStyle"
     >
         <div v-if="title || $slots.title" class="flex items-center justify-between mb-4">
-            <h3 class="text-sm font-bold" style="color: var(--text-primary);">
+            <h3 class="text-sm font-bold text-zinc-900">
                 <slot name="title">{{ title }}</slot>
             </h3>
             <slot name="action" />
@@ -27,12 +27,11 @@ const props = defineProps({
     borderColor: { type: String, default: '' },
 });
 
-const paddingMap = { none: 'p-0', sm: 'p-3', md: 'p-5', lg: 'p-6' };
-const paddingClass = computed(() => paddingMap[props.padding] || 'p-5');
+const paddingMap = { none: 'p-0', sm: 'p-4', md: 'p-6', lg: 'p-8' };
+const paddingClass = computed(() => paddingMap[props.padding] || 'p-6');
 
-const hoverClass = computed(() => props.hover ? 'hover:shadow-md hover:-translate-y-0.5 cursor-pointer' : '');
+const hoverClass = computed(() => props.hover ? 'hover:shadow-md hover:-translate-y-1 hover:border-indigo-200 cursor-pointer' : '');
 const cardStyle = computed(() => ({
-    background: 'var(--bg-card)',
     ...(props.borderColor ? { borderColor: props.borderColor } : {}),
 }));
 </script>

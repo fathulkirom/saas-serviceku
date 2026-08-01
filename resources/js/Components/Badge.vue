@@ -20,14 +20,14 @@ const props = defineProps({
 });
 
 const colors = {
-  default: { bg: 'var(--bg-hover)', color: 'var(--text-muted)', dot: 'var(--text-muted)' },
-  yellow: { bg: 'var(--warning-bg)', color: 'var(--warning-text)', dot: 'var(--warning)' },
-  orange: { bg: 'rgba(249,115,22,0.12)', color: '#ea580c', dot: '#f97316' },
-  green: { bg: 'var(--success-bg)', color: 'var(--success-text)', dot: 'var(--success)' },
-  red: { bg: 'var(--danger-bg)', color: 'var(--danger-text)', dot: 'var(--danger)' },
-  pink: { bg: 'rgba(244,63,94,0.12)', color: '#e11d48', dot: '#f43f5e' },
-  blue: { bg: 'var(--info-bg)', color: 'var(--info-text)', dot: 'var(--info)' },
-  purple: { bg: 'var(--accent-light)', color: 'var(--accent-primary)', dot: 'var(--accent-primary)' },
+  default: { bg: '#f4f4f5', color: '#71717a', dot: '#a1a1aa' }, // zinc-100, zinc-500
+  yellow: { bg: '#fef3c7', color: '#b45309', dot: '#f59e0b' }, // amber-100, amber-700
+  orange: { bg: '#ffedd5', color: '#c2410c', dot: '#f97316' }, // orange-100, orange-700
+  green: { bg: '#dcfce7', color: '#15803d', dot: '#22c55e' }, // green-100, green-700
+  red: { bg: '#fee2e2', color: '#b91c1c', dot: '#ef4444' }, // red-100, red-700
+  pink: { bg: '#fce7f3', color: '#be185d', dot: '#ec4899' }, // pink-100, pink-700
+  blue: { bg: '#dbeafe', color: '#1d4ed8', dot: '#3b82f6' }, // blue-100, blue-700
+  purple: { bg: '#e0e7ff', color: '#4338ca', dot: '#6366f1' }, // indigo-100, indigo-700
 };
 
 const statusVariantMap = {

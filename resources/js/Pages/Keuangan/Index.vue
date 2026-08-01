@@ -1,271 +1,318 @@
 <template>
   <AuthenticatedLayout>
-    <template #header>
-      <PageHeader :title="pageTitle" :subtitle="subtitle">
-        <Link
-          v-if="activeTab === 'penjualan'"
-          :href="route('sales.create')"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer"
-          style="background: var(--accent-primary);"
-        >
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
-          Transaksi Penjualan Baru
-        </Link>
-        <button
-          v-if="activeTab === 'pengeluaran'"
-          @click="openExpenseModal()"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer"
-          style="background: var(--accent-primary);"
-        >
-          + Catat Pengeluaran Baru
-        </button>
-        <button
-          v-if="activeTab === 'pembelian'"
-          @click="openPurchaseDrawer()"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer"
-          style="background: var(--accent-primary);"
-        >
-          + Pembelian Baru
-        </button>
-        <button
-          v-if="activeTab === 'retur'"
-          @click="openReturnDrawer()"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer"
-          style="background: var(--accent-primary);"
-        >
-          + Retur Pembelian Baru
-        </button>
-      </PageHeader>
-    </template>
+    <div class="flex flex-col min-h-[calc(100vh-64px)] bg-zinc-50">
+      <!-- Header CRM Style -->
+      <div class="px-6 sm:px-8 py-6 bg-white border-b border-zinc-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 sticky top-0 z-20">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center border border-blue-100">
+                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold text-zinc-900 tracking-tight">{{ pageTitle }}</h1>
+                <p class="text-sm text-zinc-500 font-medium mt-0.5">{{ subtitle }}</p>
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap items-center gap-2">
+          <Link v-if="activeTab === 'penjualan'" :href="route('sales.create')" class="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            Transaksi Baru
+          </Link>
 
-    <TabPage :tabs="tabs" v-model="activeTab" @update:model-value="switchTab">
+          <button v-if="activeTab === 'pengeluaran'" @click="openExpenseModal()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            Catat Pengeluaran
+          </button>
+
+          <button v-if="activeTab === 'pembelian'" @click="openPurchaseDrawer()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            Pembelian Stok
+          </button>
+
+          <button v-if="activeTab === 'retur'" @click="openReturnDrawer()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3m9 14V5a2 2 0 00-2-2H6a2 2 0 00-2 2v16l4-2 4 2 4-2 4 2z"/></svg>
+            Retur Baru
+          </button>
+        </div>
+      </div>
+
+      <div class="flex-1 p-6 sm:p-8 max-w-[1400px] mx-auto w-full">
+        <TabPage :tabs="tabs" v-model="activeTab" @update:model-value="switchTab">
       <!-- PENJUALAN -->
       <template #penjualan>
-        <div class="space-y-6">
+        <div class="space-y-6 mt-6">
           <Skeleton v-if="!sales" type="stat" :count="3" />
-          <div v-else class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <StatCard label="Servis Selesai" :value="salesStats?.completed ?? 0" color="green" icon="✓" />
-            <StatCard label="Draft" :value="salesStats?.draft ?? 0" color="yellow" icon="📝" />
-            <StatCard label="Lunas" :value="salesStats?.paid ?? 0" color="blue" icon="💰" />
+          <div v-else class="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm relative overflow-hidden group">
+                <div class="absolute right-0 top-0 w-24 h-24 bg-emerald-50 rounded-full blur-2xl -mr-8 -mt-8"></div>
+                <div class="relative z-10 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1">Servis Selesai</p>
+                        <h3 class="text-3xl font-black text-zinc-900">{{ salesStats?.completed ?? 0 }}</h3>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm relative overflow-hidden group">
+                <div class="absolute right-0 top-0 w-24 h-24 bg-amber-50 rounded-full blur-2xl -mr-8 -mt-8"></div>
+                <div class="relative z-10 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1">Draft & DP</p>
+                        <h3 class="text-3xl font-black text-zinc-900">{{ salesStats?.draft ?? 0 }}</h3>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm relative overflow-hidden group">
+                <div class="absolute right-0 top-0 w-24 h-24 bg-blue-50 rounded-full blur-2xl -mr-8 -mt-8"></div>
+                <div class="relative z-10 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1">Nota Lunas</p>
+                        <h3 class="text-3xl font-black text-zinc-900">{{ salesStats?.paid ?? 0 }}</h3>
+                    </div>
+                    <div class="w-12 h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                </div>
+            </div>
           </div>
 
-          <KCard title="Filter Penjualan">
-            <div class="flex flex-wrap items-center gap-3">
-              <select v-model="salesFilters.status" @change="applySalesFilter" class="text-xs font-semibold rounded-lg border px-3 py-2 bg-white text-gray-700 focus:ring-2 focus:ring-blue-200 focus:border-blue-500 focus:outline-none" style="border-color: var(--border-color);">
+          <div class="bg-white p-4 rounded-2xl border border-zinc-200 shadow-sm flex flex-wrap items-center gap-3">
+              <select v-model="salesFilters.status" @change="applySalesFilter" class="w-40 text-sm font-medium rounded-xl border border-zinc-300 px-4 py-2 bg-white text-zinc-700 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all">
                 <option value="">Semua Status</option>
                 <option value="lunas">Lunas</option>
                 <option value="draft">Draft</option>
                 <option value="dp">DP</option>
                 <option value="unpaid">Belum Bayar</option>
               </select>
-              <select v-model="salesFilters.sale_type" @change="applySalesFilter" class="text-xs font-semibold rounded-lg border px-3 py-2 bg-white text-gray-700 focus:ring-2 focus:ring-blue-200 focus:border-blue-500 focus:outline-none" style="border-color: var(--border-color);">
+              <select v-model="salesFilters.sale_type" @change="applySalesFilter" class="w-40 text-sm font-medium rounded-xl border border-zinc-300 px-4 py-2 bg-white text-zinc-700 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all">
                 <option value="">Semua Tipe</option>
                 <option value="service">Servis</option>
                 <option value="product">Produk</option>
               </select>
-              <div class="relative flex-1 min-w-[180px]">
+              <div class="relative flex-1 min-w-[200px]">
                 <input
                   type="text"
                   v-model="salesFilters.search"
                   @keyup.enter="applySalesFilter"
-                  placeholder="Cari pelanggan..."
-                  class="w-full rounded-lg border text-xs px-3 py-2 pl-8 focus:ring-2 focus:outline-none bg-white text-gray-700 focus:border-blue-500 focus:ring-blue-200 transition-all"
-                  style="border-color: var(--border-color);"
+                  placeholder="Cari nama pelanggan..."
+                  class="w-full rounded-xl border border-zinc-300 px-4 py-2 pl-10 text-sm bg-white text-zinc-700 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all"
                 />
-                <svg class="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <svg class="absolute left-3.5 top-2.5 w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
               </div>
-              <button @click="resetSalesFilter" class="px-3 py-2 rounded-lg text-xs font-semibold border border-gray-200 text-gray-500 hover:bg-gray-100 transition-all bg-white">
-                ↺ Reset
+              <button @click="resetSalesFilter" class="px-4 py-2 rounded-xl text-sm font-semibold border border-zinc-200 text-zinc-600 hover:bg-zinc-50 transition-all bg-white shadow-sm">
+                Reset
               </button>
+          </div>
+
+          <div class="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden">
+            <KTable
+              :columns="salesColumns"
+              :rows="sales?.data ?? []"
+              :emptyTitle="'Belum ada data penjualan'"
+              :emptyDescription="'Transaksi baru akan dicatat di sini.'"
+              :emptyActionLabel="'+ Transaksi Penjualan Baru'"
+              @empty-action="router.visit(route('sales.create'))"
+            >
+              <template #cell-id="{ row }">
+                <span class="font-mono text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-md">#{{ row.id }}</span>
+              </template>
+              <template #cell-customer="{ row }">
+                <div class="flex items-center gap-3 py-1">
+                  <div class="w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center text-zinc-600 font-bold text-xs shrink-0">
+                    {{ (row.customer?.name ?? 'U').charAt(0).toUpperCase() }}
+                  </div>
+                  <span class="font-bold text-zinc-900">{{ row.customer?.name ?? 'Pelanggan Umum' }}</span>
+                </div>
+              </template>
+              <template #cell-total="{ row }">
+                <span class="font-bold text-zinc-900">Rp {{ formatNumber(row.total) }}</span>
+              </template>
+              <template #cell-status="{ row }">
+                <Badge :status="row.status">{{ row.status }}</Badge>
+              </template>
+              <template #cell-created_at="{ row }">
+                <span class="text-zinc-500">{{ formatDate(row.created_at) }}</span>
+              </template>
+              <template #cell-action="{ row }">
+                <div class="flex items-center justify-end gap-2">
+                  <button v-if="row.status === 'draft'" @click="payDraft(row)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 text-white hover:bg-emerald-700 transition-all shadow-sm">Bayar</button>
+                  <Link :href="route('sales.show', row.id)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 transition-all">Detail</Link>
+                  <a :href="route('sales.print', row.id)" target="_blank" class="p-1.5 rounded-lg text-zinc-400 hover:bg-zinc-50 hover:text-zinc-600 transition-all" title="Cetak Nota">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+                  </a>
+                </div>
+              </template>
+            </KTable>
+            <div class="p-4 border-t border-zinc-200 bg-zinc-50/50">
+              <Pagination :meta="sales" />
             </div>
-          </KCard>
-
-          <KTable
-            :columns="salesColumns"
-            :rows="sales?.data ?? []"
-            :emptyTitle="'Belum ada data penjualan'"
-            :emptyDescription="'Data penjualan akan muncul setelah ada transaksi.'"
-            :emptyActionLabel="'+ Transaksi Penjualan Baru'"
-            @empty-action="router.visit(route('sales.create'))"
-          >
-            <template #cell-id="{ row }">
-              <span class="font-mono text-xs font-bold" style="color: var(--accent-primary);">#{{ row.id }}</span>
-            </template>
-            <template #cell-customer="{ row }">
-              <span class="font-medium">{{ row.customer?.name ?? '-' }}</span>
-            </template>
-            <template #cell-total="{ row }">
-              <span class="font-bold">Rp {{ formatNumber(row.total) }}</span>
-            </template>
-            <template #cell-status="{ row }">
-              <Badge :status="row.status">{{ row.status }}</Badge>
-            </template>
-            <template #cell-created_at="{ row }">
-              {{ formatDate(row.created_at) }}
-            </template>
-            <template #cell-action="{ row }">
-              <div class="flex items-center justify-end gap-1">
-                <Link :href="route('sales.show', row.id)" class="px-2 py-1 rounded text-xs font-semibold text-blue-600 border border-blue-200 hover:bg-blue-50">Detail</Link>
-                <a :href="route('sales.print', row.id)" target="_blank" class="px-2 py-1 rounded text-xs font-semibold text-gray-700 border border-gray-200 hover:bg-gray-50">Cetak Nota</a>
-                <button v-if="row.status === 'draft'" @click="payDraft(row)" class="px-2 py-1 rounded text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700">Bayar Draft</button>
-              </div>
-            </template>
-          </KTable>
-
-          <Pagination :meta="sales" />
+          </div>
         </div>
       </template>
 
       <!-- PENGELUARAN -->
       <template #pengeluaran>
-        <div class="space-y-6">
+        <div class="space-y-6 mt-6">
           <Skeleton v-if="!expenses" type="table" :count="5" />
           <template v-else>
-            <KCard title="Filter Pengeluaran">
-              <div class="flex flex-wrap items-center gap-3">
-                <select v-model="expenseFilters.category_id" @change="applyExpenseFilter" class="text-xs font-semibold rounded-lg border px-3 py-2 bg-white text-gray-700 focus:ring-2 focus:ring-blue-200 focus:border-blue-500 focus:outline-none" style="border-color: var(--border-color);">
+            <div class="bg-white p-4 rounded-2xl border border-zinc-200 shadow-sm flex flex-wrap items-center gap-3">
+                <select v-model="expenseFilters.category_id" @change="applyExpenseFilter" class="w-48 text-sm font-medium rounded-xl border border-zinc-300 px-4 py-2 bg-white text-zinc-700 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all">
                   <option value="">Semua Kategori</option>
                   <option v-for="cat in expenseCategories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
                 </select>
-                <div class="relative flex-1 min-w-[180px]">
+                <div class="relative flex-1 min-w-[200px]">
                   <input
                     type="text"
                     v-model="expenseFilters.search"
                     @keyup.enter="applyExpenseFilter"
-                    placeholder="Cari deskripsi..."
-                    class="w-full rounded-lg border text-xs px-3 py-2 pl-8 focus:ring-2 focus:outline-none bg-white text-gray-700 focus:border-blue-500 focus:ring-blue-200 transition-all"
-                    style="border-color: var(--border-color);"
+                    placeholder="Cari deskripsi pengeluaran..."
+                    class="w-full rounded-xl border border-zinc-300 px-4 py-2 pl-10 text-sm bg-white text-zinc-700 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all"
                   />
-                  <svg class="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                  <svg class="absolute left-3.5 top-2.5 w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                 </div>
-                <button @click="resetExpenseFilter" class="px-3 py-2 rounded-lg text-xs font-semibold border border-gray-200 text-gray-500 hover:bg-gray-100 transition-all bg-white">
-                  ↺ Reset
+                <button @click="resetExpenseFilter" class="px-4 py-2 rounded-xl text-sm font-semibold border border-zinc-200 text-zinc-600 hover:bg-zinc-50 transition-all bg-white shadow-sm">
+                  Reset
                 </button>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden">
+              <KTable
+                :columns="expenseColumns"
+                :rows="expenses?.data ?? []"
+                :emptyTitle="'Belum ada pengeluaran'"
+                :emptyDescription="'Data pengeluaran operasional toko akan muncul setelah ditambahkan.'"
+                :emptyActionLabel="'+ Catat Pengeluaran Baru'"
+                @empty-action="openExpenseModal()"
+              >
+                <template #cell-description="{ row }">
+                  <span class="font-bold text-zinc-900">{{ row.description }}</span>
+                </template>
+                <template #cell-amount="{ row }">
+                  <span class="font-bold text-red-600">Rp {{ formatNumber(row.amount) }}</span>
+                </template>
+                <template #cell-category="{ row }">
+                  <Badge variant="purple">{{ row.category?.name ?? '-' }}</Badge>
+                </template>
+                <template #cell-expense_date="{ row }">
+                  <span class="text-zinc-500">{{ formatDate(row.expense_date) }}</span>
+                </template>
+              </KTable>
+              <div class="p-4 border-t border-zinc-200 bg-zinc-50/50">
+                <Pagination :meta="expenses" />
               </div>
-            </KCard>
-
-            <KTable
-              :columns="expenseColumns"
-              :rows="expenses?.data ?? []"
-              :emptyTitle="'Belum ada data pengeluaran'"
-              :emptyDescription="'Data pengeluaran operasional toko akan muncul setelah ditambahkan.'"
-              :emptyActionLabel="'+ Catat Pengeluaran Baru'"
-              @empty-action="openExpenseModal()"
-            >
-              <template #cell-description="{ row }">
-                <span class="font-medium">{{ row.description }}</span>
-              </template>
-              <template #cell-amount="{ row }">
-                <span class="font-bold text-red-600">Rp {{ formatNumber(row.amount) }}</span>
-              </template>
-              <template #cell-category="{ row }">
-                <Badge variant="purple">{{ row.category?.name ?? '-' }}</Badge>
-              </template>
-              <template #cell-expense_date="{ row }">
-                {{ formatDate(row.expense_date) }}
-              </template>
-            </KTable>
-
-            <Pagination :meta="expenses" />
+            </div>
           </template>
         </div>
       </template>
 
       <!-- PEMBELIAN STOK -->
       <template #pembelian>
-        <div class="space-y-6">
+        <div class="space-y-6 mt-6">
           <Skeleton v-if="!purchases" type="table" :count="5" />
-          <KTable
-            v-else
-            :columns="purchaseColumns"
-            :rows="purchases?.data ?? []"
-            :emptyTitle="'Belum ada data pembelian'"
-            :emptyDescription="'Data pembelian dari supplier akan muncul di sini.'"
-            :emptyActionLabel="'+ Buat Pembelian Stok Baru'"
-            @empty-action="openPurchaseDrawer()"
-          >
-            <template #cell-reference_number="{ row }">
-              <span class="font-mono text-xs font-bold" style="color: var(--accent-primary);">{{ row.reference_number ?? '-' }}</span>
-            </template>
-            <template #cell-supplier_name="{ row }">
-              {{ row.supplier?.name ?? '-' }}
-            </template>
-            <template #cell-total="{ row }">
-              <span class="font-bold">Rp {{ formatNumber(row.total) }}</span>
-            </template>
-            <template #cell-type="{ row }">
-              <Badge :variant="row.type === 'cash' ? 'green' : 'purple'">{{ row.type === 'cash' ? 'Cash' : 'PO' }}</Badge>
-            </template>
-            <template #cell-created_at="{ row }">
-              {{ formatDate(row.created_at) }}
-            </template>
-            <template #cell-action="{ row }">
-              <button @click="openPurchaseDetail(row)" class="px-2.5 py-1 rounded text-xs font-semibold text-blue-600 border border-blue-200 hover:bg-blue-50">Detail</button>
-            </template>
-          </KTable>
-
-          <Pagination :meta="purchases" />
+          <div v-else class="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden">
+            <KTable
+              :columns="purchaseColumns"
+              :rows="purchases?.data ?? []"
+              :emptyTitle="'Belum ada pembelian stok'"
+              :emptyDescription="'Data pembelian dari supplier akan muncul di sini.'"
+              :emptyActionLabel="'+ Buat Pembelian Stok Baru'"
+              @empty-action="openPurchaseDrawer()"
+            >
+              <template #cell-reference_number="{ row }">
+                <span class="font-mono text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-md">{{ row.reference_number ?? '-' }}</span>
+              </template>
+              <template #cell-supplier_name="{ row }">
+                <span class="font-bold text-zinc-900">{{ row.supplier?.name ?? '-' }}</span>
+              </template>
+              <template #cell-total="{ row }">
+                <span class="font-bold text-zinc-900">Rp {{ formatNumber(row.total) }}</span>
+              </template>
+              <template #cell-type="{ row }">
+                <Badge :variant="row.type === 'cash' ? 'green' : 'purple'">{{ row.type === 'cash' ? 'Cash' : 'PO' }}</Badge>
+              </template>
+              <template #cell-created_at="{ row }">
+                <span class="text-zinc-500">{{ formatDate(row.created_at) }}</span>
+              </template>
+              <template #cell-action="{ row }">
+                <button @click="openPurchaseDetail(row)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 transition-all shadow-sm">Detail</button>
+              </template>
+            </KTable>
+            <div class="p-4 border-t border-zinc-200 bg-zinc-50/50">
+              <Pagination :meta="purchases" />
+            </div>
+          </div>
         </div>
       </template>
 
       <!-- RETUR PEMBELIAN -->
       <template #retur>
-        <div class="space-y-6">
+        <div class="space-y-6 mt-6">
           <Skeleton v-if="!returns" type="table" :count="5" />
-          <KTable
-            v-else
-            :columns="returnColumns"
-            :rows="returns?.data ?? []"
-            :emptyTitle="'Belum ada data retur pembelian'"
-            :emptyDescription="'Data pengembalian barang ke supplier akan muncul di sini.'"
-            :emptyActionLabel="'+ Retur Pembelian Baru'"
-            @empty-action="openReturnDrawer()"
-          >
-            <template #cell-reason="{ row }">
-              <span class="font-medium">{{ row.reason ?? '-' }}</span>
-            </template>
-            <template #cell-status="{ row }">
-              <Badge :status="row.status">{{ row.status }}</Badge>
-            </template>
-            <template #cell-created_at="{ row }">
-              {{ formatDate(row.created_at) }}
-            </template>
-            <template #cell-action="{ row }">
-              <select @change="updateReturnStatus(row, $event.target.value)" class="text-xs py-1 px-2 rounded border font-semibold bg-white" style="borderColor: var(--border-color);">
-                <option disabled selected>Ubah Status</option>
-                <option value="dikirim">Dikirim</option>
-                <option value="diproses_supplier">Diproses Supplier</option>
-                <option value="selesai">Selesai</option>
-                <option value="ditolak">Ditolak</option>
-              </select>
-            </template>
-          </KTable>
-
-          <Pagination :meta="returns" />
+          <div v-else class="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden">
+            <KTable
+              :columns="returnColumns"
+              :rows="returns?.data ?? []"
+              :emptyTitle="'Belum ada data retur'"
+              :emptyDescription="'Data pengembalian barang ke supplier akan muncul di sini.'"
+              :emptyActionLabel="'+ Retur Pembelian Baru'"
+              @empty-action="openReturnDrawer()"
+            >
+              <template #cell-reason="{ row }">
+                <span class="font-bold text-zinc-900">{{ row.reason ?? '-' }}</span>
+              </template>
+              <template #cell-status="{ row }">
+                <Badge :status="row.status">{{ row.status }}</Badge>
+              </template>
+              <template #cell-created_at="{ row }">
+                <span class="text-zinc-500">{{ formatDate(row.created_at) }}</span>
+              </template>
+              <template #cell-action="{ row }">
+                <select @change="updateReturnStatus(row, $event.target.value)" class="text-xs py-1.5 px-3 rounded-lg border border-zinc-300 font-semibold bg-white text-zinc-700 outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500">
+                  <option disabled selected>Ubah Status</option>
+                  <option value="dikirim">Dikirim</option>
+                  <option value="diproses_supplier">Diproses Supplier</option>
+                  <option value="selesai">Selesai</option>
+                  <option value="ditolak">Ditolak</option>
+                </select>
+              </template>
+            </KTable>
+            <div class="p-4 border-t border-zinc-200 bg-zinc-50/50">
+              <Pagination :meta="returns" />
+            </div>
+          </div>
         </div>
       </template>
     </TabPage>
+    </div>
 
     <!-- DRAWER TAMBAH PENGELUARAN -->
     <Drawer :open="showExpenseDrawer" title="Catat Pengeluaran Operasional Baru" @close="showExpenseDrawer = false" width="450px">
       <form @submit.prevent="submitExpense" class="space-y-4">
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Deskripsi Pengeluaran *</label>
+          <label class="text-xs font-semibold text-zinc-500">Deskripsi Pengeluaran *</label>
           <input v-model="expenseForm.description" required placeholder="e.g. Bayar Listrik / Beli Kertas Thermal" class="input text-sm" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Jumlah Nominal (Rp) *</label>
+          <label class="text-xs font-semibold text-zinc-500">Jumlah Nominal (Rp) *</label>
           <input v-model="expenseForm.amount" type="number" min="100" required placeholder="0" class="input text-sm" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Kategori *</label>
+          <label class="text-xs font-semibold text-zinc-500">Kategori *</label>
           <select v-model="expenseForm.category_id" required class="input text-sm">
             <option value="" disabled>-- Pilih Kategori --</option>
             <option v-for="cat in expenseCategories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
           </select>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Tanggal Pengeluaran *</label>
+          <label class="text-xs font-semibold text-zinc-500">Tanggal Pengeluaran *</label>
           <input v-model="expenseForm.expense_date" type="date" required class="input text-sm" />
         </div>
         <div class="flex justify-end gap-2 pt-3">
@@ -282,14 +329,14 @@
       <form @submit.prevent="submitPurchase" class="space-y-4">
         <div class="grid grid-cols-2 gap-3">
           <div class="space-y-1">
-            <label class="text-xs font-semibold" style="color: var(--text-muted);">Tipe *</label>
+            <label class="text-xs font-semibold text-zinc-500">Tipe *</label>
             <select v-model="purchaseForm.type" required class="input text-sm">
               <option value="po">PO (Purchase Order)</option>
               <option value="cash">Cash Langsung</option>
             </select>
           </div>
           <div class="space-y-1">
-            <label class="text-xs font-semibold" style="color: var(--text-muted);">Supplier</label>
+            <label class="text-xs font-semibold text-zinc-500">Supplier</label>
             <select v-model="purchaseForm.supplier_id" class="input text-sm">
               <option value="">-- Pilih / Kosongkan --</option>
               <option v-for="s in suppliers" :key="s.id" :value="s.id">{{ s.name }}</option>
@@ -297,12 +344,12 @@
           </div>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Nama Supplier Baru (jika tidak ada di daftar)</label>
+          <label class="text-xs font-semibold text-zinc-500">Nama Supplier Baru (jika tidak ada di daftar)</label>
           <input v-model="purchaseForm.supplier_name" type="text" class="input text-sm" placeholder="e.g. PT Sumber Jaya" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Item Pembelian *</label>
-          <div v-for="(item, i) in purchaseForm.items" :key="i" class="space-y-2 rounded-lg border p-3" style="border-color: var(--border-color);">
+          <label class="text-xs font-semibold text-zinc-500">Item Pembelian *</label>
+          <div v-for="(item, i) in purchaseForm.items" :key="i" class="space-y-2 rounded-lg border p-3 border-zinc-200">
             <div class="grid grid-cols-2 gap-2">
               <div class="col-span-2">
                 <select v-model="item.product_id" required class="input text-sm">
@@ -318,7 +365,7 @@
           <button type="button" @click="addPurchaseItem" class="text-xs font-bold text-blue-600 hover:underline mt-1">+ Tambah item</button>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Catatan</label>
+          <label class="text-xs font-semibold text-zinc-500">Catatan</label>
           <textarea v-model="purchaseForm.note" rows="2" class="input text-sm" placeholder="Catatan pembelian..."></textarea>
         </div>
         <div class="flex justify-end gap-2 pt-3">
@@ -335,40 +382,40 @@
       <div v-if="selectedPurchase" class="space-y-4">
         <div class="grid grid-cols-2 gap-3">
           <div class="space-y-1">
-            <label class="text-xs font-semibold" style="color: var(--text-muted);">No. Referensi</label>
-            <div class="text-sm font-bold font-mono" style="color: var(--accent-primary);">{{ selectedPurchase.reference_number }}</div>
+            <label class="text-xs font-semibold text-zinc-500">No. Referensi</label>
+            <div class="text-sm font-bold font-mono text-indigo-600">{{ selectedPurchase.reference_number }}</div>
           </div>
           <div class="space-y-1">
-            <label class="text-xs font-semibold" style="color: var(--text-muted);">Supplier</label>
+            <label class="text-xs font-semibold text-zinc-500">Supplier</label>
             <div class="text-sm">{{ selectedPurchase.supplier?.name ?? '-' }}</div>
           </div>
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div class="space-y-1">
-            <label class="text-xs font-semibold" style="color: var(--text-muted);">Tipe</label>
+            <label class="text-xs font-semibold text-zinc-500">Tipe</label>
             <Badge :variant="selectedPurchase.type === 'cash' ? 'green' : 'purple'">{{ selectedPurchase.type === 'cash' ? 'Cash' : 'PO' }}</Badge>
           </div>
           <div class="space-y-1">
-            <label class="text-xs font-semibold" style="color: var(--text-muted);">Tanggal</label>
+            <label class="text-xs font-semibold text-zinc-500">Tanggal</label>
             <div class="text-sm">{{ formatDate(selectedPurchase.created_at) }}</div>
           </div>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Item</label>
-          <div class="rounded-lg border divide-y" style="border-color: var(--border-color);">
+          <label class="text-xs font-semibold text-zinc-500">Item</label>
+          <div class="rounded-lg border divide-y border-zinc-200">
             <div v-for="it in (selectedPurchase.items ?? [])" :key="it.id" class="flex items-center justify-between px-3 py-2 text-sm">
-              <span>{{ it.product?.name ?? '-' }} <span class="text-xs" style="color: var(--text-muted);">x{{ it.quantity }}</span></span>
+              <span>{{ it.product?.name ?? '-' }} <span class="text-xs text-zinc-500">x{{ it.quantity }}</span></span>
               <span class="font-semibold">Rp {{ formatNumber(it.unit_price ?? 0) }}</span>
             </div>
-            <div v-if="!(selectedPurchase.items ?? []).length" class="px-3 py-2 text-xs" style="color: var(--text-muted);">Tidak ada item.</div>
+            <div v-if="!(selectedPurchase.items ?? []).length" class="px-3 py-2 text-xs text-zinc-500">Tidak ada item.</div>
           </div>
         </div>
-        <div class="flex items-center justify-between border-t pt-3" style="border-color: var(--border-color);">
-          <span class="text-xs font-semibold" style="color: var(--text-muted);">Total</span>
+        <div class="flex items-center justify-between border-t pt-3 border-zinc-200">
+          <span class="text-xs font-semibold text-zinc-500">Total</span>
           <span class="text-lg font-bold">Rp {{ formatNumber(selectedPurchase.total) }}</span>
         </div>
         <div class="space-y-1" v-if="selectedPurchase.note">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Catatan</label>
+          <label class="text-xs font-semibold text-zinc-500">Catatan</label>
           <div class="text-sm">{{ selectedPurchase.note }}</div>
         </div>
       </div>
@@ -379,14 +426,14 @@
       <form @submit.prevent="submitReturn" class="space-y-4">
         <div class="grid grid-cols-2 gap-3">
           <div class="space-y-1">
-            <label class="text-xs font-semibold" style="color: var(--text-muted);">Supplier *</label>
+            <label class="text-xs font-semibold text-zinc-500">Supplier *</label>
             <select v-model="returnForm.supplier_id" required class="input text-sm">
               <option value="" disabled>-- Pilih Supplier --</option>
               <option v-for="s in suppliers" :key="s.id" :value="s.id">{{ s.name }}</option>
             </select>
           </div>
           <div class="space-y-1">
-            <label class="text-xs font-semibold" style="color: var(--text-muted);">Referensi Pembelian</label>
+            <label class="text-xs font-semibold text-zinc-500">Referensi Pembelian</label>
             <select v-model="returnForm.purchase_id" class="input text-sm">
               <option value="">-- Pilih / Kosongkan --</option>
               <option v-for="p in (purchases?.data ?? [])" :key="p.id" :value="p.id">{{ p.reference_number }} ({{ p.supplier?.name ?? '-' }})</option>
@@ -394,12 +441,12 @@
           </div>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Alasan Retur</label>
+          <label class="text-xs font-semibold text-zinc-500">Alasan Retur</label>
           <input v-model="returnForm.reason" type="text" class="input text-sm" placeholder="e.g. Barang rusak / salah kirim" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Item Retur *</label>
-          <div v-for="(item, i) in returnForm.items" :key="i" class="space-y-2 rounded-lg border p-3" style="border-color: var(--border-color);">
+          <label class="text-xs font-semibold text-zinc-500">Item Retur *</label>
+          <div v-for="(item, i) in returnForm.items" :key="i" class="space-y-2 rounded-lg border p-3 border-zinc-200">
             <div class="grid grid-cols-2 gap-2">
               <div class="col-span-2">
                 <select v-model="item.product_id" required class="input text-sm">
@@ -430,6 +477,7 @@
         </div>
       </form>
     </Drawer>
+    </div>
   </AuthenticatedLayout>
 </template>
 

@@ -7,6 +7,7 @@ use App\Models\Tenant\Product;
 use App\Models\Tenant\InventoryMutation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 /** @deprecated Use consolidated controller instead. See FinanceController, CashController, InventarisController, ServiceToolsController, SystemController, DocumentController, SettingController. */
 class ProductController extends Controller
@@ -53,6 +54,7 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $this->authorize('update', $product);
+        $this->ensureProductBranchAccess($product);
         $validated = $request->validate([
             'code' => 'nullable|string|max:50|unique:products,code,' . $product->id,
             'name' => 'required|string|max:255',
@@ -71,6 +73,7 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         $this->authorize('delete', $product);
+        $this->ensureProductBranchAccess($product);
         $product->delete();
         return redirect()->route('products.index')->with('success', 'Produk berhasil dihapus.');
     }
@@ -82,6 +85,7 @@ class ProductController extends Controller
     public function quickStock(Request $request, Product $product)
     {
         $this->authorize('quickStock', $product);
+        $this->ensureProductBranchAccess($product);
         $user = auth()->user();
 
         $validated = $request->validate([
@@ -108,5 +112,20 @@ class ProductController extends Controller
         }
 
         return back()->with('success', 'Stok berhasil diperbarui.');
+    }
+
+    private function ensureProductBranchAccess(Product $product): void
+    {
+        $userBranchId = auth()->user()?->branch_id;
+
+        if (!$userBranchId || !$product->branch_id) {
+            return;
+        }
+
+        if ((string) $product->branch_id !== (string) $userBranchId) {
+            throw ValidationException::withMessages([
+                'product' => 'Produk tidak berada pada cabang aktif Anda.',
+            ]);
+        }
     }
 }

@@ -8,17 +8,35 @@ use App\Models\Tenant\Customer;
 use App\Models\Tenant\ChecklistTemplate;
 use App\Models\Tenant\Product;
 use App\Models\Tenant\MasterData;
+use App\Models\Tenant\User;
 use App\Services\GoogleDrivePhotoService;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
+
 class ServiceController extends Controller
 {
     public function index(Request $request)
     {
         $this->authorize('viewAny', Service::class);
-        $query = Service::with(['customer', 'technician', 'creator', 'branch']);
+        $user = auth()->user();
+        $userBranchId = $user?->branch_id;
+        $restrictToTodayCompletedTransactions = $this->shouldRestrictToTodayCompletedTransactions($user);
 
-        if ($request->filled('status')) $query->where('status', $request->status);
-        else $query->where('status', '!=', Service::STATUS_SELESAI);
+        $query = Service::with(['customer', 'technician', 'creator', 'branch']);
+        $this->applyServiceBranchScope($query, $userBranchId);
+        $assignableUsersQuery = $this->buildAssignableUsersQuery($user);
+
+        $statsBaseQuery = fn () => $this->applyServiceBranchScope(Service::query(), $userBranchId);
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+
+            if ($restrictToTodayCompletedTransactions && $this->isCompletedStatus($request->status)) {
+                $query->whereDate('updated_at', today());
+            }
+        } else {
+            $query->where('status', '!=', Service::STATUS_SELESAI);
+        }
 
         if ($request->filled('search')) {
             $search = $request->search;
@@ -29,28 +47,74 @@ class ServiceController extends Controller
 
         return inertia('Services/Index', [
             'services' => $query->latest()->paginate(15),
-            'stats' => [
-                'all' => Service::where('status', '!=', Service::STATUS_SELESAI)->count(),
-                Service::STATUS_MENUNGGU_ALOKASI => Service::where('status', Service::STATUS_MENUNGGU_ALOKASI)->count(),
-                Service::STATUS_DIKERJAKAN => Service::whereIn('status', [Service::STATUS_DITERIMA, Service::STATUS_DIKERJAKAN])->count(),
-                Service::STATUS_INDENT => Service::where('status', Service::STATUS_INDENT)->count(),
-                Service::STATUS_ONPARTNER => Service::where('status', Service::STATUS_ONPARTNER)->count(),
-                Service::STATUS_SIAP_DIAMBIL => Service::where('status', Service::STATUS_SIAP_DIAMBIL)->count(),
-                Service::STATUS_SELESAI => Service::where('status', Service::STATUS_SELESAI)->count(),
-                'cancel' => Service::whereIn('status', [Service::STATUS_CANCEL, Service::STATUS_VOID, Service::STATUS_CLOSE])->count(),
-            ],
+            'users' => $assignableUsersQuery->get(),
+            'stats' => $restrictToTodayCompletedTransactions
+                ? [
+                    'all' => $statsBaseQuery()->where('status', '!=', Service::STATUS_SELESAI)->count(),
+                    Service::STATUS_MENUNGGU_ALOKASI => $statsBaseQuery()->where('status', Service::STATUS_MENUNGGU_ALOKASI)->count(),
+                    Service::STATUS_DIKERJAKAN => $statsBaseQuery()->whereIn('status', [Service::STATUS_DITERIMA, Service::STATUS_DIKERJAKAN])->count(),
+                    Service::STATUS_INDENT => $statsBaseQuery()->where('status', Service::STATUS_INDENT)->count(),
+                    Service::STATUS_ONPARTNER => $statsBaseQuery()->where('status', Service::STATUS_ONPARTNER)->count(),
+                    Service::STATUS_SIAP_DIAMBIL => $statsBaseQuery()->where('status', Service::STATUS_SIAP_DIAMBIL)->count(),
+                    Service::STATUS_SELESAI => $statsBaseQuery()->where('status', Service::STATUS_SELESAI)->whereDate('updated_at', today())->count(),
+                    'cancel' => $statsBaseQuery()->whereIn('status', [Service::STATUS_CANCEL, Service::STATUS_VOID, Service::STATUS_CLOSE])->whereDate('updated_at', today())->count(),
+                ]
+                : [
+                    'all' => $statsBaseQuery()->where('status', '!=', Service::STATUS_SELESAI)->count(),
+                    Service::STATUS_MENUNGGU_ALOKASI => $statsBaseQuery()->where('status', Service::STATUS_MENUNGGU_ALOKASI)->count(),
+                    Service::STATUS_DIKERJAKAN => $statsBaseQuery()->whereIn('status', [Service::STATUS_DITERIMA, Service::STATUS_DIKERJAKAN])->count(),
+                    Service::STATUS_INDENT => $statsBaseQuery()->where('status', Service::STATUS_INDENT)->count(),
+                    Service::STATUS_ONPARTNER => $statsBaseQuery()->where('status', Service::STATUS_ONPARTNER)->count(),
+                    Service::STATUS_SIAP_DIAMBIL => $statsBaseQuery()->where('status', Service::STATUS_SIAP_DIAMBIL)->count(),
+                    Service::STATUS_SELESAI => $statsBaseQuery()->where('status', Service::STATUS_SELESAI)->count(),
+                    'cancel' => $statsBaseQuery()->whereIn('status', [Service::STATUS_CANCEL, Service::STATUS_VOID, Service::STATUS_CLOSE])->count(),
+                ],
             'filters' => $request->only(['status', 'search', 'date_from', 'date_to']),
         ]);
+    }
+
+    private function shouldRestrictToTodayCompletedTransactions($user): bool
+    {
+        if (!$user) {
+            return false;
+        }
+
+        if (in_array($user->role, ['cs', 'cashier'], true)) {
+            return true;
+        }
+
+        if ($user->role !== 'custom') {
+            return false;
+        }
+
+        $customRole = strtolower(trim((string) ($user->custom_role ?? '')));
+        $customRole = preg_replace('/[_\-\s]+/', ' ', $customRole);
+
+        return in_array($customRole, ['admin harian'], true);
+    }
+
+    private function isCompletedStatus(?string $status): bool
+    {
+        return in_array((string) $status, [Service::STATUS_SELESAI, Service::STATUS_CLOSE], true);
     }
 
     public function create()
     {
         $this->authorize('create', Service::class);
+        $userBranchId = auth()->user()?->branch_id;
+
         $driveService = new GoogleDrivePhotoService(tenancy()->tenant->id);
+
+        $customersQuery = Customer::query()->orderBy('name');
+        $productsQuery = Product::query()->where('stock_quantity', '>', 0);
+
+        $this->applyBranchOrGlobalScope($customersQuery, $userBranchId);
+        $this->applyBranchOrGlobalScope($productsQuery, $userBranchId);
+
         return inertia('Services/Create', [
-            'customers' => Customer::orderBy('name')->get(),
+            'customers' => $customersQuery->get(),
             'templates' => ChecklistTemplate::where('type', 'masuk')->where('is_active', true)->with('items')->get(),
-            'products' => Product::where('stock_quantity', '>', 0)->get(),
+            'products' => $productsQuery->get(),
             'deviceCategories' => MasterData::getByCategory('device_category'),
             'brands' => MasterData::getByCategory('brand'),
             'arrivalMethods' => MasterData::getByCategory('arrival_method'),
@@ -64,16 +128,32 @@ class ServiceController extends Controller
     public function show(Service $service)
     {
         $this->authorize('view', $service);
+        $this->ensureServiceBranchAccess($service, auth()->user()?->branch_id);
+
+        $userBranchId = auth()->user()?->branch_id;
+
+        $productsQuery = Product::query()->where('stock_quantity', '>', 0);
+        $usersQuery = $this->buildAssignableUsersQuery(auth()->user());
+        $previousServicesQuery = Service::with('customer')
+            ->where('status', Service::STATUS_SELESAI)
+            ->where('payment_status', 'paid')
+            ->where('id', '!=', $service->id)
+            ->latest()
+            ->take(10);
+
+        $this->applyBranchOrGlobalScope($productsQuery, $userBranchId);
+        $this->applyServiceBranchScope($previousServicesQuery, $userBranchId);
+
         $service->load(['customer', 'technician', 'creator', 'branch', 'checklists.checklistTemplate.items', 'spareparts.product', 'indent', 'sale.items', 'parentService', 'jalurKedatangan', 'kategoriPerangkat', 'merek', 'photos.uploader', 'warrantyClaims']);
 
         return inertia('Services/Show', [
             'service' => $service,
             'templatesKeluar' => ChecklistTemplate::where('type', 'keluar')->where('is_active', true)->with('items')->get(),
             'templatesMasuk' => ChecklistTemplate::where('type', 'masuk')->where('is_active', true)->with('items')->get(),
-            'products' => Product::where('stock_quantity', '>', 0)->get(),
-            'users' => \App\Models\Tenant\User::select('id', 'name', 'role', 'active')->where('active', true)->orderBy('name')->get(),
+            'products' => $productsQuery->get(),
+            'users' => $usersQuery->get(),
             'previousServices' => $service->customer_id
-                ? Service::with('customer')->where('customer_id', $service->customer_id)->where('status', Service::STATUS_SELESAI)->where('payment_status', 'paid')->where('id', '!=', $service->id)->latest()->take(10)->get()
+                ? $previousServicesQuery->where('customer_id', $service->customer_id)->get()
                 : [],
             'driveConnected' => (new GoogleDrivePhotoService(tenancy()->tenant->id))->isConnected(),
         ]);
@@ -82,13 +162,23 @@ class ServiceController extends Controller
     public function edit(Service $service)
     {
         $this->authorize('update', $service);
+        $this->ensureServiceBranchAccess($service, auth()->user()?->branch_id);
+
+        $userBranchId = auth()->user()?->branch_id;
+
+        $customersQuery = Customer::query()->orderBy('name');
+        $productsQuery = Product::query()->where('stock_quantity', '>', 0);
+
+        $this->applyBranchOrGlobalScope($customersQuery, $userBranchId);
+        $this->applyBranchOrGlobalScope($productsQuery, $userBranchId);
+
         $service->load(['customer', 'checklists.checklistTemplate.items', 'spareparts.product']);
         $driveService = new GoogleDrivePhotoService(tenancy()->tenant->id);
         return inertia('Services/Edit', [
             'service' => $service,
-            'customers' => Customer::orderBy('name')->get(),
+            'customers' => $customersQuery->get(),
             'templates' => ChecklistTemplate::where('type', 'masuk')->where('is_active', true)->with('items')->get(),
-            'products' => Product::where('stock_quantity', '>', 0)->get(),
+            'products' => $productsQuery->get(),
             'deviceCategories' => MasterData::getByCategory('device_category'),
             'brands' => MasterData::getByCategory('brand'),
             'arrivalMethods' => MasterData::getByCategory('arrival_method'),
@@ -100,6 +190,8 @@ class ServiceController extends Controller
     public function destroy(Service $service)
     {
         $this->authorize('delete', $service);
+        $this->ensureServiceBranchAccess($service, auth()->user()?->branch_id);
+
         $service->delete();
         \App\Models\Tenant\ActivityLog::log('deleted', 'Menghapus servis #' . $service->id, $service);
         return redirect()->route('services.index')->with('success', 'Servis berhasil dihapus.');
@@ -108,27 +200,84 @@ class ServiceController extends Controller
     public function update(Request $request, Service $service)
     {
         $this->authorize('update', $service);
+        $this->ensureServiceBranchAccess($service, auth()->user()?->branch_id);
+
+        if ($request->filled('status') && (string) $request->input('status') !== (string) $service->status) {
+            throw ValidationException::withMessages([
+                'status' => 'Perubahan status harus melalui aksi workflow resmi pada halaman detail servis.',
+            ]);
+        }
+
         $validated = $request->validate([
             'problem_description' => 'nullable|string', 'condition_note' => 'nullable|string',
             'service_charge' => 'nullable|numeric|min:0', 'tipe_unit' => 'nullable|string|max:100',
             'imei_sn' => 'nullable|string|max:100', 'sandi_pola' => 'nullable|string|max:50',
             'posisi_unit' => 'nullable|in:di_toko,dibawa_pelanggan', 'kelengkapan' => 'nullable|array',
-            'status' => 'nullable|in:' . implode(',', [
-                Service::STATUS_MENUNGGU_ALOKASI, Service::STATUS_DITERIMA, Service::STATUS_DIAGNOSA,
-                Service::STATUS_DIKERJAKAN, Service::STATUS_KONFIRMASI_PELANGGAN,
-                Service::STATUS_KONFIRMASI_INTERNAL, Service::STATUS_SIAP_DIAMBIL,
-                Service::STATUS_INDENT, Service::STATUS_ONPARTNER, Service::STATUS_SELESAI,
-                Service::STATUS_CANCEL, Service::STATUS_VOID, Service::STATUS_CLOSE,
-            ]),
         ]);
 
-        $oldStatus = $service->status;
         $service->update($validated);
-        \App\Models\Tenant\ActivityLog::log(
-            isset($validated['status']) && $validated['status'] !== $oldStatus ? 'status_updated' : 'updated',
-            'Update servis #' . $service->id, $service
-        );
+        \App\Models\Tenant\ActivityLog::log('updated', 'Update servis #' . $service->id, $service);
 
         return back()->with('success', 'Servis berhasil diperbarui.');
+    }
+
+    private function applyServiceBranchScope($query, $userBranchId)
+    {
+        if ($userBranchId) {
+            $query->where('branch_id', $userBranchId);
+        }
+
+        return $query;
+    }
+
+    private function applyBranchOrGlobalScope($query, $userBranchId)
+    {
+        if ($userBranchId) {
+            $query->where(function ($innerQuery) use ($userBranchId) {
+                $innerQuery->where('branch_id', $userBranchId)
+                    ->orWhereNull('branch_id');
+            });
+        }
+
+        return $query;
+    }
+
+    private function buildAssignableUsersQuery($user)
+    {
+        $userBranchId = $user?->branch_id;
+        $isCs = $user && $user->isCs();
+
+        $query = User::query()
+            ->select('id', 'name', 'role', 'active', 'branch_id')
+            ->where('active', true)
+            ->whereIn('role', ['technician', 'owner'])
+            ->orderBy('name');
+
+        if ($userBranchId) {
+            $query->where(function ($innerQuery) use ($userBranchId, $isCs) {
+                $innerQuery->where('branch_id', $userBranchId);
+
+                if (!$isCs) {
+                    $innerQuery->orWhereNull('branch_id');
+                }
+            });
+        }
+
+        return $query;
+    }
+
+    private function ensureServiceBranchAccess(Service $service, $userBranchId): void
+    {
+        if (!$userBranchId || !$service->branch_id) {
+            return;
+        }
+
+        if ((string) $service->branch_id === (string) $userBranchId) {
+            return;
+        }
+
+        throw ValidationException::withMessages([
+            'service' => 'Servis tidak berada pada cabang aktif Anda.',
+        ]);
     }
 }

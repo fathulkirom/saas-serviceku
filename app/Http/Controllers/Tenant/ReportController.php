@@ -19,33 +19,38 @@ class ReportController extends Controller
 {
     public function index()
     {
-        $last30Days = collect(range(29, 0))->map(function ($daysAgo) {
+        $user = auth()->user();
+        $branchId = $user?->branch_id;
+
+        $last30Days = collect(range(29, 0))->map(function ($daysAgo) use ($branchId) {
             $date = now()->subDays($daysAgo)->toDateString();
             return [
                 'date' => $date,
                 'label' => now()->subDays($daysAgo)->format('d M'),
-                'sales' => (float) Sale::whereDate('created_at', $date)->sum('total'),
-                'services' => Service::whereDate('created_at', $date)->count(),
-                'expenses' => (float) Expense::whereDate('expense_date', $date)->sum('amount'),
+                'sales' => (float) $this->scopeBranch(Sale::class, $branchId)->whereDate('created_at', $date)->sum('total'),
+                'services' => $this->scopeBranch(Service::class, $branchId)->whereDate('created_at', $date)->count(),
+                'expenses' => (float) $this->scopeBranch(Expense::class, $branchId)->whereDate('expense_date', $date)->sum('amount'),
             ];
         });
 
         return inertia('Reports/Index', [
             'chartData' => $last30Days,
             'summary' => [
-                'total_revenue' => (float) Sale::whereMonth('created_at', now()->month)->sum('total'),
-                'total_services' => Service::whereMonth('created_at', now()->month)->count(),
-                'total_expenses' => (float) Expense::whereMonth('expense_date', now()->month)->sum('amount'),
+                'total_revenue' => (float) $this->scopeBranch(Sale::class, $branchId)->whereMonth('created_at', now()->month)->sum('total'),
+                'total_services' => $this->scopeBranch(Service::class, $branchId)->whereMonth('created_at', now()->month)->count(),
+                'total_expenses' => (float) $this->scopeBranch(Expense::class, $branchId)->whereMonth('expense_date', now()->month)->sum('amount'),
             ],
         ]);
     }
 
     public function sales(Request $request)
     {
+        $user = auth()->user();
+        $branchId = $user?->branch_id;
         $period = $request->get('period', 'today');
         $dates = $this->getDateRange($period, $request);
 
-        $sales = Sale::with(['customer', 'items'])
+        $sales = $this->scopeBranch(Sale::class, $branchId)->with(['customer', 'items'])
             ->whereBetween('created_at', [$dates['start'], $dates['end']])
             ->latest()
             ->get();
@@ -74,10 +79,12 @@ class ReportController extends Controller
 
     public function services(Request $request)
     {
+        $user = auth()->user();
+        $branchId = $user?->branch_id;
         $period = $request->get('period', 'today');
         $dates = $this->getDateRange($period, $request);
 
-        $services = Service::with(['customer', 'technician'])
+        $services = $this->scopeBranch(Service::class, $branchId)->with(['customer', 'technician'])
             ->whereBetween('created_at', [$dates['start'], $dates['end']])
             ->latest()
             ->get();
@@ -100,12 +107,16 @@ class ReportController extends Controller
 
     public function inventory(Request $request)
     {
-        $products = Product::with(['branch'])
+        $user = auth()->user();
+        $branchId = $user?->branch_id;
+
+        $products = $this->scopeBranchOrGlobal(Product::class, $branchId)->with(['branch'])
             ->orderByRaw('stock_quantity <= min_stock DESC')
             ->orderBy('stock_quantity', 'asc')
             ->get();
 
         $mutations = InventoryMutation::with(['product', 'creator', 'branch'])
+            ->when($branchId, fn($q) => $q->where('branch_id', $branchId))
             ->latest()
             ->take(100)
             ->get();
@@ -126,11 +137,13 @@ class ReportController extends Controller
 
     public function finance(Request $request)
     {
+        $user = auth()->user();
+        $branchId = $user?->branch_id;
         $period = $request->get('period', 'month');
         $dates = $this->getDateRange($period, $request);
 
-        $sales = Sale::with(['customer', 'items'])->whereBetween('created_at', [$dates['start'], $dates['end']])->get();
-        $expenses = Expense::with('creator')->whereBetween('expense_date', [$dates['start'], $dates['end']])->get();
+        $sales = $this->scopeBranch(Sale::class, $branchId)->with(['customer', 'items'])->whereBetween('created_at', [$dates['start'], $dates['end']])->get();
+        $expenses = $this->scopeBranch(Expense::class, $branchId)->with('creator')->whereBetween('expense_date', [$dates['start'], $dates['end']])->get();
         $deposits = DailyDeposit::with('creator')->whereBetween('deposit_date', [$dates['start'], $dates['end']])->get();
 
         $summary = [
@@ -158,11 +171,12 @@ class ReportController extends Controller
      */
     public function commissions(Request $request)
     {
+        $user = auth()->user();
+        $branchId = $user?->branch_id;
         $period = $request->get('period', 'month');
         $dates = $this->getDateRange($period, $request);
 
-        // Ambil data servis yang selesai dalam periode
-        $services = Service::with(['technician', 'customer', 'spareparts'])
+        $services = $this->scopeBranch(Service::class, $branchId)->with(['technician', 'customer', 'spareparts'])
             ->where('status', Service::STATUS_SELESAI)
             ->whereBetween('updated_at', [$dates['start'], $dates['end']])
             ->get();
@@ -299,9 +313,11 @@ class ReportController extends Controller
 
     public function revenueComparison(Request $request)
     {
+        $user = auth()->user();
+        $branchId = $user?->branch_id;
         $year = $request->get('year', now()->year);
 
-        $monthlyRevenue = Sale::select(
+        $monthlyRevenue = $this->scopeBranch(Sale::class, $branchId)->select(
             DB::raw('MONTH(created_at) as month'),
             DB::raw('SUM(total) as revenue')
         )
@@ -313,7 +329,7 @@ class ReportController extends Controller
             ->keyBy('month');
 
         $previousYear = $year - 1;
-        $prevYearRevenue = Sale::select(
+        $prevYearRevenue = $this->scopeBranch(Sale::class, $branchId)->select(
             DB::raw('MONTH(created_at) as month'),
             DB::raw('SUM(total) as revenue')
         )
@@ -346,12 +362,14 @@ class ReportController extends Controller
 
     public function export(Request $request, string $type)
     {
+        $user = auth()->user();
+        $branchId = $user?->branch_id;
         $format = $request->get('format', 'csv');
         $period = $request->get('period', 'today');
         $dates = $this->getDateRange($period, $request);
 
         if ($type === 'sales') {
-            $data = Sale::with('customer')->whereBetween('created_at', [$dates['start'], $dates['end']])->latest()->get();
+            $data = $this->scopeBranch(Sale::class, $branchId)->with('customer')->whereBetween('created_at', [$dates['start'], $dates['end']])->latest()->get();
             $filename = "laporan-penjualan-{$period}-" . now()->format('Y-m-d');
             
             if ($format === 'pdf') {
@@ -389,7 +407,7 @@ class ReportController extends Controller
         }
 
         if ($type === 'services') {
-            $data = Service::with(['customer', 'technician'])->whereBetween('created_at', [$dates['start'], $dates['end']])->latest()->get();
+            $data = $this->scopeBranch(Service::class, $branchId)->with(['customer', 'technician'])->whereBetween('created_at', [$dates['start'], $dates['end']])->latest()->get();
             $filename = "laporan-servis-{$period}-" . now()->format('Y-m-d');
 
             if ($format === 'pdf') {
@@ -443,5 +461,30 @@ class ReportController extends Controller
             ],
             default => ['start' => $now->copy()->startOfDay(), 'end' => $now->copy()->endOfDay()],
         };
+    }
+
+    private function scopeBranch(string $model, $branchId)
+    {
+        $query = $model::query();
+
+        if ($branchId) {
+            $query->where('branch_id', $branchId);
+        }
+
+        return $query;
+    }
+
+    private function scopeBranchOrGlobal(string $model, $branchId)
+    {
+        $query = $model::query();
+
+        if ($branchId) {
+            $query->where(function ($inner) use ($branchId) {
+                $inner->where('branch_id', $branchId)
+                    ->orWhereNull('branch_id');
+            });
+        }
+
+        return $query;
     }
 }

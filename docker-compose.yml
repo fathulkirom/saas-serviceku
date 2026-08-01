@@ -109,6 +109,11 @@ services:
       - ./:/var/www/html
     working_dir: /var/www/html
     command: php artisan queue:work --sleep=3 --tries=3 --timeout=300
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f 'artisan queue:work' >/dev/null || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     depends_on:
       mysql:
         condition: service_healthy

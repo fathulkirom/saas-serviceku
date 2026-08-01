@@ -5,24 +5,21 @@
         <button
           v-if="activeTab === 'kb'"
           @click="openKbDrawer()"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer"
-          style="background: var(--accent-primary);"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer bg-indigo-600 text-white"
         >
           + Artikel KB Baru
         </button>
         <button
           v-if="activeTab === 'sop'"
           @click="openSopDrawer()"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer"
-          style="background: var(--accent-primary);"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer bg-indigo-600 text-white"
         >
           + SOP Baru
         </button>
         <button
           v-if="activeTab === 'balasan'"
           @click="openReplyModal()"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer"
-          style="background: var(--accent-primary);"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer bg-indigo-600 text-white"
         >
           + Balasan Cepat Baru
         </button>
@@ -46,10 +43,10 @@
           >
             <template #cell-title="{ row }">
               <span class="font-medium text-sm">{{ row.judul }}</span>
-              <p class="text-[11px]" style="color: var(--text-muted);">Penulis: {{ row.creator?.name || 'Admin' }}</p>
+              <p class="text-[11px] text-zinc-500">Penulis: {{ row.creator?.name || 'Admin' }}</p>
             </template>
             <template #cell-device_type="{ row }">
-              <span class="text-xs font-semibold px-2 py-0.5 rounded" style="background: var(--bg-hover);">{{ row.device_type ?? 'Umum' }}</span>
+              <span class="text-xs font-semibold px-2 py-0.5 rounded bg-zinc-50">{{ row.device_type ?? 'Umum' }}</span>
             </template>
             <template #cell-created_at="{ row }">
               {{ formatDate(row.created_at) }}
@@ -57,7 +54,7 @@
             <template #cell-action="{ row }">
               <div class="flex items-center justify-end gap-1">
                 <button @click="openKbDetail(row)" class="px-2.5 py-1 rounded text-xs font-semibold text-blue-600 border border-blue-200 hover:bg-blue-50">Baca</button>
-                <button @click="openKbDrawer(row)" class="px-2.5 py-1 rounded text-xs font-medium border" style="borderColor: var(--border-color); color: var(--accent-primary);">Edit</button>
+                <button @click="openKbDrawer(row)" class="px-2.5 py-1 rounded text-xs font-medium border border-zinc-200 text-indigo-600">Edit</button>
                 <button @click="deleteKb(row)" class="px-2.5 py-1 rounded text-xs font-medium text-red-600 border border-red-200 hover:bg-red-50">Hapus</button>
               </div>
             </template>
@@ -93,7 +90,7 @@
             <template #cell-action="{ row }">
               <div class="flex items-center justify-end gap-1">
                 <button @click="openSopDetail(row)" class="px-2.5 py-1 rounded text-xs font-semibold text-blue-600 border border-blue-200 hover:bg-blue-50">Lihat</button>
-                <button @click="openSopDrawer(row)" class="px-2.5 py-1 rounded text-xs font-medium border" style="borderColor: var(--border-color); color: var(--accent-primary);">Edit</button>
+                <button @click="openSopDrawer(row)" class="px-2.5 py-1 rounded text-xs font-medium border border-zinc-200 text-indigo-600">Edit</button>
                 <button @click="deleteSop(row)" class="px-2.5 py-1 rounded text-xs font-medium text-red-600 border border-red-200 hover:bg-red-50">Hapus</button>
               </div>
             </template>
@@ -118,16 +115,16 @@
             @empty-action="openReplyModal()"
           >
             <template #cell-keyword="{ row }">
-              <span class="font-mono text-xs font-bold" style="color: var(--accent-primary);">/{{ row.keyword }}</span>
+              <span class="font-mono text-xs font-bold text-indigo-600">/{{ row.keyword }}</span>
             </template>
             <template #cell-reply="{ row }">
-              <span class="text-xs" style="color: var(--text-secondary);" :title="row.reply">
+              <span class="text-xs text-zinc-600" :title="row.reply">
                 {{ truncateText(row.reply, 80) }}
               </span>
             </template>
             <template #cell-action="{ row }">
               <div class="flex items-center justify-end gap-1">
-                <button @click="openReplyModal(row)" class="px-2.5 py-1 rounded text-xs font-medium border" style="borderColor: var(--border-color); color: var(--accent-primary);">Edit</button>
+                <button @click="openReplyModal(row)" class="px-2.5 py-1 rounded text-xs font-medium border border-zinc-200 text-indigo-600">Edit</button>
                 <button @click="deleteReply(row)" class="px-2.5 py-1 rounded text-xs font-medium text-red-600 border border-red-200 hover:bg-red-50">Hapus</button>
               </div>
             </template>
@@ -140,14 +137,14 @@
     <Drawer :open="showReplyDrawer" :title="editingReply ? 'Edit Balasan Cepat' : 'Tambah Balasan Cepat Baru'" @close="showReplyDrawer = false" width="450px">
       <form @submit.prevent="submitReply" class="space-y-4">
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Kata Kunci (Shortcut) *</label>
+          <label class="text-xs font-semibold text-zinc-500">Kata Kunci (Shortcut) *</label>
           <div class="flex items-center gap-1">
             <span class="text-sm font-bold font-mono text-gray-500">/</span>
             <input v-model="replyForm.keyword" required placeholder="e.g. rekening / lokasi / jam_buka" class="input text-sm flex-1" />
           </div>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Teks Balasan Lengkap *</label>
+          <label class="text-xs font-semibold text-zinc-500">Teks Balasan Lengkap *</label>
           <textarea v-model="replyForm.reply" rows="4" required placeholder="Tuliskan isi pesan otomatis..." class="input text-sm"></textarea>
         </div>
         <div class="flex justify-end gap-2 pt-3">
@@ -163,39 +160,39 @@
     <Drawer :open="showKbDrawer" :title="editingKb ? 'Edit Artikel KB' : 'Tambah Artikel KB'" @close="showKbDrawer = false" width="520px">
       <form @submit.prevent="submitKb" class="space-y-4">
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Judul *</label>
+          <label class="text-xs font-semibold text-zinc-500">Judul *</label>
           <input v-model="kbForm.judul" type="text" required class="input text-sm" placeholder="Judul artikel" />
         </div>
         <div class="grid grid-cols-3 gap-3">
           <div class="space-y-1">
-            <label class="text-xs font-semibold" style="color: var(--text-muted);">Tipe Device</label>
+            <label class="text-xs font-semibold text-zinc-500">Tipe Device</label>
             <select v-model="kbForm.device_type" class="input text-sm">
               <option value="">Umum</option>
               <option v-for="t in kbDeviceTypes" :key="t" :value="t">{{ t }}</option>
             </select>
           </div>
           <div class="space-y-1">
-            <label class="text-xs font-semibold" style="color: var(--text-muted);">Brand</label>
+            <label class="text-xs font-semibold text-zinc-500">Brand</label>
             <select v-model="kbForm.device_brand" class="input text-sm">
               <option value="">-</option>
               <option v-for="b in kbBrands" :key="b" :value="b">{{ b }}</option>
             </select>
           </div>
           <div class="space-y-1">
-            <label class="text-xs font-semibold" style="color: var(--text-muted);">Model</label>
+            <label class="text-xs font-semibold text-zinc-500">Model</label>
             <input v-model="kbForm.device_model" type="text" class="input text-sm" placeholder="e.g. A52" />
           </div>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Masalah *</label>
+          <label class="text-xs font-semibold text-zinc-500">Masalah *</label>
           <textarea v-model="kbForm.masalah" rows="2" required class="input text-sm" placeholder="Gejala / masalah..."></textarea>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Solusi *</label>
+          <label class="text-xs font-semibold text-zinc-500">Solusi *</label>
           <textarea v-model="kbForm.solusi" rows="4" required class="input text-sm" placeholder="Langkah solusi..."></textarea>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Lampiran Gambar (opsional)</label>
+          <label class="text-xs font-semibold text-zinc-500">Lampiran Gambar (opsional)</label>
           <input type="file" accept="image/*" @change="kbForm.lampiran = $event.target.files[0] || null" class="input text-sm" />
         </div>
         <div class="flex justify-end gap-2 pt-3">
@@ -211,21 +208,21 @@
     <Drawer :open="showKbDetailDrawer" title="Detail Artikel KB" @close="showKbDetailDrawer = false" width="520px">
       <div v-if="selectedKb" class="space-y-4">
         <div>
-          <h3 class="text-base font-bold" style="color: var(--text-primary);">{{ selectedKb.judul }}</h3>
-          <p class="text-[11px]" style="color: var(--text-muted);">
+          <h3 class="text-base font-bold text-zinc-900">{{ selectedKb.judul }}</h3>
+          <p class="text-[11px] text-zinc-500">
             {{ selectedKb.device_type ?? 'Umum' }}{{ selectedKb.device_brand ? ' / ' + selectedKb.device_brand : '' }}{{ selectedKb.device_model ? ' / ' + selectedKb.device_model : '' }}
           </p>
         </div>
-        <div class="rounded-lg border p-3 space-y-2" style="border-color: var(--border-color);">
-          <p class="text-xs font-bold" style="color: var(--text-muted);">Masalah</p>
+        <div class="rounded-lg border p-3 space-y-2 border-zinc-200">
+          <p class="text-xs font-bold text-zinc-500">Masalah</p>
           <p class="text-sm whitespace-pre-wrap">{{ selectedKb.masalah }}</p>
         </div>
-        <div class="rounded-lg border p-3 space-y-2" style="border-color: var(--border-color);">
-          <p class="text-xs font-bold" style="color: var(--text-muted);">Solusi</p>
+        <div class="rounded-lg border p-3 space-y-2 border-zinc-200">
+          <p class="text-xs font-bold text-zinc-500">Solusi</p>
           <p class="text-sm whitespace-pre-wrap">{{ selectedKb.solusi }}</p>
         </div>
         <div v-if="selectedKb.lampiran" class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Lampiran</label>
+          <label class="text-xs font-semibold text-zinc-500">Lampiran</label>
           <a :href="'/storage/' + selectedKb.lampiran" target="_blank" class="text-xs font-bold text-blue-600 hover:underline">Lihat gambar ↗</a>
         </div>
       </div>
@@ -235,22 +232,22 @@
     <Drawer :open="showSopDrawer" :title="editingSop ? 'Edit SOP' : 'Buat SOP Baru'" @close="showSopDrawer = false" width="520px">
       <form @submit.prevent="submitSop" class="space-y-4">
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Judul SOP *</label>
+          <label class="text-xs font-semibold text-zinc-500">Judul SOP *</label>
           <input v-model="sopForm.title" type="text" required class="input text-sm" placeholder="Judul prosedur" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Isi Prosedur *</label>
+          <label class="text-xs font-semibold text-zinc-500">Isi Prosedur *</label>
           <textarea v-model="sopForm.content" rows="6" required class="input text-sm" placeholder="Langkah-langkah prosedur..."></textarea>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Target Role</label>
+          <label class="text-xs font-semibold text-zinc-500">Target Role</label>
           <div class="flex flex-wrap gap-2">
             <label v-for="r in sopRoles" :key="r" class="inline-flex items-center gap-1.5 text-xs cursor-pointer">
               <input type="checkbox" :value="r" v-model="sopForm.target_roles" class="w-3.5 h-3.5 rounded accent-purple-600" />
               {{ r }}
             </label>
           </div>
-          <p class="text-[11px]" style="color: var(--text-muted);">Kosongkan jika berlaku untuk semua role.</p>
+          <p class="text-[11px] text-zinc-500">Kosongkan jika berlaku untuk semua role.</p>
         </div>
         <label class="inline-flex items-center gap-2 text-xs cursor-pointer">
           <input type="checkbox" v-model="sopForm.is_mandatory" class="w-3.5 h-3.5 rounded accent-purple-600" />
@@ -269,13 +266,13 @@
     <Drawer :open="showSopDetailDrawer" title="Detail SOP" @close="showSopDetailDrawer = false" width="520px">
       <div v-if="selectedSop" class="space-y-4">
         <div class="flex items-start justify-between gap-3">
-          <h3 class="text-base font-bold" style="color: var(--text-primary);">{{ selectedSop.title }}</h3>
+          <h3 class="text-base font-bold text-zinc-900">{{ selectedSop.title }}</h3>
           <Badge variant="blue">{{ (selectedSop.target_roles ?? []).length ? selectedSop.target_roles.join(', ') : 'Semua Role' }}</Badge>
         </div>
-        <div class="rounded-lg border p-3" style="border-color: var(--border-color);">
+        <div class="rounded-lg border p-3 border-zinc-200">
           <p class="text-sm whitespace-pre-wrap">{{ selectedSop.content }}</p>
         </div>
-        <p class="text-[11px]" style="color: var(--text-muted);">Versi {{ selectedSop.version ?? 1 }} · {{ selectedSop.is_mandatory ? 'Wajib dibaca' : 'Opsional' }}</p>
+        <p class="text-[11px] text-zinc-500">Versi {{ selectedSop.version ?? 1 }} · {{ selectedSop.is_mandatory ? 'Wajib dibaca' : 'Opsional' }}</p>
       </div>
     </Drawer>
   </AuthenticatedLayout>

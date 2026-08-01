@@ -6,8 +6,7 @@
 
     <div class="max-w-2xl space-y-6">
       <!-- Flash Message -->
-      <div v-if="flashMessage" :class="flashMessage.type === 'success' ? 'bg-green-50 text-green-700 border-green-200' : flashMessage.type === 'error' ? 'bg-red-50 text-red-700 border-red-200' : 'bg-blue-50 text-blue-700 border-blue-200'"
-        class="p-3 rounded-lg border text-sm">
+      <div v-if="flashMessage" class="p-3 rounded-lg border text-sm" :class="flashMessage.type === 'success' ? 'bg-green-50 text-green-700 border-green-200' : flashMessage.type === 'error' ? 'bg-red-50 text-red-700 border-red-200' : 'bg-blue-50 text-blue-700 border-blue-200'">
         {{ flashMessage.text }}
       </div>
 

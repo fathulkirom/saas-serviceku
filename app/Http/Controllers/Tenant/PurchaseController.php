@@ -10,6 +10,7 @@ use App\Models\Tenant\Product;
 use App\Models\Tenant\InventoryMutation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 /** @deprecated Use consolidated controller instead. See FinanceController, CashController, InventarisController, ServiceToolsController, SystemController, DocumentController, SettingController. */
 class PurchaseController extends Controller
@@ -55,6 +56,13 @@ class PurchaseController extends Controller
 
         foreach ($validated['items'] as $item) {
             $product = Product::findOrFail($item['product_id']);
+
+            if ($user->branch_id && $product->branch_id && (string) $product->branch_id !== (string) $user->branch_id) {
+                throw ValidationException::withMessages([
+                    'items' => 'Produk ' . $product->name . ' bukan milik cabang aktif.',
+                ]);
+            }
+
             PurchaseItem::create([
                 'purchase_id' => $purchase->id,
                 'product_id' => $product->id,

@@ -9,21 +9,21 @@
 
         <!-- Stats -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 animate-fade-in">
-            <div class="rounded-2xl p-5 border" style="background: var(--bg-card); border-color: var(--border-color);">
-                <p class="text-2xl font-bold" style="color: var(--text-primary);">Rp {{ formatNumber(stats.total_revenue) }}</p>
-                <p class="text-xs mt-1" style="color: var(--text-muted);">Total Pendapatan</p>
+            <div class="rounded-2xl p-5 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
+                <p class="text-2xl font-bold text-slate-200">Rp {{ formatNumber(stats.total_revenue) }}</p>
+                <p class="text-xs mt-1 text-slate-400">Total Pendapatan</p>
             </div>
-            <div class="rounded-2xl p-5 border" style="background: var(--bg-card); border-color: var(--border-color);">
+            <div class="rounded-2xl p-5 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
                 <p class="text-2xl font-bold text-emerald-400">Rp {{ formatNumber(stats.monthly_revenue) }}</p>
-                <p class="text-xs mt-1" style="color: var(--text-muted);">Bulan Ini</p>
+                <p class="text-xs mt-1 text-slate-400">Bulan Ini</p>
             </div>
-            <div class="rounded-2xl p-5 border" style="background: var(--bg-card); border-color: var(--border-color);">
+            <div class="rounded-2xl p-5 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
                 <p class="text-2xl font-bold text-amber-400">{{ stats.pending_count }}</p>
-                <p class="text-xs mt-1" style="color: var(--text-muted);">Pending</p>
+                <p class="text-xs mt-1 text-slate-400">Pending</p>
             </div>
-            <div class="rounded-2xl p-5 border" style="background: var(--bg-card); border-color: var(--border-color);">
+            <div class="rounded-2xl p-5 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
                 <p class="text-2xl font-bold text-emerald-400">{{ stats.success_count }}</p>
-                <p class="text-xs mt-1" style="color: var(--text-muted);">Sukses</p>
+                <p class="text-xs mt-1 text-slate-400">Sukses</p>
             </div>
         </div>
 
@@ -33,31 +33,31 @@
         </div>
 
         <!-- Tabel -->
-        <div class="rounded-2xl overflow-hidden border" style="background: var(--bg-card); border-color: var(--border-color);">
+        <div class="rounded-2xl overflow-hidden border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
             <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+                <thead class="bg-slate-800/50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Invoice</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tenant</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Plan</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tanggal</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase">Invoice</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase">Tenant</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase">Plan</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase">Amount</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase">Tanggal</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-slate-400 uppercase">Aksi</th>
                     </tr>
                 </thead>
-                <tbody style="background: var(--bg-card);">
-                    <tr v-for="p in payments.data" :key="p.id" class="hover:bg-gray-50">
+                <tbody class="bg-slate-900">
+                    <tr v-for="p in payments.data" :key="p.id" class="hover:bg-slate-800/50">
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-indigo-600">{{ p.invoice_number }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ p.tenant?.tenant_name || '-' }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ p.plan_slug }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-400">{{ p.plan_slug }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Rp {{ formatNumber(p.amount) }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <span :class="statusClass(p.status)" class="px-2 py-1 text-xs font-medium rounded-full">
+                            <span class="px-2 py-1 text-xs font-medium rounded-full" :class="statusClass(p.status)">
                                 {{ statusLabel(p.status) }}
                             </span>
                         </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ p.created_at }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-400">{{ p.created_at }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm">
                             <div class="flex gap-2">
                                 <button v-if="p.status === 'pending'" @click="confirmPayment(p.id)"
@@ -72,7 +72,7 @@
                         </td>
                     </tr>
                     <tr v-if="payments.data?.length === 0">
-                        <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">Belum ada transaksi</td>
+                        <td colspan="7" class="px-6 py-4 text-center text-sm text-slate-400">Belum ada transaksi</td>
                     </tr>
                 </tbody>
             </table>
@@ -107,9 +107,9 @@ const statusClass = (status) => ({
     pending: 'bg-yellow-100 text-yellow-800',
     success: 'bg-green-100 text-green-800',
     failed: 'bg-red-100 text-red-800',
-    expired: 'bg-gray-100 text-gray-800',
+    expired: 'bg-slate-800 text-slate-200',
     refunded: 'bg-orange-100 text-orange-800',
-}[status] || 'bg-gray-100 text-gray-800');
+}[status] || 'bg-slate-800 text-slate-200');
 
 const confirmPayment = (id) => {
     if (confirm('Konfirmasi pembayaran ini?')) {

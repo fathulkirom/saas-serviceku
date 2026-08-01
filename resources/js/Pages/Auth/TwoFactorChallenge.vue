@@ -1,104 +1,141 @@
 <template>
     <Head title="Verifikasi 2FA" />
-    <div class="min-h-screen flex items-center justify-center bg-gray-50">
-        <div class="max-w-md w-full bg-white rounded-xl shadow-lg p-8">
-            <div class="text-center mb-6">
-                <div class="text-5xl mb-4">🔐</div>
-                <h1 class="text-2xl font-bold text-gray-800">Verifikasi Dua Langkah</h1>
-                <p class="text-gray-500 mt-2">
-                    Masukkan kode dari aplikasi authenticator Anda.
-                </p>
-                <p class="text-sm text-gray-400 mt-1">{{ email }}</p>
+    <GuestLayout>
+        <div class="text-center mb-8">
+            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-indigo-100 mb-6 shadow-sm ring-8 ring-indigo-50">
+                <svg class="h-8 w-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
             </div>
-
-            <div v-if="$page.props.flash?.success" class="bg-green-50 text-green-700 p-3 rounded-lg mb-4 text-sm">
-                {{ $page.props.flash.success }}
-            </div>
-
-            <div v-if="form.errors.code" class="bg-red-50 text-red-700 p-3 rounded-lg mb-4 text-sm">
-                {{ form.errors.code }}
-            </div>
-
-            <!-- TOTP Form -->
-            <form v-if="!showBackup && !showEmailCode" @submit.prevent="submit" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Kode Authenticator</label>
-                    <input
-                        v-model="form.code"
-                        type="text"
-                        inputmode="numeric"
-                        maxlength="6"
-                        placeholder="000000"
-                        class="w-full text-center text-2xl tracking-[0.5em] px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        autofocus
-                    />
-                </div>
-                <button type="submit"
-                    :disabled="form.processing"
-                    class="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition">
-                    Verifikasi
-                </button>
-            </form>
-
-            <!-- Backup Code Form -->
-            <form v-if="showBackup" @submit.prevent="submitBackup" class="space-y-4">
-                <p class="text-sm text-gray-500 mb-2">Masukkan salah satu kode cadangan Anda:</p>
-                <div>
-                    <input
-                        v-model="form.code"
-                        type="text"
-                        placeholder="XXXXXX-XXXXXX"
-                        class="w-full text-center px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    />
-                </div>
-                <button type="submit"
-                    :disabled="form.processing"
-                    class="w-full py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 disabled:opacity-50 transition">
-                    Verifikasi Kode Cadangan
-                </button>
-                <button type="button" @click="showBackup = false"
-                    class="w-full py-2 text-sm text-gray-500 hover:text-gray-700">
-                    Kembali
-                </button>
-            </form>
-
-            <!-- Email Code Form -->
-            <form v-if="showEmailCode" @submit.prevent="submitEmailCode" class="space-y-4">
-                <div class="bg-blue-50 text-blue-700 p-3 rounded-lg mb-2 text-sm">
-                    Kode telah dikirim ke email <strong>{{ email }}</strong>. Cek inbox Anda.
-                </div>
-                <div>
-                    <input
-                        v-model="form.code"
-                        type="text"
-                        inputmode="numeric"
-                        maxlength="6"
-                        placeholder="000000"
-                        class="w-full text-center text-2xl tracking-[0.5em] px-4 py-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    />
-                </div>
-                <button type="submit"
-                    :disabled="form.processing"
-                    class="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition">
-                    Verifikasi
-                </button>
-                <button type="button" @click="showEmailCode = false"
-                    class="w-full py-2 text-sm text-gray-500 hover:text-gray-700">
-                    Kembali
-                </button>
-            </form>
-
-            <!-- Options -->
-            <div v-if="!showBackup && !showEmailCode" class="mt-4 space-y-2 text-center">
-                <button @click="sendEmailCode" class="text-sm text-blue-600 hover:text-blue-800 block w-full">
-                    Kirim kode via email
-                </button>
-                <button @click="showBackup = true" class="text-sm text-gray-500 hover:text-gray-700 block w-full">
-                    Gunakan kode cadangan
-                </button>
-            </div>
+            
+            <h1 class="text-2xl font-black text-zinc-900 tracking-tight mb-2">Verifikasi Dua Langkah</h1>
+            <p class="text-zinc-500 font-medium text-sm leading-relaxed">
+                Masukkan kode keamanan untuk <strong class="text-zinc-900 font-bold">{{ email }}</strong>.
+            </p>
         </div>
-    </div>
+
+        <div v-if="$page.props.flash?.success" class="mb-6 p-4 bg-emerald-50 border border-emerald-100 rounded-xl flex items-start gap-3">
+            <svg class="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <p class="text-sm font-semibold text-emerald-800">{{ $page.props.flash.success }}</p>
+        </div>
+
+        <div v-if="form.errors.code" class="mb-6 p-4 bg-red-50 border border-red-100 rounded-xl flex items-start gap-3">
+            <svg class="w-5 h-5 text-red-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <p class="text-sm font-semibold text-red-800">{{ form.errors.code }}</p>
+        </div>
+
+        <!-- TOTP Form -->
+        <form v-if="!showBackup && !showEmailCode" @submit.prevent="submit" class="space-y-6">
+            <div>
+                <label class="block text-sm font-bold text-zinc-900 mb-2 text-center">Kode Aplikasi Authenticator</label>
+                <input
+                    v-model="form.code"
+                    type="text"
+                    inputmode="numeric"
+                    maxlength="6"
+                    placeholder="000000"
+                    class="w-full text-center text-3xl font-black tracking-[0.5em] px-4 py-4 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
+                    autofocus
+                />
+            </div>
+            
+            <div class="pt-2 flex flex-col gap-4">
+                <button type="submit"
+                    :disabled="form.processing || form.code.length !== 6"
+                    class="w-full flex items-center justify-center px-6 py-3 rounded-xl bg-zinc-900 text-white text-sm font-bold shadow-md hover:bg-zinc-800 focus:ring-2 focus:ring-offset-2 focus:ring-zinc-900 transition-all disabled:opacity-70">
+                    <svg v-if="form.processing" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    Verifikasi Kode
+                </button>
+            </div>
+        </form>
+
+        <!-- Backup Code Form -->
+        <form v-if="showBackup" @submit.prevent="submitBackup" class="space-y-6">
+            <div class="bg-amber-50 text-amber-900 border border-amber-100 p-4 rounded-xl mb-2 text-sm font-medium">
+                Masukkan salah satu dari kode pemulihan cadangan Anda.
+            </div>
+            <div>
+                <label class="block text-sm font-bold text-zinc-900 mb-2 text-center">Kode Cadangan</label>
+                <input
+                    v-model="form.code"
+                    type="text"
+                    placeholder="XXXXXX-XXXXXX"
+                    class="w-full text-center text-xl font-bold tracking-widest px-4 py-4 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
+                    autofocus
+                />
+            </div>
+            
+            <div class="pt-2 flex flex-col gap-4">
+                <button type="submit"
+                    :disabled="form.processing || !form.code"
+                    class="w-full flex items-center justify-center px-6 py-3 rounded-xl bg-zinc-900 text-white text-sm font-bold shadow-md hover:bg-zinc-800 focus:ring-2 focus:ring-offset-2 focus:ring-zinc-900 transition-all disabled:opacity-70">
+                    <svg v-if="form.processing" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    Gunakan Kode Cadangan
+                </button>
+                <button type="button" @click="showBackup = false; form.code = ''"
+                    class="w-full py-2 text-sm font-bold text-zinc-500 hover:text-zinc-900 transition-colors">
+                    Kembali ke Authenticator
+                </button>
+            </div>
+        </form>
+
+        <!-- Email Code Form -->
+        <form v-if="showEmailCode" @submit.prevent="submitEmailCode" class="space-y-6">
+            <div class="bg-indigo-50 text-indigo-900 border border-indigo-100 p-4 rounded-xl mb-2 text-sm font-medium">
+                Kode keamanan telah dikirim ke email <strong class="font-bold">{{ email }}</strong>. Silakan periksa kotak masuk Anda.
+            </div>
+            <div>
+                <label class="block text-sm font-bold text-zinc-900 mb-2 text-center">Kode dari Email</label>
+                <input
+                    v-model="form.code"
+                    type="text"
+                    inputmode="numeric"
+                    maxlength="6"
+                    placeholder="000000"
+                    class="w-full text-center text-3xl font-black tracking-[0.5em] px-4 py-4 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
+                    autofocus
+                />
+            </div>
+            
+            <div class="pt-2 flex flex-col gap-4">
+                <button type="submit"
+                    :disabled="form.processing || form.code.length !== 6"
+                    class="w-full flex items-center justify-center px-6 py-3 rounded-xl bg-zinc-900 text-white text-sm font-bold shadow-md hover:bg-zinc-800 focus:ring-2 focus:ring-offset-2 focus:ring-zinc-900 transition-all disabled:opacity-70">
+                    <svg v-if="form.processing" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    Verifikasi Kode Email
+                </button>
+                <button type="button" @click="showEmailCode = false; form.code = ''"
+                    class="w-full py-2 text-sm font-bold text-zinc-500 hover:text-zinc-900 transition-colors">
+                    Kembali ke Authenticator
+                </button>
+            </div>
+        </form>
+
+        <!-- Options -->
+        <div v-if="!showBackup && !showEmailCode" class="mt-8 space-y-3 pt-6 border-t border-zinc-100">
+            <button @click="sendEmailCode" class="w-full flex items-center justify-center gap-2 py-2 text-sm font-bold text-indigo-600 hover:text-indigo-700 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+                Kirim kode keamanan via Email
+            </button>
+            <button @click="showBackup = true" class="w-full flex items-center justify-center gap-2 py-2 text-sm font-bold text-zinc-500 hover:text-zinc-900 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" /></svg>
+                Gunakan Kode Cadangan (Backup)
+            </button>
+        </div>
+    </GuestLayout>
 </template>
 
 <script setup>

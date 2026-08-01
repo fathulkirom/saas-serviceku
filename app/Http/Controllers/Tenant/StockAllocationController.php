@@ -8,6 +8,7 @@ use App\Models\Tenant\Product;
 use App\Models\Tenant\InventoryMutation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 /** @deprecated Use consolidated controller instead. See FinanceController, CashController, InventarisController, ServiceToolsController, SystemController, DocumentController, SettingController. */
 class StockAllocationController extends Controller
@@ -27,6 +28,12 @@ class StockAllocationController extends Controller
 
         $user = Auth::user();
         $product = Product::findOrFail($validated['product_id']);
+
+        if ($user->branch_id && $product->branch_id && (string) $product->branch_id !== (string) $user->branch_id) {
+            throw ValidationException::withMessages([
+                'product_id' => 'Produk tidak berada pada cabang aktif Anda.',
+            ]);
+        }
 
         // Cek stok cukup
         if ($product->stock_quantity < $validated['quantity']) {
@@ -66,6 +73,10 @@ class StockAllocationController extends Controller
     {
         $user = Auth::user();
 
+        if ($user->branch_id && (string) $stockAllocation->to_branch_id !== (string) $user->branch_id) {
+            return back()->with('error', 'Transfer ini ditujukan untuk cabang lain.');
+        }
+
         if ($stockAllocation->status !== 'pending') {
             return back()->with('error', 'Transfer sudah diproses sebelumnya.');
         }
@@ -99,6 +110,10 @@ class StockAllocationController extends Controller
     public function reject(StockAllocation $stockAllocation)
     {
         $user = Auth::user();
+
+        if ($user->branch_id && (string) $stockAllocation->to_branch_id !== (string) $user->branch_id) {
+            return back()->with('error', 'Transfer ini ditujukan untuk cabang lain.');
+        }
 
         if ($stockAllocation->status !== 'pending') {
             return back()->with('error', 'Transfer sudah diproses sebelumnya.');

@@ -37,17 +37,19 @@ class DashboardController extends Controller
     private function ownerDashboard()
     {
         $tenantId = tenancy()->tenant->id;
+        $user = auth()->user();
+        $branchId = $user?->branch_id;
 
-        $stats = Cache::remember("dashboard_stats_{$tenantId}", 300, function () {
+        $stats = Cache::remember("dashboard_stats_{$tenantId}_{$branchId}", 300, function () use ($branchId) {
             return [
-                'services_today' => Service::whereDate('created_at', today())->count(),
-                'revenue_today'  => Sale::whereDate('created_at', today())->sum('total'),
-                'low_stock'       => Product::whereColumn('stock_quantity', '<=', 'min_stock')->count(),
-                'active_services' => Service::active()->count(),
+                'services_today' => $this->scopeBranch(Service::class, $branchId)->whereDate('created_at', today())->count(),
+                'revenue_today'  => $this->scopeBranch(Sale::class, $branchId)->whereDate('created_at', today())->sum('total'),
+                'low_stock'       => $this->scopeBranchOrGlobal(Product::class, $branchId)->whereColumn('stock_quantity', '<=', 'min_stock')->count(),
+                'active_services' => $this->scopeBranch(Service::class, $branchId)->active()->count(),
             ];
         });
 
-        $recentServices = Service::with(['customer', 'technician'])
+        $recentServices = $this->scopeBranch(Service::class, $branchId)->with(['customer', 'technician'])
             ->latest()
             ->take(5)
             ->get()
@@ -58,13 +60,14 @@ class DashboardController extends Controller
 
         // Onboarding redirect if new tenant
         $storeName = TenantSetting::getValue('store_name', '');
-        $hasNoData = Customer::count() === 0 && Service::count() === 0;
+        $hasNoData = $this->scopeBranchOrGlobal(Customer::class, $branchId)->count() === 0
+            && $this->scopeBranch(Service::class, $branchId)->count() === 0;
         if ($hasNoData && !$storeName && auth()->user()->isOwner()) {
             return redirect()->route('onboarding.index');
         }
 
         // Hitung breakdown status untuk sidebar
-        $statusCounts = Service::selectRaw('status, count(*) as total')
+        $statusCounts = $this->scopeBranch(Service::class, $branchId)->selectRaw('status, count(*) as total')
             ->groupBy('status')
             ->pluck('total', 'status');
 
@@ -83,6 +86,7 @@ class DashboardController extends Controller
     {
         $myServices = Service::with(['customer', 'technician'])
             ->where('technician_id', $user->id)
+            ->when($user->branch_id, fn($q) => $q->where('branch_id', $user->branch_id))
             ->whereIn('status', [
                 Service::STATUS_MENUNGGU_ALOKASI,
                 Service::STATUS_DITERIMA,
@@ -97,17 +101,23 @@ class DashboardController extends Controller
             ->take(10)
             ->get();
 
+        $branchId = $user->branch_id;
+
         $stats = [
             'assigned_to_me' => Service::where('technician_id', $user->id)
+                ->when($branchId, fn($q) => $q->where('branch_id', $branchId))
                 ->whereIn('status', [
                     Service::STATUS_MENUNGGU_ALOKASI, Service::STATUS_DITERIMA,
                     Service::STATUS_DIKERJAKAN, Service::STATUS_INDENT,
                 ])->count(),
             'waiting' => Service::where('technician_id', $user->id)
+                ->when($branchId, fn($q) => $q->where('branch_id', $branchId))
                 ->where('status', Service::STATUS_MENUNGGU_ALOKASI)->count(),
             'in_progress' => Service::where('technician_id', $user->id)
+                ->when($branchId, fn($q) => $q->where('branch_id', $branchId))
                 ->whereIn('status', [Service::STATUS_DITERIMA, Service::STATUS_DIKERJAKAN])->count(),
             'completed_today' => Service::where('technician_id', $user->id)
+                ->when($branchId, fn($q) => $q->where('branch_id', $branchId))
                 ->where('status', Service::STATUS_SELESAI)
                 ->whereDate('updated_at', today())->count(),
         ];
@@ -124,29 +134,52 @@ class DashboardController extends Controller
     // ========================================================================
     private function csDashboard()
     {
+        $user = auth()->user();
+        $branchId = $user?->branch_id;
+
         $stats = [
-            'services_today'     => Service::whereDate('created_at', today())->count(),
-            'new_customers_today'=> Customer::whereDate('created_at', today())->count(),
-            'pending_allocation' => Service::where('status', Service::STATUS_MENUNGGU_ALOKASI)->count(),
-            'active_services'    => Service::active()->count(),
+            'services_today'     => $this->scopeBranch(Service::class, $branchId)->whereDate('created_at', today())->count(),
+            'new_customers_today'=> $this->scopeBranchOrGlobal(Customer::class, $branchId)->whereDate('created_at', today())->count(),
+            'pending_allocation' => $this->scopeBranch(Service::class, $branchId)->where('status', Service::STATUS_MENUNGGU_ALOKASI)->count(),
+            'active_services'    => $this->scopeBranch(Service::class, $branchId)->active()->count(),
         ];
 
-        $recentServices = Service::with(['customer', 'technician'])
+        $recentServices = $this->scopeBranch(Service::class, $branchId)->with(['customer'])
             ->whereDate('created_at', today())
             ->latest()
             ->take(8)
-            ->get();
+            ->get()
+            ->map(function (Service $service) {
+                return [
+                    'id' => $service->id,
+                    'customer_name' => $service->customer?->name ?? 'Umum',
+                    'device_type' => $service->tipe_unit ?: '-',
+                    'status' => $service->status,
+                ];
+            })
+            ->values();
 
-        $pendingServices = Service::with(['customer'])
+        $pendingServices = $this->scopeBranch(Service::class, $branchId)->with(['customer'])
             ->where('status', Service::STATUS_MENUNGGU_ALOKASI)
             ->latest()
             ->take(8)
-            ->get();
+            ->get()
+            ->map(function (Service $service) {
+                return [
+                    'id' => $service->id,
+                    'customer_name' => $service->customer?->name ?? 'Umum',
+                    'device_type' => $service->tipe_unit ?: '-',
+                    'status' => $service->status,
+                ];
+            })
+            ->values();
 
         return inertia('CsDashboard', [
             'stats'          => $stats,
             'recentServices' => $recentServices,
-            'pendingServices'=> $pendingServices,
+            'unallocatedServices' => $pendingServices,
+            // Backward-compatible alias for older frontend builds.
+            'pendingServices' => $pendingServices,
         ]);
     }
 
@@ -156,20 +189,23 @@ class DashboardController extends Controller
     // ========================================================================
     private function cashierDashboard()
     {
+        $user = auth()->user();
+        $branchId = $user?->branch_id;
+
         $stats = [
-            'revenue_today'  => Sale::whereDate('created_at', today())->sum('total'),
-            'paid_sales'     => Sale::whereDate('created_at', today())->paid()->count(),
-            'draft_sales'    => Sale::draft()->count(),
-            'ready_for_pickup'=> Service::readyForPayment()->count(),
+            'revenue_today'  => $this->scopeBranch(Sale::class, $branchId)->whereDate('created_at', today())->sum('total'),
+            'paid_sales'     => $this->scopeBranch(Sale::class, $branchId)->whereDate('created_at', today())->paid()->count(),
+            'draft_sales'    => $this->scopeBranch(Sale::class, $branchId)->draft()->count(),
+            'ready_for_pickup'=> $this->scopeBranch(Service::class, $branchId)->readyForPayment()->count(),
         ];
 
-        $recentSales = Sale::with(['customer'])
+        $recentSales = $this->scopeBranch(Sale::class, $branchId)->with(['customer'])
             ->whereDate('created_at', today())
             ->latest()
             ->take(8)
             ->get();
 
-        $pickupServices = Service::with(['customer'])
+        $pickupServices = $this->scopeBranch(Service::class, $branchId)->with(['customer'])
             ->readyForPayment()
             ->latest()
             ->take(8)
@@ -194,21 +230,24 @@ class DashboardController extends Controller
     // ========================================================================
     private function courierDashboard()
     {
+        $user = auth()->user();
+        $branchId = $user?->branch_id;
+
         $stats = [
-            'ready_for_pickup' => Service::readyForPayment()->count(),
-            'in_progress'      => Service::active()->count(),
-            'completed_today'  => Service::where('status', Service::STATUS_SELESAI)
+            'ready_for_pickup' => $this->scopeBranch(Service::class, $branchId)->readyForPayment()->count(),
+            'in_progress'      => $this->scopeBranch(Service::class, $branchId)->active()->count(),
+            'completed_today'  => $this->scopeBranch(Service::class, $branchId)->where('status', Service::STATUS_SELESAI)
                                     ->whereDate('updated_at', today())->count(),
-            'waiting_parts'    => Service::where('status', Service::STATUS_INDENT)->count(),
+            'waiting_parts'    => $this->scopeBranch(Service::class, $branchId)->where('status', Service::STATUS_INDENT)->count(),
         ];
 
-        $pickupServices = Service::with(['customer'])
+        $pickupServices = $this->scopeBranch(Service::class, $branchId)->with(['customer'])
             ->readyForPayment()
             ->latest()
             ->take(10)
             ->get();
 
-        $completedServices = Service::with(['customer', 'technician'])
+        $completedServices = $this->scopeBranch(Service::class, $branchId)->with(['customer', 'technician'])
             ->where('status', Service::STATUS_SELESAI)
             ->whereDate('updated_at', today())
             ->latest()
@@ -220,5 +259,33 @@ class DashboardController extends Controller
             'pickupServices'    => $pickupServices,
             'completedServices' => $completedServices,
         ]);
+    }
+
+    // ========================================================================
+    //  HELPERS
+    // ========================================================================
+    private function scopeBranch(string $model, $branchId)
+    {
+        $query = $model::query();
+
+        if ($branchId) {
+            $query->where('branch_id', $branchId);
+        }
+
+        return $query;
+    }
+
+    private function scopeBranchOrGlobal(string $model, $branchId)
+    {
+        $query = $model::query();
+
+        if ($branchId) {
+            $query->where(function ($inner) use ($branchId) {
+                $inner->where('branch_id', $branchId)
+                    ->orWhereNull('branch_id');
+            });
+        }
+
+        return $query;
     }
 }

@@ -1,0 +1,123 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Models\Tenant\Service;
+use Tests\TestCase;
+
+class TenantServiceWorkflowBranchGuardTest extends TestCase
+{
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->setUpTenant();
+    }
+
+    public function test_owner_cannot_accept_service_from_other_branch(): void
+    {
+        $branchA = $this->createBranch(['name' => 'Cabang A']);
+        $branchB = $this->createBranch(['name' => 'Cabang B']);
+
+        $ownerA = $this->createTenantUser([
+            'role' => 'owner',
+            'branch_id' => $branchA->id,
+        ]);
+
+        $ownerB = $this->createTenantUser([
+            'role' => 'owner',
+            'branch_id' => $branchB->id,
+        ]);
+
+        $customerB = $this->createCustomer([
+            'branch_id' => $branchB->id,
+        ]);
+
+        $service = $this->createService([
+            'branch_id' => $branchB->id,
+            'customer_id' => $customerB->id,
+            'created_by' => $ownerB->id,
+            'status' => Service::STATUS_MENUNGGU_ALOKASI,
+            'technician_id' => null,
+        ]);
+
+        $this->actingAs($ownerA);
+
+        $response = $this->post(route('services.accept', $service));
+
+        $response->assertSessionHasErrors(['service']);
+
+        $service->refresh();
+        $this->assertSame(Service::STATUS_MENUNGGU_ALOKASI, $service->status);
+        $this->assertNull($service->technician_id);
+    }
+
+    public function test_owner_can_accept_service_in_same_branch(): void
+    {
+        $branch = $this->createBranch(['name' => 'Cabang A']);
+
+        $owner = $this->createTenantUser([
+            'role' => 'owner',
+            'branch_id' => $branch->id,
+        ]);
+
+        $customer = $this->createCustomer([
+            'branch_id' => $branch->id,
+        ]);
+
+        $service = $this->createService([
+            'branch_id' => $branch->id,
+            'customer_id' => $customer->id,
+            'created_by' => $owner->id,
+            'status' => Service::STATUS_MENUNGGU_ALOKASI,
+            'technician_id' => null,
+        ]);
+
+        $this->actingAs($owner);
+
+        $response = $this->post(route('services.accept', $service));
+
+        $response->assertSessionHas('success');
+
+        $service->refresh();
+        $this->assertSame(Service::STATUS_DITERIMA, $service->status);
+        $this->assertSame($owner->id, $service->technician_id);
+    }
+
+    public function test_assigned_technician_cannot_cancel_service_from_other_branch(): void
+    {
+        $branchA = $this->createBranch(['name' => 'Cabang A']);
+        $branchB = $this->createBranch(['name' => 'Cabang B']);
+
+        $ownerB = $this->createTenantUser([
+            'role' => 'owner',
+            'branch_id' => $branchB->id,
+        ]);
+
+        $technicianA = $this->createTenantUser([
+            'role' => 'technician',
+            'branch_id' => $branchA->id,
+        ]);
+
+        $customerB = $this->createCustomer([
+            'branch_id' => $branchB->id,
+        ]);
+
+        $service = $this->createService([
+            'branch_id' => $branchB->id,
+            'customer_id' => $customerB->id,
+            'created_by' => $ownerB->id,
+            'status' => Service::STATUS_DIKERJAKAN,
+            'technician_id' => $technicianA->id,
+        ]);
+
+        $this->actingAs($technicianA);
+
+        $response = $this->post(route('services.cancel', $service));
+
+        $response->assertSessionHasErrors(['service']);
+
+        $service->refresh();
+        $this->assertSame(Service::STATUS_DIKERJAKAN, $service->status);
+        $this->assertNull($service->cancel_at);
+    }
+}

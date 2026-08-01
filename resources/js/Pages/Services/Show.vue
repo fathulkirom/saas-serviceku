@@ -8,8 +8,8 @@
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
                     </Link>
                     <div>
-                        <h2 class="text-xl font-bold" style="color: var(--text-primary);">Servis #{{ service.id }}</h2>
-                        <p class="text-xs mt-0.5" style="color: var(--text-muted);">{{ service.customer?.name || '-' }}</p>
+                        <h2 class="text-xl font-bold text-zinc-900">Servis #{{ service.id }}</h2>
+                        <p class="text-xs mt-0.5 text-zinc-500">{{ service.customer?.name || '-' }}</p>
                     </div>
                 </div>
                 <div class="flex items-center gap-2">
@@ -25,7 +25,7 @@
             <!-- ACTION BUTTONS -->
             <div class="flex flex-wrap items-center gap-2 p-4 rounded-xl border" style="border-color: var(--border-color); background: var(--bg-secondary);">
                 <template v-if="isActive">
-                    <button v-if="canAssign" :disabled="processingAction" @click="openAssignModal" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-all hover:shadow-sm disabled:opacity-50" style="background: var(--accent-primary);">
+                    <button v-if="canAssign" :disabled="processingAction" @click="openAssignModal" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-all hover:shadow-sm disabled:opacity-50 bg-indigo-600 text-white">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
                         Assign Teknisi
                     </button>
@@ -51,10 +51,10 @@
                     <button v-if="canReallocate" :disabled="processingAction === 'services.request-reallocation'" @click="postAction('services.request-reallocation')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-all hover:shadow-sm disabled:opacity-50" style="background: var(--danger);">
                         {{ processingAction === 'services.request-reallocation' ? 'Memproses...' : 'Request Alokasi Ulang' }}
                     </button>
-                    <button v-if="canPartner" :disabled="processingAction" @click="openPartnerModal" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-all hover:shadow-sm disabled:opacity-50" style="background: var(--accent-primary);">
+                    <button v-if="canPartner" :disabled="processingAction" @click="openPartnerModal" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-all hover:shadow-sm disabled:opacity-50 bg-indigo-600 text-white">
                         Kirim ke Partner
                     </button>
-                    <button v-if="canCompletePartner" :disabled="processingAction === 'services.complete-partner'" @click="postAction('services.complete-partner')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-all hover:shadow-sm disabled:opacity-50" style="background: var(--accent-primary);">
+                    <button v-if="canCompletePartner" :disabled="processingAction === 'services.complete-partner'" @click="postAction('services.complete-partner')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-all hover:shadow-sm disabled:opacity-50 bg-indigo-600 text-white">
                         {{ processingAction === 'services.complete-partner' ? 'Memproses...' : 'Partner Selesai' }}
                     </button>
                     <button v-if="canTakeOver" :disabled="processingAction === 'services.take-over'" @click="postAction('services.take-over')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-all hover:shadow-sm disabled:opacity-50" style="background: var(--warning);">
@@ -64,7 +64,7 @@
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                         Batalkan
                     </button>
-                    <button v-if="canIndent" :disabled="processingAction === 'services.indent'" @click="postAction('services.indent')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-all hover:shadow-sm disabled:opacity-50" style="background: var(--accent-primary);">
+                    <button v-if="canIndent" :disabled="processingAction === 'services.indent'" @click="postAction('services.indent')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-all hover:shadow-sm disabled:opacity-50 bg-indigo-600 text-white">
                         {{ processingAction === 'services.indent' ? 'Memproses...' : 'Indent Sparepart' }}
                     </button>
                     <button v-if="canResumeIndent" :disabled="processingAction === 'services.resume-from-indent'" @click="postAction('services.resume-from-indent')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-all hover:shadow-sm disabled:opacity-50" style="background: var(--success);">
@@ -108,7 +108,7 @@
                     ← Servis Induk #{{ service.parent_service_id }}
                 </Link>
                 <Link v-if="service.sale" :href="route('sales.show', service.sale.id)"
-                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-all hover:shadow-sm" style="background: var(--accent-primary);">
+                    class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-all hover:shadow-sm bg-indigo-600 text-white">
                     Lihat Nota #{{ service.sale.id }}
                 </Link>
             </div>
@@ -126,58 +126,58 @@
                         color: isStepDone(step.key) ? 'var(--text-primary)' : 'var(--text-muted)',
                         fontWeight: step.key === service.status ? '700' : '500',
                     }">{{ step.label }}</span>
-                    <svg v-if="i < statusTimeline.length - 1" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--text-muted);"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    <svg v-if="i < statusTimeline.length - 1" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="text-zinc-500"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 </div>
             </div>
 
             <!-- INFO CARDS: Customer + Device -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-secondary);">
-                    <h3 class="text-sm font-bold mb-4" style="color: var(--text-primary);">👤 Data Pelanggan</h3>
+                    <h3 class="text-sm font-bold mb-4 text-zinc-900">👤 Data Pelanggan</h3>
                     <div class="space-y-3">
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold text-white shadow-sm" style="background: var(--accent-primary);">
+                            <div class="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold text-white shadow-sm bg-indigo-600 text-white">
                                 {{ getInitials(service.customer?.name) }}
                             </div>
                             <div>
-                                <p class="text-sm font-bold" style="color: var(--text-primary);">{{ service.customer?.name || '-' }}</p>
-                                <p class="text-xs" style="color: var(--text-muted);">{{ service.customer?.phone || '-' }}</p>
-                                <p v-if="service.customer?.address" class="text-xs mt-0.5" style="color: var(--text-muted);">{{ service.customer.address }}</p>
+                                <p class="text-sm font-bold text-zinc-900">{{ service.customer?.name || '-' }}</p>
+                                <p class="text-xs text-zinc-500">{{ service.customer?.phone || '-' }}</p>
+                                <p v-if="service.customer?.address" class="text-xs mt-0.5 text-zinc-500">{{ service.customer.address }}</p>
                             </div>
                         </div>
                         <div v-if="previousServices?.length" class="pt-2 border-t" style="border-color: var(--border-light);">
-                            <p class="text-xs font-semibold mb-2" style="color: var(--text-muted);">Riwayat Servis Sebelumnya:</p>
+                            <p class="text-xs font-semibold mb-2 text-zinc-500">Riwayat Servis Sebelumnya:</p>
                             <Link v-for="ps in previousServices" :key="ps.id" :href="route('services.show', ps.id)"
-                                class="block text-xs py-1" style="color: var(--accent-primary);">
+                                class="block text-xs py-1 text-indigo-600">
                                 #{{ ps.id }} — {{ formatDate(ps.created_at) }}
                             </Link>
                         </div>
                     </div>
                 </div>
                 <div class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-secondary);">
-                    <h3 class="text-sm font-bold mb-4" style="color: var(--text-primary);">📱 Data Perangkat</h3>
+                    <h3 class="text-sm font-bold mb-4 text-zinc-900">📱 Data Perangkat</h3>
                     <div class="space-y-2 text-sm">
-                        <div class="flex justify-between"><span style="color: var(--text-muted);">Teknisi</span><span class="font-semibold" style="color: var(--text-primary);">{{ service.technician?.name || '-' }}</span></div>
-                        <div class="flex justify-between"><span style="color: var(--text-muted);">Tipe</span><span class="font-semibold" style="color: var(--text-primary);">{{ service.tipe_unit || '-' }}</span></div>
-                        <div class="flex justify-between"><span style="color: var(--text-muted);">IMEI/SN</span><span class="font-semibold" style="color: var(--text-primary);">{{ service.imei_sn || '-' }}</span></div>
-                        <div class="flex justify-between"><span style="color: var(--text-muted);">Sandi/PIN</span><span class="font-semibold" style="color: var(--text-primary);">{{ service.sandi_pola || '-' }}</span></div>
-                        <div class="flex justify-between"><span style="color: var(--text-muted);">Kelengkapan</span><span class="font-semibold" style="color: var(--text-primary);">{{ Array.isArray(service.kelengkapan) ? service.kelengkapan.join(', ') : service.kelengkapan || '-' }}</span></div>
-                        <div class="flex justify-between"><span style="color: var(--text-muted);">Cabang</span><span class="font-semibold" style="color: var(--text-primary);">{{ service.branch?.name || '-' }}</span></div>
-                        <div class="flex justify-between"><span style="color: var(--text-muted);">Dibuat oleh</span><span class="font-semibold" style="color: var(--text-primary);">{{ service.creator?.name || '-' }}</span></div>
+                        <div class="flex justify-between"><span class="text-zinc-500">Teknisi</span><span class="font-semibold text-zinc-900">{{ service.technician?.name || '-' }}</span></div>
+                        <div class="flex justify-between"><span class="text-zinc-500">Tipe</span><span class="font-semibold text-zinc-900">{{ service.tipe_unit || '-' }}</span></div>
+                        <div class="flex justify-between"><span class="text-zinc-500">IMEI/SN</span><span class="font-semibold text-zinc-900">{{ service.imei_sn || '-' }}</span></div>
+                        <div class="flex justify-between"><span class="text-zinc-500">Sandi/PIN</span><span class="font-semibold text-zinc-900">{{ service.sandi_pola || '-' }}</span></div>
+                        <div class="flex justify-between"><span class="text-zinc-500">Kelengkapan</span><span class="font-semibold text-zinc-900">{{ Array.isArray(service.kelengkapan) ? service.kelengkapan.join(', ') : service.kelengkapan || '-' }}</span></div>
+                        <div class="flex justify-between"><span class="text-zinc-500">Cabang</span><span class="font-semibold text-zinc-900">{{ service.branch?.name || '-' }}</span></div>
+                        <div class="flex justify-between"><span class="text-zinc-500">Dibuat oleh</span><span class="font-semibold text-zinc-900">{{ service.creator?.name || '-' }}</span></div>
                     </div>
                 </div>
             </div>
 
             <!-- PROBLEM + CONDITION -->
             <div class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-secondary);">
-                <h3 class="text-sm font-bold mb-3" style="color: var(--text-primary);">📝 Deskripsi Masalah</h3>
-                <p class="text-sm whitespace-pre-wrap" style="color: var(--text-secondary);">{{ service.problem_description || 'Tidak ada deskripsi' }}</p>
+                <h3 class="text-sm font-bold mb-3 text-zinc-900">📝 Deskripsi Masalah</h3>
+                <p class="text-sm whitespace-pre-wrap text-zinc-600">{{ service.problem_description || 'Tidak ada deskripsi' }}</p>
                 <p v-if="service.condition_note" class="text-sm mt-3 pt-3 border-t whitespace-pre-wrap" style="border-color: var(--border-light); color: var(--text-muted);">{{ service.condition_note }}</p>
             </div>
 
             <!-- CHECKLIST MASUK -->
             <div v-if="checklistMasuk" class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-secondary);">
-                <h3 class="text-sm font-bold mb-3" style="color: var(--text-primary);">✅ Checklist Masuk</h3>
+                <h3 class="text-sm font-bold mb-3 text-zinc-900">✅ Checklist Masuk</h3>
                 <div class="flex flex-wrap gap-2">
                     <span v-for="item in checklistMasuk.checked_items" :key="item"
                         class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold"
@@ -185,12 +185,12 @@
                         ✓ {{ getChecklistItemName(item) }}
                     </span>
                 </div>
-                <p v-if="checklistMasuk.notes" class="text-xs mt-2" style="color: var(--text-muted);">Catatan: {{ checklistMasuk.notes }}</p>
+                <p v-if="checklistMasuk.notes" class="text-xs mt-2 text-zinc-500">Catatan: {{ checklistMasuk.notes }}</p>
             </div>
 
             <!-- CHECKLIST KELUAR -->
             <div v-if="checklistKeluar" class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-secondary);">
-                <h3 class="text-sm font-bold mb-3" style="color: var(--text-primary);">📋 Checklist Keluar</h3>
+                <h3 class="text-sm font-bold mb-3 text-zinc-900">📋 Checklist Keluar</h3>
                 <div class="flex flex-wrap gap-2">
                     <span v-for="item in checklistKeluar.checked_items" :key="item"
                         class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold"
@@ -198,28 +198,28 @@
                         ✓ {{ getChecklistItemName(item) }}
                     </span>
                 </div>
-                <p v-if="checklistKeluar.notes" class="text-xs mt-2" style="color: var(--text-muted);">Catatan: {{ checklistKeluar.notes }}</p>
+                <p v-if="checklistKeluar.notes" class="text-xs mt-2 text-zinc-500">Catatan: {{ checklistKeluar.notes }}</p>
             </div>
 
             <!-- SPAREPART + COST -->
             <div v-if="service.spareparts?.length" class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-secondary);">
-                <h3 class="text-sm font-bold mb-4" style="color: var(--text-primary);">🔧 Sparepart Terpakai</h3>
+                <h3 class="text-sm font-bold mb-4 text-zinc-900">🔧 Sparepart Terpakai</h3>
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
                         <thead>
                             <tr class="border-b" style="border-color: var(--border-light);">
-                                <th class="text-left py-2 px-2 text-xs font-semibold" style="color: var(--text-muted);">Produk</th>
-                                <th class="text-right py-2 px-2 text-xs font-semibold" style="color: var(--text-muted);">Qty</th>
-                                <th class="text-right py-2 px-2 text-xs font-semibold" style="color: var(--text-muted);">Harga</th>
-                                <th class="text-right py-2 px-2 text-xs font-semibold" style="color: var(--text-muted);">Subtotal</th>
+                                <th class="text-left py-2 px-2 text-xs font-semibold text-zinc-500">Produk</th>
+                                <th class="text-right py-2 px-2 text-xs font-semibold text-zinc-500">Qty</th>
+                                <th class="text-right py-2 px-2 text-xs font-semibold text-zinc-500">Harga</th>
+                                <th class="text-right py-2 px-2 text-xs font-semibold text-zinc-500">Subtotal</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="sp in service.spareparts" :key="sp.id" class="border-b" style="border-color: var(--border-light);">
-                                <td class="py-2 px-2" style="color: var(--text-primary);">{{ sp.product?.name || 'Produk dihapus' }}</td>
-                                <td class="text-right py-2 px-2" style="color: var(--text-secondary);">{{ sp.quantity }}</td>
-                                <td class="text-right py-2 px-2" style="color: var(--text-secondary);">Rp {{ formatNumber(sp.unit_price) }}</td>
-                                <td class="text-right py-2 px-2 font-semibold" style="color: var(--text-primary);">Rp {{ formatNumber(sp.subtotal) }}</td>
+                                <td class="py-2 px-2 text-zinc-900">{{ sp.product?.name || 'Produk dihapus' }}</td>
+                                <td class="text-right py-2 px-2 text-zinc-600">{{ sp.quantity }}</td>
+                                <td class="text-right py-2 px-2 text-zinc-600">Rp {{ formatNumber(sp.unit_price) }}</td>
+                                <td class="text-right py-2 px-2 font-semibold text-zinc-900">Rp {{ formatNumber(sp.subtotal) }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -228,39 +228,39 @@
 
             <!-- BIAYA -->
             <div v-if="showCost" class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-secondary);">
-                <h3 class="text-sm font-bold mb-4" style="color: var(--text-primary);">💰 Rincian Biaya</h3>
+                <h3 class="text-sm font-bold mb-4 text-zinc-900">💰 Rincian Biaya</h3>
                 <div class="space-y-2 text-sm max-w-sm">
                     <div class="flex justify-between">
-                        <span style="color: var(--text-muted);">Biaya Jasa</span>
-                        <span style="color: var(--text-primary);">Rp {{ formatNumber(service.service_charge) }}</span>
+                        <span class="text-zinc-500">Biaya Jasa</span>
+                        <span class="text-zinc-900">Rp {{ formatNumber(service.service_charge) }}</span>
                     </div>
                     <div v-if="service.spareparts?.length" class="flex justify-between">
-                        <span style="color: var(--text-muted);">Sparepart</span>
-                        <span style="color: var(--text-primary);">Rp {{ formatNumber(sparepartTotal) }}</span>
+                        <span class="text-zinc-500">Sparepart</span>
+                        <span class="text-zinc-900">Rp {{ formatNumber(sparepartTotal) }}</span>
                     </div>
-                    <div class="flex justify-between pt-2 border-t font-bold text-base" style="border-color: var(--border-color);">
-                        <span style="color: var(--text-primary);">Total</span>
-                        <span style="color: var(--accent-primary);">Rp {{ formatNumber(service.total_cost || service.service_charge + sparepartTotal) }}</span>
+                    <div class="flex justify-between pt-2 border-t font-bold text-base border-zinc-200">
+                        <span class="text-zinc-900">Total</span>
+                        <span class="text-indigo-600">Rp {{ formatNumber(service.total_cost || service.service_charge + sparepartTotal) }}</span>
                     </div>
                     <div v-if="service.payment_status" class="flex justify-between pt-2">
-                        <span style="color: var(--text-muted);">Status Bayar</span>
+                        <span class="text-zinc-500">Status Bayar</span>
                         <span class="font-semibold" :style="{ color: service.payment_status === 'paid' ? 'var(--success)' : 'var(--danger)' }">
                             {{ service.payment_status === 'paid' ? 'Lunas' : 'Belum Bayar' }}
                         </span>
                     </div>
                     <div v-if="service.warranty_expired_at" class="flex justify-between">
-                        <span style="color: var(--text-muted);">Garansi s.d.</span>
-                        <span style="color: var(--text-primary);">{{ formatDate(service.warranty_expired_at) }}</span>
+                        <span class="text-zinc-500">Garansi s.d.</span>
+                        <span class="text-zinc-900">{{ formatDate(service.warranty_expired_at) }}</span>
                     </div>
                 </div>
             </div>
 
             <!-- PHOTOS -->
             <div v-if="service.photos?.length" class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-secondary);">
-                <h3 class="text-sm font-bold mb-4" style="color: var(--text-primary);">📸 Foto Perangkat</h3>
+                <h3 class="text-sm font-bold mb-4 text-zinc-900">📸 Foto Perangkat</h3>
                 <div class="grid grid-cols-4 gap-3">
                     <div v-for="photo in service.photos" :key="photo.id" class="relative group cursor-pointer" @click="previewPhoto = photo.photo_url">
-                        <img :src="photo.photo_url" class="w-full h-24 object-cover rounded-lg border" style="border-color: var(--border-color);" />
+                        <img :src="photo.photo_url" class="w-full h-24 object-cover rounded-lg border border-zinc-200" />
                         <div class="absolute inset-0 rounded-lg bg-black/0 group-hover:bg-black/10 transition-all"></div>
                     </div>
                 </div>
@@ -268,17 +268,17 @@
 
             <!-- UPLOAD PHOTO -->
             <div v-if="driveConnected && isActive" class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-secondary);">
-                <h3 class="text-sm font-bold mb-4" style="color: var(--text-primary);">📤 Upload Foto Tambahan</h3>
+                <h3 class="text-sm font-bold mb-4 text-zinc-900">📤 Upload Foto Tambahan</h3>
                 <form @submit.prevent="uploadPhotos">
                     <input type="file" @change="onAdditionalPhotos" accept="image/*" multiple
                         class="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
                     <div v-if="additionalPreviews.length" class="mt-3 flex flex-wrap gap-2">
                         <div v-for="(preview, idx) in additionalPreviews" :key="idx" class="relative">
-                            <img :src="preview" class="h-16 w-16 object-cover rounded-lg border" style="border-color: var(--border-color);" />
+                            <img :src="preview" class="h-16 w-16 object-cover rounded-lg border border-zinc-200" />
                         </div>
                     </div>
                     <button v-if="additionalFiles.length" type="submit" :disabled="processingAction === 'upload_photos'"
-                        class="mt-3 px-4 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-sm disabled:opacity-50" style="background: var(--accent-primary);">
+                        class="mt-3 px-4 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-sm disabled:opacity-50 bg-indigo-600 text-white">
                         {{ processingAction === 'upload_photos' ? 'Mengupload...' : 'Upload' }}
                     </button>
                 </form>
@@ -286,12 +286,11 @@
 
             <!-- WARRANTY CLAIMS -->
             <div v-if="service.warranty_claims?.length" class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-secondary);">
-                <h3 class="text-sm font-bold mb-4" style="color: var(--text-primary);">🛡️ Klaim Garansi</h3>
+                <h3 class="text-sm font-bold mb-4 text-zinc-900">🛡️ Klaim Garansi</h3>
                 <div class="space-y-2">
                     <Link v-for="claim in service.warranty_claims" :key="claim.id" :href="route('services.show', claim.id)"
-                        class="flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all"
-                        style="background: var(--bg-hover);">
-                        <span style="color: var(--text-primary);">#{{ claim.id }}</span>
+                        class="flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all bg-zinc-50">
+                        <span class="text-zinc-900">#{{ claim.id }}</span>
                         <span class="text-xs" :style="statusStyle(claim.status)">{{ statusLabel(claim.status) }}</span>
                     </Link>
                 </div>
@@ -299,7 +298,7 @@
 
             <!-- TIMELINE -->
             <div class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-secondary);">
-                <h3 class="text-sm font-bold mb-4" style="color: var(--text-primary);">📊 Timeline Servis</h3>
+                <h3 class="text-sm font-bold mb-4 text-zinc-900">📊 Timeline Servis</h3>
                 <div class="space-y-4">
                     <div v-for="(evt, idx) in timeline" :key="idx" class="flex gap-3">
                         <div class="flex flex-col items-center">
@@ -307,8 +306,8 @@
                             <div v-if="idx < timeline.length - 1" class="w-0.5 flex-1" style="background: #d1d5db; min-height: 24px;"></div>
                         </div>
                         <div class="pb-1">
-                            <p class="text-sm font-semibold" style="color: var(--text-primary);">{{ evt.label }}</p>
-                            <p class="text-xs" style="color: var(--text-muted);">{{ evt.date }}</p>
+                            <p class="text-sm font-semibold text-zinc-900">{{ evt.label }}</p>
+                            <p class="text-xs text-zinc-500">{{ evt.date }}</p>
                         </div>
                     </div>
                 </div>
@@ -325,7 +324,7 @@
             <Teleport to="body">
                 <div v-if="showAssignModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showAssignModal = false">
                     <div class="rounded-2xl shadow-2xl p-5 w-full max-w-sm mx-3 border" style="background: var(--bg-secondary); border-color: var(--border-color);">
-                        <h3 class="text-base font-bold mb-4" style="color: var(--text-primary);">Assign Teknisi</h3>
+                        <h3 class="text-base font-bold mb-4 text-zinc-900">Assign Teknisi</h3>
                         <select v-model="assignTechnicianId"
                             class="w-full rounded-xl border px-3 py-2.5 text-sm mb-4"
                             :style="{ background: 'var(--bg-input)', color: 'var(--text-primary)', borderColor: 'var(--border-color)' }">
@@ -338,8 +337,7 @@
                                 style="border-color: var(--border-color); color: var(--text-secondary); background: var(--bg-hover);">Batal</button>
                             <button @click="executeAssign" :disabled="!assignTechnicianId || processingAction === 'assign'"
                                 class="flex-1 px-4 py-2 rounded-xl text-sm font-bold text-white transition-all disabled:opacity-50"
-                                :class="assignTechnicianId ? 'shadow-sm' : ''"
-                                style="background: var(--accent-primary);">{{ processingAction === 'assign' ? 'Menyimpan...' : 'Simpan' }}</button>
+                                class="bg-indigo-600 text-white" :class="assignTechnicianId ? 'shadow-sm' : ''">{{ processingAction === 'assign' ? 'Menyimpan...' : 'Simpan' }}</button>
                         </div>
                     </div>
                 </div>
@@ -349,8 +347,8 @@
             <Teleport to="body">
                 <div v-if="showCancelModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showCancelModal = false">
                     <div class="rounded-2xl shadow-2xl p-5 w-full max-w-sm mx-3 border" style="background: var(--bg-secondary); border-color: var(--border-color);">
-                        <h3 class="text-base font-bold mb-2" style="color: var(--text-primary);">Batalkan Servis?</h3>
-                        <p class="text-sm mb-4" style="color: var(--text-muted);">Servis #{{ service.id }} akan dibatalkan. Tindakan ini tidak dapat dibatalkan.</p>
+                        <h3 class="text-base font-bold mb-2 text-zinc-900">Batalkan Servis?</h3>
+                        <p class="text-sm mb-4 text-zinc-500">Servis #{{ service.id }} akan dibatalkan. Tindakan ini tidak dapat dibatalkan.</p>
                         <div class="flex gap-2">
                             <button @click="showCancelModal = false"
                                 class="flex-1 px-4 py-2 rounded-xl border text-sm font-semibold transition-all"
@@ -366,8 +364,8 @@
             <Teleport to="body">
                 <div v-if="showPartnerModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showPartnerModal = false">
                     <div class="rounded-2xl shadow-2xl p-5 w-full max-w-sm mx-3 border" style="background: var(--bg-secondary); border-color: var(--border-color);">
-                        <h3 class="text-base font-bold mb-2" style="color: var(--text-primary);">Kirim ke Partner</h3>
-                        <p class="text-xs mb-3" style="color: var(--text-muted);">Servis #{{ service.id }} akan dikerjakan oleh partner eksternal.</p>
+                        <h3 class="text-base font-bold mb-2 text-zinc-900">Kirim ke Partner</h3>
+                        <p class="text-xs mb-3 text-zinc-500">Servis #{{ service.id }} akan dikerjakan oleh partner eksternal.</p>
                         <textarea v-model="partnerNote" rows="3" placeholder="Catatan untuk partner (opsional)..."
                             class="w-full rounded-xl border px-3 py-2.5 text-sm mb-4 resize-none"
                             :style="{ background: 'var(--bg-input)', color: 'var(--text-primary)', borderColor: 'var(--border-color)' }"></textarea>
@@ -376,7 +374,7 @@
                                 class="flex-1 px-4 py-2 rounded-xl border text-sm font-semibold transition-all"
                                 style="border-color: var(--border-color); color: var(--text-secondary); background: var(--bg-hover);">Batal</button>
                             <button @click="executePartner" :disabled="processingAction === 'partner'"
-                                class="flex-1 px-4 py-2 rounded-xl text-sm font-bold text-white transition-all shadow-sm disabled:opacity-50" style="background: var(--accent-primary);">{{ processingAction === 'partner' ? 'Mengirim...' : 'Kirim' }}</button>
+                                class="flex-1 px-4 py-2 rounded-xl text-sm font-bold text-white transition-all shadow-sm disabled:opacity-50 bg-indigo-600 text-white">{{ processingAction === 'partner' ? 'Mengirim...' : 'Kirim' }}</button>
                         </div>
                     </div>
                 </div>
@@ -386,10 +384,10 @@
             <Teleport to="body">
                 <div v-if="showCompleteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm overflow-y-auto py-8" @click.self="showCompleteModal = false">
                     <div class="rounded-2xl shadow-2xl p-5 w-full max-w-lg mx-3 border" style="background: var(--bg-secondary); border-color: var(--border-color);">
-                        <h3 class="text-base font-bold mb-4" style="color: var(--text-primary);">✅ Complete Servis</h3>
+                        <h3 class="text-base font-bold mb-4 text-zinc-900">✅ Complete Servis</h3>
                         <div class="space-y-4">
                             <div>
-                                <label class="block text-xs font-semibold mb-1" style="color: var(--text-muted);">Checklist Keluar (opsional)</label>
+                                <label class="block text-xs font-semibold mb-1 text-zinc-500">Checklist Keluar (opsional)</label>
                                 <select v-model="completeForm.checklist_template_id"
                                     class="w-full rounded-xl border px-3 py-2 text-sm"
                                     :style="{ background: 'var(--bg-input)', color: 'var(--text-primary)', borderColor: 'var(--border-color)' }">
@@ -398,8 +396,7 @@
                                 </select>
                                 <div v-if="selectedChecklistItems.length" class="mt-2 space-y-1">
                                     <label v-for="item in selectedChecklistItems" :key="item.id"
-                                        class="flex items-center gap-2 text-sm cursor-pointer py-0.5"
-                                        style="color: var(--text-secondary);">
+                                        class="flex items-center gap-2 text-sm cursor-pointer py-0.5 text-zinc-600">
                                         <input type="checkbox" :value="item.id" v-model="completeForm.checked_items"
                                             class="rounded" style="accent-color: var(--accent-primary);" />
                                         {{ item.item_name }}
@@ -407,13 +404,13 @@
                                 </div>
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold mb-1" style="color: var(--text-muted);">Biaya Jasa</label>
+                                <label class="block text-xs font-semibold mb-1 text-zinc-500">Biaya Jasa</label>
                                 <input type="number" v-model.number="completeForm.service_charge" min="0"
                                     class="w-full rounded-xl border px-3 py-2 text-sm"
                                     :style="{ background: 'var(--bg-input)', color: 'var(--text-primary)', borderColor: 'var(--border-color)' }" />
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold mb-1" style="color: var(--text-muted);">Tambah Sparepart</label>
+                                <label class="block text-xs font-semibold mb-1 text-zinc-500">Tambah Sparepart</label>
                                 <div class="space-y-2">
                                     <div v-for="(sp, idx) in completeForm.spareparts" :key="idx" class="flex gap-2 items-center">
                                         <select v-model="sp.product_id" class="flex-1 rounded-xl border px-2 py-1.5 text-xs"
@@ -427,11 +424,11 @@
                                         <button @click="completeForm.spareparts.splice(idx, 1)" class="text-xs" style="color: var(--danger);">✕</button>
                                     </div>
                                     <button @click="completeForm.spareparts.push({ product_id: '', quantity: 1 })"
-                                        class="text-xs font-semibold" style="color: var(--accent-primary);">+ Tambah Sparepart</button>
+                                        class="text-xs font-semibold text-indigo-600">+ Tambah Sparepart</button>
                                 </div>
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold mb-1" style="color: var(--text-muted);">Catatan (opsional)</label>
+                                <label class="block text-xs font-semibold mb-1 text-zinc-500">Catatan (opsional)</label>
                                 <textarea v-model="completeForm.condition_note" rows="2"
                                     class="w-full rounded-xl border px-3 py-2 text-sm resize-none"
                                     :style="{ background: 'var(--bg-input)', color: 'var(--text-primary)', borderColor: 'var(--border-color)' }"></textarea>
@@ -451,10 +448,10 @@
             <Teleport to="body">
                 <div v-if="showChecklistMasukModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm overflow-y-auto py-8" @click.self="showChecklistMasukModal = false">
                     <div class="rounded-2xl shadow-2xl p-5 w-full max-w-lg mx-3 border" style="background: var(--bg-secondary); border-color: var(--border-color);">
-                        <h3 class="text-base font-bold mb-4" style="color: var(--text-primary);">{{ checklistMasuk ? 'Edit Checklist Masuk' : 'Isi Checklist Masuk' }}</h3>
+                        <h3 class="text-base font-bold mb-4 text-zinc-900">{{ checklistMasuk ? 'Edit Checklist Masuk' : 'Isi Checklist Masuk' }}</h3>
                         <div class="space-y-4">
                             <div>
-                                <label class="block text-xs font-semibold mb-1" style="color: var(--text-muted);">Template Checklist</label>
+                                <label class="block text-xs font-semibold mb-1 text-zinc-500">Template Checklist</label>
                                 <select v-model="checklistMasukForm.template_id"
                                     class="w-full rounded-xl border px-3 py-2 text-sm"
                                     :style="{ background: 'var(--bg-input)', color: 'var(--text-primary)', borderColor: 'var(--border-color)' }">
@@ -464,15 +461,14 @@
                             </div>
                             <div v-if="masukChecklistItems.length" class="space-y-1">
                                 <label v-for="item in masukChecklistItems" :key="item.id"
-                                    class="flex items-center gap-2 text-sm cursor-pointer py-0.5"
-                                    style="color: var(--text-secondary);">
+                                    class="flex items-center gap-2 text-sm cursor-pointer py-0.5 text-zinc-600">
                                     <input type="checkbox" :value="item.id" v-model="checklistMasukForm.checked_items"
                                         class="rounded" style="accent-color: var(--accent-primary);" />
                                     {{ item.item_name }}
                                 </label>
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold mb-1" style="color: var(--text-muted);">Catatan</label>
+                                <label class="block text-xs font-semibold mb-1 text-zinc-500">Catatan</label>
                                 <textarea v-model="checklistMasukForm.notes" rows="2"
                                     class="w-full rounded-xl border px-3 py-2 text-sm resize-none"
                                     :style="{ background: 'var(--bg-input)', color: 'var(--text-primary)', borderColor: 'var(--border-color)' }"></textarea>
@@ -483,7 +479,7 @@
                                 class="flex-1 px-4 py-2 rounded-xl border text-sm font-semibold transition-all"
                                 style="border-color: var(--border-color); color: var(--text-secondary); background: var(--bg-hover);">Batal</button>
                             <button @click="executeSaveChecklistMasuk" :disabled="processingAction === 'save_checklist_masuk'"
-                                class="flex-1 px-4 py-2 rounded-xl text-sm font-bold text-white transition-all shadow-sm disabled:opacity-50" style="background: var(--accent-primary);">{{ processingAction === 'save_checklist_masuk' ? 'Menyimpan...' : 'Simpan' }}</button>
+                                class="flex-1 px-4 py-2 rounded-xl text-sm font-bold text-white transition-all shadow-sm disabled:opacity-50 bg-indigo-600 text-white">{{ processingAction === 'save_checklist_masuk' ? 'Menyimpan...' : 'Simpan' }}</button>
                         </div>
                     </div>
                 </div>
@@ -493,10 +489,10 @@
             <Teleport to="body">
                 <div v-if="showChecklistKeluarModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm overflow-y-auto py-8" @click.self="showChecklistKeluarModal = false">
                     <div class="rounded-2xl shadow-2xl p-5 w-full max-w-lg mx-3 border" style="background: var(--bg-secondary); border-color: var(--border-color);">
-                        <h3 class="text-base font-bold mb-4" style="color: var(--text-primary);">{{ checklistKeluar ? 'Edit Checklist Keluar' : 'Isi Checklist Keluar' }}</h3>
+                        <h3 class="text-base font-bold mb-4 text-zinc-900">{{ checklistKeluar ? 'Edit Checklist Keluar' : 'Isi Checklist Keluar' }}</h3>
                         <div class="space-y-4">
                             <div>
-                                <label class="block text-xs font-semibold mb-1" style="color: var(--text-muted);">Template Checklist Keluar</label>
+                                <label class="block text-xs font-semibold mb-1 text-zinc-500">Template Checklist Keluar</label>
                                 <select v-model="checklistKeluarForm.template_id"
                                     class="w-full rounded-xl border px-3 py-2 text-sm"
                                     :style="{ background: 'var(--bg-input)', color: 'var(--text-primary)', borderColor: 'var(--border-color)' }">
@@ -506,15 +502,14 @@
                             </div>
                             <div v-if="keluarChecklistItems.length" class="space-y-1 max-h-60 overflow-y-auto pr-1">
                                 <label v-for="item in keluarChecklistItems" :key="item.id"
-                                    class="flex items-center gap-2 text-sm cursor-pointer py-1 border-b border-dark-100/30"
-                                    style="color: var(--text-secondary);">
+                                    class="flex items-center gap-2 text-sm cursor-pointer py-1 border-b border-dark-100/30 text-zinc-600">
                                     <input type="checkbox" :value="item.id" v-model="checklistKeluarForm.checked_items"
                                         class="rounded" style="accent-color: #2563eb;" />
                                     {{ item.item_name }}
                                 </label>
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold mb-1" style="color: var(--text-muted);">Catatan Keluar</label>
+                                <label class="block text-xs font-semibold mb-1 text-zinc-500">Catatan Keluar</label>
                                 <textarea v-model="checklistKeluarForm.notes" rows="2"
                                     class="w-full rounded-xl border px-3 py-2 text-sm resize-none"
                                     :style="{ background: 'var(--bg-input)', color: 'var(--text-primary)', borderColor: 'var(--border-color)' }"></textarea>

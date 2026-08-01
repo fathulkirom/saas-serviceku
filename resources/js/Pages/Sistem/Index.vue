@@ -3,19 +3,19 @@
     <template #header>
       <PageHeader :title="pageTitle" :subtitle="subtitle">
         <button v-if="activeTab === 'pengguna'" @click="openUserModal()"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer" style="background: var(--accent-primary);">
+          class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white transition-all shadow-sm hover:shadow-md">
           + Tambah Pengguna
         </button>
         <button v-if="activeTab === 'cabang'" @click="openBranchModal()"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer" style="background: var(--accent-primary);">
+          class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white transition-all shadow-sm hover:shadow-md">
           + Tambah Cabang
         </button>
         <button v-if="activeTab === 'shift'" @click="openShiftModal()"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer" style="background: var(--accent-primary);">
+          class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white transition-all shadow-sm hover:shadow-md">
           + Tambah Shift Kerja
         </button>
         <button v-if="activeTab === 'absensi'" @click="openAttendanceModal()"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer" style="background: var(--accent-primary);">
+          class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white transition-all shadow-sm hover:shadow-md">
           + Catat Absensi Manual
         </button>
       </PageHeader>
@@ -41,7 +41,7 @@
                   :style="{ background: 'var(--accent-primary)' }">{{ getInitials(row.name) }}</div>
                 <div>
                   <span class="font-medium text-sm">{{ row.name }}</span>
-                  <p class="text-[11px]" style="color: var(--text-muted);">{{ row.email }}</p>
+                  <p class="text-[11px] text-zinc-500">{{ row.email }}</p>
                 </div>
               </div>
             </template>
@@ -58,8 +58,7 @@
               <div class="flex items-center gap-1 justify-end">
                 <button @click="openMenuAccessModal(row)" class="text-xs px-2 py-1 rounded border font-medium transition-colors"
                   style="borderColor: var(--border-color); color: #8e44ad;">Akses Menu</button>
-                <button @click="openUserModal(row)" class="text-xs px-2 py-1 rounded border font-medium transition-colors"
-                  style="borderColor: var(--border-color); color: var(--accent-primary);">Edit</button>
+                <button @click="openUserModal(row)" class="text-xs px-2 py-1 rounded border font-medium transition-colors border-zinc-200 text-indigo-600">Edit</button>
                 <button @click="toggleUser(row)" class="text-xs px-2 py-1 rounded border font-medium transition-colors"
                   :style="{ borderColor: row.active ? '#fca5a5' : '#86efac', color: row.active ? '#ef4444' : '#10b981' }">{{ row.active ? 'Nonaktifkan' : 'Aktifkan' }}</button>
               </div>
@@ -85,7 +84,7 @@
           >
             <template #cell-name="{ row }">
               <span class="font-medium text-sm">{{ row.name }}</span>
-              <p class="text-[11px]" style="color: var(--text-muted);">{{ row.address || '-' }}</p>
+              <p class="text-[11px] text-zinc-500">{{ row.address || '-' }}</p>
             </template>
             <template #cell-users_count="{ row }">
               {{ formatNumber(row.users_count ?? 0) }} orang
@@ -101,7 +100,7 @@
             </template>
             <template #cell-action="{ row }">
               <div class="flex items-center justify-end gap-1">
-                <button @click="openBranchModal(row)" class="px-2.5 py-1 rounded text-xs font-medium border" style="borderColor: var(--border-color); color: var(--accent-primary);">Edit</button>
+                <button @click="openBranchModal(row)" class="px-2.5 py-1 rounded text-xs font-medium border border-zinc-200 text-indigo-600">Edit</button>
               </div>
             </template>
           </KTable>
@@ -132,7 +131,7 @@
             </template>
             <template #cell-action="{ row }">
               <div class="flex items-center justify-end gap-1">
-                <button @click="openShiftModal(row)" class="px-2.5 py-1 rounded text-xs font-medium border" style="borderColor: var(--border-color); color: var(--accent-primary);">Edit</button>
+                <button @click="openShiftModal(row)" class="px-2.5 py-1 rounded text-xs font-medium border border-zinc-200 text-indigo-600">Edit</button>
                 <button @click="deleteShift(row)" class="px-2.5 py-1 rounded text-xs font-medium text-red-600 border border-red-200 hover:bg-red-50">Hapus</button>
               </div>
             </template>
@@ -168,7 +167,7 @@
               </Badge>
             </template>
             <template #cell-action="{ row }">
-              <select @change="updateAttendanceStatus(row, $event.target.value)" class="text-xs py-1 px-2 rounded border font-semibold bg-white" style="borderColor: var(--border-color);">
+              <select @change="updateAttendanceStatus(row, $event.target.value)" class="text-xs py-1 px-2 rounded border font-semibold bg-white border-zinc-200">
                 <option disabled selected>Ubah Status</option>
                 <option value="present">Hadir</option>
                 <option value="late">Terlambat</option>
@@ -188,26 +187,26 @@
     <Drawer :open="showUserDrawer" :title="editingUser ? 'Edit Pengguna' : 'Tambah Pengguna Baru'" @close="showUserDrawer = false" width="420px">
       <form @submit.prevent="submitUser" class="space-y-4">
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Nama *</label>
+          <label class="text-xs font-semibold text-zinc-500">Nama *</label>
           <input v-model="userForm.name" required class="input text-sm" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Email *</label>
+          <label class="text-xs font-semibold text-zinc-500">Email *</label>
           <input v-model="userForm.email" type="email" required class="input text-sm" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Password {{ editingUser ? '(Opsional)' : '*' }}</label>
+          <label class="text-xs font-semibold text-zinc-500">Password {{ editingUser ? '(Opsional)' : '*' }}</label>
           <input v-model="userForm.password" type="password" :required="!editingUser" class="input text-sm" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Role *</label>
+          <label class="text-xs font-semibold text-zinc-500">Role *</label>
           <select v-model="userForm.role" required class="input text-sm">
             <option value="" disabled>Pilih Role</option>
             <option v-for="r in roles" :key="r" :value="r">{{ r }}</option>
           </select>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Cabang</label>
+          <label class="text-xs font-semibold text-zinc-500">Cabang</label>
           <select v-model="userForm.branch_id" class="input text-sm">
             <option value="">Pilih Cabang</option>
             <option v-for="b in branchesForSelect" :key="b.id" :value="b.id">{{ b.name }}</option>
@@ -226,15 +225,15 @@
     <Drawer :open="showBranchDrawer" :title="editingBranch ? 'Edit Cabang Toko' : 'Tambah Cabang Toko'" @close="showBranchDrawer = false" width="420px">
       <form @submit.prevent="submitBranch" class="space-y-4">
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Nama Cabang *</label>
+          <label class="text-xs font-semibold text-zinc-500">Nama Cabang *</label>
           <input v-model="branchForm.name" required placeholder="e.g. Cabang Bandung Center" class="input text-sm" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Alamat Lengkap</label>
+          <label class="text-xs font-semibold text-zinc-500">Alamat Lengkap</label>
           <textarea v-model="branchForm.address" rows="2" placeholder="Jl. Merdeka No. 45..." class="input text-sm"></textarea>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">No. Telepon Cabang</label>
+          <label class="text-xs font-semibold text-zinc-500">No. Telepon Cabang</label>
           <input v-model="branchForm.phone" placeholder="022-xxxxxxx" class="input text-sm" />
         </div>
         <div class="flex items-center gap-2 pt-2">
@@ -254,16 +253,16 @@
     <Drawer :open="showShiftDrawer" :title="editingShift ? 'Edit Shift Kerja' : 'Tambah Shift Kerja'" @close="showShiftDrawer = false" width="420px">
       <form @submit.prevent="submitShift" class="space-y-4">
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Nama Shift *</label>
+          <label class="text-xs font-semibold text-zinc-500">Nama Shift *</label>
           <input v-model="shiftForm.name" required placeholder="e.g. Shift Pagi / Shift Malam" class="input text-sm" />
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div class="space-y-1">
-            <label class="text-xs font-semibold" style="color: var(--text-muted);">Jam Mulai *</label>
+            <label class="text-xs font-semibold text-zinc-500">Jam Mulai *</label>
             <input v-model="shiftForm.start_time" type="time" required class="input text-sm" />
           </div>
           <div class="space-y-1">
-            <label class="text-xs font-semibold" style="color: var(--text-muted);">Jam Selesai *</label>
+            <label class="text-xs font-semibold text-zinc-500">Jam Selesai *</label>
             <input v-model="shiftForm.end_time" type="time" required class="input text-sm" />
           </div>
         </div>
@@ -280,14 +279,14 @@
     <Drawer :open="showAttendanceDrawer" title="Catat Absensi Karyawan Manual" @close="showAttendanceDrawer = false" width="420px">
       <form @submit.prevent="submitAttendance" class="space-y-4">
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Pilih Karyawan *</label>
+          <label class="text-xs font-semibold text-zinc-500">Pilih Karyawan *</label>
           <select v-model="attendanceForm.user_id" required class="input text-sm">
             <option value="" disabled>-- Pilih Karyawan --</option>
             <option v-for="u in attendanceUsers" :key="u.id" :value="u.id">{{ u.name }} ({{ u.role }})</option>
           </select>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Status Kehadiran *</label>
+          <label class="text-xs font-semibold text-zinc-500">Status Kehadiran *</label>
           <select v-model="attendanceForm.status" required class="input text-sm">
             <option value="present">Hadir</option>
             <option value="late">Terlambat</option>
@@ -297,7 +296,7 @@
           </select>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Waktu Masuk *</label>
+          <label class="text-xs font-semibold text-zinc-500">Waktu Masuk *</label>
           <input v-model="attendanceForm.check_in" type="datetime-local" required class="input text-sm" />
         </div>
         <div class="flex justify-end gap-2 pt-3">
@@ -316,13 +315,13 @@
         <div class="space-y-2 max-h-80 overflow-y-auto pr-1">
           <div v-for="menu in availableMenus" :key="menu.id" class="flex items-center justify-between p-2.5 rounded-xl border" style="borderColor: var(--border-color); background: var(--bg-hover);">
             <div>
-              <p class="text-xs font-bold" style="color: var(--text-primary);">{{ menu.label }}</p>
-              <p class="text-[10px]" style="color: var(--text-muted);">{{ menu.group }}</p>
+              <p class="text-xs font-bold text-zinc-900">{{ menu.label }}</p>
+              <p class="text-[10px] text-zinc-500">{{ menu.group }}</p>
             </div>
             <input type="checkbox" :value="menu.id" v-model="selectedMenuIds" class="w-4 h-4 rounded accent-purple-600 cursor-pointer" />
           </div>
         </div>
-        <div class="flex justify-between items-center pt-3 border-t" style="borderColor: var(--border-color);">
+        <div class="flex justify-between items-center pt-3 border-t border-zinc-200">
           <button type="button" @click="resetMenuAccess" class="text-xs text-red-500 font-semibold hover:underline cursor-pointer">Reset Default Role</button>
           <div class="flex gap-2">
             <button type="button" @click="showMenuAccessDrawer = false" class="btn-secondary text-xs">Batal</button>

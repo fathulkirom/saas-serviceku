@@ -2,43 +2,44 @@
     <AdminLayout>
         <template #header>
             <div class="flex justify-between items-center">
-                <h2 class="font-semibold text-xl text-gray-800 leading-tight">Edit Tenant: {{ tenant.tenant_name }}</h2>
-                <Link :href="route('admin.tenant.index')" class="text-sm text-indigo-600 hover:text-indigo-500">← Kembali</Link>
+                <h2 class="font-black text-2xl text-slate-100 tracking-tight">Edit Tenant: <span class="text-indigo-400">{{ tenant.tenant_name }}</span></h2>
+                <Link :href="route('admin.tenant.index')" class="text-sm font-bold text-slate-400 hover:text-slate-300 transition-colors">&larr; Kembali</Link>
             </div>
         </template>
 
         <!-- Flash Message -->
-        <div v-if="$page.props.flash?.success" class="mb-4 p-4 bg-green-50 border border-green-200 rounded-md">
-            <p class="text-sm text-green-700">{{ $page.props.flash.success }}</p>
+        <div v-if="$page.props.flash?.success" class="mb-5 p-4 rounded-xl border flex items-center gap-3 animate-slide-down bg-emerald-500/10 border-emerald-500/20">
+            <svg class="w-5 h-5 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <p class="text-sm text-emerald-300 font-medium">{{ $page.props.flash.success }}</p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Form Edit -->
-            <div class="lg:col-span-2 rounded-2xl p-6 border" style="background: var(--bg-card); border-color: var(--border-color);">
-                <h3 class="font-semibold text-gray-900 mb-4">Informasi Dasar</h3>
+            <div class="lg:col-span-2 rounded-2xl p-6 border bg-slate-800/50 border-slate-700/50 backdrop-blur-xl shadow-sm">
+                <h3 class="font-bold text-lg text-slate-100 mb-6">Informasi Dasar</h3>
                 <form @submit.prevent="submit">
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-2 gap-5">
                         <div class="col-span-2">
-                            <label class="block text-sm font-medium text-gray-700">Nama Toko</label>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Nama Toko</label>
                             <input v-model="form.tenant_name" type="text" required
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
-                            <p v-if="form.errors.tenant_name" class="mt-1 text-xs text-red-600">{{ form.errors.tenant_name }}</p>
+                                class="w-full rounded-xl text-sm py-2.5 px-4 border transition-all duration-200 focus:ring-2 focus:ring-indigo-500/50 focus:outline-none bg-slate-900/50 border-slate-700 text-slate-200 placeholder-slate-500" />
+                            <p v-if="form.errors.tenant_name" class="mt-1.5 text-xs font-medium text-rose-400">{{ form.errors.tenant_name }}</p>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Email</label>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Email</label>
                             <input v-model="form.email" type="email" required
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
-                            <p v-if="form.errors.email" class="mt-1 text-xs text-red-600">{{ form.errors.email }}</p>
+                                class="w-full rounded-xl text-sm py-2.5 px-4 border transition-all duration-200 focus:ring-2 focus:ring-indigo-500/50 focus:outline-none bg-slate-900/50 border-slate-700 text-slate-200 placeholder-slate-500" />
+                            <p v-if="form.errors.email" class="mt-1.5 text-xs font-medium text-rose-400">{{ form.errors.email }}</p>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">Telepon</label>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Telepon</label>
                             <input v-model="form.phone" type="text"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
+                                class="w-full rounded-xl text-sm py-2.5 px-4 border transition-all duration-200 focus:ring-2 focus:ring-indigo-500/50 focus:outline-none bg-slate-900/50 border-slate-700 text-slate-200 placeholder-slate-500" />
                         </div>
                         <div class="col-span-2">
-                            <label class="block text-sm font-medium text-gray-700">Tipe Bisnis</label>
+                            <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Tipe Bisnis</label>
                             <select v-model="form.business_type"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                class="w-full rounded-xl text-sm py-2.5 px-4 border transition-all duration-200 focus:ring-2 focus:ring-indigo-500/50 focus:outline-none bg-slate-900/50 border-slate-700 text-slate-200">
                                 <option value="full_service">Servis & Sparepart</option>
                                 <option value="aksesoris_service">Aksesoris & Servis</option>
                                 <option value="aksespare_service">Pusat Servis & Sparepart</option>
@@ -48,13 +49,14 @@
                         </div>
                     </div>
 
-                    <div class="flex justify-end gap-3 mt-6 pt-4 border-t">
+                    <div class="flex justify-end gap-3 mt-8 pt-6 border-t border-slate-700/50">
                         <Link :href="route('admin.tenant.index')"
-                            class="px-4 py-2 text-sm text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200">
+                            class="px-5 py-2.5 rounded-xl text-sm font-bold transition-colors text-slate-300 bg-slate-700/50 hover:bg-slate-700">
                             Batal
                         </Link>
                         <button type="submit" :disabled="form.processing"
-                            class="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 text-sm">
+                            class="px-6 py-2.5 rounded-xl text-sm font-bold text-white transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:hover:translate-y-0 flex items-center gap-2">
+                            <svg v-if="form.processing" class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                             {{ form.processing ? 'Menyimpan...' : 'Simpan Perubahan' }}
                         </button>
                     </div>
@@ -62,28 +64,32 @@
             </div>
 
             <!-- Sidebar Actions -->
-            <div class="space-y-4">
+            <div class="space-y-6">
                 <!-- Quick Actions -->
-                <div class="rounded-2xl p-6 border">
-                    <h3 class="font-semibold text-gray-900 mb-4">⚡ Aksi Cepat</h3>
+                <div class="rounded-2xl p-6 border bg-slate-800/50 border-slate-700/50 backdrop-blur-xl shadow-sm">
+                    <h3 class="font-bold text-lg text-slate-100 mb-4 flex items-center gap-2">
+                        ⚡ Aksi Cepat
+                    </h3>
                     <div class="space-y-3">
                         <Link :href="route('admin.tenant.show', tenant.id)"
-                            class="block w-full text-center px-4 py-2 bg-indigo-100 text-indigo-700 rounded-md text-sm hover:bg-indigo-200">
+                            class="block w-full text-center px-4 py-2.5 bg-indigo-500/10 text-indigo-400 font-bold rounded-xl text-sm hover:bg-indigo-500/20 transition-colors">
                             📋 Detail Tenant
                         </Link>
                         <a v-if="domainUrl" :href="domainUrl" target="_blank"
-                            class="block w-full text-center px-4 py-2 bg-green-100 text-green-700 rounded-md text-sm hover:bg-green-200">
+                            class="block w-full text-center px-4 py-2.5 bg-emerald-500/10 text-emerald-400 font-bold rounded-xl text-sm hover:bg-emerald-500/20 transition-colors">
                             🔗 Buka Toko
                         </a>
                     </div>
                 </div>
 
                 <!-- Change Plan -->
-                <div class="rounded-2xl p-6 border">
-                    <h3 class="font-semibold text-gray-900 mb-4">📦 Ganti Paket</h3>
+                <div class="rounded-2xl p-6 border bg-slate-800/50 border-slate-700/50 backdrop-blur-xl shadow-sm">
+                    <h3 class="font-bold text-lg text-slate-100 mb-4 flex items-center gap-2">
+                        📦 Ganti Paket
+                    </h3>
                     <form @submit.prevent="changePlan">
                         <select v-model="planForm.plan_id" required
-                            class="w-full rounded-md border-gray-300 shadow-sm text-sm focus:border-indigo-500 focus:ring-indigo-500 mb-3"
+                            class="w-full rounded-xl text-sm py-2.5 px-4 border transition-all duration-200 focus:ring-2 focus:ring-indigo-500/50 focus:outline-none bg-slate-900/50 border-slate-700 text-slate-200 mb-4"
                             @change="onPlanChange">
                             <option value="">Pilih Paket</option>
                             <option v-for="p in plans" :key="p.id" :value="p.id" :selected="tenant.plan_id === p.id">
@@ -92,50 +98,51 @@
                         </select>
 
                         <!-- Simulasi Upgrade/Downgrade -->
-                        <div v-if="simulation" class="p-3 rounded-lg mb-3 text-sm"
-                            :class="simulation.type === 'upgrade' ? 'bg-blue-50 border border-blue-200' : simulation.type === 'downgrade' ? 'bg-yellow-50 border border-yellow-200' : 'bg-gray-50 border border-gray-200'">
-                            <div class="flex items-center gap-2 mb-2">
-                                <span v-if="simulation.type === 'upgrade'" class="text-blue-600 font-semibold">⬆️ Upgrade</span>
-                                <span v-else-if="simulation.type === 'downgrade'" class="text-yellow-600 font-semibold">⬇️ Downgrade</span>
-                                <span v-else class="text-gray-600 font-semibold">🔄 Paket Sama</span>
+                        <div v-if="simulation" class="p-4 rounded-xl mb-4 text-sm"
+                            :class="simulation.type === 'upgrade' ? 'bg-indigo-500/10 border border-indigo-500/20' : simulation.type === 'downgrade' ? 'bg-amber-500/10 border border-amber-500/20' : 'bg-slate-700/30 border border-slate-600/50'">
+                            <div class="flex items-center gap-2 mb-3">
+                                <span v-if="simulation.type === 'upgrade'" class="text-indigo-400 font-bold">⬆️ Upgrade</span>
+                                <span v-else-if="simulation.type === 'downgrade'" class="text-amber-400 font-bold">⬇️ Downgrade</span>
+                                <span v-else class="text-slate-300 font-bold">🔄 Paket Sama</span>
                             </div>
-                            <div class="space-y-1 text-xs">
+                            <div class="space-y-1.5 text-xs font-medium">
                                 <div class="flex justify-between">
-                                    <span class="text-gray-500">Paket Lama:</span>
-                                    <span class="font-medium">{{ simulation.old_plan }} — Rp {{ formatNumber(simulation.old_price) }}/bln</span>
+                                    <span class="text-slate-400">Paket Lama:</span>
+                                    <span class="text-slate-200">{{ simulation.old_plan }} — Rp {{ formatNumber(simulation.old_price) }}/bln</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <span class="text-gray-500">Paket Baru:</span>
-                                    <span class="font-medium">{{ simulation.new_plan }} — Rp {{ formatNumber(simulation.new_price) }}/bln</span>
+                                    <span class="text-slate-400">Paket Baru:</span>
+                                    <span class="text-slate-200">{{ simulation.new_plan }} — Rp {{ formatNumber(simulation.new_price) }}/bln</span>
                                 </div>
                                 <div class="flex justify-between">
-                                    <span class="text-gray-500">Sisa Periode:</span>
-                                    <span class="font-medium">{{ simulation.remaining_days }} hari</span>
+                                    <span class="text-slate-400">Sisa Periode:</span>
+                                    <span class="text-slate-200">{{ simulation.remaining_days }} hari</span>
                                 </div>
-                                <hr class="my-1">
-                                <div class="flex justify-between font-medium"
-                                    :class="simulation.diff > 0 ? 'text-blue-700' : simulation.diff < 0 ? 'text-yellow-700' : 'text-gray-700'">
+                                <hr class="my-2 border-slate-700/50">
+                                <div class="flex justify-between font-bold"
+                                    :class="simulation.diff > 0 ? 'text-indigo-400' : simulation.diff < 0 ? 'text-amber-400' : 'text-slate-300'">
                                     <span>{{ simulation.diff > 0 ? 'Tambahan Biaya:' : simulation.diff < 0 ? 'Kredit:' : 'Tidak Ada Biaya:' }}</span>
                                     <span>Rp {{ formatNumber(Math.abs(simulation.diff)) }}</span>
                                 </div>
                             </div>
                         </div>
 
-                        <button type="submit" :disabled="planForm.processing || !planForm.plan_id"
-                            class="w-full px-4 py-2 bg-indigo-600 text-white rounded-md text-sm hover:bg-indigo-700 disabled:opacity-50">
-                            {{ planForm.processing ? 'Menyimpan...' : 'Simpan' }}
+                        <button type="submit" :disabled="planForm.processing"
+                            class="w-full px-4 py-2.5 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 disabled:opacity-50 text-sm flex items-center justify-center gap-2">
+                            <svg v-if="planForm.processing" class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                            {{ planForm.processing ? 'Menyimpan...' : 'Simpan Paket' }}
                         </button>
                     </form>
                 </div>
 
                 <!-- Extend Trial -->
-                <div class="rounded-2xl p-6 border">
-                    <h3 class="font-semibold text-gray-900 mb-4">⏰ Perpanjang Trial</h3>
-                    <p class="text-xs text-gray-500 mb-3">Trial saat ini: {{ tenant.trial_ends_at || 'Tidak ada' }}</p>
+                <div class="rounded-2xl p-6 border bg-slate-800/50 border-slate-700/50 backdrop-blur-xl shadow-sm">
+                    <h3 class="font-bold text-lg text-slate-100 mb-4 flex items-center gap-2">⏰ Perpanjang Trial</h3>
+                    <p class="text-xs text-slate-400 mb-3">Trial saat ini: <span class="text-slate-200">{{ tenant.trial_ends_at || 'Tidak ada' }}</span></p>
                     <form @submit.prevent="extendTrial">
                         <div class="flex gap-2">
                             <select v-model="trialForm.days"
-                                class="flex-1 rounded-md border-gray-300 shadow-sm text-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                class="flex-1 rounded-xl text-sm py-2.5 px-4 border transition-all duration-200 focus:ring-2 focus:ring-indigo-500/50 focus:outline-none bg-slate-900/50 border-slate-700 text-slate-200">
                                 <option value="7">7 hari</option>
                                 <option value="14">14 hari</option>
                                 <option value="30">30 hari</option>
@@ -143,7 +150,7 @@
                                 <option value="90">90 hari</option>
                             </select>
                             <button type="submit" :disabled="trialForm.processing"
-                                class="px-4 py-2 bg-yellow-500 text-white rounded-md text-sm hover:bg-yellow-600 disabled:opacity-50">
+                                class="px-5 py-2.5 bg-yellow-500 text-yellow-950 font-bold rounded-xl hover:bg-yellow-400 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 disabled:opacity-50 text-sm">
                                 Perpanjang
                             </button>
                         </div>
@@ -151,27 +158,27 @@
                 </div>
 
                 <!-- Danger Zone -->
-                <div class="rounded-2xl p-6 border border-2 border-red-200">
-                    <h3 class="font-semibold text-red-600 mb-4">⚠️ Zona Berbahaya</h3>
+                <div class="rounded-2xl p-6 border bg-rose-950/20 border-rose-900/50 backdrop-blur-xl shadow-sm">
+                    <h3 class="font-bold text-lg text-rose-500 mb-4 flex items-center gap-2">⚠️ Zona Berbahaya</h3>
 
                     <!-- Tenant Aktif -> Harus Suspend Dulu -->
                     <template v-if="tenant.is_active">
-                        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-3">
-                            <p class="text-xs text-yellow-800">
-                                🛑 Tenant masih <strong>aktif</strong>. Untuk menghapus, harus di-<strong>Suspend</strong> terlebih dahulu.
+                        <div class="bg-amber-950/30 border border-amber-900/50 rounded-xl p-4 mb-4">
+                            <p class="text-sm font-medium text-amber-500 leading-relaxed">
+                                🛑 Tenant masih <strong class="text-amber-400 font-bold">aktif</strong>. Untuk menghapus, harus di-<strong class="text-amber-400 font-bold">Suspend</strong> terlebih dahulu.
                             </p>
                         </div>
                         <button @click="suspendTenant" :disabled="suspendForm.processing"
-                            class="w-full px-4 py-2 bg-orange-500 text-white rounded-md text-sm hover:bg-orange-600 disabled:opacity-50">
+                            class="w-full px-4 py-2.5 bg-orange-600/20 border border-orange-500/30 text-orange-400 font-bold rounded-xl hover:bg-orange-600/30 transition-all shadow-sm hover:-translate-y-0.5 disabled:opacity-50 text-sm">
                             🔒 Suspend Tenant
                         </button>
                     </template>
 
                     <!-- Tenant Tidak Aktif -> Bisa Hapus -->
                     <template v-else>
-                        <p class="text-xs text-gray-500 mb-3">Menghapus tenant akan menghapus semua data termasuk database tenant.</p>
+                        <p class="text-sm font-medium text-rose-400/80 mb-4 leading-relaxed">Menghapus tenant akan menghapus semua data termasuk database tenant permanen.</p>
                         <button @click="confirmDelete"
-                            class="w-full px-4 py-2 bg-red-600 text-white rounded-md text-sm hover:bg-red-700">
+                            class="w-full px-4 py-2.5 bg-rose-600 text-white font-bold rounded-xl hover:bg-rose-700 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 text-sm">
                             🗑️ Hapus Tenant
                         </button>
                     </template>
@@ -180,20 +187,21 @@
         </div>
 
         <!-- Delete Confirmation Modal -->
-        <div v-if="showDeleteModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50" @click.self="showDeleteModal = false">
-            <div class="rounded-2xl p-6 max-w-md mx-4 border" style="background: var(--bg-card); border-color: var(--border-color); box-shadow: var(--shadow-lg);">
-                <h3 class="text-lg font-bold text-red-600 mb-2">Konfirmasi Hapus Tenant</h3>
-                <p class="text-sm text-gray-600 mb-4">
-                    Apakah Anda yakin ingin menghapus <strong>{{ tenant.tenant_name }}</strong>?<br>
-                    Tindakan ini <strong>tidak bisa dibatalkan</strong>. Semua data termasuk database tenant akan dihapus permanen.
+        <div v-if="showDeleteModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center z-50 animate-fade-in" @click.self="showDeleteModal = false">
+            <div class="rounded-3xl p-8 max-w-md mx-4 border bg-slate-900 border-slate-700 shadow-2xl animate-slide-up">
+                <h3 class="text-2xl font-black text-rose-500 mb-3 tracking-tight">Konfirmasi Hapus Tenant</h3>
+                <p class="text-sm font-medium text-slate-300 mb-6 leading-relaxed">
+                    Apakah Anda yakin ingin menghapus <strong class="text-white">{{ tenant.tenant_name }}</strong>?<br><br>
+                    Tindakan ini <strong class="text-rose-400">tidak bisa dibatalkan</strong>. Semua data termasuk database tenant akan dihapus permanen.
                 </p>
                 <div class="flex justify-end gap-3">
-                    <button @click="showDeleteModal = false" class="px-4 py-2 bg-gray-100 text-gray-700 rounded-md text-sm hover:bg-gray-200">
+                    <button @click="showDeleteModal = false" class="px-5 py-2.5 bg-slate-800 text-slate-300 font-bold rounded-xl hover:bg-slate-700 transition-colors text-sm">
                         Batal
                     </button>
                     <button @click="deleteTenant" :disabled="deleteForm.processing"
-                        class="px-4 py-2 bg-red-600 text-white rounded-md text-sm hover:bg-red-700 disabled:opacity-50">
-                        {{ deleteForm.processing ? 'Menghapus...' : 'Ya, Hapus!' }}
+                        class="px-6 py-2.5 bg-rose-600 text-white font-bold rounded-xl hover:bg-rose-700 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 disabled:opacity-50 text-sm flex items-center gap-2">
+                        <svg v-if="deleteForm.processing" class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                        {{ deleteForm.processing ? 'Menghapus...' : 'Ya, Hapus' }}
                     </button>
                 </div>
             </div>

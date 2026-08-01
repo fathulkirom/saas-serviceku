@@ -1,43 +1,44 @@
 <template>
-  <div class="rounded-xl border overflow-hidden" :style="{ background: 'var(--bg-card)', borderColor: 'var(--border-color)' }">
-    <div v-if="title" class="px-5 py-4 border-b" :style="{ borderColor: 'var(--border-light)' }">
-      <h3 class="text-sm font-bold" style="color: var(--text-primary);">{{ title }}</h3>
+  <div class="rounded-2xl border border-zinc-200 bg-white overflow-hidden shadow-sm">
+    <div v-if="title" class="px-5 py-4 border-b border-zinc-200 bg-zinc-50/50">
+      <h3 class="text-sm font-bold text-zinc-900">{{ title }}</h3>
     </div>
     <div class="overflow-x-auto">
-      <table class="w-full">
+      <table class="w-full text-left border-collapse">
         <thead>
-          <tr class="border-b" :style="{ borderColor: 'var(--border-light)', background: 'var(--bg-hover)' }">
+          <tr class="border-b border-zinc-200 bg-zinc-50">
             <th v-for="col in columns" :key="col.key"
-              class="px-4 py-3 text-[11px] font-bold uppercase tracking-wider sticky top-0 z-10"
-              :class="col.align === 'right' ? 'text-right' : col.align === 'center' ? 'text-center' : 'text-left'"
-              :style="{ color: 'var(--text-muted)', background: 'var(--bg-hover)' }">
+              class="px-5 py-3 text-xs font-semibold text-zinc-500 uppercase tracking-wider sticky top-0 z-10"
+              :class="col.align === 'right' ? 'text-right' : col.align === 'center' ? 'text-center' : 'text-left'">
               {{ col.label }}
             </th>
-            <th v-if="$slots.action" class="px-4 py-3 text-right sticky top-0 z-10" :style="{ background: 'var(--bg-hover)' }"></th>
+            <th v-if="$slots.action" class="px-5 py-3 text-right sticky top-0 z-10 bg-zinc-50"></th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="divide-y divide-zinc-200">
           <tr v-if="!rows.length">
-            <td :colspan="columns.length + ($slots.action ? 1 : 0)" class="px-4 py-8">
+            <td :colspan="columns.length + ($slots.action ? 1 : 0)" class="px-5 py-12">
               <EmptyState :icon="emptyIcon" :title="emptyTitle" :description="emptyDescription"
-                :actionUrl="emptyActionUrl" :actionLabel="emptyActionLabel" />
+                :actionUrl="emptyActionUrl" :actionLabel="emptyActionLabel" @action="$emit('empty-action')" />
             </td>
           </tr>
           <template v-else>
             <tr v-for="(row, i) in rows" :key="i"
-              class="border-t transition-all"
-              :class="[hoverable ? 'hover:bg-dark-50 cursor-pointer' : '', striped && i % 2 === 1 ? 'bg-dark-50/50' : '']"
-              :style="{ borderColor: 'var(--border-light)' }"
+              class="group transition-colors"
+              :class="[hoverable ? 'hover:bg-zinc-50/80 cursor-pointer' : '', striped && i % 2 === 1 ? 'bg-zinc-50/30' : 'bg-white']"
               @click="$emit('row-click', row)">
               <td v-for="col in columns" :key="col.key"
-                class="px-4 py-3.5 text-sm"
-                :class="[col.align === 'right' ? 'text-right font-medium' : col.align === 'center' ? 'text-center' : 'text-left', compact ? 'py-2.5' : 'py-3.5']"
-                :style="{ color: col.bold ? 'var(--text-primary)' : 'var(--text-secondary)' }">
+                class="px-5 text-sm"
+                :class="[
+                  col.align === 'right' ? 'text-right' : col.align === 'center' ? 'text-center' : 'text-left',
+                  compact ? 'py-3' : 'py-4',
+                  col.bold ? 'font-semibold text-zinc-900' : 'text-zinc-600'
+                ]">
                 <slot :name="'cell-' + col.key" :row="row" :value="row[col.key]">
                   {{ formatCell(row, col) }}
                 </slot>
               </td>
-              <td v-if="$slots.action" class="px-4 py-3 text-right" :class="compact ? 'py-2.5' : 'py-3.5'">
+              <td v-if="$slots.action" class="px-5 text-right" :class="compact ? 'py-3' : 'py-4'">
                 <slot name="action" :row="row" />
               </td>
             </tr>
@@ -45,7 +46,7 @@
         </tbody>
       </table>
     </div>
-    <div v-if="$slots.footer" class="px-4 py-3 border-t" :style="{ borderColor: 'var(--border-light)' }">
+    <div v-if="$slots.footer" class="px-5 py-4 border-t border-zinc-200 bg-zinc-50/50">
       <slot name="footer" />
     </div>
   </div>

@@ -5,32 +5,28 @@
         <button
           v-if="activeTab === 'ceklis'"
           @click="openCeklisModal()"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer"
-          style="background: var(--accent-primary);"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer bg-indigo-600"
         >
           + Template Ceklis
         </button>
         <button
           v-if="activeTab === 'partner'"
           @click="openPartnerModal()"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer"
-          style="background: var(--accent-primary);"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer bg-indigo-600"
         >
           + Partner Baru
         </button>
         <button
           v-if="activeTab === 'pickup'"
           @click="openPickupModal()"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer"
-          style="background: var(--accent-primary);"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer bg-indigo-600"
         >
           + Jadwal Pickup/Delivery
         </button>
         <button
           v-if="activeTab === 'inden'"
           @click="openIndenModal()"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer"
-          style="background: var(--accent-primary);"
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer bg-indigo-600"
         >
           + Catat Inden Baru
         </button>
@@ -65,7 +61,7 @@
             </template>
             <template #cell-action="{ row }">
               <div class="flex items-center justify-end gap-1">
-                <button @click="openCeklisModal(row)" class="px-2.5 py-1 rounded text-xs font-medium border" style="borderColor: var(--border-color); color: var(--accent-primary);">Edit</button>
+                <button @click="openCeklisModal(row)" class="px-2.5 py-1 rounded text-xs font-medium border border-zinc-200 text-indigo-600 hover:border-indigo-600 hover:bg-indigo-50">Edit</button>
                 <button @click="deleteTemplate(row)" class="px-2.5 py-1 rounded text-xs font-medium text-red-600 border border-red-200 hover:bg-red-50">Hapus</button>
               </div>
             </template>
@@ -92,7 +88,7 @@
               <span class="font-medium">{{ row.name }}</span>
             </template>
             <template #cell-expertise="{ row }">
-              <span class="text-xs font-semibold px-2 py-0.5 rounded" style="background: var(--bg-hover);">{{ row.expertise ?? '-' }}</span>
+              <span class="text-xs font-semibold px-2 py-0.5 rounded bg-zinc-100 text-zinc-700">{{ row.expertise ?? '-' }}</span>
             </template>
             <template #cell-phone="{ row }">
               {{ row.phone ?? '-' }}
@@ -102,7 +98,7 @@
             </template>
             <template #cell-action="{ row }">
               <div class="flex items-center justify-end gap-1">
-                <button @click="openPartnerModal(row)" class="px-2.5 py-1 rounded text-xs font-medium border" style="borderColor: var(--border-color); color: var(--accent-primary);">Edit</button>
+                <button @click="openPartnerModal(row)" class="px-2.5 py-1 rounded text-xs font-medium border border-zinc-200 text-indigo-600 hover:border-indigo-600 hover:bg-indigo-50">Edit</button>
                 <button @click="deletePartner(row)" class="px-2.5 py-1 rounded text-xs font-medium text-red-600 border border-red-200 hover:bg-red-50">Hapus</button>
               </div>
             </template>
@@ -142,7 +138,7 @@
             </template>
             <template #cell-action="{ row }">
               <div class="flex items-center justify-end gap-1">
-                <select @change="updatePickupStatus(row, $event.target.value)" class="text-xs py-1 px-2 rounded border font-semibold bg-white" style="borderColor: var(--border-color);">
+                <select @change="updatePickupStatus(row, $event.target.value)" class="text-xs py-1 px-2 rounded border font-semibold bg-white border-zinc-200 focus:border-indigo-500 focus:ring-indigo-200">
                   <option disabled selected>Ubah Status</option>
                   <option value="pending">Pending</option>
                   <option value="scheduled">Terjadwal</option>
@@ -171,7 +167,7 @@
           >
             <template #cell-service_info="{ row }">
               <span class="font-medium">{{ row.customer?.name ?? '-' }}</span>
-              <p class="text-xs" style="color: var(--text-muted);">{{ row.tipe_unit ?? '' }}</p>
+              <p class="text-xs text-zinc-500">{{ row.tipe_unit ?? '' }}</p>
             </template>
             <template #cell-from_branch="{ row }">
               {{ row.branch?.name ?? '-' }}
@@ -196,7 +192,7 @@
           <template v-else>
             <KCard title="Filter Inden">
               <div class="flex flex-wrap items-center gap-3">
-                <select v-model="indentFilters.status" @change="applyIndentFilter" class="text-xs font-semibold rounded-lg border px-3 py-2 bg-white text-gray-700 focus:ring-2 focus:ring-blue-200 focus:border-blue-500 focus:outline-none" style="border-color: var(--border-color);">
+                <select v-model="indentFilters.status" @change="applyIndentFilter" class="text-xs font-semibold rounded-xl border px-3 py-2 bg-white text-zinc-700 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 focus:outline-none border-zinc-200 focus:border-indigo-500 focus:ring-indigo-200">
                   <option value="">Semua Status</option>
                   <option value="menunggu">Menunggu</option>
                   <option value="diproses">Diproses</option>
@@ -209,12 +205,11 @@
                     v-model="indentFilters.search"
                     @keyup.enter="applyIndentFilter"
                     placeholder="Cari nama barang / pelanggan..."
-                    class="w-full rounded-lg border text-xs px-3 py-2 pl-8 focus:ring-2 focus:outline-none bg-white text-gray-700 focus:border-blue-500 focus:ring-blue-200 transition-all"
-                    style="border-color: var(--border-color);"
+                    class="w-full rounded-xl border text-xs px-3 py-2 pl-8 focus:ring-2 focus:outline-none bg-white text-zinc-700 focus:border-indigo-500 focus:ring-indigo-200 transition-all border-zinc-200 focus:border-indigo-500 focus:ring-indigo-200"
                   />
-                  <svg class="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                  <svg class="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                 </div>
-                <button @click="resetIndentFilter" class="px-3 py-2 rounded-lg text-xs font-semibold border border-gray-200 text-gray-500 hover:bg-gray-100 transition-all bg-white">
+                <button @click="resetIndentFilter" class="px-3 py-2 rounded-xl text-xs font-semibold border border-zinc-200 text-zinc-500 hover:bg-zinc-100 transition-all bg-white">
                   ↺ Reset
                 </button>
               </div>
@@ -232,7 +227,7 @@
                 <span class="font-medium">{{ row.customer?.name ?? row.service?.customer?.name ?? '-' }}</span>
               </template>
               <template #cell-product_name="{ row }">
-                <span class="font-medium" style="color: var(--accent-primary);">{{ row.product_name ?? row.product?.name ?? '-' }}</span>
+                <span class="font-medium text-indigo-600">{{ row.product_name ?? row.product?.name ?? '-' }}</span>
               </template>
               <template #cell-estimated_price="{ row }">
                 Rp {{ formatNumber(row.estimated_price || 0) }}
@@ -245,7 +240,7 @@
               </template>
               <template #cell-action="{ row }">
                 <div class="flex items-center justify-end gap-1">
-                  <a :href="route('indents.print', row.id)" target="_blank" class="px-2.5 py-1 rounded text-xs font-semibold text-blue-600 border border-blue-200 hover:bg-blue-50">Nota</a>
+                  <a :href="route('indents.print', row.id)" target="_blank" class="px-2.5 py-1 rounded text-xs font-semibold text-indigo-600 border border-blue-200 hover:bg-blue-50">Nota</a>
                   <button @click="deleteInden(row)" class="px-2.5 py-1 rounded text-xs font-medium text-red-600 border border-red-200 hover:bg-red-50">Hapus</button>
                 </div>
               </template>
@@ -261,13 +256,13 @@
     <Drawer :open="showCeklisDrawer" :title="editingCeklis ? 'Edit Template Ceklis' : 'Tambah Template Ceklis'" @close="showCeklisDrawer = false" width="450px">
       <form @submit.prevent="submitCeklis" class="space-y-4">
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Nama Template *</label>
+          <label class="text-xs font-semibold text-zinc-500">Nama Template *</label>
           <input v-model="ceklisForm.name" required placeholder="e.g. Ceklis Handphone / Laptop" class="input text-sm" />
         </div>
         <div class="space-y-2">
-          <label class="text-xs font-semibold flex items-center justify-between" style="color: var(--text-muted);">
+          <label class="text-xs font-semibold flex items-center justify-between text-zinc-500">
             Item Ceklis (Daftar Fisik & Kelengkapan)
-            <button type="button" @click="addCeklisItem" class="text-xs text-blue-600 font-bold hover:underline">+ Tambah Item</button>
+            <button type="button" @click="addCeklisItem" class="text-xs text-indigo-600 font-bold hover:underline">+ Tambah Item</button>
           </label>
           <div v-for="(item, idx) in ceklisForm.items" :key="idx" class="flex gap-2 items-center">
             <input v-model="ceklisForm.items[idx]" placeholder="e.g. Layar / Baterai / Charger" required class="input text-xs flex-1" />
@@ -291,23 +286,23 @@
     <Drawer :open="showPartnerDrawer" :title="editingPartner ? 'Edit Partner' : 'Tambah Partner Teknisi'" @close="showPartnerDrawer = false" width="450px">
       <form @submit.prevent="submitPartner" class="space-y-4">
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Nama Partner *</label>
+          <label class="text-xs font-semibold text-zinc-500">Nama Partner *</label>
           <input v-model="partnerForm.name" required placeholder="e.g. Specialist Micro Soldering" class="input text-sm" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Keahlian / Spesialisasi</label>
+          <label class="text-xs font-semibold text-zinc-500">Keahlian / Spesialisasi</label>
           <input v-model="partnerForm.expertise" placeholder="e.g. Reball CPU, MacBook, TV LED" class="input text-sm" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">No. Telepon / WA *</label>
+          <label class="text-xs font-semibold text-zinc-500">No. Telepon / WA *</label>
           <input v-model="partnerForm.phone" required placeholder="08xxxxxxxxxx" class="input text-sm" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Alamat / Lokasi Workshop</label>
+          <label class="text-xs font-semibold text-zinc-500">Alamat / Lokasi Workshop</label>
           <textarea v-model="partnerForm.address" rows="2" class="input text-sm"></textarea>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Status</label>
+          <label class="text-xs font-semibold text-zinc-500">Status</label>
           <select v-model="partnerForm.status" class="input text-sm">
             <option value="active">Aktif</option>
             <option value="inactive">Nonaktif</option>
@@ -326,22 +321,22 @@
     <Drawer :open="showPickupDrawer" title="Jadwal Pickup / Delivery Baru" @close="showPickupDrawer = false" width="450px">
       <form @submit.prevent="submitPickup" class="space-y-4">
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Tipe Layanan *</label>
+          <label class="text-xs font-semibold text-zinc-500">Tipe Layanan *</label>
           <select v-model="pickupForm.type" required class="input text-sm">
             <option value="pickup">Jemput Unit (Pickup)</option>
             <option value="delivery">Antar Unit (Delivery)</option>
           </select>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Alamat Penjemputan / Pengantaran *</label>
+          <label class="text-xs font-semibold text-zinc-500">Alamat Penjemputan / Pengantaran *</label>
           <textarea v-model="pickupForm.address" required rows="2" placeholder="Jl. Anggrek No. 123..." class="input text-sm"></textarea>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Tanggal & Waktu Penjadwalan *</label>
+          <label class="text-xs font-semibold text-zinc-500">Tanggal & Waktu Penjadwalan *</label>
           <input v-model="pickupForm.scheduled_date" type="datetime-local" required class="input text-sm" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Catatan / Instruksi Driver</label>
+          <label class="text-xs font-semibold text-zinc-500">Catatan / Instruksi Driver</label>
           <textarea v-model="pickupForm.note" rows="2" placeholder="Hubungi wa dulu sebelum sampai..." class="input text-sm"></textarea>
         </div>
         <div class="flex justify-end gap-2 pt-3">
@@ -357,19 +352,19 @@
     <Drawer :open="showIndenDrawer" title="Catat Inden Sparepart Baru" @close="showIndenDrawer = false" width="450px">
       <form @submit.prevent="submitInden" class="space-y-4">
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Nama Barang / Sparepart *</label>
+          <label class="text-xs font-semibold text-zinc-500">Nama Barang / Sparepart *</label>
           <input v-model="indenForm.product_name" required placeholder="e.g. LCD OLED iPhone 13 Pro Max Original" class="input text-sm" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Estimasi Harga (Rp)</label>
+          <label class="text-xs font-semibold text-zinc-500">Estimasi Harga (Rp)</label>
           <input v-model="indenForm.estimated_price" type="number" min="0" placeholder="0" class="input text-sm" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Uang Muka / DP (Rp)</label>
+          <label class="text-xs font-semibold text-zinc-500">Uang Muka / DP (Rp)</label>
           <input v-model="indenForm.down_payment" type="number" min="0" placeholder="0" class="input text-sm" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold" style="color: var(--text-muted);">Catatan / Deskripsi</label>
+          <label class="text-xs font-semibold text-zinc-500">Catatan / Deskripsi</label>
           <textarea v-model="indenForm.notes" rows="2" placeholder="Pesanan warna Hitam..." class="input text-sm"></textarea>
         </div>
         <div class="flex justify-end gap-2 pt-3">

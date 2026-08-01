@@ -2,80 +2,60 @@
     <GuestLayout>
         <div class="text-center">
             <!-- Success Icon -->
-            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-success-50 mb-6">
-                <svg class="h-10 w-10 text-success-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-emerald-100 mb-6 shadow-sm ring-8 ring-emerald-50">
+                <svg class="h-8 w-8 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
                 </svg>
             </div>
 
-            <h2 class="text-2xl font-bold text-dark-900 mb-2">Pendaftaran Berhasil! 🎉</h2>
+            <h2 class="text-2xl font-black tracking-tight text-zinc-900 mb-2">Pendaftaran Berhasil!</h2>
             
-            <div v-if="emailSent" class="bg-premium-50 border border-premium-200 rounded-xl p-4 mb-6">
-                <p class="text-sm text-premium-700">
-                    ✉️ Email telah dikirim ke <strong>{{ email }}</strong>
+            <div v-if="emailSent" class="bg-indigo-50 text-indigo-900 border border-indigo-100 rounded-xl p-4 mb-8">
+                <p class="text-sm font-medium">
+                    ✉️ Email informasi akun telah dikirim ke <strong class="font-bold">{{ email }}</strong>
                 </p>
             </div>
-            <div v-else class="bg-accent-50 border border-accent-200 rounded-xl p-4 mb-6">
-                <p class="text-sm text-accent-700">
-                    ⚠️ Gagal mengirim email. Tapi jangan khawatir, Anda tetap bisa login menggunakan informasi di bawah ini.
+            <div v-else class="bg-amber-50 text-amber-900 border border-amber-100 rounded-xl p-4 mb-8">
+                <p class="text-sm font-medium">
+                    ⚠️ Gagal mengirim email. Jangan khawatir, Anda tetap bisa login menggunakan informasi di bawah ini.
                 </p>
             </div>
 
             <!-- Info Login -->
-            <div class="bg-dark-50 rounded-2xl shadow-soft border border-dark-100/50 p-6 mb-6 text-left">
-                <h3 class="text-sm font-medium text-dark-600 mb-3">📋 Informasi Akun</h3>
-                <div class="space-y-2 text-sm">
-                    <div class="flex justify-between">
-                        <span class="text-dark-400">Paket:</span>
-                        <span class="font-semibold text-premium-600">{{ plan }}</span>
+            <div class="bg-white rounded-2xl shadow-sm border border-zinc-200 p-6 mb-8 text-left">
+                <h3 class="text-sm font-bold text-zinc-900 mb-4 flex items-center gap-2">
+                    <svg class="w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                    Informasi Akun
+                </h3>
+                <div class="space-y-3 text-sm">
+                    <div class="flex justify-between items-center py-2 border-b border-zinc-100 last:border-0">
+                        <span class="text-zinc-500 font-medium">Paket Langganan</span>
+                        <span class="font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md text-xs tracking-wide uppercase">{{ plan }}</span>
                     </div>
-                    <div class="flex justify-between">
-                        <span class="text-dark-400">Link Login:</span>
-                        <a :href="'http://' + domain + '/login'" target="_blank" class="text-premium-600 hover:text-premium-500 font-semibold">
+                    <div class="flex justify-between items-center py-2 border-b border-zinc-100 last:border-0">
+                        <span class="text-zinc-500 font-medium">Link Login</span>
+                        <a :href="'http://' + domain + '/login'" target="_blank" class="text-indigo-600 hover:text-indigo-700 font-bold hover:underline">
                             {{ domain }}/login
                         </a>
                     </div>
-                    <div class="flex justify-between">
-                        <span class="text-dark-400">Email:</span>
-                        <span class="font-medium text-dark-900">{{ email }}</span>
+                    <div class="flex justify-between items-center py-2 border-b border-zinc-100 last:border-0">
+                        <span class="text-zinc-500 font-medium">Email</span>
+                        <span class="font-bold text-zinc-900">{{ email }}</span>
                     </div>
-                    <div class="flex justify-between">
-                        <span class="text-dark-400">Password:</span>
-                        <span class="font-medium text-dark-900">(password yang Anda daftarkan)</span>
+                    <div class="flex justify-between items-center py-2 border-b border-zinc-100 last:border-0">
+                        <span class="text-zinc-500 font-medium">Password</span>
+                        <span class="font-bold text-zinc-400 text-xs">(Seperti yang didaftarkan)</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Steps -->
-            <div class="text-left mb-8">
-                <h3 class="text-sm font-medium text-dark-600 mb-3">📝 Langkah Selanjutnya</h3>
-                <ol class="space-y-2 text-sm text-dark-500">
-                    <li class="flex items-start gap-2">
-                        <span class="text-success-700 font-bold">1.</span>
-                        <span>Cek email <strong>{{ email }}</strong> untuk link login</span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <span class="text-success-700 font-bold">2.</span>
-                        <span>Klik link atau buka <strong>{{ domain }}/login</strong> di browser</span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <span class="text-success-700 font-bold">3.</span>
-                        <span>Login menggunakan email dan password yang sudah didaftarkan</span>
-                    </li>
-                    <li class="flex items-start gap-2">
-                        <span class="text-success-700 font-bold">4.</span>
-                        <span>Mulai kelola toko Anda! 🚀</span>
-                    </li>
-                </ol>
-            </div>
-
             <Link :href="'http://' + domain + '/login'"
-                class="btn-premium-primary inline-block text-sm font-medium">
-                🔑 Login ke {{ domain }}
+                class="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-zinc-900 text-white text-base font-black shadow-md hover:bg-zinc-800 transition-all">
+                Mulai Kelola Toko 🚀
             </Link>
 
-            <p class="mt-4 text-xs text-dark-400">
-                Butuh bantuan? Hubungi kami di support@serviceku.my.id
+            <p class="mt-6 text-xs font-medium text-zinc-500">
+                Butuh bantuan? Hubungi <a href="mailto:support@serviceku.com" class="text-zinc-900 font-bold hover:underline">support@serviceku.com</a>
             </p>
         </div>
     </GuestLayout>

@@ -240,10 +240,14 @@ class RegisteredTenantController extends Controller
             $request->session()->put('tenant_id', $tenant->id);
         }
 
+        $configuredBaseDomain = env('CENTRAL_DOMAIN');
+        $requestHost = request()->getHost();
+        $requestHostNoPort = preg_replace('/:\\d+$/', '', $requestHost);
+        $baseDomain = $configuredBaseDomain ?: $requestHostNoPort;
+
         // Buat domain untuk subdomain tenant: {slug}.basedomain
         try {
-            $baseHost = request()->getHost(); // localhost:8000 / serviceku.my.id
-            $domain = $slug . '.' . $baseHost;
+            $domain = $slug . '.' . $baseDomain;
             \Stancl\Tenancy\Database\Models\Domain::create([
                 'tenant_id' => $tenant->id,
                 'domain' => $domain,
@@ -257,8 +261,11 @@ class RegisteredTenantController extends Controller
 
         // Tentukan URL login tenant (subdomain)
         $scheme = request()->getScheme();
-        $baseHost = request()->getHost();
-        $tenantLoginUrl = $scheme . '://' . $slug . '.' . $baseHost . '/login';
+        $requestPort = request()->getPort();
+        $tenantHost = $slug . '.' . $baseDomain;
+        $isLocalDomain = str_contains($baseDomain, 'localhost') || filter_var($baseDomain, FILTER_VALIDATE_IP);
+        $portSuffix = ($isLocalDomain && !in_array($requestPort, [80, 443], true)) ? ':' . $requestPort : '';
+        $tenantLoginUrl = $scheme . '://' . $tenantHost . $portSuffix . '/login';
 
         // Kirim email selamat datang
         try {

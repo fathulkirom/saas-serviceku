@@ -8,6 +8,8 @@ use App\Models\Tenant\Product;
 use App\Models\Tenant\InventoryMutation;
 use App\Models\Tenant\ActivityLog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 /** @deprecated Use consolidated controller instead. See FinanceController, CashController, InventarisController, ServiceToolsController, SystemController, DocumentController, SettingController. */
 class DamagedStockController extends Controller
@@ -29,6 +31,14 @@ class DamagedStockController extends Controller
 
         $validated['created_by'] = auth()->id();
         $validated['branch_id'] = auth()->user()->branch_id;
+
+        $product = Product::findOrFail($validated['product_id']);
+
+        if (auth()->user()->branch_id && $product->branch_id && (string) $product->branch_id !== (string) auth()->user()->branch_id) {
+            throw ValidationException::withMessages([
+                'product_id' => 'Produk tidak berada pada cabang aktif Anda.',
+            ]);
+        }
 
         Product::where('id', $validated['product_id'])->decrement('stock_quantity', $validated['quantity']);
 

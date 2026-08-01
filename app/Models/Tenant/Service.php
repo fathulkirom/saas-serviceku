@@ -71,6 +71,67 @@ class Service extends Model
     const STATUS_VOID             = 'void';
     const STATUS_CLOSE            = 'close';
 
+    /**
+     * Daftar transisi status yang diizinkan.
+     */
+    private const ALLOWED_TRANSITIONS = [
+        self::STATUS_MENUNGGU_ALOKASI => [
+            self::STATUS_DITERIMA,
+            self::STATUS_DIKERJAKAN,
+            self::STATUS_INDENT,
+            self::STATUS_ONPARTNER,
+            self::STATUS_CANCEL,
+        ],
+        self::STATUS_DITERIMA => [
+            self::STATUS_DIKERJAKAN,
+            self::STATUS_MENUNGGU_ALOKASI,
+            self::STATUS_INDENT,
+            self::STATUS_CANCEL,
+        ],
+        self::STATUS_DIAGNOSA => [
+            self::STATUS_DIKERJAKAN,
+            self::STATUS_KONFIRMASI_PELANGGAN,
+            self::STATUS_KONFIRMASI_INTERNAL,
+            self::STATUS_INDENT,
+            self::STATUS_CANCEL,
+        ],
+        self::STATUS_DIKERJAKAN => [
+            self::STATUS_KONFIRMASI_PELANGGAN,
+            self::STATUS_KONFIRMASI_INTERNAL,
+            self::STATUS_INDENT,
+            self::STATUS_ONPARTNER,
+            self::STATUS_SELESAI,
+            self::STATUS_CANCEL,
+        ],
+        self::STATUS_KONFIRMASI_PELANGGAN => [
+            self::STATUS_DIKERJAKAN,
+            self::STATUS_CANCEL,
+        ],
+        self::STATUS_KONFIRMASI_INTERNAL => [
+            self::STATUS_DIKERJAKAN,
+            self::STATUS_CANCEL,
+        ],
+        self::STATUS_INDENT => [
+            self::STATUS_DIKERJAKAN,
+            self::STATUS_CANCEL,
+        ],
+        self::STATUS_ONPARTNER => [
+            self::STATUS_DIKERJAKAN,
+            self::STATUS_SELESAI,
+            self::STATUS_CANCEL,
+        ],
+        self::STATUS_SELESAI => [
+            self::STATUS_SIAP_DIAMBIL,
+            self::STATUS_CLOSE,
+        ],
+        self::STATUS_SIAP_DIAMBIL => [
+            self::STATUS_CLOSE,
+        ],
+        self::STATUS_CANCEL => [],
+        self::STATUS_VOID => [],
+        self::STATUS_CLOSE => [],
+    ];
+
     // ========== BOOT ==========
     protected static function booted()
     {
@@ -234,9 +295,37 @@ class Service extends Model
         return $this->warranty_expired_at && $this->warranty_expired_at->isFuture();
     }
 
-    public function getStatusLabel(): string
+    public static function allStatuses(): array
     {
-        return match ($this->status) {
+        return array_keys(self::ALLOWED_TRANSITIONS);
+    }
+
+    public static function isKnownStatus(string $status): bool
+    {
+        return in_array($status, self::allStatuses(), true);
+    }
+
+    public static function canTransition(string $from, string $to): bool
+    {
+        if (!self::isKnownStatus($from) || !self::isKnownStatus($to)) {
+            return false;
+        }
+
+        if ($from === $to) {
+            return false;
+        }
+
+        return in_array($to, self::ALLOWED_TRANSITIONS[$from] ?? [], true);
+    }
+
+    public function canTransitionTo(string $to): bool
+    {
+        return self::canTransition((string) $this->status, $to);
+    }
+
+    public static function statusLabel(string $status): string
+    {
+        return match ($status) {
             self::STATUS_MENUNGGU_ALOKASI => 'Menunggu Alokasi',
             self::STATUS_DITERIMA => 'Diterima Teknisi',
             self::STATUS_DIAGNOSA => 'Diagnosa',
@@ -250,8 +339,13 @@ class Service extends Model
             self::STATUS_CANCEL => 'Dibatalkan',
             self::STATUS_VOID => 'Void',
             self::STATUS_CLOSE => 'Ditutup',
-            default => ucfirst($this->status),
+            default => ucfirst($status),
         };
+    }
+
+    public function getStatusLabel(): string
+    {
+        return self::statusLabel((string) $this->status);
     }
 
     public function getStatusColor(): string

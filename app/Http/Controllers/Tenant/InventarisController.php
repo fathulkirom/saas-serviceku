@@ -17,16 +17,18 @@ class InventarisController extends Controller
     public function index(Request $request): Response
     {
         $tab = $request->get('tab', 'stok');
+        $branchId = auth()->user()->branch_id;
 
         return Inertia::render('Inventaris/Index', [
             'activeTab' => $tab,
 
-            'products' => fn() => Product::with('branch')->latest()->paginate(15),
+            'products' => fn() => $this->scopeProductBranch(Product::query(), $branchId)->with('branch')->latest()->paginate(15),
 
             // Untuk drawer Transfer Stok (cabang tujuan)
             'branches' => fn() => \App\Models\Tenant\Branch::where('is_active', true)->orderBy('name')->get(['id', 'name']),
 
             'allocations' => fn() => StockAllocation::with(['fromBranch', 'toBranch', 'product', 'allocator', 'confirmer'])
+                ->when($branchId, fn($q) => $q->where('from_branch_id', $branchId)->orWhere('to_branch_id', $branchId))
                 ->latest()
                 ->paginate(15),
 
@@ -37,7 +39,7 @@ class InventarisController extends Controller
 
             'mutations' => fn() => $this->getMutations($request),
 
-            'mutationProducts' => fn() => Product::orderBy('name')->get(['id', 'name']),
+            'mutationProducts' => fn() => $this->scopeProductBranch(Product::query(), $branchId)->orderBy('name')->get(['id', 'name']),
 
             'mutationFilters' => fn() => $request->only(['product_id', 'type', 'date_from', 'date_to']),
 
@@ -48,11 +50,11 @@ class InventarisController extends Controller
                 ->get(),
 
             'inventoryStats' => fn() => [
-                'total_products' => Product::count(),
-                'low_stock' => Product::whereColumn('stock_quantity', '<=', 'min_stock')->count(),
-                'out_of_stock' => Product::where('stock_quantity', 0)->count(),
-                'total_value' => (float) Product::sum(DB::raw('stock_quantity * selling_price')),
-                'total_damaged' => (int) DamagedStock::sum('quantity'),
+                'total_products' => $this->scopeProductBranch(Product::query(), $branchId)->count(),
+                'low_stock' => $this->scopeProductBranch(Product::query(), $branchId)->whereColumn('stock_quantity', '<=', 'min_stock')->count(),
+                'out_of_stock' => $this->scopeProductBranch(Product::query(), $branchId)->where('stock_quantity', 0)->count(),
+                'total_value' => (float) $this->scopeProductBranch(Product::query(), $branchId)->sum(DB::raw('stock_quantity * selling_price')),
+                'total_damaged' => (int) DamagedStock::where('branch_id', $branchId)->sum('quantity'),
             ],
 
             'forecast' => fn() => $this->getForecast(),
@@ -61,7 +63,9 @@ class InventarisController extends Controller
 
     private function getMutations(Request $request)
     {
-        $query = InventoryMutation::with(['product', 'creator', 'branch']);
+        $branchId = auth()->user()->branch_id;
+        $query = InventoryMutation::with(['product', 'creator', 'branch'])
+            ->when($branchId, fn($q) => $q->where('branch_id', $branchId));
 
         if ($request->filled('product_id')) {
             $query->where('product_id', $request->product_id);
@@ -115,5 +119,14 @@ class InventarisController extends Controller
                     'needs_restock' => $needsRestock,
                 ];
             })->sortBy('days_until_empty')->values();
+    }
+
+    private function scopeProductBranch($query, $branchId)
+    {
+        if ($branchId) {
+            $query->where('branch_id', $branchId);
+        }
+
+        return $query;
     }
 }

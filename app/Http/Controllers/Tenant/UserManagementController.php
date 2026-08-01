@@ -7,6 +7,7 @@ use App\Models\Tenant\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\ValidationException;
 
 /** @deprecated Use consolidated controller instead. See FinanceController, CashController, InventarisController, ServiceToolsController, SystemController, DocumentController, SettingController. */
 class UserManagementController extends Controller
@@ -23,6 +24,16 @@ class UserManagementController extends Controller
             'branch_id' => 'nullable|exists:branches,id',
         ]);
 
+        $userBranchId = auth()->user()->branch_id;
+
+        if ($userBranchId && !empty($validated['branch_id']) && (string) $validated['branch_id'] !== (string) $userBranchId) {
+            throw ValidationException::withMessages([
+                'branch_id' => 'Hanya bisa membuat user di cabang aktif Anda.',
+            ]);
+        }
+
+        $validated['branch_id'] = $validated['branch_id'] ?? $userBranchId;
+
         $validated['password'] = Hash::make($validated['password']);
 
         User::create($validated);
@@ -33,6 +44,7 @@ class UserManagementController extends Controller
     public function update(Request $request, User $userManagement)
     {
         $this->authorize('update', $userManagement);
+        $this->ensureUserBranchAccess($userManagement);
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($userManagement->id)],
@@ -61,6 +73,7 @@ class UserManagementController extends Controller
         }
 
         $this->authorize('delete', $userManagement);
+        $this->ensureUserBranchAccess($userManagement);
         $userManagement->delete();
         return back()->with('success', 'User berhasil dihapus.');
     }
@@ -132,6 +145,21 @@ class UserManagementController extends Controller
         $user->update(['ui_preferences' => $preferences]);
 
         return back()->with('success', 'Preferensi tampilan berhasil disimpan.');
+    }
+
+    private function ensureUserBranchAccess(User $user): void
+    {
+        $userBranchId = auth()->user()?->branch_id;
+
+        if (!$userBranchId || !$user->branch_id) {
+            return;
+        }
+
+        if ((string) $user->branch_id !== (string) $userBranchId) {
+            throw ValidationException::withMessages([
+                'user' => 'User tidak berada pada cabang aktif Anda.',
+            ]);
+        }
     }
 
     /**

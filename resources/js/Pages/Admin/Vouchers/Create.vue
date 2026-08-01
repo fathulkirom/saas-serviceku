@@ -1,116 +1,159 @@
 <template>
     <AdminLayout>
-        <div class="page-header">
-            <div>
-                <h1 class="text-2xl font-bold text-dark-900">{{ isEditing ? 'Edit Voucher' : 'Buat Voucher Baru' }}</h1>
-                <p class="text-sm text-dark-400 mt-1">{{ isEditing ? 'Perbarui kode promo' : 'Buat kode diskon untuk pelanggan' }}</p>
+        <div class="max-w-4xl mx-auto">
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h1 class="text-2xl font-bold text-zinc-900 tracking-tight">{{ isEditing ? 'Edit Voucher' : 'Buat Voucher Baru' }}</h1>
+                    <p class="text-sm text-zinc-500 mt-1">{{ isEditing ? 'Perbarui informasi kode promo yang sudah ada' : 'Buat kode diskon untuk menarik lebih banyak pelanggan' }}</p>
+                </div>
+                <Link :href="route('admin.vouchers.index')" class="px-4 py-2 bg-white border border-zinc-200 rounded-xl text-zinc-700 text-sm font-bold hover:bg-zinc-50 transition-colors shadow-sm">
+                    Kembali
+                </Link>
             </div>
-            <Link :href="route('admin.vouchers.index')" class="btn-premium-secondary">← Kembali</Link>
-        </div>
 
-        <div class="card-premium max-w-2xl">
-            <form @submit.prevent="submit">
-                <!-- Kode Voucher -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-dark-600 mb-1.5">Kode Voucher</label>
-                    <div class="flex gap-2">
-                        <input v-model="form.code" type="text" name="code" class="input-premium flex-1 font-mono tracking-wider uppercase"
-                            placeholder="KOSONGKAN untuk auto-generate" />
-                        <button type="button" @click="generateCode" class="btn-premium-secondary text-sm whitespace-nowrap">↻ Generate</button>
+            <div class="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden">
+                <form @submit.prevent="submit" class="divide-y divide-zinc-100">
+                    
+                    <!-- Basic Info -->
+                    <div class="p-6">
+                        <h3 class="text-sm font-bold text-zinc-900 mb-5 flex items-center gap-2">
+                            <svg class="w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/></svg>
+                            Informasi Kode Promo
+                        </h3>
+                        
+                        <div class="space-y-6">
+                            <!-- Kode Voucher -->
+                            <div>
+                                <label class="block text-sm font-bold text-zinc-900 mb-2">Kode Voucher <span class="text-red-500">*</span></label>
+                                <div class="flex gap-3">
+                                    <input v-model="form.code" type="text" class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-zinc-900 font-mono tracking-widest uppercase focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all shadow-sm" placeholder="KOSONGKAN UNTUK AUTO-GENERATE" />
+                                    <button type="button" @click="generateCode" class="px-5 py-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-sm font-bold rounded-xl border border-zinc-200 transition-colors whitespace-nowrap flex items-center gap-2">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                                        Generate
+                                    </button>
+                                </div>
+                                <p v-if="form.errors.code" class="mt-2 text-sm text-red-600 font-medium">{{ form.errors.code }}</p>
+                                <p v-else class="mt-2 text-xs text-zinc-500">Kosongkan kolom ini jika ingin sistem mengacak kode (8 karakter acak).</p>
+                            </div>
+
+                            <!-- Tipe & Nilai -->
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <div>
+                                    <label class="block text-sm font-bold text-zinc-900 mb-2">Tipe Diskon</label>
+                                    <select v-model="form.type" class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all shadow-sm appearance-none">
+                                        <option value="percent">Persentase (%)</option>
+                                        <option value="fixed">Harga Tetap (Rp)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-bold text-zinc-900 mb-2">
+                                        {{ form.type === 'percent' ? 'Diskon (%)' : 'Potongan (Rp)' }} <span class="text-red-500">*</span>
+                                    </label>
+                                    <input v-model="form.value" type="number" step="0.01" min="0" class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all shadow-sm" :placeholder="form.type === 'percent' ? 'Contoh: 10' : 'Contoh: 50000'" />
+                                    <p v-if="form.errors.value" class="mt-2 text-sm text-red-600 font-medium">{{ form.errors.value }}</p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-bold text-zinc-900 mb-2">
+                                        Gratis Bulan <span class="text-zinc-400 font-normal">(opsional)</span>
+                                    </label>
+                                    <input v-model="form.extra_months" type="number" min="0" max="60" class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all shadow-sm" placeholder="Contoh: 1" />
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <p v-if="form.errors.code" class="mt-1 text-sm text-accent-600">{{ form.errors.code }}</p>
-                    <p class="mt-1 text-xs text-dark-400">Kosongkan untuk generate otomatis (8 karakter acak)</p>
-                </div>
 
-                <!-- Tipe & Nilai -->
-                <div class="grid grid-cols-3 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-dark-600 mb-1.5">Tipe Diskon</label>
-                        <select v-model="form.type" name="type" class="input-premium">
-                            <option value="percent">Persen (%)</option>
-                            <option value="fixed">Harga Tetap (Rp)</option>
-                        </select>
+                    <!-- Rules & Restrictions -->
+                    <div class="p-6">
+                        <h3 class="text-sm font-bold text-zinc-900 mb-5 flex items-center gap-2">
+                            <svg class="w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                            Aturan & Batasan
+                        </h3>
+
+                        <div class="space-y-6">
+                            <!-- Untuk -->
+                            <div>
+                                <label class="block text-sm font-bold text-zinc-900 mb-2">Berlaku Untuk Transaksi</label>
+                                <select v-model="form.applicable_for" class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all shadow-sm appearance-none">
+                                    <option value="both">Semua (Pendaftaran Baru & Perpanjangan)</option>
+                                    <option value="new">Hanya Pendaftaran Baru</option>
+                                    <option value="existing">Hanya Perpanjangan / Upgrade</option>
+                                </select>
+                            </div>
+
+                            <!-- Khusus Tenant -->
+                            <div v-if="form.applicable_for !== 'new'" class="p-4 bg-amber-50 border border-amber-100 rounded-xl">
+                                <label class="block text-sm font-bold text-amber-900 mb-2 flex items-center gap-2">
+                                    <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+                                    Batasi Khusus Tenant Tertentu <span class="text-amber-700/70 font-normal text-xs">(opsional)</span>
+                                </label>
+                                <select v-model="form.tenant_id" class="w-full px-4 py-3 rounded-xl border border-amber-200 bg-white text-zinc-900 focus:ring-2 focus:ring-amber-200 focus:border-amber-500 transition-all shadow-sm appearance-none">
+                                    <option value="">Semua Tenant (Tidak dibatasi)</option>
+                                    <option v-for="t in tenants" :key="t.id" :value="t.id">{{ t.tenant_name }}</option>
+                                </select>
+                                <p class="mt-2 text-xs text-amber-700">Jika Anda memilih tenant, maka voucher ini akan menjadi voucher eksklusif yang hanya bisa diklaim oleh tenant tersebut.</p>
+                            </div>
+
+                            <!-- Batasan Usage & Price -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-bold text-zinc-900 mb-2">Kuota Pemakaian <span class="text-zinc-400 font-normal">(opsional)</span></label>
+                                    <input v-model="form.max_uses" type="number" min="0" class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all shadow-sm" placeholder="Kosongkan = Tanpa batas kuota" />
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-bold text-zinc-900 mb-2">Minimal Harga Paket <span class="text-zinc-400 font-normal">(opsional)</span></label>
+                                    <input v-model="form.min_plan_price" type="number" step="1000" min="0" class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all shadow-sm" placeholder="Kosongkan = Tanpa batas minimal" />
+                                </div>
+                            </div>
+
+                            <!-- Masa Berlaku -->
+                            <div>
+                                <label class="block text-sm font-bold text-zinc-900 mb-2">Tanggal Berakhir <span class="text-zinc-400 font-normal">(opsional)</span></label>
+                                <input v-model="form.expires_at" type="datetime-local" class="w-full md:w-1/2 px-4 py-3 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all shadow-sm" />
+                                <p class="mt-2 text-xs text-zinc-500">Kosongkan jika voucher berlaku selamanya.</p>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-dark-600 mb-1.5">
-                            {{ form.type === 'percent' ? 'Diskon (%)' : 'Potongan (Rp)' }}
-                        </label>
-                        <input v-model="form.value" type="number" step="0.01" min="0" name="value" class="input-premium"
-                            :placeholder="form.type === 'percent' ? 'Contoh: 10' : 'Contoh: 50000'" />
-                        <p v-if="form.errors.value" class="mt-1 text-sm text-accent-600">{{ form.errors.value }}</p>
+
+                    <!-- Extras -->
+                    <div class="p-6">
+                        <h3 class="text-sm font-bold text-zinc-900 mb-5 flex items-center gap-2">
+                            <svg class="w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h7"/></svg>
+                            Lainnya
+                        </h3>
+
+                        <div class="space-y-6">
+                            <!-- Deskripsi -->
+                            <div>
+                                <label class="block text-sm font-bold text-zinc-900 mb-2">Catatan Internal <span class="text-zinc-400 font-normal">(opsional)</span></label>
+                                <textarea v-model="form.description" rows="3" class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all shadow-sm resize-none" placeholder="Catatan atau deskripsi untuk admin..."></textarea>
+                            </div>
+
+                            <!-- Status -->
+                            <div>
+                                <label class="flex items-center gap-3 cursor-pointer group">
+                                    <div class="relative flex items-center justify-center">
+                                        <input type="checkbox" v-model="form.is_active" class="w-5 h-5 rounded-md border-zinc-300 text-indigo-600 focus:ring-indigo-500 transition-all cursor-pointer" />
+                                    </div>
+                                    <span class="text-sm font-bold text-zinc-900 group-hover:text-indigo-600 transition-colors">Voucher Aktif</span>
+                                </label>
+                                <p class="text-xs text-zinc-500 mt-2 pl-8">Hanya voucher dengan status aktif yang bisa diklaim oleh pelanggan.</p>
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-dark-600 mb-1.5">
-                            Gratis Bulan <span class="text-xs text-dark-400">(opsional)</span>
-                        </label>
-                        <input v-model="form.extra_months" type="number" min="0" max="60" name="extra_months" class="input-premium"
-                            placeholder="Contoh: 1" />
-                        <p class="mt-1 text-xs text-dark-400">Tambahan bulan gratis langganan</p>
+
+                    <!-- Actions -->
+                    <div class="px-6 py-5 bg-zinc-50 flex items-center justify-end gap-4 rounded-b-2xl">
+                        <Link :href="route('admin.vouchers.index')" class="px-6 py-2.5 text-zinc-700 text-sm font-bold hover:text-zinc-900 transition-colors">
+                            Batal
+                        </Link>
+                        <button type="submit" class="flex items-center gap-2 px-8 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white text-sm font-bold rounded-xl shadow-md transition-all disabled:opacity-70" :disabled="form.processing">
+                            <svg v-if="form.processing" class="animate-spin w-4 h-4 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                            <svg v-else class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                            {{ form.processing ? 'Menyimpan...' : (isEditing ? 'Simpan Perubahan' : 'Buat Voucher') }}
+                        </button>
                     </div>
-                </div>
-
-                <!-- Untuk -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-dark-600 mb-1.5">Berlaku Untuk</label>
-                    <select v-model="form.applicable_for" name="applicable_for" class="input-premium">
-                        <option value="both">Semua (Pendaftaran Baru & Perpanjangan)</option>
-                        <option value="new">Pendaftaran Baru Saja</option>
-                        <option value="existing">Perpanjangan / Upgrade Saja</option>
-                    </select>
-                </div>
-
-                <!-- Khusus Tenant -->
-                <div class="mb-4" v-if="form.applicable_for !== 'new'">
-                    <label class="block text-sm font-medium text-dark-600 mb-1.5">Batasi Khusus Toko / Tenant <span class="text-xs text-dark-400">(opsional)</span></label>
-                    <select v-model="form.tenant_id" name="tenant_id" class="input-premium">
-                        <option value="">Semua Toko / Tenant</option>
-                        <option v-for="t in tenants" :key="t.id" :value="t.id">
-                            {{ t.tenant_name }}
-                        </option>
-                    </select>
-                    <p class="mt-1 text-xs text-dark-400">Jika diisi, voucher hanya dapat digunakan oleh toko terpilih saja.</p>
-                </div>
-
-                <!-- Batasan -->
-                <div class="grid grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm font-medium text-dark-600 mb-1.5">Maksimal Pemakaian</label>
-                        <input v-model="form.max_uses" type="number" min="0" name="max_uses" class="input-premium" placeholder="Kosongkan = tidak terbatas" />
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-dark-600 mb-1.5">Min. Harga Plan</label>
-                        <input v-model="form.min_plan_price" type="number" step="1000" min="0" name="min_plan_price" class="input-premium" placeholder="Kosongkan = tanpa minimal" />
-                    </div>
-                </div>
-
-                <!-- Masa Berlaku -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-dark-600 mb-1.5">Berlaku Sampai</label>
-                    <input v-model="form.expires_at" type="datetime-local" name="expires_at" class="input-premium" />
-                    <p class="mt-1 text-xs text-dark-400">Kosongkan = tidak ada batas waktu</p>
-                </div>
-
-                <!-- Deskripsi -->
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-dark-600 mb-1.5">Deskripsi (opsional)</label>
-                    <textarea v-model="form.description" rows="3" name="description" class="input-premium" placeholder="Keterangan internal"></textarea>
-                </div>
-
-                <!-- Status -->
-                <div class="mb-6">
-                    <label class="flex items-center gap-3">
-                        <input type="checkbox" v-model="form.is_active" name="is_active" class="rounded border-dark-200 text-premium-600 focus:ring-premium-500" />
-                        <span class="text-sm font-medium text-dark-600">Aktif</span>
-                    </label>
-                </div>
-
-                <div class="flex items-center justify-end gap-3 pt-4 border-t border-dark-100">
-                    <Link :href="route('admin.vouchers.index')" class="btn-premium-secondary">Batal</Link>
-                    <button type="submit" class="btn-premium-primary" :disabled="form.processing">
-                        {{ form.processing ? 'Menyimpan...' : (isEditing ? 'Simpan Perubahan' : 'Buat Voucher') }}
-                    </button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </AdminLayout>
 </template>

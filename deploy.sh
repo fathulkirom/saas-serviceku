@@ -106,6 +106,10 @@ APP_DEBUG=false
 APP_TIMEZONE=Asia/Jakarta
 APP_KEY=
 APP_URL=https://serviceku.my.id
+CENTRAL_DOMAIN=serviceku.my.id
+ADMIN_DOMAIN=admin.serviceku.my.id
+SESSION_DOMAIN=.serviceku.my.id
+TENANT_SMOKE_DOMAIN=
 
 LOG_CHANNEL=stack
 LOG_STACK=daily
@@ -129,8 +133,8 @@ REDIS_HOST=serviceku-redis
 REDIS_PORT=6379
 REDIS_PASSWORD=null
 
-MAIL_MAILER=log
-MAIL_HOST=smtp.gmail.com
+MAIL_MAILER=smtp
+MAIL_HOST=smtp-relay.brevo.com
 MAIL_PORT=587
 MAIL_USERNAME=
 MAIL_PASSWORD=

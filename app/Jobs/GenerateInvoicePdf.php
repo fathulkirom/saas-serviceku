@@ -17,6 +17,7 @@ class GenerateInvoicePdf implements ShouldQueue
     public function handle(): void
     {
         $this->sale->load(['customer', 'items', 'branch']);
+        $sale = $this->sale;
 
         $storeName = TenantSetting::getValue('store_name', 'ServiceKU');
         $storeAddress = TenantSetting::getValue('address', '');

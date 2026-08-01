@@ -1,66 +1,78 @@
 <template>
     <GuestLayout>
-        <h2 class="text-xl font-bold text-dark-900 mb-2">Reset Password</h2>
-        <p class="text-sm text-dark-400 mb-6">Masukkan password baru untuk akun Anda.</p>
+        <div class="text-center mb-8">
+            <h2 class="text-xl font-bold text-zinc-900 mb-2">Reset Password</h2>
+            <p class="text-sm text-zinc-500">Buat password baru untuk akun Anda agar bisa kembali mengakses dasbor.</p>
+        </div>
 
         <!-- Error Message -->
-        <div v-if="form.errors.email" class="mb-4 p-3 bg-accent-50 border border-accent-200 rounded-xl">
-            <p class="text-sm text-accent-700">{{ form.errors.email }}</p>
-        </div>
-        <div v-if="form.errors.password" class="mb-4 p-3 bg-accent-50 border border-accent-200 rounded-xl">
-            <p class="text-sm text-accent-700">{{ form.errors.password }}</p>
+        <div v-if="form.errors.email || form.errors.password" class="mb-6 p-4 bg-red-50 border border-red-100 rounded-xl flex items-start gap-3">
+            <svg class="w-5 h-5 text-red-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <div class="flex-1">
+                <p v-if="form.errors.email" class="text-sm font-semibold text-red-800">{{ form.errors.email }}</p>
+                <p v-if="form.errors.password" class="text-sm font-semibold text-red-800">{{ form.errors.password }}</p>
+            </div>
         </div>
 
-        <form @submit.prevent="submit">
-            <div class="mb-4">
-                <label for="email" class="block text-sm font-medium text-dark-600 mb-1">Email</label>
+        <form @submit.prevent="submit" class="space-y-5">
+            <div>
+                <label for="email" class="block text-sm font-bold text-zinc-900 mb-2">Email</label>
                 <input
                     id="email"
                     v-model="form.email"
                     type="email"
-                    class="input-premium bg-dark-50"
+                    class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-sm font-semibold text-zinc-500 focus:ring-0 outline-none shadow-sm cursor-not-allowed"
                     required
                     readonly
                     autocomplete="email"
                 />
             </div>
-            <div class="mb-4">
-                <label for="password" class="block text-sm font-medium text-dark-600 mb-1">Password Baru</label>
+            
+            <div>
+                <label for="password" class="block text-sm font-bold text-zinc-900 mb-2">Password Baru</label>
                 <input
                     id="password"
                     v-model="form.password"
                     type="password"
-                    class="input-premium"
+                    class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
                     required
                     minlength="8"
+                    placeholder="Minimal 8 karakter"
                     autocomplete="new-password"
                 />
-                <p v-if="form.errors.password" class="mt-1 text-sm text-accent-700">{{ form.errors.password }}</p>
             </div>
-            <div class="mb-4">
-                <label for="password_confirmation" class="block text-sm font-medium text-dark-600 mb-1">Konfirmasi Password Baru</label>
+            
+            <div>
+                <label for="password_confirmation" class="block text-sm font-bold text-zinc-900 mb-2">Konfirmasi Password Baru</label>
                 <input
                     id="password_confirmation"
                     v-model="form.password_confirmation"
                     type="password"
-                    class="input-premium"
+                    class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
                     required
                     minlength="8"
+                    placeholder="Ulangi password baru"
                     autocomplete="new-password"
                 />
             </div>
 
-            <div class="flex items-center justify-between mt-6">
-                <Link :href="route('login')" class="text-sm text-premium-600 hover:text-premium-500 font-semibold">
-                    ← Kembali ke Login
-                </Link>
+            <div class="pt-2 flex flex-col gap-4">
                 <button
                     type="submit"
-                    class="btn-premium-primary disabled:opacity-50"
+                    class="w-full flex items-center justify-center px-6 py-3 rounded-xl bg-zinc-900 text-white text-sm font-bold shadow-md hover:bg-zinc-800 focus:ring-2 focus:ring-offset-2 focus:ring-zinc-900 transition-all disabled:opacity-70"
                     :disabled="form.processing"
                 >
-                    {{ form.processing ? 'Menyimpan...' : 'Reset Password' }}
+                    <svg v-if="form.processing" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    {{ form.processing ? 'Menyimpan...' : 'Simpan Password Baru' }}
                 </button>
+                <Link :href="route('login')" class="text-center text-sm font-bold text-indigo-600 hover:text-indigo-700 transition-colors">
+                    Batalkan dan kembali ke Login
+                </Link>
             </div>
         </form>
     </GuestLayout>

@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Tenant\Customer;
+use App\Models\Tenant\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Inertia\Middleware;
@@ -43,6 +45,7 @@ class HandleInertiaRequests extends Middleware
         return [
             ...parent::share($request),
             'app_env' => fn () => app()->environment(),
+            'app_version' => fn () => config('app.version'),
             'auth' => [
                 'user' => $request->user(),
             ],
@@ -74,6 +77,9 @@ class HandleInertiaRequests extends Middleware
                 ? tenancy()->tenant->plan?->getDefaultMenusForRole($request->user()->role)
                     ?? \App\Models\Plan::getBuiltInDefaultMenus($request->user()->role)
                 : [],
+            'onboarding_focus_mode' => fn () => tenancy()->initialized && $request->user()
+                ? (Customer::count() === 0 && Service::count() === 0)
+                : false,
             'timezone' => fn () => config('app.timezone', 'UTC'),
             'role_permissions' => fn () => [
                 'owner' => ['manage_users', 'manage_settings', 'manage_finance', 'manage_products', 'manage_customers', 'manage_sales', 'manage_cash_register', 'manage_deposits', 'manage_purchases', 'manage_branches', 'manage_indents', 'void_transactions', 'assign_technician', 'work_on_services', 'delete_models', 'quick_stock'],

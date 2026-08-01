@@ -54,12 +54,11 @@
                     <span class="text-indigo-600">Jadi Lebih Mudah</span>
                 </h2>
                 <p class="text-base sm:text-lg md:text-xl text-gray-600 mb-6 md:mb-8 max-w-2xl mx-auto px-2">
-                    Platform SaaS manajemen servis yang fleksibel — dari one-man operation 
-                    hingga enterprise multi-cabang.
+                    Satu aplikasi untuk mencatat servis, mengelola stok, kasir, dan laporan toko.
                 </p>
                 <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-4">
                     <Link :href="route('register')" class="w-full sm:w-auto px-6 md:px-8 py-3 bg-indigo-600 text-white rounded-lg text-sm md:text-lg font-semibold hover:bg-indigo-700 shadow-lg shadow-indigo-200 text-center">
-                        🚀 Mulai Trial Gratis
+                        Mulai Trial Gratis
                     </Link>
                     <a href="#features" class="w-full sm:w-auto px-6 md:px-8 py-3 border border-gray-300 text-gray-700 rounded-lg text-sm md:text-lg font-semibold hover:bg-gray-50 text-center">
                         Lihat Fitur
@@ -144,7 +143,7 @@
                             </ul>
                         </div>
                         <Link :href="route('register', { business_type: selectedBusinessType })" class="mt-6 block text-center px-4 py-2.5 rounded-md text-sm font-semibold" :class="pkg.featured ? 'bg-indigo-600 text-white hover:bg-indigo-700' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'">
-                            {{ pkg.is_promo_active ? '🚀 Ambil Promo' : 'Mulai Trial' }}
+                            {{ pkg.is_promo_active ? 'Ambil Promo' : 'Mulai Trial' }}
                         </Link>
                     </div>
                 </div>
@@ -155,7 +154,7 @@
         <footer id="contact" class="bg-gray-900 text-gray-400 py-8 md:py-12">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
                 <h5 class="text-xl font-bold text-white">ServiceKU</h5>
-                <p class="mt-2 text-sm">Platform Manajemen Servis Terpercaya</p>
+                <p class="mt-2 text-sm">Aplikasi Manajemen Servis</p>
                 <p class="mt-6 text-xs">© 2026 ServiceKU. All rights reserved.</p>
             </div>
         </footer>

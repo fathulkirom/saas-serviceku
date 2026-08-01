@@ -48,12 +48,12 @@
 
                 <!-- Value Proposition -->
                 <h2 class="text-3xl lg:text-4xl font-extrabold text-white leading-tight">
-                    Streamline Your<br>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400">Repair Center</span><br>
-                    Operations
+                    Kelola Operasional<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400">Toko Servis</span><br>
+                    Lebih Rapi
                 </h2>
                 <p class="mt-4 text-base text-slate-400 leading-relaxed max-w-sm mx-auto lg:mx-0">
-                    The all-in-one SaaS platform for electronics repair shops. Manage tickets, inventory, POS, and multi-branch operations from a single dashboard.
+                    Catat servis, pantau stok, dan proses penjualan dari satu dashboard.
                 </p>
 
                 <!-- Testimonial mini -->
@@ -65,8 +65,8 @@
                             <div class="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-amber-500 border-2 border-slate-800 flex items-center justify-center text-white text-[10px] font-bold">MS</div>
                         </div>
                         <div>
-                            <p class="text-sm font-semibold text-white">500+ Repair Shops</p>
-                            <p class="text-xs text-slate-500">trust ServiceKU daily</p>
+                            <p class="text-sm font-semibold text-white">Digunakan Berbagai Toko Servis</p>
+                            <p class="text-xs text-slate-500">untuk operasional harian</p>
                         </div>
                     </div>
                 </div>
@@ -79,8 +79,8 @@
 
                 <!-- Form Header -->
                 <div class="text-center lg:text-left mb-8">
-                    <h1 class="text-2xl font-bold text-slate-900">Welcome Back</h1>
-                    <p class="text-sm text-slate-500 mt-1">Sign in to your repair center dashboard</p>
+                    <h1 class="text-2xl font-bold text-slate-900">Masuk ke Akun Toko</h1>
+                    <p class="text-sm text-slate-500 mt-1">Gunakan email dan password yang terdaftar</p>
                 </div>
 
                 <!-- Login Form -->
@@ -89,7 +89,7 @@
 
                     <!-- Email -->
                     <div>
-                        <label for="email" class="block text-sm font-medium text-slate-700 mb-1.5">Email Address</label>
+                        <label for="email" class="block text-sm font-medium text-slate-700 mb-1.5">Email</label>
                         <input
                             id="email"
                             name="email"
@@ -97,7 +97,7 @@
                             autocomplete="email"
                             required
                             autofocus
-                            placeholder="you@repairshop.com"
+                            placeholder="owner@tokoservis.com"
                             class="block w-full px-4 py-3 rounded-xl border border-slate-200 bg-white/80 text-sm text-slate-800 placeholder:text-slate-400 shadow-sm transition-all duration-200 focus:border-slate-800 focus:ring-2 focus:ring-slate-800/20"
                         />
                         @error('email')
@@ -130,10 +130,10 @@
                                 name="remember"
                                 class="w-4 h-4 rounded-md border-slate-300 text-slate-800 focus:ring-slate-800 transition-all"
                             />
-                            <span class="text-sm text-slate-600">Remember me</span>
+                            <span class="text-sm text-slate-600">Ingat saya</span>
                         </label>
                         <a href="#" class="text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors">
-                            Forgot password?
+                            Lupa password?
                         </a>
                     </div>
 
@@ -142,7 +142,7 @@
                         type="submit"
                         class="w-full flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-gradient-to-r from-slate-800 to-slate-700 text-white text-sm font-bold hover:from-slate-900 hover:to-slate-800 hover:shadow-soft-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 shadow-soft"
                     >
-                        Sign In
+                        Masuk
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                         </svg>
@@ -155,7 +155,7 @@
                         <div class="w-full border-t border-slate-200"></div>
                     </div>
                     <div class="relative flex justify-center text-sm">
-                        <span class="px-4 bg-white text-slate-400">or continue with</span>
+                        <span class="px-4 bg-white text-slate-400">atau lanjut dengan</span>
                     </div>
                 </div>
 
@@ -173,10 +173,14 @@
 
                 <!-- Register Link -->
                 <p class="text-center text-sm text-slate-500 mt-8">
-                    Don't have an account?
+                    Belum punya akun?
                     <a href="{{ route('register') }}" class="font-semibold text-indigo-600 hover:text-indigo-700 transition-colors">
-                        Create one
+                        Daftar
                     </a>
+                </p>
+
+                <p class="text-center text-xs text-slate-400 mt-3">
+                    &copy; {{ date('Y') }} ServiceKU. Semua hak dilindungi. &middot; v{{ config('app.version') }}
                 </p>
             </div>
         </div>

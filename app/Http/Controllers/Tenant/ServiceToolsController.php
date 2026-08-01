@@ -34,6 +34,7 @@ class ServiceToolsController extends Controller
                 ->paginate(20),
 
             'indents' => fn() => Indent::with(['customer', 'branch', 'service'])
+                ->where('branch_id', auth()->user()->branch_id)
                 ->when($request->indent_status, fn($q) => $q->where('status', $request->indent_status))
                 ->when($request->indent_search, fn($q) => $q->where(function ($q) use ($request) {
                     $q->whereHas('customer', fn($c) => $c->where('name', 'like', "%{$request->indent_search}%"))
@@ -45,9 +46,8 @@ class ServiceToolsController extends Controller
             'indentFilters' => fn() => $request->only(['indent_status', 'indent_search']),
 
             'transferServices' => fn() => Service::with(['customer', 'branch'])
-                ->where('status', Service::STATUS_SIAP_DIAMBIL)
-                ->orWhere('status', Service::STATUS_SELESAI)
                 ->where('branch_id', auth()->user()->branch_id)
+                ->whereIn('status', [Service::STATUS_SIAP_DIAMBIL, Service::STATUS_SELESAI])
                 ->latest()
                 ->get(),
 

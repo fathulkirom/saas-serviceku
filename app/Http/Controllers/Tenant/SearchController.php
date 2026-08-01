@@ -13,6 +13,7 @@ class SearchController extends Controller
     public function search(Request $request)
     {
         $query = trim($request->get('q', ''));
+        $userBranchId = auth()->user()?->branch_id;
 
         if (strlen($query) < 2) {
             return response()->json(['results' => []]);
@@ -20,6 +21,7 @@ class SearchController extends Controller
 
         // Search services
         $services = Service::with('customer')
+            ->when($userBranchId, fn($q) => $q->where('branch_id', $userBranchId))
             ->where(function ($q) use ($query) {
                 $cleanId = preg_replace('/[^0-9]/', '', $query);
                 if ($cleanId) {
@@ -39,8 +41,13 @@ class SearchController extends Controller
             ]);
 
         // Search customers
-        $customers = Customer::where('name', 'like', "%{$query}%")
-            ->orWhere('phone', 'like', "%{$query}%")
+        $customers = Customer::when($userBranchId, fn($q) => $q->where(function ($inner) use ($userBranchId) {
+            $inner->where('branch_id', $userBranchId)->orWhereNull('branch_id');
+        }))
+            ->where(function ($q) use ($query) {
+                $q->where('name', 'like', "%{$query}%")
+                  ->orWhere('phone', 'like', "%{$query}%");
+            })
             ->take(5)->get()
             ->map(fn($c) => [
                 'type' => 'customer',
@@ -51,8 +58,8 @@ class SearchController extends Controller
             ]);
 
         // Search products
-        $products = Product::where('name', 'like', "%{$query}%")
-            ->take(5)->get()
+        $products = Product::when($userBranchId, fn($q) => $q->where('branch_id', $userBranchId))
+            ->where('name', 'like', "%{$query}%")
             ->map(fn($p) => [
                 'type' => 'product',
                 'icon' => '📦',

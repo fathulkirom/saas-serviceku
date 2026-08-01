@@ -15,34 +15,34 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Payment Gateway Selection -->
             <div class="lg:col-span-2 space-y-6">
-                <div class="rounded-2xl p-6 border" style="background: var(--bg-card); border-color: var(--border-color);">
+                <div class="rounded-2xl p-6 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Pilih Payment Gateway</h3>
                     <form @submit.prevent="submitSettings">
                         <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Gateway</label>
+                            <label class="block text-sm font-medium text-slate-300 mb-2">Gateway</label>
                             <div class="space-y-2">
-                                <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50"
-                                    :class="form.payment_gateway === 'manual' ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200'">
+                                <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-slate-800/50"
+                                    :class="form.payment_gateway === 'manual' ? 'border-indigo-500 bg-indigo-50' : 'border-slate-700'">
                                     <input type="radio" v-model="form.payment_gateway" value="manual" name="payment_gateway" class="mr-3" />
                                     <div>
                                         <p class="font-medium text-gray-900">💰 Manual Transfer</p>
-                                        <p class="text-sm text-gray-500">Pelanggan transfer ke rekening, admin konfirmasi manual</p>
+                                        <p class="text-sm text-slate-400">Pelanggan transfer ke rekening, admin konfirmasi manual</p>
                                     </div>
                                 </label>
-                                <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50"
-                                    :class="form.payment_gateway === 'midtrans' ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200'">
+                                <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-slate-800/50"
+                                    :class="form.payment_gateway === 'midtrans' ? 'border-indigo-500 bg-indigo-50' : 'border-slate-700'">
                                     <input type="radio" v-model="form.payment_gateway" value="midtrans" name="payment_gateway" class="mr-3" />
                                     <div>
                                         <p class="font-medium text-gray-900">🔵 Midtrans</p>
-                                        <p class="text-sm text-gray-500">Support: Bank Transfer, GOPAY, QRIS, ShopeePay</p>
+                                        <p class="text-sm text-slate-400">Support: Bank Transfer, GOPAY, QRIS, ShopeePay</p>
                                     </div>
                                 </label>
-                                <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-gray-50"
-                                    :class="form.payment_gateway === 'xendit' ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200'">
+                                <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-slate-800/50"
+                                    :class="form.payment_gateway === 'xendit' ? 'border-indigo-500 bg-indigo-50' : 'border-slate-700'">
                                     <input type="radio" v-model="form.payment_gateway" value="xendit" name="payment_gateway" class="mr-3" />
                                     <div>
                                         <p class="font-medium text-gray-900">🟠 Xendit</p>
-                                        <p class="text-sm text-gray-500">Support: Bank Transfer, QRIS, E-Wallet</p>
+                                        <p class="text-sm text-slate-400">Support: Bank Transfer, QRIS, E-Wallet</p>
                                     </div>
                                 </label>
                             </div>
@@ -53,27 +53,27 @@
                             <h4 class="font-medium text-gray-900">Konfigurasi Midtrans</h4>
                             <div class="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700">Merchant ID</label>
-                                    <input v-model="form.midtrans_merchant_id" type="text" name="midtrans_merchant_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                    <label class="block text-sm font-medium text-slate-300">Merchant ID</label>
+                                    <input v-model="form.midtrans_merchant_id" type="text" name="midtrans_merchant_id" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700">Client Key</label>
-                                    <input v-model="form.midtrans_client_key" type="text" name="midtrans_client_key" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                    <label class="block text-sm font-medium text-slate-300">Client Key</label>
+                                    <input v-model="form.midtrans_client_key" type="text" name="midtrans_client_key" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                                 </div>
                                 <div class="col-span-2">
-                                    <label class="block text-sm font-medium text-gray-700">Server Key</label>
-                                    <input v-model="form.midtrans_server_key" type="password" name="midtrans_server_key" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                    <label class="block text-sm font-medium text-slate-300">Server Key</label>
+                                    <input v-model="form.midtrans_server_key" type="password" name="midtrans_server_key" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700">Environment</label>
-                                    <select v-model="form.midtrans_is_production" name="midtrans_is_production" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                    <label class="block text-sm font-medium text-slate-300">Environment</label>
+                                    <select v-model="form.midtrans_is_production" name="midtrans_is_production" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                                         <option value="false">Sandbox (Development)</option>
                                         <option value="true">Production</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700">Auto Confirm</label>
-                                    <select v-model="form.payment_auto_confirm" name="payment_auto_confirm" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                    <label class="block text-sm font-medium text-slate-300">Auto Confirm</label>
+                                    <select v-model="form.payment_auto_confirm" name="payment_auto_confirm" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                                         <option value="false">Manual</option>
                                         <option value="true">Otomatis</option>
                                     </select>
@@ -85,12 +85,12 @@
                         <div v-if="form.payment_gateway === 'xendit'" class="border-t pt-4 mt-4 space-y-3">
                             <h4 class="font-medium text-gray-900">Konfigurasi Xendit</h4>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">API Key</label>
-                                <input v-model="form.xendit_api_key" type="password" name="xendit_api_key" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                <label class="block text-sm font-medium text-slate-300">API Key</label>
+                                <input v-model="form.xendit_api_key" type="password" name="xendit_api_key" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                             </div>
                             <div>
-                                <label class="block text-sm font-medium text-gray-700">Auto Confirm</label>
-                                <select v-model="form.payment_auto_confirm" name="payment_auto_confirm" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                <label class="block text-sm font-medium text-slate-300">Auto Confirm</label>
+                                <select v-model="form.payment_auto_confirm" name="payment_auto_confirm" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                                     <option value="false">Manual</option>
                                     <option value="true">Otomatis</option>
                                 </select>
@@ -107,10 +107,10 @@
                 </div>
 
                 <!-- Webhook URL Info -->
-                <div class="rounded-2xl p-6 border" style="background: var(--bg-card); border-color: var(--border-color);">
+                <div class="rounded-2xl p-6 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
                     <h3 class="text-lg font-semibold text-gray-900 mb-2">🔗 Webhook URL</h3>
-                    <p class="text-sm text-gray-600 mb-3">Daftarkan URL berikut di dashboard payment gateway untuk menerima notifikasi otomatis:</p>
-                    <div class="bg-gray-50 rounded-md p-3 font-mono text-sm text-gray-700 break-all">
+                    <p class="text-sm text-slate-400 mb-3">Daftarkan URL berikut di dashboard payment gateway untuk menerima notifikasi otomatis:</p>
+                    <div class="bg-slate-800/50 rounded-md p-3 font-mono text-sm text-slate-300 break-all">
                         {{ webhookUrl }}
                     </div>
                 </div>
@@ -118,43 +118,43 @@
 
             <!-- Rekening Manual -->
             <div class="space-y-6">
-                <div class="rounded-2xl p-6 border" style="background: var(--bg-card); border-color: var(--border-color);">
+                <div class="rounded-2xl p-6 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">🏦 Rekening Manual</h3>
-                    <p class="text-sm text-gray-500 mb-4">Untuk pembayaran transfer manual</p>
+                    <p class="text-sm text-slate-400 mb-4">Untuk pembayaran transfer manual</p>
                     <form @submit.prevent="submitSettings">
                         <div class="space-y-3 mb-4 pb-4 border-b">
-                            <h4 class="text-sm font-medium text-gray-700">Rekening 1</h4>
+                            <h4 class="text-sm font-medium text-slate-300">Rekening 1</h4>
                             <div>
-                                <label class="block text-xs text-gray-500">Bank</label>
-                                <input v-model="form.bank_name_1" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                <label class="block text-xs text-slate-400">Bank</label>
+                                <input v-model="form.bank_name_1" type="text" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                             </div>
                             <div>
-                                <label class="block text-xs text-gray-500">Atas Nama</label>
-                                <input v-model="form.bank_account_name_1" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                <label class="block text-xs text-slate-400">Atas Nama</label>
+                                <input v-model="form.bank_account_name_1" type="text" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                             </div>
                             <div>
-                                <label class="block text-xs text-gray-500">No. Rekening</label>
-                                <input v-model="form.bank_account_number_1" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                <label class="block text-xs text-slate-400">No. Rekening</label>
+                                <input v-model="form.bank_account_number_1" type="text" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                             </div>
                         </div>
                         <div class="space-y-3 mb-4">
-                            <h4 class="text-sm font-medium text-gray-700">Rekening 2</h4>
+                            <h4 class="text-sm font-medium text-slate-300">Rekening 2</h4>
                             <div>
-                                <label class="block text-xs text-gray-500">Bank</label>
-                                <input v-model="form.bank_name_2" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                <label class="block text-xs text-slate-400">Bank</label>
+                                <input v-model="form.bank_name_2" type="text" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                             </div>
                             <div>
-                                <label class="block text-xs text-gray-500">Atas Nama</label>
-                                <input v-model="form.bank_account_name_2" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                <label class="block text-xs text-slate-400">Atas Nama</label>
+                                <input v-model="form.bank_account_name_2" type="text" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                             </div>
                             <div>
-                                <label class="block text-xs text-gray-500">No. Rekening</label>
-                                <input v-model="form.bank_account_number_2" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                <label class="block text-xs text-slate-400">No. Rekening</label>
+                                <input v-model="form.bank_account_number_2" type="text" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                             </div>
                         </div>
                         <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700">Instruksi Pembayaran</label>
-                            <textarea v-model="form.payment_instructions" rows="4" name="payment_instructions" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"></textarea>
+                            <label class="block text-sm font-medium text-slate-300">Instruksi Pembayaran</label>
+                            <textarea v-model="form.payment_instructions" rows="4" name="payment_instructions" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"></textarea>
                         </div>
                         <button type="submit" :disabled="form.processing"
                             class="w-full px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 text-sm">
