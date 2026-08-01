@@ -10,8 +10,9 @@
 #   ./backup.sh --restore FILE     # Restore dari file backup
 #
 # Cron (setiap jam 3 pagi) — jalankan dari HOST (bukan container, karena
-# tidak ada docker CLI di dalam app container):
-#   0 3 * * * /home/kirom/serviceku/backup.sh --auto >> /var/log/serviceku-backup.log 2>&1
+# tidak ada docker CLI di dalam app container). Log ke HOME kirom
+# (/var/log butuh root):
+#   0 3 * * * /home/kirom/serviceku/backup.sh --auto >> /home/kirom/serviceku-backup.log 2>&1
 #
 # Catatan: `backup:run` (artisan) di dalam container tidak bisa dump DB
 # (tidak ada docker CLI/mysqldump). Gunakan backup.sh di HOST ini.

@@ -71,8 +71,11 @@ Tambahkan baris berikut, lalu simpan:
 - **vi/vim**: `i` → tempel baris → `Esc` → `:wq` → `Enter`
 
 ```
-0 3 * * * /home/kirom/serviceku/backup.sh --auto >> /var/log/serviceku-backup.log 2>&1
+0 3 * * * /home/kirom/serviceku/backup.sh --auto >> /home/kirom/serviceku-backup.log 2>&1
 ```
+
+> ⚠️ **Jangan pakai `/var/log/serviceku-backup.log`** — `/var/log` butuh root,
+> kirom tidak bisa tulis (permission denied). Pakai path di HOME kirom.
 
 Verifikasi cron terpasang:
 ```bash
