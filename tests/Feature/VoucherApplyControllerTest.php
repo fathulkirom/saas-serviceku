@@ -26,16 +26,21 @@ class VoucherApplyControllerTest extends TestCase
 
         // Validasi `exists:plans,id` memakai koneksi default (sqlite),
         // sedangkan Plan model memakai 'central'. Sinkronkan ke sqlite.
-        DB::table('plans')->insert([
-            'id' => $this->plan->id,
-            'name' => $this->plan->name,
-            'slug' => $this->plan->slug,
-            'price' => 199000,
-            'is_active' => true,
-            'features' => json_encode([]),
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        // updateOrInsert dipakai agar idempotent: bila central & sqlite
+        // berbagi file DB yang sama (mis. CI: database/central.sqlite),
+        // row sudah ada dari Plan::create sehingga tidak tabrakan UNIQUE.
+        DB::table('plans')->updateOrInsert(
+            ['id' => $this->plan->id],
+            [
+                'name' => $this->plan->name,
+                'slug' => $this->plan->slug,
+                'price' => 199000,
+                'is_active' => true,
+                'features' => json_encode([]),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+        );
     }
 
     private function createVoucher(array $overrides = []): Voucher
