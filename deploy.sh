@@ -74,6 +74,9 @@ rsync -avzO --progress \
     --exclude 'node_modules' \
     --exclude 'vendor' \
     --exclude '.git' \
+    --exclude '.hypothesis' \
+    --exclude '.schemathesis' \
+    --exclude '.ua' \
     --exclude 'storage' \
     --exclude 'bootstrap/cache/*' \
     --exclude 'public/build' \
