@@ -81,10 +81,10 @@ function darkenHex(hex, percent) {
 function applyTenantTheme(color) {
     if (!color) return;
     const root = document.documentElement;
-    root.style.setProperty('--accent-primary', color);
-    root.style.setProperty('--accent-hover', darkenHex(color, 12));
-    root.style.setProperty('--accent-light', hexToRgba(color, 0.1));
-    root.style.setProperty('--accent-glow', hexToRgba(color, 0.2));
+    root.style.setProperty('--primary', color);
+    root.style.setProperty('--primary-hover', darkenHex(color, 12));
+    root.style.setProperty('--primary-soft', hexToRgba(color, 0.1));
+    root.style.setProperty('--primary-soft-border', hexToRgba(color, 0.2));
 }
 
 onMounted(() => applyTenantTheme(primaryColor.value));

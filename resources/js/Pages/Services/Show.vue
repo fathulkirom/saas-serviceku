@@ -23,7 +23,7 @@
 
         <div class="max-w-5xl mx-auto space-y-5">
             <!-- ACTION BUTTONS -->
-            <div class="flex flex-wrap items-center gap-2 p-4 rounded-xl border" style="border-color: var(--border-color); background: var(--bg-secondary);">
+            <div class="flex flex-wrap items-center gap-2 p-4 rounded-xl border" style="border-color: var(--border-color); background: var(--bg-card);">
                 <template v-if="isActive">
                     <button v-if="canAssign" :disabled="processingAction" @click="openAssignModal" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-white transition-all hover:shadow-sm disabled:opacity-50 bg-indigo-600 text-white">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
@@ -118,7 +118,7 @@
                 <div v-for="(step, i) in statusTimeline" :key="step.key" class="flex items-center gap-2 whitespace-nowrap">
                     <div class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 transition-all"
                         :style="{
-                            background: isStepDone(step.key) ? 'var(--accent-primary)' : 'var(--bg-hover)',
+                            background: isStepDone(step.key) ? 'var(--primary)' : 'var(--bg-hover)',
                             color: isStepDone(step.key) ? '#fff' : 'var(--text-muted)',
                             boxShadow: step.key === service.status ? '0 0 0 3px var(--accent-glow)' : 'none',
                         }">{{ i + 1 }}</div>
@@ -126,13 +126,13 @@
                         color: isStepDone(step.key) ? 'var(--text-primary)' : 'var(--text-muted)',
                         fontWeight: step.key === service.status ? '700' : '500',
                     }">{{ step.label }}</span>
-                    <svg v-if="i < statusTimeline.length - 1" class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="text-zinc-500"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    <svg v-if="i < statusTimeline.length - 1" class="w-4 h-4 shrink-0 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                 </div>
             </div>
 
             <!-- INFO CARDS: Customer + Device -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-secondary);">
+                <div class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-card);">
                     <h3 class="text-sm font-bold mb-4 text-zinc-900">👤 Data Pelanggan</h3>
                     <div class="space-y-3">
                         <div class="flex items-center gap-3">
@@ -154,7 +154,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-secondary);">
+                <div class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-card);">
                     <h3 class="text-sm font-bold mb-4 text-zinc-900">📱 Data Perangkat</h3>
                     <div class="space-y-2 text-sm">
                         <div class="flex justify-between"><span class="text-zinc-500">Teknisi</span><span class="font-semibold text-zinc-900">{{ service.technician?.name || '-' }}</span></div>
@@ -169,19 +169,19 @@
             </div>
 
             <!-- PROBLEM + CONDITION -->
-            <div class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-secondary);">
+            <div class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-card);">
                 <h3 class="text-sm font-bold mb-3 text-zinc-900">📝 Deskripsi Masalah</h3>
                 <p class="text-sm whitespace-pre-wrap text-zinc-600">{{ service.problem_description || 'Tidak ada deskripsi' }}</p>
                 <p v-if="service.condition_note" class="text-sm mt-3 pt-3 border-t whitespace-pre-wrap" style="border-color: var(--border-light); color: var(--text-muted);">{{ service.condition_note }}</p>
             </div>
 
             <!-- CHECKLIST MASUK -->
-            <div v-if="checklistMasuk" class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-secondary);">
+            <div v-if="checklistMasuk" class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-card);">
                 <h3 class="text-sm font-bold mb-3 text-zinc-900">✅ Checklist Masuk</h3>
                 <div class="flex flex-wrap gap-2">
                     <span v-for="item in checklistMasuk.checked_items" :key="item"
                         class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold"
-                        style="background: var(--success-bg); color: var(--success-text);">
+                        style="background: var(--success-soft); color: var(--success-text);">
                         ✓ {{ getChecklistItemName(item) }}
                     </span>
                 </div>
@@ -189,12 +189,12 @@
             </div>
 
             <!-- CHECKLIST KELUAR -->
-            <div v-if="checklistKeluar" class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-secondary);">
+            <div v-if="checklistKeluar" class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-card);">
                 <h3 class="text-sm font-bold mb-3 text-zinc-900">📋 Checklist Keluar</h3>
                 <div class="flex flex-wrap gap-2">
                     <span v-for="item in checklistKeluar.checked_items" :key="item"
                         class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold"
-                        style="background: var(--success-bg); color: var(--success-text);">
+                        style="background: var(--success-soft); color: var(--success-text);">
                         ✓ {{ getChecklistItemName(item) }}
                     </span>
                 </div>
@@ -202,7 +202,7 @@
             </div>
 
             <!-- SPAREPART + COST -->
-            <div v-if="service.spareparts?.length" class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-secondary);">
+            <div v-if="service.spareparts?.length" class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-card);">
                 <h3 class="text-sm font-bold mb-4 text-zinc-900">🔧 Sparepart Terpakai</h3>
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm">
@@ -227,7 +227,7 @@
             </div>
 
             <!-- BIAYA -->
-            <div v-if="showCost" class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-secondary);">
+            <div v-if="showCost" class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-card);">
                 <h3 class="text-sm font-bold mb-4 text-zinc-900">💰 Rincian Biaya</h3>
                 <div class="space-y-2 text-sm max-w-sm">
                     <div class="flex justify-between">
@@ -256,7 +256,7 @@
             </div>
 
             <!-- PHOTOS -->
-            <div v-if="service.photos?.length" class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-secondary);">
+            <div v-if="service.photos?.length" class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-card);">
                 <h3 class="text-sm font-bold mb-4 text-zinc-900">📸 Foto Perangkat</h3>
                 <div class="grid grid-cols-4 gap-3">
                     <div v-for="photo in service.photos" :key="photo.id" class="relative group cursor-pointer" @click="previewPhoto = photo.photo_url">
@@ -267,7 +267,7 @@
             </div>
 
             <!-- UPLOAD PHOTO -->
-            <div v-if="driveConnected && isActive" class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-secondary);">
+            <div v-if="driveConnected && isActive" class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-card);">
                 <h3 class="text-sm font-bold mb-4 text-zinc-900">📤 Upload Foto Tambahan</h3>
                 <form @submit.prevent="uploadPhotos">
                     <input type="file" @change="onAdditionalPhotos" accept="image/*" multiple
@@ -285,7 +285,7 @@
             </div>
 
             <!-- WARRANTY CLAIMS -->
-            <div v-if="service.warranty_claims?.length" class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-secondary);">
+            <div v-if="service.warranty_claims?.length" class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-card);">
                 <h3 class="text-sm font-bold mb-4 text-zinc-900">🛡️ Klaim Garansi</h3>
                 <div class="space-y-2">
                     <Link v-for="claim in service.warranty_claims" :key="claim.id" :href="route('services.show', claim.id)"
@@ -297,12 +297,12 @@
             </div>
 
             <!-- TIMELINE -->
-            <div class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-secondary);">
+            <div class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-card);">
                 <h3 class="text-sm font-bold mb-4 text-zinc-900">📊 Timeline Servis</h3>
                 <div class="space-y-4">
                     <div v-for="(evt, idx) in timeline" :key="idx" class="flex gap-3">
                         <div class="flex flex-col items-center">
-                            <div class="w-3 h-3 rounded-full flex-shrink-0" :style="{ background: evt.active ? 'var(--accent-primary)' : '#d1d5db' }"></div>
+                            <div class="w-3 h-3 rounded-full flex-shrink-0" :style="{ background: evt.active ? 'var(--primary)' : '#d1d5db' }"></div>
                             <div v-if="idx < timeline.length - 1" class="w-0.5 flex-1" style="background: #d1d5db; min-height: 24px;"></div>
                         </div>
                         <div class="pb-1">
@@ -323,7 +323,7 @@
             <!-- ===== MODAL: ASSIGN TECHNICIAN ===== -->
             <Teleport to="body">
                 <div v-if="showAssignModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showAssignModal = false">
-                    <div class="rounded-2xl shadow-2xl p-5 w-full max-w-sm mx-3 border" style="background: var(--bg-secondary); border-color: var(--border-color);">
+                    <div class="rounded-2xl shadow-2xl p-5 w-full max-w-sm mx-3 border" style="background: var(--bg-card); border-color: var(--border-color);">
                         <h3 class="text-base font-bold mb-4 text-zinc-900">Assign Teknisi</h3>
                         <select v-model="assignTechnicianId"
                             class="w-full rounded-xl border px-3 py-2.5 text-sm mb-4"
@@ -336,8 +336,7 @@
                                 class="flex-1 px-4 py-2 rounded-xl border text-sm font-semibold transition-all"
                                 style="border-color: var(--border-color); color: var(--text-secondary); background: var(--bg-hover);">Batal</button>
                             <button @click="executeAssign" :disabled="!assignTechnicianId || processingAction === 'assign'"
-                                class="flex-1 px-4 py-2 rounded-xl text-sm font-bold text-white transition-all disabled:opacity-50"
-                                class="bg-indigo-600 text-white" :class="assignTechnicianId ? 'shadow-sm' : ''">{{ processingAction === 'assign' ? 'Menyimpan...' : 'Simpan' }}</button>
+                                class="flex-1 px-4 py-2 rounded-xl text-sm font-bold text-white transition-all disabled:opacity-50 bg-indigo-600" :class="assignTechnicianId ? 'shadow-sm' : ''">{{ processingAction === 'assign' ? 'Menyimpan...' : 'Simpan' }}</button>
                         </div>
                     </div>
                 </div>
@@ -346,7 +345,7 @@
             <!-- ===== MODAL: CANCEL ===== -->
             <Teleport to="body">
                 <div v-if="showCancelModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showCancelModal = false">
-                    <div class="rounded-2xl shadow-2xl p-5 w-full max-w-sm mx-3 border" style="background: var(--bg-secondary); border-color: var(--border-color);">
+                    <div class="rounded-2xl shadow-2xl p-5 w-full max-w-sm mx-3 border" style="background: var(--bg-card); border-color: var(--border-color);">
                         <h3 class="text-base font-bold mb-2 text-zinc-900">Batalkan Servis?</h3>
                         <p class="text-sm mb-4 text-zinc-500">Servis #{{ service.id }} akan dibatalkan. Tindakan ini tidak dapat dibatalkan.</p>
                         <div class="flex gap-2">
@@ -363,7 +362,7 @@
             <!-- ===== MODAL: PARTNER ===== -->
             <Teleport to="body">
                 <div v-if="showPartnerModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" @click.self="showPartnerModal = false">
-                    <div class="rounded-2xl shadow-2xl p-5 w-full max-w-sm mx-3 border" style="background: var(--bg-secondary); border-color: var(--border-color);">
+                    <div class="rounded-2xl shadow-2xl p-5 w-full max-w-sm mx-3 border" style="background: var(--bg-card); border-color: var(--border-color);">
                         <h3 class="text-base font-bold mb-2 text-zinc-900">Kirim ke Partner</h3>
                         <p class="text-xs mb-3 text-zinc-500">Servis #{{ service.id }} akan dikerjakan oleh partner eksternal.</p>
                         <textarea v-model="partnerNote" rows="3" placeholder="Catatan untuk partner (opsional)..."
@@ -383,7 +382,7 @@
             <!-- ===== MODAL: COMPLETE ===== -->
             <Teleport to="body">
                 <div v-if="showCompleteModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm overflow-y-auto py-8" @click.self="showCompleteModal = false">
-                    <div class="rounded-2xl shadow-2xl p-5 w-full max-w-lg mx-3 border" style="background: var(--bg-secondary); border-color: var(--border-color);">
+                    <div class="rounded-2xl shadow-2xl p-5 w-full max-w-lg mx-3 border" style="background: var(--bg-card); border-color: var(--border-color);">
                         <h3 class="text-base font-bold mb-4 text-zinc-900">✅ Complete Servis</h3>
                         <div class="space-y-4">
                             <div>
@@ -398,7 +397,7 @@
                                     <label v-for="item in selectedChecklistItems" :key="item.id"
                                         class="flex items-center gap-2 text-sm cursor-pointer py-0.5 text-zinc-600">
                                         <input type="checkbox" :value="item.id" v-model="completeForm.checked_items"
-                                            class="rounded" style="accent-color: var(--accent-primary);" />
+                                            class="rounded" style="accent-color: var(--primary);" />
                                         {{ item.item_name }}
                                     </label>
                                 </div>
@@ -447,7 +446,7 @@
             <!-- ===== MODAL: CHECKLIST MASUK ===== -->
             <Teleport to="body">
                 <div v-if="showChecklistMasukModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm overflow-y-auto py-8" @click.self="showChecklistMasukModal = false">
-                    <div class="rounded-2xl shadow-2xl p-5 w-full max-w-lg mx-3 border" style="background: var(--bg-secondary); border-color: var(--border-color);">
+                    <div class="rounded-2xl shadow-2xl p-5 w-full max-w-lg mx-3 border" style="background: var(--bg-card); border-color: var(--border-color);">
                         <h3 class="text-base font-bold mb-4 text-zinc-900">{{ checklistMasuk ? 'Edit Checklist Masuk' : 'Isi Checklist Masuk' }}</h3>
                         <div class="space-y-4">
                             <div>
@@ -463,7 +462,7 @@
                                 <label v-for="item in masukChecklistItems" :key="item.id"
                                     class="flex items-center gap-2 text-sm cursor-pointer py-0.5 text-zinc-600">
                                     <input type="checkbox" :value="item.id" v-model="checklistMasukForm.checked_items"
-                                        class="rounded" style="accent-color: var(--accent-primary);" />
+                                        class="rounded" style="accent-color: var(--primary);" />
                                     {{ item.item_name }}
                                 </label>
                             </div>
@@ -488,7 +487,7 @@
             <!-- MODAL CHECKLIST KELUAR -->
             <Teleport to="body">
                 <div v-if="showChecklistKeluarModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm overflow-y-auto py-8" @click.self="showChecklistKeluarModal = false">
-                    <div class="rounded-2xl shadow-2xl p-5 w-full max-w-lg mx-3 border" style="background: var(--bg-secondary); border-color: var(--border-color);">
+                    <div class="rounded-2xl shadow-2xl p-5 w-full max-w-lg mx-3 border" style="background: var(--bg-card); border-color: var(--border-color);">
                         <h3 class="text-base font-bold mb-4 text-zinc-900">{{ checklistKeluar ? 'Edit Checklist Keluar' : 'Isi Checklist Keluar' }}</h3>
                         <div class="space-y-4">
                             <div>
@@ -837,23 +836,23 @@ const statusLabel = (status) => ({
 const statusDot = (status) => ({
     menunggu_alokasi: 'var(--warning)', diterima: 'var(--info)', dikerjakan: 'var(--info)',
     menunggu_konfirmasi_pelanggan: 'var(--danger)', menunggu_konfirmasi_internal: 'var(--danger)',
-    siap_diambil: 'var(--success)', indent: 'var(--accent-primary)', onpartner: 'var(--accent-primary)',
+    siap_diambil: 'var(--success)', indent: 'var(--primary)', onpartner: 'var(--primary)',
     selesai: 'var(--success)', cancel: 'var(--danger)', void: 'var(--danger)', close: 'var(--text-muted)', diambil: 'var(--success)',
 }[status] || '#8e8ea0');
 
 const statusStyle = (status) => {
     const colors = {
         menunggu_alokasi: { bg: 'rgba(243,156,18,0.12)', color: '#b87c0e' },
-        diterima: { bg: 'var(--info-bg)', color: 'var(--info-text)' },
-        dikerjakan: { bg: 'var(--info-bg)', color: 'var(--info-text)' },
-        menunggu_konfirmasi_pelanggan: { bg: 'var(--danger-bg)', color: 'var(--danger-text)' },
-        menunggu_konfirmasi_internal: { bg: 'var(--danger-bg)', color: 'var(--danger-text)' },
-        indent: { bg: 'var(--accent-light)', color: 'var(--accent-primary)' },
-        onpartner: { bg: 'var(--accent-light)', color: 'var(--accent-primary)' },
-        selesai: { bg: 'var(--success-bg)', color: 'var(--success-text)' },
-        cancel: { bg: 'var(--danger-bg)', color: 'var(--danger-text)' },
-        void: { bg: 'var(--danger-bg)', color: 'var(--danger-text)' },
-        diambil: { bg: 'var(--success-bg)', color: 'var(--success-text)' },
+        diterima: { bg: 'var(--info-soft)', color: 'var(--info-text)' },
+        dikerjakan: { bg: 'var(--info-soft)', color: 'var(--info-text)' },
+        menunggu_konfirmasi_pelanggan: { bg: 'var(--danger-soft)', color: 'var(--danger-text)' },
+        menunggu_konfirmasi_internal: { bg: 'var(--danger-soft)', color: 'var(--danger-text)' },
+        indent: { bg: 'var(--primary-soft)', color: 'var(--primary)' },
+        onpartner: { bg: 'var(--primary-soft)', color: 'var(--primary)' },
+        selesai: { bg: 'var(--success-soft)', color: 'var(--success-text)' },
+        cancel: { bg: 'var(--danger-soft)', color: 'var(--danger-text)' },
+        void: { bg: 'var(--danger-soft)', color: 'var(--danger-text)' },
+        diambil: { bg: 'var(--success-soft)', color: 'var(--success-text)' },
     };
     const c = colors[status] || { bg: 'rgba(142,142,160,0.12)', color: '#71717a' };
     return `background: ${c.bg}; color: ${c.color};`;

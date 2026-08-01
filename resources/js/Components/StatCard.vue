@@ -67,12 +67,12 @@ const props = defineProps({
 });
 
 const colorMap = {
-  primary: { hex: 'var(--accent-primary)', light: 'var(--accent-light)' },
+  primary: { hex: 'var(--primary)', light: 'var(--primary-soft)' },
   cyan: { hex: '#06b6d4', light: 'rgba(6,182,212,0.1)' },
-  green: { hex: 'var(--success)', light: 'var(--success-bg)' },
-  orange: { hex: 'var(--warning)', light: 'var(--warning-bg)' },
-  red: { hex: 'var(--danger)', light: 'var(--danger-bg)' },
-  blue: { hex: 'var(--info)', light: 'var(--info-bg)' },
+  green: { hex: 'var(--success)', light: 'var(--success-soft)' },
+  orange: { hex: 'var(--warning)', light: 'var(--warning-soft)' },
+  red: { hex: 'var(--danger)', light: 'var(--danger-soft)' },
+  blue: { hex: 'var(--info)', light: 'var(--info-soft)' },
   pink: { hex: '#ec4899', light: 'rgba(236,72,153,0.1)' },
 };
 
@@ -97,6 +97,6 @@ const displayValue = computed(() => {
   return props.value;
 });
 
-const trendBg = computed(() => props.trend > 0 ? 'var(--success-bg)' : 'var(--danger-bg)');
+const trendBg = computed(() => props.trend > 0 ? 'var(--success-soft)' : 'var(--danger-soft)');
 const trendColor = computed(() => props.trend > 0 ? 'var(--success)' : 'var(--danger)');
 </script>

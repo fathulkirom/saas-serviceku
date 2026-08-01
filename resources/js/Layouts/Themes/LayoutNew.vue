@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen flex" style="background: var(--bg-primary);">
+    <div class="min-h-screen flex" style="background: var(--bg-app);">
         
         <!-- SIDEBAR -->
         <aside v-if="showSidebar && !sidebarHidden" ref="sidebarRef"
@@ -9,10 +9,10 @@
                 sidebarPosition === 'right' ? 'right-0 border-l' : 'left-0 border-r',
                 isMobile && !mobileOpen ? '-translate-x-full lg:translate-x-0' : 'translate-x-0'
             ]"
-            :style="{ background: 'var(--sidebar-bg)', borderColor: 'var(--sidebar-border)' }">
+            :style="{ background: 'var(--bg-sidebar)', borderColor: 'var(--border-color)' }">
 
             <!-- Logo -->
-            <div class="h-14 lg:h-16 flex items-center gap-2.5 px-4 border-b flex-shrink-0" :style="{ borderColor: 'var(--sidebar-border)' }">
+            <div class="h-14 lg:h-16 flex items-center gap-2.5 px-4 border-b flex-shrink-0" :style="{ borderColor: 'var(--border-color)' }">
                 <Logo :link="route('dashboard')" size="sm" theme="dark" />
                 <span v-if="sidebarExpanded || activeLayout !== 'slim'" class="text-sm font-bold truncate" style="color: var(--text-sidebar);">
                     {{ $page.props.tenant?.name || 'ServiceKU' }}
@@ -23,12 +23,12 @@
             </div>
 
             <!-- Branch Switcher (only if multi_branch is available) -->
-            <div v-if="branches.length > 1" class="px-3 py-2.5 border-b flex-shrink-0" :style="{ borderColor: 'var(--sidebar-border)' }">
+            <div v-if="branches.length > 1" class="px-3 py-2.5 border-b flex-shrink-0" :style="{ borderColor: 'var(--border-color)' }">
                 <Dropdown align="left" width="56">
                     <template #trigger>
                         <button class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-medium transition-all"
                             :style="{ background: 'var(--bg-hover)', color: 'var(--text-sidebar)' }">
-                            <div class="w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-bold text-white flex-shrink-0" style="background: var(--accent-primary);">
+                            <div class="w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-bold text-white flex-shrink-0" style="background: var(--primary);">
                                 {{ currentBranch?.name?.charAt(0) || 'P' }}
                             </div>
                             <span v-if="showBranchText" class="truncate max-w-[100px]">{{ currentBranch?.name || 'Pilih Cabang' }}</span>
@@ -40,7 +40,7 @@
                         <template v-for="branch in branches" :key="branch.id">
                             <DropdownLink v-if="branch.id !== currentBranch?.id" @click="switchBranch(branch.id)">
                                 <div class="flex items-center gap-2.5">
-                                    <div class="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold text-white" style="background: var(--accent-primary);">{{ branch.name.charAt(0) }}</div>
+                                    <div class="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold text-white" style="background: var(--primary);">{{ branch.name.charAt(0) }}</div>
                                     <span class="text-xs font-medium truncate max-w-[120px]" style="color: var(--text-primary);">{{ branch.name }}</span>
                                 </div>
                             </DropdownLink>
@@ -61,7 +61,7 @@
                         <Link v-for="item in items" :key="item.label" :href="item.href"
                             class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm transition-all duration-150"
                             :style="isActive(item.href) 
-                                ? { background: 'var(--sidebar-active)', color: 'var(--text-sidebar-active)' } 
+                                ? { background: 'var(--bg-sidebar-active)', color: 'var(--text-sidebar-active)' } 
                                 : { color: 'var(--text-sidebar)', opacity: 0.8 }"
                             :title="!sidebarExpanded && activeLayout === 'slim' ? item.label : ''">
                             <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-200"
@@ -82,7 +82,7 @@
                     <Link v-for="item in allowedMenuItems" :key="item.label" :href="item.href"
                         class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm transition-all duration-150"
                         :style="isActive(item.href) 
-                            ? { background: 'var(--sidebar-active)', color: 'var(--text-sidebar-active)' } 
+                            ? { background: 'var(--bg-sidebar-active)', color: 'var(--text-sidebar-active)' } 
                             : { color: 'var(--text-sidebar)', opacity: 0.8 }"
                         :title="!sidebarExpanded && activeLayout === 'slim' ? item.label : ''">
                         <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-200"
@@ -101,13 +101,13 @@
             </nav>
 
             <!-- Sidebar Footer -->
-            <div v-if="showSidebar" class="px-3 py-3 border-t flex-shrink-0" :style="{ borderColor: 'var(--sidebar-border)' }"></div>
+            <div v-if="showSidebar" class="px-3 py-3 border-t flex-shrink-0" :style="{ borderColor: 'var(--border-color)' }"></div>
         </aside>
 
         <!-- Floating toggle button (when sidebar is hidden) -->
         <button v-if="sidebarHidden && !isMobile" @click="emit('toggle-sidebar')"
             class="fixed top-20 left-3 z-50 w-10 h-10 rounded-xl flex items-center justify-center shadow-lg hover:shadow-xl transition-all"
-            :style="{ background: 'var(--accent-primary)' }" title="Tampilkan Sidebar">
+            :style="{ background: 'var(--primary)' }" title="Tampilkan Sidebar">
             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
             </svg>
@@ -133,7 +133,7 @@
                         </button>
                         <Logo v-if="activeLayout === 'classic'" :link="route('dashboard')" size="sm" theme="dark" />
                         <span class="hidden lg:block text-xs font-semibold uppercase tracking-wider px-2 py-1 rounded-lg" 
-                            style="background: var(--accent-light); color: var(--accent-primary);">
+                            style="background: var(--primary-soft); color: var(--primary);">
                             {{ $page.props.auth.user.role }} Panel
                         </span>
                     </div>
@@ -144,10 +144,10 @@
                             class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap"
                             :style="{
                                 color: isActive(item.href)
-                                  ? (groupColors[item.group]?.hex || 'var(--accent-primary)')
+                                  ? (groupColors[item.group]?.hex || 'var(--primary)')
                                   : 'var(--text-secondary)',
                                 background: isActive(item.href)
-                                  ? (groupColors[item.group]?.light || 'var(--accent-light)')
+                                  ? (groupColors[item.group]?.light || 'var(--primary-soft)')
                                   : 'transparent'
                             }">
                             <span class="w-4 h-4 flex items-center justify-center" v-html="getIcon(item.id)"></span>
@@ -202,8 +202,8 @@
                         </Dropdown>
 
                         <div v-if="planName && planName !== 'Enterprise' && $page.props.auth.user.role === 'owner'" class="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-[10px] font-semibold border" 
-                            style="background: var(--accent-light); border-color: var(--border-focus); color: var(--accent-primary);">
-                            <span class="w-1.5 h-1.5 rounded-full" style="background: var(--accent-primary);"></span>
+                            style="background: var(--primary-soft); border-color: var(--border-focus); color: var(--primary);">
+                            <span class="w-1.5 h-1.5 rounded-full" style="background: var(--primary);"></span>
                             {{ planName }}
                         </div>
 
@@ -211,7 +211,7 @@
                         <Dropdown align="right" width="52">
                             <template #trigger>
                                 <button class="flex items-center gap-2 pl-2 pr-1 py-1 rounded-xl transition-all border border-transparent" style="background: var(--bg-hover);">
-                                    <div class="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold text-white" style="background: var(--accent-primary);">{{ userInitials }}</div>
+                                    <div class="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold text-white" style="background: var(--primary);">{{ userInitials }}</div>
                                     <span class="hidden lg:block text-xs font-medium max-w-[80px] truncate" style="color: var(--text-primary);">{{ $page.props.auth.user.name }}</span>
                                     <svg class="w-3 h-3" style="color: var(--text-muted);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                                 </button>
@@ -237,7 +237,7 @@
                     <div class="max-h-[70vh] overflow-y-auto px-3 py-3 space-y-1">
                         <Link v-for="item in allowedMenuItems" :key="item.label" :href="item.href" @click="$emit('close-mobile')"
                             class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
-                            :style="isActive(item.href) ? { background: 'var(--accent-primary)', color: '#fff' } : { color: 'var(--text-secondary)' }">
+                            :style="isActive(item.href) ? { background: 'var(--primary)', color: '#fff' } : { color: 'var(--text-secondary)' }">
                             <span class="w-4 h-4" v-html="getIcon(item.id)"></span>
                             <span>{{ item.label }}</span>
                         </Link>
@@ -249,7 +249,7 @@
             <main class="flex-1">
                 <Transition name="page" mode="out-in">
                     <div :key="$page.url">
-                        <div v-if="$slots.header" class="border-b" style="background: var(--bg-secondary); border-color: var(--border-light);">
+                        <div v-if="$slots.header" class="border-b" style="background: var(--bg-card); border-color: var(--border-light);">
                             <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
                                 <slot name="header" />
                             </div>
@@ -279,7 +279,7 @@
                         <div v-else-if="combinedSearchResults.length === 0 && searchQuery.length >= 2" class="px-3 py-8 text-center text-sm text-muted">Tidak ada hasil</div>
                         <div v-for="(item, idx) in combinedSearchResults" :key="idx" @click="navigateTo(item.url)"
                             class="flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer transition-all duration-150"
-                            :style="idx === searchIndex ? { background: 'var(--accent-light)' } : {}">
+                            :style="idx === searchIndex ? { background: 'var(--primary-soft)' } : {}">
                             <div class="w-8 h-8 rounded-lg flex items-center justify-center text-base" style="background: var(--bg-hover);">
                                 <span>{{ item.icon || '🔍' }}</span>
                             </div>
@@ -330,16 +330,16 @@ const props = defineProps({
 const emit = defineEmits(['toggle-mobile', 'close-mobile', 'open-search', 'close-search', 'toggle-sidebar']);
 
 const groupColors = {
-  'Utama':     { accent: 'var(--accent-primary)', light: 'var(--accent-light)', hex: '#7c3aed' },
+  'Utama':     { accent: 'var(--primary)', light: 'var(--primary-soft)', hex: '#7c3aed' },
   'Transaksi': { accent: '#10b981', light: 'rgba(16, 185, 129, 0.12)', hex: '#10b981' },
   'Manajemen': { accent: '#3b82f6', light: 'rgba(59, 130, 246, 0.12)', hex: '#3b82f6' },
-  'Operasional': { accent: 'var(--accent-primary)', light: 'var(--accent-light)', hex: '#7c3aed' },
+  'Operasional': { accent: 'var(--primary)', light: 'var(--primary-soft)', hex: '#7c3aed' },
   'Keuangan': { accent: '#10b981', light: 'rgba(16, 185, 129, 0.12)', hex: '#10b981' },
   'Sistem & Laporan': { accent: '#3b82f6', light: 'rgba(59, 130, 246, 0.12)', hex: '#3b82f6' },
 };
 
 function getGroupAccent(group) {
-  return groupColors[group]?.accent || 'var(--accent-primary)';
+  return groupColors[group]?.accent || 'var(--primary)';
 }
 
 const page = usePage();

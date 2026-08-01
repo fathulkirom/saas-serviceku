@@ -6,7 +6,7 @@
                     <h2 class="text-xl font-bold text-slate-100">Kelola Paket Langganan</h2>
                     <p class="text-sm text-slate-400 mt-0.5">Atur paket, harga, dan fitur per tipe bisnis</p>
                 </div>
-                <button @click="openCreateModal" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-white transition-all duration-200 hover:-translate-y-0.5 shadow-lg" style="background: var(--accent-primary);">
+                <button @click="openCreateModal" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-white transition-all duration-200 hover:-translate-y-0.5 shadow-lg" style="background: var(--primary);">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
                     Tambah Paket
                 </button>
@@ -21,7 +21,7 @@
         <!-- Plan Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div v-for="plan in plans" :key="plan.id" class="rounded-2xl p-6 border transition-all duration-300 hover:-translate-y-0.5 bg-slate-900/50 border-slate-800 backdrop-blur-xl"
-                :style="plan.is_active ? { borderTop: '3px solid var(--accent-primary)' } : { borderTop: '3px solid var(--border-color)' }">
+                :style="plan.is_active ? { borderTop: '3px solid var(--primary)' } : { borderTop: '3px solid var(--border-color)' }">
                 <div class="flex justify-between items-start">
                     <h3 class="text-lg font-bold text-slate-200">{{ plan.name }}</h3>
                     <span class="px-2 py-1 text-xs font-medium rounded-full whitespace-nowrap" :class="plan.is_active ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'">

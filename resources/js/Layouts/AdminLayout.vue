@@ -1,7 +1,7 @@
 <template>
-    <div class="min-h-screen" style="background: var(--bg-primary);">
+    <div class="min-h-screen" style="background: var(--bg-app);">
         <!-- Admin Top Navigation -->
-        <nav class="sticky top-0 z-50 border-b backdrop-blur-xl" style="background: var(--bg-sidebar); border-color: var(--sidebar-border);">
+        <nav class="sticky top-0 z-50 border-b backdrop-blur-xl" style="background: var(--bg-sidebar); border-color: var(--border-color);">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-14">
                     <div class="flex items-center gap-1">
@@ -12,7 +12,7 @@
                                 class="px-3 py-1.5 text-xs font-semibold rounded-lg transition-all duration-200 hover:bg-white/5"
                                 :style="{
                                     color: route().current(item.active) ? 'var(--text-sidebar-active)' : 'var(--text-sidebar)',
-                                    background: route().current(item.active) ? 'var(--sidebar-active)' : 'transparent'
+                                    background: route().current(item.active) ? 'var(--bg-sidebar-active)' : 'transparent'
                                 }"
                             >
                                 {{ item.label }}
@@ -36,7 +36,7 @@
                                 class="block px-3 py-2.5 text-sm rounded-lg transition-colors hover:bg-white/5"
                                 :style="{
                                     color: route().current(item.active) ? 'var(--text-sidebar-active)' : 'var(--text-sidebar)',
-                                    background: route().current(item.active) ? 'var(--sidebar-active)' : 'transparent'
+                                    background: route().current(item.active) ? 'var(--bg-sidebar-active)' : 'transparent'
                                 }"
                             >
                                 {{ item.label }}
@@ -60,7 +60,7 @@
         </nav>
 
         <!-- Page Header -->
-        <header v-if="$slots.header" class="border-b" style="background: var(--bg-secondary); border-color: var(--border-light);">
+        <header v-if="$slots.header" class="border-b" style="background: var(--bg-card); border-color: var(--border-light);">
             <div class="max-w-7xl mx-auto py-5 px-4 sm:px-6 lg:px-8">
                 <slot name="header" />
             </div>

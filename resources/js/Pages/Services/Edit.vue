@@ -14,7 +14,7 @@
 
         <form @submit.prevent="submit" class="max-w-3xl mx-auto space-y-5">
             <!-- Data Pelanggan -->
-            <div class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-secondary);">
+            <div class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-card);">
                 <h3 class="text-sm font-bold mb-4 flex items-center gap-2 text-zinc-900">
                     <span class="w-6 h-6 rounded flex items-center justify-center text-xs text-white bg-indigo-600 text-white">1</span>
                     Data Pelanggan
@@ -38,7 +38,7 @@
             </div>
 
             <!-- Data Perangkat -->
-            <div class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-secondary);">
+            <div class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-card);">
                 <h3 class="text-sm font-bold mb-4 flex items-center gap-2 text-zinc-900">
                     <span class="w-6 h-6 rounded flex items-center justify-center text-xs text-white bg-indigo-600 text-white">2</span>
                     Data Perangkat
@@ -82,7 +82,7 @@
                     <label class="block text-xs font-semibold mb-2 uppercase tracking-wider text-zinc-500">Kelengkapan Bawaan</label>
                     <div class="flex flex-wrap gap-3">
                         <label v-for="eq in equipment" :key="eq.id" class="flex items-center gap-2 text-sm cursor-pointer text-zinc-600">
-                            <input type="checkbox" :value="eq.name" v-model="form.kelengkapan" class="rounded" style="accent-color: var(--accent-primary);" />
+                            <input type="checkbox" :value="eq.name" v-model="form.kelengkapan" class="rounded" style="accent-color: var(--primary);" />
                             {{ eq.name }}
                         </label>
                     </div>
@@ -90,7 +90,7 @@
             </div>
 
             <!-- Checklist Masuk -->
-            <div class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-secondary);">
+            <div class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-card);">
                 <h3 class="text-sm font-bold mb-4 flex items-center gap-2 text-zinc-900">
                     <span class="w-6 h-6 rounded flex items-center justify-center text-xs text-white bg-indigo-600 text-white">3</span>
                     Ceklis Kondisi Masuk
@@ -104,14 +104,14 @@
                 </div>
                 <div v-if="selectedTemplate" class="space-y-2">
                     <label v-for="item in selectedTemplate.items" :key="item.id" class="flex items-center gap-2 text-sm cursor-pointer text-zinc-600">
-                        <input type="checkbox" :value="item.item_name" v-model="form.checked_items" class="rounded" style="accent-color: var(--accent-primary);" />
+                        <input type="checkbox" :value="item.item_name" v-model="form.checked_items" class="rounded" style="accent-color: var(--primary);" />
                         {{ item.item_name }}
                     </label>
                 </div>
             </div>
 
             <!-- Deskripsi -->
-            <div class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-secondary);">
+            <div class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-card);">
                 <h3 class="text-sm font-bold mb-4 flex items-center gap-2 text-zinc-900">
                     <span class="w-6 h-6 rounded flex items-center justify-center text-xs text-white bg-indigo-600 text-white">4</span>
                     Deskripsi Masalah & Kondisi

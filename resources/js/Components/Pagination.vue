@@ -11,7 +11,7 @@
         v-bind="link.url ? { onClick: () => navigate(link.url) } : {}"
         class="inline-flex items-center justify-center min-w-[30px] h-7 px-1.5 rounded-lg text-xs font-bold transition-all"
         :class="getLinkClass(link)"
-        :style="link.active ? { background: 'var(--accent-primary)', color: '#fff' } : {}"
+        :style="link.active ? { background: 'var(--primary)', color: '#fff' } : {}"
       >
         <span v-html="link.label" />
       </component>

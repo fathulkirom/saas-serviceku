@@ -38,7 +38,7 @@
             <template #cell-name="{ row }">
               <div class="flex items-center gap-2.5">
                 <div class="w-7 h-7 rounded-lg flex items-center justify-center text-[10px] font-bold text-white flex-shrink-0"
-                  :style="{ background: 'var(--accent-primary)' }">{{ getInitials(row.name) }}</div>
+                  :style="{ background: 'var(--primary)' }">{{ getInitials(row.name) }}</div>
                 <div>
                   <span class="font-medium text-sm">{{ row.name }}</span>
                   <p class="text-[11px] text-zinc-500">{{ row.email }}</p>

@@ -38,10 +38,10 @@ const icons = {
 };
 
 const vars = {
-  success: { bg: 'var(--success-bg)', bar: 'var(--success)' },
-  error: { bg: 'var(--danger-bg)', bar: 'var(--danger)' },
-  warning: { bg: 'var(--warning-bg)', bar: 'var(--warning)' },
-  info: { bg: 'var(--info-bg)', bar: 'var(--info)' },
+  success: { bg: 'var(--success-soft)', bar: 'var(--success)' },
+  error: { bg: 'var(--danger-soft)', bar: 'var(--danger)' },
+  warning: { bg: 'var(--warning-soft)', bar: 'var(--warning)' },
+  info: { bg: 'var(--info-soft)', bar: 'var(--info)' },
 };
 
 const titles = { success: 'Berhasil', error: 'Gagal', warning: 'Peringatan', info: 'Informasi' };

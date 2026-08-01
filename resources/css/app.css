@@ -9,7 +9,7 @@
     body {
         @apply antialiased;
         font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
-        background: var(--bg-primary);
+        background: var(--bg-app);
         color: var(--text-primary);
     }
 
@@ -38,10 +38,10 @@
         box-shadow: var(--shadow-md);
     }
     .card-glass {
-        background: var(--bg-secondary);
+        background: var(--bg-card);
         backdrop-filter: blur(10px);
         border: 1px solid var(--border-color);
-        border-radius: 1rem;
+        border-radius: 0.75rem;
         box-shadow: var(--shadow-sm);
     }
 
@@ -54,14 +54,13 @@
     }
     .btn-primary {
         @apply btn;
-        background: var(--accent-primary);
+        background: var(--primary);
         color: white;
         border-radius: 0.75rem;
         padding: 0.5rem 1.25rem;
     }
     .btn-primary:hover:not(:disabled) {
-        opacity: 0.9;
-        transform: translateY(-1px);
+        background: var(--primary-hover);
         box-shadow: var(--shadow-md);
     }
     .btn-secondary {
@@ -83,7 +82,7 @@
         padding: 0.5rem 1.25rem;
     }
     .btn-danger:hover:not(:disabled) {
-        background: var(--danger-text);
+        background: var(--danger-hover);
     }
     .btn-success {
         @apply btn;
@@ -113,9 +112,9 @@
         font-size: 0.875rem;
     }
     .input:focus {
-        border-color: var(--accent-primary);
+        border-color: var(--primary);
         outline: none;
-        box-shadow: 0 0 0 3px var(--accent-glow);
+        box-shadow: 0 0 0 3px var(--primary-soft);
     }
     .input::placeholder {
         color: var(--text-muted);
@@ -130,24 +129,24 @@
         padding: 0.125rem 0.75rem;
     }
     .badge-success {
-        background: var(--success-bg);
+        background: var(--success-soft);
         color: var(--success-text);
-        border: 1px solid var(--success-border);
+        border: 1px solid var(--success-soft-border);
     }
     .badge-warning {
-        background: var(--warning-bg);
+        background: var(--warning-soft);
         color: var(--warning-text);
-        border: 1px solid var(--warning-border);
+        border: 1px solid var(--warning-soft-border);
     }
     .badge-danger {
-        background: var(--danger-bg);
+        background: var(--danger-soft);
         color: var(--danger-text);
-        border: 1px solid var(--danger-border);
+        border: 1px solid var(--danger-soft-border);
     }
     .badge-info {
-        background: var(--info-bg);
+        background: var(--info-soft);
         color: var(--info-text);
-        border-color: transparent;
+        border: 1px solid var(--info-soft-border);
     }
 
     /* ===== TABLE ===== */
@@ -299,10 +298,10 @@
     /* ===== MODERN UTILITIES ===== */
 
     .glass {
-        background: var(--glass-bg);
-        backdrop-filter: blur(var(--glass-blur));
-        -webkit-backdrop-filter: blur(var(--glass-blur));
-        border: 1px solid var(--glass-border);
+        background: rgba(255,255,255,0.8);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--border-color);
     }
 
     .gradient-text {
@@ -336,7 +335,7 @@
 
     .ring-accent:focus {
         outline: none;
-        box-shadow: 0 0 0 3px var(--accent-glow);
+        box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
     }
 
     @keyframes skeleton-shimmer {
@@ -390,7 +389,7 @@
         justify-content: center;
     }
     .btn-premium-primary:hover {
-        background: var(--accent-hover);
+        background: var(--primary-hover);
         box-shadow: var(--shadow-md);
     }
     .btn-premium-primary:disabled {
@@ -398,7 +397,7 @@
         cursor: not-allowed;
     }
     .btn-premium-secondary {
-        background: var(--bg-secondary);
+        background: var(--bg-card);
         color: var(--text-primary);
         border: 1px solid var(--border-color);
         padding: var(--space-2) var(--btn-padding-x-md);
