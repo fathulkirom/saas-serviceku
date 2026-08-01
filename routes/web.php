@@ -116,6 +116,13 @@ Route::get('/dev-login', App\Http\Controllers\DevLoginController::class)->name('
 // ========== TENANT LOOKUP (Cari Toko) ==========
 Route::post('/tenant/lookup', [App\Http\Controllers\TenantLookupController::class, '__invoke'])->name('tenant.lookup');
 
+// ========== LOGIN (central) — halaman cari toko ==========
+// LoginController::create menampilkan Auth/Login (pencarian toko) di domain
+// central; saat tenancy aktif (subdomain tenant) menampilkan Auth/SubdomainLogin
+// (form email/password). Route ini diperlukan agar /login tersedia di domain
+// publik (sebelumnya hanya ada di rute tenant -> 404 di central).
+Route::get('/login', [App\Http\Controllers\Auth\LoginController::class, 'create'])->name('login');
+
 // ========== GOOGLE LOGIN (central - for landing page) ==========
 Route::get('/auth/google/redirect', [App\Http\Controllers\Auth\GoogleLoginController::class, 'redirect'])->name('google.login.central');
 Route::get('/auth/google/callback', [App\Http\Controllers\Auth\GoogleLoginController::class, 'callback'])->name('google.callback.central');
