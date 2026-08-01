@@ -19,22 +19,22 @@
         >
           + Catat Pengeluaran Baru
         </button>
-        <Link
+        <button
           v-if="activeTab === 'pembelian'"
-          :href="route('purchases.create')"
+          @click="openPurchaseDrawer()"
           class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer"
           style="background: var(--accent-primary);"
         >
           + Pembelian Baru
-        </Link>
-        <Link
+        </button>
+        <button
           v-if="activeTab === 'retur'"
-          :href="route('purchase-returns.create')"
+          @click="openReturnDrawer()"
           class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer"
           style="background: var(--accent-primary);"
         >
           + Retur Pembelian Baru
-        </Link>
+        </button>
       </PageHeader>
     </template>
 
@@ -182,7 +182,7 @@
             :emptyTitle="'Belum ada data pembelian'"
             :emptyDescription="'Data pembelian dari supplier akan muncul di sini.'"
             :emptyActionLabel="'+ Buat Pembelian Stok Baru'"
-            @empty-action="router.visit(route('purchases.create'))"
+            @empty-action="openPurchaseDrawer()"
           >
             <template #cell-reference_number="{ row }">
               <span class="font-mono text-xs font-bold" style="color: var(--accent-primary);">{{ row.reference_number ?? '-' }}</span>
@@ -200,7 +200,7 @@
               {{ formatDate(row.created_at) }}
             </template>
             <template #cell-action="{ row }">
-              <Link :href="route('purchases.show', row.id)" class="px-2.5 py-1 rounded text-xs font-semibold text-blue-600 border border-blue-200 hover:bg-blue-50">Detail</Link>
+              <button @click="openPurchaseDetail(row)" class="px-2.5 py-1 rounded text-xs font-semibold text-blue-600 border border-blue-200 hover:bg-blue-50">Detail</button>
             </template>
           </KTable>
 
@@ -219,7 +219,7 @@
             :emptyTitle="'Belum ada data retur pembelian'"
             :emptyDescription="'Data pengembalian barang ke supplier akan muncul di sini.'"
             :emptyActionLabel="'+ Retur Pembelian Baru'"
-            @empty-action="router.visit(route('purchase-returns.create'))"
+            @empty-action="openReturnDrawer()"
           >
             <template #cell-reason="{ row }">
               <span class="font-medium">{{ row.reason ?? '-' }}</span>
@@ -276,6 +276,160 @@
         </div>
       </form>
     </Drawer>
+
+    <!-- DRAWER PEMBELIAN BARU -->
+    <Drawer :open="showPurchaseDrawer" title="Pembelian Baru" @close="showPurchaseDrawer = false" width="520px">
+      <form @submit.prevent="submitPurchase" class="space-y-4">
+        <div class="grid grid-cols-2 gap-3">
+          <div class="space-y-1">
+            <label class="text-xs font-semibold" style="color: var(--text-muted);">Tipe *</label>
+            <select v-model="purchaseForm.type" required class="input text-sm">
+              <option value="po">PO (Purchase Order)</option>
+              <option value="cash">Cash Langsung</option>
+            </select>
+          </div>
+          <div class="space-y-1">
+            <label class="text-xs font-semibold" style="color: var(--text-muted);">Supplier</label>
+            <select v-model="purchaseForm.supplier_id" class="input text-sm">
+              <option value="">-- Pilih / Kosongkan --</option>
+              <option v-for="s in suppliers" :key="s.id" :value="s.id">{{ s.name }}</option>
+            </select>
+          </div>
+        </div>
+        <div class="space-y-1">
+          <label class="text-xs font-semibold" style="color: var(--text-muted);">Nama Supplier Baru (jika tidak ada di daftar)</label>
+          <input v-model="purchaseForm.supplier_name" type="text" class="input text-sm" placeholder="e.g. PT Sumber Jaya" />
+        </div>
+        <div class="space-y-1">
+          <label class="text-xs font-semibold" style="color: var(--text-muted);">Item Pembelian *</label>
+          <div v-for="(item, i) in purchaseForm.items" :key="i" class="space-y-2 rounded-lg border p-3" style="border-color: var(--border-color);">
+            <div class="grid grid-cols-2 gap-2">
+              <div class="col-span-2">
+                <select v-model="item.product_id" required class="input text-sm">
+                  <option value="" disabled>-- Pilih Produk --</option>
+                  <option v-for="p in products" :key="p.id" :value="p.id">{{ p.name }}</option>
+                </select>
+              </div>
+              <input v-model="item.quantity" type="number" min="1" required class="input text-sm" placeholder="Qty" />
+              <input v-model="item.unit_price" type="number" min="0" required class="input text-sm" placeholder="Harga Satuan" />
+            </div>
+            <button type="button" v-if="purchaseForm.items.length > 1" @click="removePurchaseItem(i)" class="text-xs font-semibold text-red-500 hover:underline">− Hapus item</button>
+          </div>
+          <button type="button" @click="addPurchaseItem" class="text-xs font-bold text-blue-600 hover:underline mt-1">+ Tambah item</button>
+        </div>
+        <div class="space-y-1">
+          <label class="text-xs font-semibold" style="color: var(--text-muted);">Catatan</label>
+          <textarea v-model="purchaseForm.note" rows="2" class="input text-sm" placeholder="Catatan pembelian..."></textarea>
+        </div>
+        <div class="flex justify-end gap-2 pt-3">
+          <button type="button" @click="showPurchaseDrawer = false" class="btn-secondary text-xs">Batal</button>
+          <button type="submit" :disabled="purchaseForm.processing" class="btn-primary text-xs">
+            {{ purchaseForm.processing ? 'Menyimpan...' : 'Simpan Pembelian' }}
+          </button>
+        </div>
+      </form>
+    </Drawer>
+
+    <!-- DRAWER DETAIL PEMBELIAN -->
+    <Drawer :open="showPurchaseDetailDrawer" title="Detail Pembelian" @close="showPurchaseDetailDrawer = false" width="480px">
+      <div v-if="selectedPurchase" class="space-y-4">
+        <div class="grid grid-cols-2 gap-3">
+          <div class="space-y-1">
+            <label class="text-xs font-semibold" style="color: var(--text-muted);">No. Referensi</label>
+            <div class="text-sm font-bold font-mono" style="color: var(--accent-primary);">{{ selectedPurchase.reference_number }}</div>
+          </div>
+          <div class="space-y-1">
+            <label class="text-xs font-semibold" style="color: var(--text-muted);">Supplier</label>
+            <div class="text-sm">{{ selectedPurchase.supplier?.name ?? '-' }}</div>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="space-y-1">
+            <label class="text-xs font-semibold" style="color: var(--text-muted);">Tipe</label>
+            <Badge :variant="selectedPurchase.type === 'product' ? 'blue' : 'purple'">{{ selectedPurchase.type === 'product' ? 'Stok Produk' : 'Alat Servis' }}</Badge>
+          </div>
+          <div class="space-y-1">
+            <label class="text-xs font-semibold" style="color: var(--text-muted);">Tanggal</label>
+            <div class="text-sm">{{ formatDate(selectedPurchase.created_at) }}</div>
+          </div>
+        </div>
+        <div class="space-y-1">
+          <label class="text-xs font-semibold" style="color: var(--text-muted);">Item</label>
+          <div class="rounded-lg border divide-y" style="border-color: var(--border-color);">
+            <div v-for="it in (selectedPurchase.items ?? [])" :key="it.id" class="flex items-center justify-between px-3 py-2 text-sm">
+              <span>{{ it.product?.name ?? '-' }} <span class="text-xs" style="color: var(--text-muted);">x{{ it.quantity }}</span></span>
+              <span class="font-semibold">Rp {{ formatNumber(it.unit_price ?? 0) }}</span>
+            </div>
+            <div v-if="!(selectedPurchase.items ?? []).length" class="px-3 py-2 text-xs" style="color: var(--text-muted);">Tidak ada item.</div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between border-t pt-3" style="border-color: var(--border-color);">
+          <span class="text-xs font-semibold" style="color: var(--text-muted);">Total</span>
+          <span class="text-lg font-bold">Rp {{ formatNumber(selectedPurchase.total) }}</span>
+        </div>
+        <div class="space-y-1" v-if="selectedPurchase.note">
+          <label class="text-xs font-semibold" style="color: var(--text-muted);">Catatan</label>
+          <div class="text-sm">{{ selectedPurchase.note }}</div>
+        </div>
+      </div>
+    </Drawer>
+
+    <!-- DRAWER RETUR PEMBELIAN BARU -->
+    <Drawer :open="showReturnDrawer" title="Retur Pembelian Baru" @close="showReturnDrawer = false" width="520px">
+      <form @submit.prevent="submitReturn" class="space-y-4">
+        <div class="grid grid-cols-2 gap-3">
+          <div class="space-y-1">
+            <label class="text-xs font-semibold" style="color: var(--text-muted);">Supplier *</label>
+            <select v-model="returnForm.supplier_id" required class="input text-sm">
+              <option value="" disabled>-- Pilih Supplier --</option>
+              <option v-for="s in suppliers" :key="s.id" :value="s.id">{{ s.name }}</option>
+            </select>
+          </div>
+          <div class="space-y-1">
+            <label class="text-xs font-semibold" style="color: var(--text-muted);">Referensi Pembelian</label>
+            <select v-model="returnForm.purchase_id" class="input text-sm">
+              <option value="">-- Pilih / Kosongkan --</option>
+              <option v-for="p in (purchases?.data ?? [])" :key="p.id" :value="p.id">{{ p.reference_number }} ({{ p.supplier?.name ?? '-' }})</option>
+            </select>
+          </div>
+        </div>
+        <div class="space-y-1">
+          <label class="text-xs font-semibold" style="color: var(--text-muted);">Alasan Retur</label>
+          <input v-model="returnForm.reason" type="text" class="input text-sm" placeholder="e.g. Barang rusak / salah kirim" />
+        </div>
+        <div class="space-y-1">
+          <label class="text-xs font-semibold" style="color: var(--text-muted);">Item Retur *</label>
+          <div v-for="(item, i) in returnForm.items" :key="i" class="space-y-2 rounded-lg border p-3" style="border-color: var(--border-color);">
+            <div class="grid grid-cols-2 gap-2">
+              <div class="col-span-2">
+                <select v-model="item.product_id" required class="input text-sm">
+                  <option value="" disabled>-- Pilih Produk --</option>
+                  <option v-for="p in products" :key="p.id" :value="p.id">{{ p.name }}</option>
+                </select>
+              </div>
+              <input v-model="item.quantity" type="number" min="1" required class="input text-sm" placeholder="Qty" />
+              <input v-model="item.price" type="number" min="0" class="input text-sm" placeholder="Harga Satuan" />
+            </div>
+            <div class="flex items-center justify-between">
+              <select v-model="item.condition" class="input text-sm w-40">
+                <option value="rusak">Rusak</option>
+                <option value="salah">Salah Kirim</option>
+                <option value="expired">Expired</option>
+                <option value="lain">Lainnya</option>
+              </select>
+              <button type="button" v-if="returnForm.items.length > 1" @click="removeReturnItem(i)" class="text-xs font-semibold text-red-500 hover:underline">− Hapus</button>
+            </div>
+          </div>
+          <button type="button" @click="addReturnItem" class="text-xs font-bold text-blue-600 hover:underline mt-1">+ Tambah item</button>
+        </div>
+        <div class="flex justify-end gap-2 pt-3">
+          <button type="button" @click="showReturnDrawer = false" class="btn-secondary text-xs">Batal</button>
+          <button type="submit" :disabled="returnForm.processing" class="btn-primary text-xs">
+            {{ returnForm.processing ? 'Menyimpan...' : 'Simpan Retur' }}
+          </button>
+        </div>
+      </form>
+    </Drawer>
   </AuthenticatedLayout>
 </template>
 
@@ -305,6 +459,8 @@ const props = defineProps({
   expenseCategories: { type: Array, default: () => [] },
   purchases: { type: Object, default: null },
   returns: { type: Object, default: null },
+  suppliers: { type: Array, default: () => [] },
+  products: { type: Array, default: () => [] },
 });
 
 const activeTab = ref(props.activeTab);
@@ -327,6 +483,65 @@ const submitExpense = () => {
   expenseForm.post(route('expenses.store'), {
     preserveScroll: true,
     onSuccess: () => { showExpenseDrawer.value = false; }
+  });
+};
+
+// Drawer Pembelian Baru (multi-item)
+const showPurchaseDrawer = ref(false);
+const purchaseForm = useForm({
+  type: 'po', supplier_id: '', supplier_name: '', note: '',
+  items: [{ product_id: '', quantity: 1, unit_price: '' }],
+});
+
+const openPurchaseDrawer = () => {
+  purchaseForm.reset();
+  purchaseForm.type = 'po';
+  purchaseForm.items = [{ product_id: '', quantity: 1, unit_price: '' }];
+  showPurchaseDrawer.value = true;
+};
+const addPurchaseItem = () => {
+  purchaseForm.items.push({ product_id: '', quantity: 1, unit_price: '' });
+};
+const removePurchaseItem = (i) => {
+  if (purchaseForm.items.length > 1) purchaseForm.items.splice(i, 1);
+};
+const submitPurchase = () => {
+  purchaseForm.post(route('purchases.store'), {
+    preserveScroll: true,
+    onSuccess: () => { showPurchaseDrawer.value = false; }
+  });
+};
+
+// Drawer Detail Pembelian
+const showPurchaseDetailDrawer = ref(false);
+const selectedPurchase = ref(null);
+const openPurchaseDetail = (row) => {
+  selectedPurchase.value = row;
+  showPurchaseDetailDrawer.value = true;
+};
+
+// Drawer Retur Pembelian Baru (multi-item)
+const showReturnDrawer = ref(false);
+const returnForm = useForm({
+  purchase_id: '', supplier_id: '', reason: '',
+  items: [{ product_id: '', quantity: 1, price: '', condition: 'rusak' }],
+});
+
+const openReturnDrawer = () => {
+  returnForm.reset();
+  returnForm.items = [{ product_id: '', quantity: 1, price: '', condition: 'rusak' }];
+  showReturnDrawer.value = true;
+};
+const addReturnItem = () => {
+  returnForm.items.push({ product_id: '', quantity: 1, price: '', condition: 'rusak' });
+};
+const removeReturnItem = (i) => {
+  if (returnForm.items.length > 1) returnForm.items.splice(i, 1);
+};
+const submitReturn = () => {
+  returnForm.post(route('purchase-returns.store'), {
+    preserveScroll: true,
+    onSuccess: () => { showReturnDrawer.value = false; }
   });
 };
 

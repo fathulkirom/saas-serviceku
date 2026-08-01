@@ -19,14 +19,6 @@ class PurchaseController extends Controller
         return redirect()->route('keuangan.index', ['tab' => 'pembelian'])->with('info', 'Halaman pembelian sudah dipindah ke Keuangan.');
     }
 
-    public function create()
-    {
-        return inertia('Purchases/Create', [
-            'suppliers' => Supplier::orderBy('name')->get(),
-            'products' => Product::orderBy('name')->get(),
-        ]);
-    }
-
     public function store(Request $request)
     {
         $this->authorize('create', Purchase::class);
@@ -85,11 +77,5 @@ class PurchaseController extends Controller
         }
 
         return redirect()->route('purchases.index')->with('success', 'Pembelian berhasil dicatat.');
-    }
-
-    public function show(Purchase $purchase)
-    {
-        $purchase->load(['supplier', 'items.product', 'creator', 'branch']);
-        return inertia('Purchases/Show', ['purchase' => $purchase]);
     }
 }

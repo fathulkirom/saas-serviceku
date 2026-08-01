@@ -5,10 +5,8 @@ namespace App\Http\Controllers\Tenant;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\PurchaseReturn;
 use App\Models\Tenant\PurchaseReturnItem;
-use App\Models\Tenant\Purchase;
 use App\Models\Tenant\Product;
 use App\Models\Tenant\InventoryMutation;
-use App\Models\Tenant\Supplier;
 use App\Models\Tenant\ActivityLog;
 use Illuminate\Http\Request;
 
@@ -18,17 +16,6 @@ class PurchaseReturnController extends Controller
     public function index()
     {
         return redirect()->route('keuangan.index', ['tab' => 'retur'])->with('info', 'Retur pembelian sudah dipindah ke Keuangan.');
-    }
-
-    public function create()
-    {
-        $purchases = Purchase::with('supplier')
-            ->where('branch_id', auth()->user()->branch_id)
-            ->where('status', 'selesai')
-            ->latest()->get();
-        $products = Product::where('branch_id', auth()->user()->branch_id)->where('stock_quantity', '>', 0)->get();
-        $suppliers = Supplier::where('branch_id', auth()->user()->branch_id)->get();
-        return inertia('PurchaseReturns/Create', ['purchases' => $purchases, 'products' => $products, 'suppliers' => $suppliers]);
     }
 
     public function store(Request $request)

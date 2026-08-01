@@ -16,11 +16,6 @@ class ProductController extends Controller
         return redirect()->route('inventaris.index')->with('info', 'Manajemen produk sudah dipindah ke Inventaris.');
     }
 
-    public function create()
-    {
-        return inertia('Products/Create');
-    }
-
     public function store(Request $request)
     {
         $this->authorize('create', Product::class);

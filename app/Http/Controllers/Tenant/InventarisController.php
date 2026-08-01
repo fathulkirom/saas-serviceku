@@ -23,6 +23,9 @@ class InventarisController extends Controller
 
             'products' => fn() => Product::with('branch')->latest()->paginate(15),
 
+            // Untuk drawer Transfer Stok (cabang tujuan)
+            'branches' => fn() => \App\Models\Tenant\Branch::where('is_active', true)->orderBy('name')->get(['id', 'name']),
+
             'allocations' => fn() => StockAllocation::with(['fromBranch', 'toBranch', 'product', 'allocator', 'confirmer'])
                 ->latest()
                 ->paginate(15),

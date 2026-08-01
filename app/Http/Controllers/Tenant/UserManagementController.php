@@ -135,7 +135,8 @@ class UserManagementController extends Controller
     }
 
     /**
-     * Halaman atur menu access untuk suatu user.
+     * Data menu access untuk suatu user (dikonsumsi halaman Sistem via fetch JSON).
+     * Dipakai oleh drawer akses menu — bukan halaman Inertia terpisah.
      */
     public function getMenuAccess(User $userManagement)
     {
@@ -148,7 +149,7 @@ class UserManagementController extends Controller
             $planAccess = tenancy()->tenant->getAllEffectiveFeatureAccess();
         }
 
-        return inertia('Users/MenuAccess', [
+        return response()->json([
             'user' => $userManagement->load('branch'),
             'defaultMenus' => $defaultMenus,
             'customMenus' => $customMenus,

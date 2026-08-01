@@ -127,7 +127,7 @@ Route::middleware([
     Route::post('/customers/{customer}/register-member', [CustomerController::class, 'registerMember'])->name('customers.register-member')->middleware('check.plan.feature:customers');
 
     // ========== PRODUCTS ==========
-    Route::resource('products', ProductController::class)->except(['edit', 'show'])->middleware('check.plan.feature:products');
+    Route::resource('products', ProductController::class)->except(['create', 'edit', 'show'])->middleware('check.plan.feature:products');
 
     // ========== SALES ==========
     Route::resource('sales', SaleController::class)->only(['index', 'create', 'show'])->middleware('check.plan.feature:sales');
@@ -150,7 +150,7 @@ Route::middleware([
     Route::resource('users', App\Http\Controllers\Tenant\UserManagementController::class)->except(['create', 'edit', 'index', 'show'])->middleware('check.plan.feature:users');
 
     // ========== STOCK ALLOCATIONS (TRANSFER STOK) ==========
-    Route::resource('stock-allocations', App\Http\Controllers\Tenant\StockAllocationController::class)->except(['edit', 'update'])->middleware('check.plan.feature:transfer_stock');
+    Route::resource('stock-allocations', App\Http\Controllers\Tenant\StockAllocationController::class)->except(['create', 'edit', 'update'])->middleware('check.plan.feature:transfer_stock');
     Route::post('/stock-allocations/{stock_allocation}/confirm', [App\Http\Controllers\Tenant\StockAllocationController::class, 'confirm'])->name('stock-allocations.confirm')->middleware('check.plan.feature:transfer_stock');
     Route::post('/stock-allocations/{stock_allocation}/reject', [App\Http\Controllers\Tenant\StockAllocationController::class, 'reject'])->name('stock-allocations.reject')->middleware('check.plan.feature:transfer_stock');
 
@@ -158,7 +158,7 @@ Route::middleware([
     Route::resource('expenses', ExpenseController::class)->only(['index', 'store'])->middleware('check.plan.feature:expenses');
 
     // ========== PURCHASE RETURNS ==========
-    Route::resource('purchase-returns', App\Http\Controllers\Tenant\PurchaseReturnController::class)->except(['edit', 'update', 'show'])->middleware('check.plan.feature:purchases');
+    Route::resource('purchase-returns', App\Http\Controllers\Tenant\PurchaseReturnController::class)->except(['create', 'edit', 'update', 'show'])->middleware('check.plan.feature:purchases');
     Route::post('/purchase-returns/{purchaseReturn}/status', [App\Http\Controllers\Tenant\PurchaseReturnController::class, 'updateStatus'])->name('purchase-returns.status')->middleware('check.plan.feature:purchases');
 
     // ========== DAMAGED STOCKS ==========
@@ -243,7 +243,7 @@ Route::middleware([
     Route::post('/demo/toggle-mode', [App\Http\Controllers\Tenant\DemoController::class, 'toggleMode'])->name('demo.toggle');
 
     // ========== PURCHASES ==========
-    Route::resource('purchases', App\Http\Controllers\Tenant\PurchaseController::class)->except(['edit', 'update', 'destroy'])->middleware('check.plan.feature:purchases');
+    Route::resource('purchases', App\Http\Controllers\Tenant\PurchaseController::class)->except(['create', 'edit', 'show', 'update', 'destroy'])->middleware('check.plan.feature:purchases');
 
     // ========== DAILY DEPOSITS ==========
     Route::resource('daily-deposits', DailyDepositController::class)->only(['index', 'store'])->middleware('check.plan.feature:deposits');

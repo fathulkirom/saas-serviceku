@@ -10,24 +10,24 @@
           >
             ⚡ Penyesuaian Stok
           </button>
-          <Link
-            :href="route('products.create')"
+          <button
+            @click="openProductDrawer()"
             class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer"
             style="background: var(--accent-primary);"
           >
             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
             Produk Baru
-          </Link>
+          </button>
         </div>
 
-        <Link
+        <button
           v-if="activeTab === 'transfer'"
-          :href="route('stock-allocations.create')"
+          @click="openTransferDrawer()"
           class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer"
           style="background: var(--accent-primary);"
         >
           + Transfer Stok
-        </Link>
+        </button>
 
         <button
           v-if="activeTab === 'rusak'"
@@ -40,7 +40,7 @@
 
         <Link
           v-if="activeTab === 'reorder' || activeTab === 'forecast'"
-          :href="route('purchases.create')"
+          :href="route('keuangan.index', { tab: 'pembelian' })"
           class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer"
           style="background: var(--accent-primary);"
         >
@@ -61,7 +61,7 @@
             :emptyTitle="'Belum ada data produk'"
             :emptyDescription="'Data produk akan muncul setelah ditambahkan.'"
             :emptyActionLabel="'+ Tambah Produk Baru'"
-            @empty-action="router.visit(route('products.create'))"
+            @empty-action="openProductDrawer()"
           >
             <template #cell-name="{ row }">
               <span class="font-medium text-sm">{{ row.name }}</span>
@@ -100,7 +100,7 @@
             :emptyTitle="'Belum ada transfer stok'"
             :emptyDescription="'Data transfer stok antar cabang akan muncul setelah ditambahkan.'"
             :emptyActionLabel="'+ Transfer Stok Baru'"
-            @empty-action="router.visit(route('stock-allocations.create'))"
+            @empty-action="openTransferDrawer()"
           >
             <template #cell-product_name="{ row }">
               <span class="font-medium">{{ row.product?.name ?? '-' }}</span>
@@ -235,7 +235,7 @@
               </Badge>
             </template>
             <template #cell-action="{ row }">
-              <Link :href="route('purchases.create')" class="px-2.5 py-1 rounded text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700">
+              <Link :href="route('keuangan.index', { tab: 'pembelian' })" class="px-2.5 py-1 rounded text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700">
                 Order Pembelian
               </Link>
             </template>
@@ -345,6 +345,86 @@
         </div>
       </form>
     </Drawer>
+
+    <!-- DRAWER TAMBAH PRODUK BARU -->
+    <Drawer :open="showProductDrawer" title="Tambah Produk Baru" @close="showProductDrawer = false" width="460px">
+      <form @submit.prevent="submitProduct" class="space-y-4">
+        <div class="grid grid-cols-2 gap-3">
+          <div class="space-y-1">
+            <label class="text-xs font-semibold" style="color: var(--text-muted);">Nama Produk *</label>
+            <input v-model="productForm.name" type="text" required class="input text-sm" placeholder="e.g. Oli Mesin 1L" />
+          </div>
+          <div class="space-y-1">
+            <label class="text-xs font-semibold" style="color: var(--text-muted);">Kode / SKU</label>
+            <input v-model="productForm.code" type="text" class="input text-sm" placeholder="e.g. SKU-001" />
+          </div>
+        </div>
+        <div class="space-y-1">
+          <label class="text-xs font-semibold" style="color: var(--text-muted);">Deskripsi</label>
+          <textarea v-model="productForm.description" rows="2" class="input text-sm" placeholder="Deskripsi singkat produk..."></textarea>
+        </div>
+        <div class="grid grid-cols-3 gap-3">
+          <div class="space-y-1">
+            <label class="text-xs font-semibold" style="color: var(--text-muted);">Satuan</label>
+            <input v-model="productForm.unit" type="text" class="input text-sm" placeholder="e.g. pcs" />
+          </div>
+          <div class="space-y-1">
+            <label class="text-xs font-semibold" style="color: var(--text-muted);">Harga Modal</label>
+            <input v-model="productForm.cost_price" type="number" min="0" class="input text-sm" />
+          </div>
+          <div class="space-y-1">
+            <label class="text-xs font-semibold" style="color: var(--text-muted);">Harga Jual *</label>
+            <input v-model="productForm.selling_price" type="number" min="0" class="input text-sm" />
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="space-y-1">
+            <label class="text-xs font-semibold" style="color: var(--text-muted);">Stok Awal</label>
+            <input v-model="productForm.stock_quantity" type="number" min="0" class="input text-sm" />
+          </div>
+          <div class="space-y-1">
+            <label class="text-xs font-semibold" style="color: var(--text-muted);">Stok Minimum</label>
+            <input v-model="productForm.min_stock" type="number" min="0" class="input text-sm" />
+          </div>
+        </div>
+        <div class="flex justify-end gap-2 pt-3">
+          <button type="button" @click="showProductDrawer = false" class="btn-secondary text-xs">Batal</button>
+          <button type="submit" :disabled="productForm.processing" class="btn-primary text-xs">
+            {{ productForm.processing ? 'Menyimpan...' : 'Simpan Produk' }}
+          </button>
+        </div>
+      </form>
+    </Drawer>
+
+    <!-- DRAWER TRANSFER STOK ANTAR CABANG -->
+    <Drawer :open="showTransferDrawer" title="Transfer Stok Antar Cabang" @close="showTransferDrawer = false" width="420px">
+      <form @submit.prevent="submitTransfer" class="space-y-4">
+        <div class="space-y-1">
+          <label class="text-xs font-semibold" style="color: var(--text-muted);">Produk *</label>
+          <select v-model="transferForm.product_id" required class="input text-sm">
+            <option value="" disabled>-- Pilih Produk --</option>
+            <option v-for="p in (products?.data ?? [])" :key="p.id" :value="p.id">{{ p.name }} (Stok: {{ p.stock_quantity }})</option>
+          </select>
+        </div>
+        <div class="space-y-1">
+          <label class="text-xs font-semibold" style="color: var(--text-muted);">Tujuan Cabang *</label>
+          <select v-model="transferForm.to_branch_id" required class="input text-sm">
+            <option value="" disabled>-- Pilih Cabang Tujuan --</option>
+            <option v-for="b in branches" :key="b.id" :value="b.id">{{ b.name }}</option>
+          </select>
+        </div>
+        <div class="space-y-1">
+          <label class="text-xs font-semibold" style="color: var(--text-muted);">Jumlah Transfer *</label>
+          <input v-model="transferForm.quantity" type="number" min="1" required class="input text-sm" />
+        </div>
+        <div class="flex justify-end gap-2 pt-3">
+          <button type="button" @click="showTransferDrawer = false" class="btn-secondary text-xs">Batal</button>
+          <button type="submit" :disabled="transferForm.processing" class="btn-primary text-xs">
+            {{ transferForm.processing ? 'Menyimpan...' : 'Transfer Stok' }}
+          </button>
+        </div>
+      </form>
+    </Drawer>
   </AuthenticatedLayout>
 </template>
 
@@ -374,6 +454,7 @@ const props = defineProps({
   mutationFilters: { type: Object, default: () => ({ product_id: '', mutation_type: '' }) },
   reorderAlerts: { type: [Object, Array], default: null },
   forecast: { type: [Object, Array], default: null },
+  branches: { type: Array, default: () => [] },
 });
 
 const activeTab = ref(props.activeTab);
@@ -415,6 +496,43 @@ const submitDamagedStock = () => {
   damagedForm.post(route('inventory.damaged.store'), {
     preserveScroll: true,
     onSuccess: () => { showDamagedDrawer.value = false; }
+  });
+};
+
+// Drawer Tambah Produk Baru
+const showProductDrawer = ref(false);
+const productForm = useForm({
+  code: '', name: '', description: '', unit: '',
+  cost_price: '', selling_price: '', stock_quantity: 0, min_stock: 0,
+});
+
+const openProductDrawer = () => {
+  productForm.reset();
+  showProductDrawer.value = true;
+};
+
+const submitProduct = () => {
+  productForm.post(route('products.store'), {
+    preserveScroll: true,
+    onSuccess: () => { showProductDrawer.value = false; }
+  });
+};
+
+// Drawer Transfer Stok Antar Cabang
+const showTransferDrawer = ref(false);
+const transferForm = useForm({ to_branch_id: '', product_id: '', quantity: 1 });
+
+const openTransferDrawer = () => {
+  transferForm.reset();
+  transferForm.quantity = 1;
+  showTransferDrawer.value = true;
+};
+
+const submitTransfer = () => {
+  if (!transferForm.to_branch_id || !transferForm.product_id) return;
+  transferForm.post(route('stock-allocations.store'), {
+    preserveScroll: true,
+    onSuccess: () => { showTransferDrawer.value = false; }
   });
 };
 

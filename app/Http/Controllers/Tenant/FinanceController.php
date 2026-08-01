@@ -53,6 +53,10 @@ class FinanceController extends Controller
                 ->whereHas('purchase', fn($q) => $q->where('branch_id', auth()->user()->branch_id))
                 ->latest()
                 ->paginate(20),
+
+            // Untuk drawer Pembelian & Retur Pembelian
+            'suppliers' => fn() => \App\Models\Tenant\Supplier::orderBy('name')->get(['id', 'name']),
+            'products' => fn() => \App\Models\Tenant\Product::orderBy('name')->get(['id', 'name']),
         ]);
     }
 }

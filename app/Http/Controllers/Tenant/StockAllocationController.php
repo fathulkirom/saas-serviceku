@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Tenant;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\StockAllocation;
 use App\Models\Tenant\Product;
-use App\Models\Tenant\Branch;
 use App\Models\Tenant\InventoryMutation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,19 +15,6 @@ class StockAllocationController extends Controller
     public function index()
     {
         return redirect()->route('inventaris.index')->with('info', 'Alokasi stok sudah dipindah ke Inventaris.');
-    }
-
-    public function create()
-    {
-        $branches = Branch::where('is_active', true)->get();
-        $products = Product::where('stock_quantity', '>', 0)->get();
-        $currentBranch = Auth::user()->branch;
-
-        return inertia('StockAllocations/Create', [
-            'branches' => $branches,
-            'products' => $products,
-            'currentBranch' => $currentBranch,
-        ]);
     }
 
     public function store(Request $request)
