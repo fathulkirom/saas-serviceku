@@ -10,6 +10,10 @@ class MailConfigServiceTest extends TestCase
 {
     public function test_apply_with_log_driver_keeps_default()
     {
+        // Baseline eksplisit: jangan bergantung pada MAIL_MAILER ambient
+        // (phpunit.xml memaksa 'array'; nilai aktual bergantung urutan boot app).
+        config(['mail.default' => 'log']);
+
         SystemSetting::setValue('mail_driver', 'log', 'mail');
         MailConfigService::apply();
         $this->assertEquals('log', config('mail.default'));
@@ -48,7 +52,10 @@ class MailConfigServiceTest extends TestCase
 
     public function test_test_method_returns_true()
     {
-        // Dengan mail driver log/array, pengiriman harus berhasil
+        // Dengan mail driver log/array, pengiriman harus berhasil.
+        // Pakai baseline eksplisit agar tidak bergantung transport default ambient.
+        config(['mail.default' => 'array']);
+
         SystemSetting::setValue('mail_driver', 'log', 'mail');
         $result = MailConfigService::test('test@example.com');
         $this->assertTrue($result);

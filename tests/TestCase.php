@@ -5,6 +5,7 @@ namespace Tests;
 use App\Models\Tenant;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -22,6 +23,24 @@ abstract class TestCase extends BaseTestCase
                 '--database' => $connection,
                 '--force' => true,
             ]);
+
+            // Emulate :memory: (DB kosong per test) untuk file-based sqlite (CI).
+            // Tanpa ini, data tabel central (mis. system_settings, plans) bocor
+            // antar-test karena `migrate` tidak menghapus data yang sudah ada.
+            $tables = array_column(
+                DB::connection($connection)->select(
+                    "SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' AND name <> 'migrations'"
+                ),
+                'name'
+            );
+
+            if ($tables !== []) {
+                DB::connection($connection)->statement('PRAGMA foreign_keys = OFF');
+                foreach ($tables as $table) {
+                    DB::connection($connection)->table($table)->truncate();
+                }
+                DB::connection($connection)->statement('PRAGMA foreign_keys = ON');
+            }
         }
 
         Artisan::call('db:seed', [
