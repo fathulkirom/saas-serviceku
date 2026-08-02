@@ -23,7 +23,7 @@
                             <div class="space-y-2">
                                 <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-slate-800/50"
                                     :class="form.payment_gateway === 'manual' ? 'border-indigo-500 bg-indigo-50' : 'border-slate-700'">
-                                    <input type="radio" v-model="form.payment_gateway" value="manual" name="payment_gateway" class="mr-3" />
+                                    <KRadio  v-model="form.payment_gateway" value="manual" name="payment_gateway" class="mr-3" />
                                     <div>
                                         <p class="font-medium text-gray-900">💰 Manual Transfer</p>
                                         <p class="text-sm text-slate-400">Pelanggan transfer ke rekening, admin konfirmasi manual</p>
@@ -31,7 +31,7 @@
                                 </label>
                                 <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-slate-800/50"
                                     :class="form.payment_gateway === 'midtrans' ? 'border-indigo-500 bg-indigo-50' : 'border-slate-700'">
-                                    <input type="radio" v-model="form.payment_gateway" value="midtrans" name="payment_gateway" class="mr-3" />
+                                    <KRadio  v-model="form.payment_gateway" value="midtrans" name="payment_gateway" class="mr-3" />
                                     <div>
                                         <p class="font-medium text-gray-900">🔵 Midtrans</p>
                                         <p class="text-sm text-slate-400">Support: Bank Transfer, GOPAY, QRIS, ShopeePay</p>
@@ -39,7 +39,7 @@
                                 </label>
                                 <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-slate-800/50"
                                     :class="form.payment_gateway === 'xendit' ? 'border-indigo-500 bg-indigo-50' : 'border-slate-700'">
-                                    <input type="radio" v-model="form.payment_gateway" value="xendit" name="payment_gateway" class="mr-3" />
+                                    <KRadio  v-model="form.payment_gateway" value="xendit" name="payment_gateway" class="mr-3" />
                                     <div>
                                         <p class="font-medium text-gray-900">🟠 Xendit</p>
                                         <p class="text-sm text-slate-400">Support: Bank Transfer, QRIS, E-Wallet</p>
@@ -54,29 +54,29 @@
                             <div class="grid grid-cols-2 gap-3">
                                 <div>
                                     <label class="block text-sm font-medium text-slate-300">Merchant ID</label>
-                                    <input v-model="form.midtrans_merchant_id" type="text" name="midtrans_merchant_id" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                    <KInput  v-model="form.midtrans_merchant_id" type="text" name="midtrans_merchant_id" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-slate-300">Client Key</label>
-                                    <input v-model="form.midtrans_client_key" type="text" name="midtrans_client_key" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                    <KInput  v-model="form.midtrans_client_key" type="text" name="midtrans_client_key" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
                                 </div>
                                 <div class="col-span-2">
                                     <label class="block text-sm font-medium text-slate-300">Server Key</label>
-                                    <input v-model="form.midtrans_server_key" type="password" name="midtrans_server_key" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                    <KInput  v-model="form.midtrans_server_key" type="password" name="midtrans_server_key" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-slate-300">Environment</label>
-                                    <select v-model="form.midtrans_is_production" name="midtrans_is_production" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                    <KSelect  v-model="form.midtrans_is_production" name="midtrans_is_production" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                                         <option value="false">Sandbox (Development)</option>
                                         <option value="true">Production</option>
-                                    </select>
+                                    </KSelect>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-medium text-slate-300">Auto Confirm</label>
-                                    <select v-model="form.payment_auto_confirm" name="payment_auto_confirm" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                    <KSelect  v-model="form.payment_auto_confirm" name="payment_auto_confirm" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                                         <option value="false">Manual</option>
                                         <option value="true">Otomatis</option>
-                                    </select>
+                                    </KSelect>
                                 </div>
                             </div>
                         </div>
@@ -86,22 +86,22 @@
                             <h4 class="font-medium text-gray-900">Konfigurasi Xendit</h4>
                             <div>
                                 <label class="block text-sm font-medium text-slate-300">API Key</label>
-                                <input v-model="form.xendit_api_key" type="password" name="xendit_api_key" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                <KInput  v-model="form.xendit_api_key" type="password" name="xendit_api_key" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-slate-300">Auto Confirm</label>
-                                <select v-model="form.payment_auto_confirm" name="payment_auto_confirm" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                <KSelect  v-model="form.payment_auto_confirm" name="payment_auto_confirm" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                                     <option value="false">Manual</option>
                                     <option value="true">Otomatis</option>
-                                </select>
+                                </KSelect>
                             </div>
                         </div>
 
                         <div class="flex justify-end mt-6 pt-4 border-t">
-                            <button type="submit" :disabled="form.processing"
+                            <KButton  type="submit" :disabled="form.processing"
                                 class="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 text-sm">
                                 Simpan Pengaturan
-                            </button>
+                            </KButton>
                         </div>
                     </form>
                 </div>
@@ -126,40 +126,40 @@
                             <h4 class="text-sm font-medium text-slate-300">Rekening 1</h4>
                             <div>
                                 <label class="block text-xs text-slate-400">Bank</label>
-                                <input v-model="form.bank_name_1" type="text" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                <KInput  v-model="form.bank_name_1" type="text" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
                             </div>
                             <div>
                                 <label class="block text-xs text-slate-400">Atas Nama</label>
-                                <input v-model="form.bank_account_name_1" type="text" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                <KInput  v-model="form.bank_account_name_1" type="text" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
                             </div>
                             <div>
                                 <label class="block text-xs text-slate-400">No. Rekening</label>
-                                <input v-model="form.bank_account_number_1" type="text" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                <KInput  v-model="form.bank_account_number_1" type="text" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
                             </div>
                         </div>
                         <div class="space-y-3 mb-4">
                             <h4 class="text-sm font-medium text-slate-300">Rekening 2</h4>
                             <div>
                                 <label class="block text-xs text-slate-400">Bank</label>
-                                <input v-model="form.bank_name_2" type="text" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                <KInput  v-model="form.bank_name_2" type="text" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
                             </div>
                             <div>
                                 <label class="block text-xs text-slate-400">Atas Nama</label>
-                                <input v-model="form.bank_account_name_2" type="text" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                <KInput  v-model="form.bank_account_name_2" type="text" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
                             </div>
                             <div>
                                 <label class="block text-xs text-slate-400">No. Rekening</label>
-                                <input v-model="form.bank_account_number_2" type="text" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                <KInput  v-model="form.bank_account_number_2" type="text" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
                             </div>
                         </div>
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-slate-300">Instruksi Pembayaran</label>
-                            <textarea v-model="form.payment_instructions" rows="4" name="payment_instructions" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"></textarea>
+                            <KTextarea  v-model="form.payment_instructions" rows="4" name="payment_instructions" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"></KTextarea>
                         </div>
-                        <button type="submit" :disabled="form.processing"
+                        <KButton  type="submit" :disabled="form.processing"
                             class="w-full px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 text-sm">
                             Simpan Rekening
-                        </button>
+                        </KButton>
                     </form>
                 </div>
             </div>
@@ -168,6 +168,12 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+import KInput from '@/Components/KInput.vue';
+import KSelect from '@/Components/KSelect.vue';
+import KTextarea from '@/Components/KTextarea.vue';
+import KRadio from '@/Components/KRadio.vue';
+
 import { useForm } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 

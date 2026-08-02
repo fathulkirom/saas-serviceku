@@ -13,11 +13,11 @@
             <!-- Tracking Form -->
             <div class="bg-white rounded-2xl shadow-sm border p-4 mb-6">
                 <form @submit.prevent="searchTracking" class="flex gap-2">
-                    <input type="text" v-model="searchCode" placeholder="Masukkan kode tracking..."
+                    <KInput  type="text" v-model="searchCode" placeholder="Masukkan kode tracking..."
                         class="flex-1 rounded-xl border text-sm px-4 py-2.5 focus:ring-2 focus:outline-none border-gray-200 focus:border-indigo-500 focus:ring-indigo-200" />
-                    <button type="submit" class="px-5 py-2.5 rounded-xl text-sm font-semibold text-white" :style="{ background: 'var(--theme-color)' }">
+                    <KButton  type="submit" class="px-5 py-2.5 rounded-xl text-sm font-semibold text-white" :style="{ background: 'var(--theme-color)' }">
                         Cari
-                    </button>
+                    </KButton>
                 </form>
             </div>
 
@@ -187,6 +187,9 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+import KInput from '@/Components/KInput.vue';
+
 import { computed, ref } from 'vue';
 import { router } from '@inertiajs/vue3';
 

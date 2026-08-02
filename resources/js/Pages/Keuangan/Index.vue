@@ -20,20 +20,20 @@
             Transaksi Baru
           </Link>
 
-          <button v-if="activeTab === 'pengeluaran'" @click="openExpenseModal()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
+          <KButton  v-if="activeTab === 'pengeluaran'" @click="openExpenseModal()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
             Catat Pengeluaran
-          </button>
+          </KButton>
 
-          <button v-if="activeTab === 'pembelian'" @click="openPurchaseDrawer()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
+          <KButton  v-if="activeTab === 'pembelian'" @click="openPurchaseDrawer()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
             Pembelian Stok
-          </button>
+          </KButton>
 
-          <button v-if="activeTab === 'retur'" @click="openReturnDrawer()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
+          <KButton  v-if="activeTab === 'retur'" @click="openReturnDrawer()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3m9 14V5a2 2 0 00-2-2H6a2 2 0 00-2 2v16l4-2 4 2 4-2 4 2z"/></svg>
             Retur Baru
-          </button>
+          </KButton>
         </div>
       </div>
 
@@ -85,31 +85,30 @@
           </div>
 
           <div class="bg-white p-4 rounded-2xl border border-zinc-200 shadow-sm flex flex-wrap items-center gap-3">
-              <select v-model="salesFilters.status" @change="applySalesFilter" class="w-40 text-sm font-medium rounded-xl border border-zinc-300 px-4 py-2 bg-white text-zinc-700 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all">
+              <KSelect  v-model="salesFilters.status" @change="applySalesFilter" class="w-40 text-sm font-medium rounded-xl border border-zinc-300 px-4 py-2 bg-white text-zinc-700 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all">
                 <option value="">Semua Status</option>
                 <option value="lunas">Lunas</option>
                 <option value="draft">Draft</option>
                 <option value="dp">DP</option>
                 <option value="unpaid">Belum Bayar</option>
-              </select>
-              <select v-model="salesFilters.sale_type" @change="applySalesFilter" class="w-40 text-sm font-medium rounded-xl border border-zinc-300 px-4 py-2 bg-white text-zinc-700 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all">
+              </KSelect>
+              <KSelect  v-model="salesFilters.sale_type" @change="applySalesFilter" class="w-40 text-sm font-medium rounded-xl border border-zinc-300 px-4 py-2 bg-white text-zinc-700 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all">
                 <option value="">Semua Tipe</option>
                 <option value="service">Servis</option>
                 <option value="product">Produk</option>
-              </select>
+              </KSelect>
               <div class="relative flex-1 min-w-[200px]">
-                <input
+                <KInput 
                   type="text"
                   v-model="salesFilters.search"
                   @keyup.enter="applySalesFilter"
                   placeholder="Cari nama pelanggan..."
-                  class="w-full rounded-xl border border-zinc-300 px-4 py-2 pl-10 text-sm bg-white text-zinc-700 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all"
-                />
+                  class="w-full rounded-xl border border-zinc-300 px-4 py-2 pl-10 text-sm bg-white text-zinc-700 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all" />
                 <svg class="absolute left-3.5 top-2.5 w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
               </div>
-              <button @click="resetSalesFilter" class="px-4 py-2 rounded-xl text-sm font-semibold border border-zinc-200 text-zinc-600 hover:bg-zinc-50 transition-all bg-white shadow-sm">
+              <KButton  @click="resetSalesFilter" class="px-4 py-2 rounded-xl text-sm font-semibold border border-zinc-200 text-zinc-600 hover:bg-zinc-50 transition-all bg-white shadow-sm">
                 Reset
-              </button>
+              </KButton>
           </div>
 
           <div class="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden">
@@ -143,7 +142,7 @@
               </template>
               <template #cell-action="{ row }">
                 <div class="flex items-center justify-end gap-2">
-                  <button v-if="row.status === 'draft'" @click="payDraft(row)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 text-white hover:bg-emerald-700 transition-all shadow-sm">Bayar</button>
+                  <KButton  v-if="row.status === 'draft'" @click="payDraft(row)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 text-white hover:bg-emerald-700 transition-all shadow-sm">Bayar</KButton>
                   <Link :href="route('sales.show', row.id)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 transition-all">Detail</Link>
                   <a :href="route('sales.print', row.id)" target="_blank" class="p-1.5 rounded-lg text-zinc-400 hover:bg-zinc-50 hover:text-zinc-600 transition-all" title="Cetak Nota">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
@@ -164,23 +163,22 @@
           <Skeleton v-if="!expenses" type="table" :count="5" />
           <template v-else>
             <div class="bg-white p-4 rounded-2xl border border-zinc-200 shadow-sm flex flex-wrap items-center gap-3">
-                <select v-model="expenseFilters.category_id" @change="applyExpenseFilter" class="w-48 text-sm font-medium rounded-xl border border-zinc-300 px-4 py-2 bg-white text-zinc-700 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all">
+                <KSelect  v-model="expenseFilters.category_id" @change="applyExpenseFilter" class="w-48 text-sm font-medium rounded-xl border border-zinc-300 px-4 py-2 bg-white text-zinc-700 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all">
                   <option value="">Semua Kategori</option>
                   <option v-for="cat in expenseCategories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
-                </select>
+                </KSelect>
                 <div class="relative flex-1 min-w-[200px]">
-                  <input
+                  <KInput 
                     type="text"
                     v-model="expenseFilters.search"
                     @keyup.enter="applyExpenseFilter"
                     placeholder="Cari deskripsi pengeluaran..."
-                    class="w-full rounded-xl border border-zinc-300 px-4 py-2 pl-10 text-sm bg-white text-zinc-700 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all"
-                  />
+                    class="w-full rounded-xl border border-zinc-300 px-4 py-2 pl-10 text-sm bg-white text-zinc-700 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all" />
                   <svg class="absolute left-3.5 top-2.5 w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                 </div>
-                <button @click="resetExpenseFilter" class="px-4 py-2 rounded-xl text-sm font-semibold border border-zinc-200 text-zinc-600 hover:bg-zinc-50 transition-all bg-white shadow-sm">
+                <KButton  @click="resetExpenseFilter" class="px-4 py-2 rounded-xl text-sm font-semibold border border-zinc-200 text-zinc-600 hover:bg-zinc-50 transition-all bg-white shadow-sm">
                   Reset
-                </button>
+                </KButton>
             </div>
 
             <div class="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden">
@@ -242,7 +240,7 @@
                 <span class="text-zinc-500">{{ formatDate(row.created_at) }}</span>
               </template>
               <template #cell-action="{ row }">
-                <button @click="openPurchaseDetail(row)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 transition-all shadow-sm">Detail</button>
+                <KButton  @click="openPurchaseDetail(row)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 transition-all shadow-sm">Detail</KButton>
               </template>
             </KTable>
             <div class="p-4 border-t border-zinc-200 bg-zinc-50/50">
@@ -275,13 +273,13 @@
                 <span class="text-zinc-500">{{ formatDate(row.created_at) }}</span>
               </template>
               <template #cell-action="{ row }">
-                <select @change="updateReturnStatus(row, $event.target.value)" class="text-xs py-1.5 px-3 rounded-lg border border-zinc-300 font-semibold bg-white text-zinc-700 outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500">
+                <KSelect  @change="updateReturnStatus(row, $event.target.value)" class="text-xs py-1.5 px-3 rounded-lg border border-zinc-300 font-semibold bg-white text-zinc-700 outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500">
                   <option disabled selected>Ubah Status</option>
                   <option value="dikirim">Dikirim</option>
                   <option value="diproses_supplier">Diproses Supplier</option>
                   <option value="selesai">Selesai</option>
                   <option value="ditolak">Ditolak</option>
-                </select>
+                </KSelect>
               </template>
             </KTable>
             <div class="p-4 border-t border-zinc-200 bg-zinc-50/50">
@@ -298,28 +296,28 @@
       <form @submit.prevent="submitExpense" class="space-y-4">
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Deskripsi Pengeluaran *</label>
-          <input v-model="expenseForm.description" required placeholder="e.g. Bayar Listrik / Beli Kertas Thermal" class="input text-sm" />
+          <KInput  v-model="expenseForm.description" required placeholder="e.g. Bayar Listrik / Beli Kertas Thermal" class="input text-sm" />
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Jumlah Nominal (Rp) *</label>
-          <input v-model="expenseForm.amount" type="number" min="100" required placeholder="0" class="input text-sm" />
+          <KInput  v-model="expenseForm.amount" type="number" min="100" required placeholder="0" class="input text-sm" />
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Kategori *</label>
-          <select v-model="expenseForm.category_id" required class="input text-sm">
+          <KSelect  v-model="expenseForm.category_id" required class="input text-sm">
             <option value="" disabled>-- Pilih Kategori --</option>
             <option v-for="cat in expenseCategories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
-          </select>
+          </KSelect>
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Tanggal Pengeluaran *</label>
-          <input v-model="expenseForm.expense_date" type="date" required class="input text-sm" />
+          <KInput  v-model="expenseForm.expense_date" type="date" required class="input text-sm" />
         </div>
         <div class="flex justify-end gap-2 pt-3">
-          <button type="button" @click="showExpenseDrawer = false" class="btn-secondary text-xs">Batal</button>
-          <button type="submit" :disabled="expenseForm.processing" class="btn-primary text-xs">
+          <KButton  type="button" @click="showExpenseDrawer = false" class="btn-secondary text-xs">Batal</KButton>
+          <KButton  type="submit" :disabled="expenseForm.processing" class="btn-primary text-xs">
             {{ expenseForm.processing ? 'Menyimpan...' : 'Simpan Pengeluaran' }}
-          </button>
+          </KButton>
         </div>
       </form>
     </Drawer>
@@ -330,49 +328,49 @@
         <div class="grid grid-cols-2 gap-3">
           <div class="space-y-1">
             <label class="text-xs font-semibold text-zinc-500">Tipe *</label>
-            <select v-model="purchaseForm.type" required class="input text-sm">
+            <KSelect  v-model="purchaseForm.type" required class="input text-sm">
               <option value="po">PO (Purchase Order)</option>
               <option value="cash">Cash Langsung</option>
-            </select>
+            </KSelect>
           </div>
           <div class="space-y-1">
             <label class="text-xs font-semibold text-zinc-500">Supplier</label>
-            <select v-model="purchaseForm.supplier_id" class="input text-sm">
+            <KSelect  v-model="purchaseForm.supplier_id" class="input text-sm">
               <option value="">-- Pilih / Kosongkan --</option>
               <option v-for="s in suppliers" :key="s.id" :value="s.id">{{ s.name }}</option>
-            </select>
+            </KSelect>
           </div>
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Nama Supplier Baru (jika tidak ada di daftar)</label>
-          <input v-model="purchaseForm.supplier_name" type="text" class="input text-sm" placeholder="e.g. PT Sumber Jaya" />
+          <KInput  v-model="purchaseForm.supplier_name" type="text" class="input text-sm" placeholder="e.g. PT Sumber Jaya" />
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Item Pembelian *</label>
           <div v-for="(item, i) in purchaseForm.items" :key="i" class="space-y-2 rounded-lg border p-3 border-zinc-200">
             <div class="grid grid-cols-2 gap-2">
               <div class="col-span-2">
-                <select v-model="item.product_id" required class="input text-sm">
+                <KSelect  v-model="item.product_id" required class="input text-sm">
                   <option value="" disabled>-- Pilih Produk --</option>
                   <option v-for="p in products" :key="p.id" :value="p.id">{{ p.name }}</option>
-                </select>
+                </KSelect>
               </div>
-              <input v-model="item.quantity" type="number" min="1" required class="input text-sm" placeholder="Qty" />
-              <input v-model="item.unit_price" type="number" min="0" required class="input text-sm" placeholder="Harga Satuan" />
+              <KInput  v-model="item.quantity" type="number" min="1" required class="input text-sm" placeholder="Qty" />
+              <KInput  v-model="item.unit_price" type="number" min="0" required class="input text-sm" placeholder="Harga Satuan" />
             </div>
-            <button type="button" v-if="purchaseForm.items.length > 1" @click="removePurchaseItem(i)" class="text-xs font-semibold text-red-500 hover:underline">− Hapus item</button>
+            <KButton  type="button" v-if="purchaseForm.items.length > 1" @click="removePurchaseItem(i)" class="text-xs font-semibold text-red-500 hover:underline">− Hapus item</KButton>
           </div>
-          <button type="button" @click="addPurchaseItem" class="text-xs font-bold text-blue-600 hover:underline mt-1">+ Tambah item</button>
+          <KButton  type="button" @click="addPurchaseItem" class="text-xs font-bold text-blue-600 hover:underline mt-1">+ Tambah item</KButton>
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Catatan</label>
-          <textarea v-model="purchaseForm.note" rows="2" class="input text-sm" placeholder="Catatan pembelian..."></textarea>
+          <KTextarea  v-model="purchaseForm.note" rows="2" class="input text-sm" placeholder="Catatan pembelian..."></KTextarea>
         </div>
         <div class="flex justify-end gap-2 pt-3">
-          <button type="button" @click="showPurchaseDrawer = false" class="btn-secondary text-xs">Batal</button>
-          <button type="submit" :disabled="purchaseForm.processing" class="btn-primary text-xs">
+          <KButton  type="button" @click="showPurchaseDrawer = false" class="btn-secondary text-xs">Batal</KButton>
+          <KButton  type="submit" :disabled="purchaseForm.processing" class="btn-primary text-xs">
             {{ purchaseForm.processing ? 'Menyimpan...' : 'Simpan Pembelian' }}
-          </button>
+          </KButton>
         </div>
       </form>
     </Drawer>
@@ -427,53 +425,53 @@
         <div class="grid grid-cols-2 gap-3">
           <div class="space-y-1">
             <label class="text-xs font-semibold text-zinc-500">Supplier *</label>
-            <select v-model="returnForm.supplier_id" required class="input text-sm">
+            <KSelect  v-model="returnForm.supplier_id" required class="input text-sm">
               <option value="" disabled>-- Pilih Supplier --</option>
               <option v-for="s in suppliers" :key="s.id" :value="s.id">{{ s.name }}</option>
-            </select>
+            </KSelect>
           </div>
           <div class="space-y-1">
             <label class="text-xs font-semibold text-zinc-500">Referensi Pembelian</label>
-            <select v-model="returnForm.purchase_id" class="input text-sm">
+            <KSelect  v-model="returnForm.purchase_id" class="input text-sm">
               <option value="">-- Pilih / Kosongkan --</option>
               <option v-for="p in (purchases?.data ?? [])" :key="p.id" :value="p.id">{{ p.reference_number }} ({{ p.supplier?.name ?? '-' }})</option>
-            </select>
+            </KSelect>
           </div>
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Alasan Retur</label>
-          <input v-model="returnForm.reason" type="text" class="input text-sm" placeholder="e.g. Barang rusak / salah kirim" />
+          <KInput  v-model="returnForm.reason" type="text" class="input text-sm" placeholder="e.g. Barang rusak / salah kirim" />
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Item Retur *</label>
           <div v-for="(item, i) in returnForm.items" :key="i" class="space-y-2 rounded-lg border p-3 border-zinc-200">
             <div class="grid grid-cols-2 gap-2">
               <div class="col-span-2">
-                <select v-model="item.product_id" required class="input text-sm">
+                <KSelect  v-model="item.product_id" required class="input text-sm">
                   <option value="" disabled>-- Pilih Produk --</option>
                   <option v-for="p in products" :key="p.id" :value="p.id">{{ p.name }}</option>
-                </select>
+                </KSelect>
               </div>
-              <input v-model="item.quantity" type="number" min="1" required class="input text-sm" placeholder="Qty" />
-              <input v-model="item.price" type="number" min="0" class="input text-sm" placeholder="Harga Satuan" />
+              <KInput  v-model="item.quantity" type="number" min="1" required class="input text-sm" placeholder="Qty" />
+              <KInput  v-model="item.price" type="number" min="0" class="input text-sm" placeholder="Harga Satuan" />
             </div>
             <div class="flex items-center justify-between">
-              <select v-model="item.condition" class="input text-sm w-40">
+              <KSelect  v-model="item.condition" class="input text-sm w-40">
                 <option value="rusak">Rusak</option>
                 <option value="salah">Salah Kirim</option>
                 <option value="expired">Expired</option>
                 <option value="lain">Lainnya</option>
-              </select>
-              <button type="button" v-if="returnForm.items.length > 1" @click="removeReturnItem(i)" class="text-xs font-semibold text-red-500 hover:underline">− Hapus</button>
+              </KSelect>
+              <KButton  type="button" v-if="returnForm.items.length > 1" @click="removeReturnItem(i)" class="text-xs font-semibold text-red-500 hover:underline">− Hapus</KButton>
             </div>
           </div>
-          <button type="button" @click="addReturnItem" class="text-xs font-bold text-blue-600 hover:underline mt-1">+ Tambah item</button>
+          <KButton  type="button" @click="addReturnItem" class="text-xs font-bold text-blue-600 hover:underline mt-1">+ Tambah item</KButton>
         </div>
         <div class="flex justify-end gap-2 pt-3">
-          <button type="button" @click="showReturnDrawer = false" class="btn-secondary text-xs">Batal</button>
-          <button type="submit" :disabled="returnForm.processing" class="btn-primary text-xs">
+          <KButton  type="button" @click="showReturnDrawer = false" class="btn-secondary text-xs">Batal</KButton>
+          <KButton  type="submit" :disabled="returnForm.processing" class="btn-primary text-xs">
             {{ returnForm.processing ? 'Menyimpan...' : 'Simpan Retur' }}
-          </button>
+          </KButton>
         </div>
       </form>
     </Drawer>
@@ -482,6 +480,11 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+import KInput from '@/Components/KInput.vue';
+import KSelect from '@/Components/KSelect.vue';
+import KTextarea from '@/Components/KTextarea.vue';
+
 import { computed, reactive, ref } from 'vue';
 import { router, Link, useForm } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';

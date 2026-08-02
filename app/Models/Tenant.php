@@ -162,22 +162,12 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     }
 
     /**
-     * Dapatkan level akses fitur berdasarkan tipe bisnis dan paket.
+     * Dapatkan level akses fitur menggunakan FeatureEngine (Sprint 7.1B).
+     * Unified resolver: Module activation → Plan feature → Business type constraint.
      */
     public function getFeatureAccessLevel(string $feature): string
     {
-        if (!$this->plan) {
-            return 'none';
-        }
-
-        $businessType = $this->getBusinessType();
-
-        // Pengaman struktural: Retail Saja tidak boleh mengakses Servis dan Template Ceklis
-        if ($businessType === 'retail_only' && in_array($feature, ['services', 'checklist'])) {
-            return 'none';
-        }
-
-        return $this->plan->featureAccessLevel($feature, $businessType);
+        return app(\App\Services\FeatureEngine::class)->getAccessLevel($this, $feature);
     }
 
     /**
@@ -185,16 +175,6 @@ class Tenant extends BaseTenant implements TenantWithDatabase
      */
     public function getAllEffectiveFeatureAccess(): array
     {
-        $features = [
-            'services', 'customers', 'products', 'sales', 'reports', 'settings',
-            'monitoring', 'multi_branch', 'transfer_stock', 'users', 'expenses',
-            'purchases', 'deposits', 'checklist', 'indents'
-        ];
-
-        $result = [];
-        foreach ($features as $f) {
-            $result[$f] = $this->getFeatureAccessLevel($f);
-        }
-        return $result;
+        return app(\App\Services\FeatureEngine::class)->getAllFeatures($this);
     }
 }

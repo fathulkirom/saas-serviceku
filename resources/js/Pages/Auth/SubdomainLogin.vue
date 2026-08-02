@@ -42,7 +42,7 @@
         <form @submit.prevent="submit" class="space-y-5">
             <div>
                 <label for="login" class="block text-sm font-bold text-zinc-900 mb-2">Email / Nama Pengguna</label>
-                <input
+                <KInput 
                     id="login"
                     v-model="form.login"
                     type="text"
@@ -50,8 +50,7 @@
                     placeholder="email@example.com"
                     required
                     autofocus
-                    autocomplete="username"
-                />
+                    autocomplete="username" />
             </div>
             
             <div>
@@ -61,29 +60,27 @@
                         Lupa password?
                     </Link>
                 </div>
-                <input
+                <KInput 
                     id="password"
                     v-model="form.password"
                     type="password"
                     class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
                     placeholder="••••••••"
                     required
-                    autocomplete="current-password"
-                />
+                    autocomplete="current-password" />
             </div>
 
             <div class="pt-2">
-                <button
+                <KButton 
                     type="submit"
                     class="w-full flex items-center justify-center px-6 py-3 rounded-xl bg-zinc-900 text-white text-sm font-bold shadow-md hover:bg-zinc-800 focus:ring-2 focus:ring-offset-2 focus:ring-zinc-900 transition-all disabled:opacity-70"
-                    :disabled="form.processing"
-                >
+                    :disabled="form.processing">
                     <svg v-if="form.processing" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                     </svg>
                     Masuk ke Dasbor
-                </button>
+                </KButton>
             </div>
         </form>
 
@@ -115,6 +112,9 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+import KInput from '@/Components/KInput.vue';
+
 import { useForm, usePage, Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import GuestLayout from '@/Layouts/GuestLayout.vue';

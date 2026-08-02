@@ -7,35 +7,35 @@
             </label>
 
             <!-- Text -->
-            <input v-if="field.type === 'text'"
+            <KInput  v-if="field.type === 'text'"
                 v-model="formData[fieldKey(field.id)]"
                 :required="field.is_required"
                 class="input text-sm mt-1"
                 :placeholder="field.label" />
 
             <!-- Number -->
-            <input v-else-if="field.type === 'number'"
+            <KInput  v-else-if="field.type === 'number'"
                 v-model.number="formData[fieldKey(field.id)]"
                 type="number"
                 class="input text-sm mt-1"
                 :placeholder="field.label" />
 
             <!-- Textarea -->
-            <textarea v-else-if="field.type === 'textarea'"
+            <KTextarea  v-else-if="field.type === 'textarea'"
                 v-model="formData[fieldKey(field.id)]"
                 :required="field.is_required"
                 class="input text-sm mt-1"
                 rows="3"
-                :placeholder="field.label"></textarea>
+                :placeholder="field.label"></KTextarea>
 
             <!-- Date -->
-            <input v-else-if="field.type === 'date'"
+            <KInput  v-else-if="field.type === 'date'"
                 v-model="formData[fieldKey(field.id)]"
                 type="date"
                 class="input text-sm mt-1" />
 
             <!-- Dropdown -->
-            <select v-else-if="field.type === 'dropdown'"
+            <KSelect  v-else-if="field.type === 'dropdown'"
                 v-model="formData[fieldKey(field.id)]"
                 :required="field.is_required"
                 class="input text-sm mt-1">
@@ -43,12 +43,11 @@
                 <option v-for="opt in (field.options || [])" :key="opt" :value="opt">
                     {{ opt }}
                 </option>
-            </select>
+            </KSelect>
 
             <!-- Checkbox -->
             <div v-else-if="field.type === 'checkbox'" class="flex items-center gap-2 mt-1">
-                <input type="checkbox"
-                    v-model="formData[fieldKey(field.id)]"
+                <KCheckbox  v-model="formData[fieldKey(field.id)]"
                     :true-value="'1'"
                     :false-value="'0'"
                     class="rounded border-gray-300" />
@@ -59,6 +58,11 @@
 </template>
 
 <script setup>
+import KInput from '@/Components/KInput.vue';
+import KSelect from '@/Components/KSelect.vue';
+import KTextarea from '@/Components/KTextarea.vue';
+import KCheckbox from '@/Components/KCheckbox.vue';
+
 const props = defineProps({
     fields: { type: Array, default: () => [] },
     formData: { type: Object, default: () => ({}) },

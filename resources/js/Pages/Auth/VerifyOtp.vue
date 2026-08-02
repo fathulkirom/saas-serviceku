@@ -23,7 +23,7 @@
         <form @submit.prevent="submit" class="space-y-6">
             <div>
                 <div class="flex gap-2 sm:gap-3 justify-center mb-2">
-                    <input
+                    <KInput 
                         v-for="i in 6"
                         :key="i"
                         :ref="el => { if (el) otpInputs[i-1] = el }"
@@ -34,32 +34,33 @@
                         class="w-10 h-12 sm:w-14 sm:h-16 text-center text-xl sm:text-2xl font-black rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none shadow-sm transition-all"
                         @input="onInput($event, i-1)"
                         @keydown.backspace="onBackspace($event, i-1)"
-                        :autofocus="i === 1"
-                    />
+                        :autofocus="i === 1" />
                 </div>
             </div>
 
             <div class="pt-2 flex flex-col gap-4">
-                <button
+                <KButton 
                     type="submit"
                     class="w-full flex items-center justify-center px-6 py-3 rounded-xl bg-zinc-900 text-white text-sm font-bold shadow-md hover:bg-zinc-800 focus:ring-2 focus:ring-offset-2 focus:ring-zinc-900 transition-all disabled:opacity-70"
-                    :disabled="form.processing || otpDigits.some(d => !d)"
-                >
+                    :disabled="form.processing || otpDigits.some(d => !d)">
                     <svg v-if="form.processing" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                     </svg>
                     Verifikasi OTP
-                </button>
-                <button type="button" @click="resend" class="text-center text-sm font-bold text-indigo-600 hover:text-indigo-700 transition-colors">
+                </KButton>
+                <KButton  type="button" @click="resend" class="text-center text-sm font-bold text-indigo-600 hover:text-indigo-700 transition-colors">
                     Belum menerima kode? Kirim ulang
-                </button>
+                </KButton>
             </div>
         </form>
     </GuestLayout>
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+import KInput from '@/Components/KInput.vue';
+
 import { useForm, usePage } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
 import GuestLayout from '@/Layouts/GuestLayout.vue';

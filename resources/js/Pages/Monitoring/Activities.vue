@@ -18,34 +18,34 @@
             <form class="flex flex-wrap gap-4 items-end" @submit.prevent="filter">
                 <div class="flex-1 min-w-[200px]">
                     <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">User</label>
-                    <select v-model="filters.user_id" @change="filter" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white">
+                    <KSelect  v-model="filters.user_id" @change="filter" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white">
                         <option value="">Semua User</option>
                         <option v-for="u in users" :key="u.id" :value="u.id">{{ u.name }}</option>
-                    </select>
+                    </KSelect>
                 </div>
                 <div class="flex-1 min-w-[150px]">
                     <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Aksi</label>
-                    <select v-model="filters.action" @change="filter" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white">
+                    <KSelect  v-model="filters.action" @change="filter" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white">
                         <option value="">Semua Aksi</option>
                         <option value="created">Created</option>
                         <option value="updated">Updated</option>
                         <option value="completed">Completed</option>
                         <option value="login">Login</option>
                         <option value="logout">Logout</option>
-                    </select>
+                    </KSelect>
                 </div>
                 <div class="flex-1 min-w-[150px]">
                     <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Dari Tanggal</label>
-                    <input type="date" v-model="filters.date_from" @change="filter" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white" />
+                    <KInput  type="date" v-model="filters.date_from" @change="filter" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white" />
                 </div>
                 <div class="flex-1 min-w-[150px]">
                     <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Sampai Tanggal</label>
-                    <input type="date" v-model="filters.date_to" @change="filter" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white" />
+                    <KInput  type="date" v-model="filters.date_to" @change="filter" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white" />
                 </div>
                 <div>
-                    <button type="button" @click="resetFilter" class="px-5 py-2.5 rounded-xl border border-zinc-300 text-sm font-bold text-zinc-700 bg-white hover:bg-zinc-50 transition-colors shadow-sm">
+                    <KButton  type="button" @click="resetFilter" class="px-5 py-2.5 rounded-xl border border-zinc-300 text-sm font-bold text-zinc-700 bg-white hover:bg-zinc-50 transition-colors shadow-sm">
                         Reset Filter
-                    </button>
+                    </KButton>
                 </div>
             </form>
         </div>
@@ -85,6 +85,10 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+import KInput from '@/Components/KInput.vue';
+import KSelect from '@/Components/KSelect.vue';
+
 import { Link, router } from '@inertiajs/vue3';
 import { reactive } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';

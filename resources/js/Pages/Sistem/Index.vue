@@ -2,22 +2,22 @@
   <AuthenticatedLayout>
     <template #header>
       <PageHeader :title="pageTitle" :subtitle="subtitle">
-        <button v-if="activeTab === 'pengguna'" @click="openUserModal()"
+        <KButton  v-if="activeTab === 'pengguna'" @click="openUserModal()"
           class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white transition-all shadow-sm hover:shadow-md">
           + Tambah Pengguna
-        </button>
-        <button v-if="activeTab === 'cabang'" @click="openBranchModal()"
+        </KButton>
+        <KButton  v-if="activeTab === 'cabang'" @click="openBranchModal()"
           class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white transition-all shadow-sm hover:shadow-md">
           + Tambah Cabang
-        </button>
-        <button v-if="activeTab === 'shift'" @click="openShiftModal()"
+        </KButton>
+        <KButton  v-if="activeTab === 'shift'" @click="openShiftModal()"
           class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white transition-all shadow-sm hover:shadow-md">
           + Tambah Shift Kerja
-        </button>
-        <button v-if="activeTab === 'absensi'" @click="openAttendanceModal()"
+        </KButton>
+        <KButton  v-if="activeTab === 'absensi'" @click="openAttendanceModal()"
           class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white transition-all shadow-sm hover:shadow-md">
           + Catat Absensi Manual
-        </button>
+        </KButton>
       </PageHeader>
     </template>
 
@@ -56,11 +56,11 @@
             </template>
             <template #cell-action="{ row }">
               <div class="flex items-center gap-1 justify-end">
-                <button @click="openMenuAccessModal(row)" class="text-xs px-2 py-1 rounded border font-medium transition-colors"
-                  style="borderColor: var(--border-color); color: #8e44ad;">Akses Menu</button>
-                <button @click="openUserModal(row)" class="text-xs px-2 py-1 rounded border font-medium transition-colors border-zinc-200 text-indigo-600">Edit</button>
-                <button @click="toggleUser(row)" class="text-xs px-2 py-1 rounded border font-medium transition-colors"
-                  :style="{ borderColor: row.active ? '#fca5a5' : '#86efac', color: row.active ? '#ef4444' : '#10b981' }">{{ row.active ? 'Nonaktifkan' : 'Aktifkan' }}</button>
+                <KButton  @click="openMenuAccessModal(row)" class="text-xs px-2 py-1 rounded border font-medium transition-colors"
+                  style="borderColor: var(--border-color); color: #8e44ad;">Akses Menu</KButton>
+                <KButton  @click="openUserModal(row)" class="text-xs px-2 py-1 rounded border font-medium transition-colors border-zinc-200 text-indigo-600">Edit</KButton>
+                <KButton  @click="toggleUser(row)" class="text-xs px-2 py-1 rounded border font-medium transition-colors"
+                  :style="{ borderColor: row.active ? '#fca5a5' : '#86efac', color: row.active ? '#ef4444' : '#10b981' }">{{ row.active ? 'Nonaktifkan' : 'Aktifkan' }}</KButton>
               </div>
             </template>
           </KTable>
@@ -100,7 +100,7 @@
             </template>
             <template #cell-action="{ row }">
               <div class="flex items-center justify-end gap-1">
-                <button @click="openBranchModal(row)" class="px-2.5 py-1 rounded text-xs font-medium border border-zinc-200 text-indigo-600">Edit</button>
+                <KButton  @click="openBranchModal(row)" class="px-2.5 py-1 rounded text-xs font-medium border border-zinc-200 text-indigo-600">Edit</KButton>
               </div>
             </template>
           </KTable>
@@ -131,8 +131,8 @@
             </template>
             <template #cell-action="{ row }">
               <div class="flex items-center justify-end gap-1">
-                <button @click="openShiftModal(row)" class="px-2.5 py-1 rounded text-xs font-medium border border-zinc-200 text-indigo-600">Edit</button>
-                <button @click="deleteShift(row)" class="px-2.5 py-1 rounded text-xs font-medium text-red-600 border border-red-200 hover:bg-red-50">Hapus</button>
+                <KButton  @click="openShiftModal(row)" class="px-2.5 py-1 rounded text-xs font-medium border border-zinc-200 text-indigo-600">Edit</KButton>
+                <KButton  @click="deleteShift(row)" class="px-2.5 py-1 rounded text-xs font-medium text-red-600 border border-red-200 hover:bg-red-50">Hapus</KButton>
               </div>
             </template>
           </KTable>
@@ -167,14 +167,14 @@
               </Badge>
             </template>
             <template #cell-action="{ row }">
-              <select @change="updateAttendanceStatus(row, $event.target.value)" class="text-xs py-1 px-2 rounded border font-semibold bg-white border-zinc-200">
+              <KSelect  @change="updateAttendanceStatus(row, $event.target.value)" class="text-xs py-1 px-2 rounded border font-semibold bg-white border-zinc-200">
                 <option disabled selected>Ubah Status</option>
                 <option value="present">Hadir</option>
                 <option value="late">Terlambat</option>
                 <option value="sick">Sakit</option>
                 <option value="leave">Izin</option>
                 <option value="absent">Alpa</option>
-              </select>
+              </KSelect>
             </template>
           </KTable>
 
@@ -188,35 +188,35 @@
       <form @submit.prevent="submitUser" class="space-y-4">
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Nama *</label>
-          <input v-model="userForm.name" required class="input text-sm" />
+          <KInput  v-model="userForm.name" required class="input text-sm" />
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Email *</label>
-          <input v-model="userForm.email" type="email" required class="input text-sm" />
+          <KInput  v-model="userForm.email" type="email" required class="input text-sm" />
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Password {{ editingUser ? '(Opsional)' : '*' }}</label>
-          <input v-model="userForm.password" type="password" :required="!editingUser" class="input text-sm" />
+          <KInput  v-model="userForm.password" type="password" :required="!editingUser" class="input text-sm" />
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Role *</label>
-          <select v-model="userForm.role" required class="input text-sm">
+          <KSelect  v-model="userForm.role" required class="input text-sm">
             <option value="" disabled>Pilih Role</option>
             <option v-for="r in roles" :key="r" :value="r">{{ r }}</option>
-          </select>
+          </KSelect>
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Cabang</label>
-          <select v-model="userForm.branch_id" class="input text-sm">
+          <KSelect  v-model="userForm.branch_id" class="input text-sm">
             <option value="">Pilih Cabang</option>
             <option v-for="b in branchesForSelect" :key="b.id" :value="b.id">{{ b.name }}</option>
-          </select>
+          </KSelect>
         </div>
         <div class="flex justify-end gap-2 pt-3">
-          <button type="button" @click="showUserDrawer = false" class="btn-secondary text-xs">Batal</button>
-          <button type="submit" :disabled="userForm.processing" class="btn-primary text-xs">
+          <KButton  type="button" @click="showUserDrawer = false" class="btn-secondary text-xs">Batal</KButton>
+          <KButton  type="submit" :disabled="userForm.processing" class="btn-primary text-xs">
             {{ userForm.processing ? 'Menyimpan...' : 'Simpan' }}
-          </button>
+          </KButton>
         </div>
       </form>
     </Drawer>
@@ -226,25 +226,25 @@
       <form @submit.prevent="submitBranch" class="space-y-4">
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Nama Cabang *</label>
-          <input v-model="branchForm.name" required placeholder="e.g. Cabang Bandung Center" class="input text-sm" />
+          <KInput  v-model="branchForm.name" required placeholder="e.g. Cabang Bandung Center" class="input text-sm" />
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Alamat Lengkap</label>
-          <textarea v-model="branchForm.address" rows="2" placeholder="Jl. Merdeka No. 45..." class="input text-sm"></textarea>
+          <KTextarea  v-model="branchForm.address" rows="2" placeholder="Jl. Merdeka No. 45..." class="input text-sm"></KTextarea>
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">No. Telepon Cabang</label>
-          <input v-model="branchForm.phone" placeholder="022-xxxxxxx" class="input text-sm" />
+          <KInput  v-model="branchForm.phone" placeholder="022-xxxxxxx" class="input text-sm" />
         </div>
         <div class="flex items-center gap-2 pt-2">
-          <input type="checkbox" v-model="branchForm.is_active" id="branch_active" class="rounded" />
+          <KCheckbox  v-model="branchForm.is_active" id="branch_active" class="rounded" />
           <label for="branch_active" class="text-xs font-medium">Aktifkan Cabang Ini</label>
         </div>
         <div class="flex justify-end gap-2 pt-3">
-          <button type="button" @click="showBranchDrawer = false" class="btn-secondary text-xs">Batal</button>
-          <button type="submit" :disabled="branchForm.processing" class="btn-primary text-xs">
+          <KButton  type="button" @click="showBranchDrawer = false" class="btn-secondary text-xs">Batal</KButton>
+          <KButton  type="submit" :disabled="branchForm.processing" class="btn-primary text-xs">
             {{ branchForm.processing ? 'Menyimpan...' : 'Simpan Cabang' }}
-          </button>
+          </KButton>
         </div>
       </form>
     </Drawer>
@@ -254,23 +254,23 @@
       <form @submit.prevent="submitShift" class="space-y-4">
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Nama Shift *</label>
-          <input v-model="shiftForm.name" required placeholder="e.g. Shift Pagi / Shift Malam" class="input text-sm" />
+          <KInput  v-model="shiftForm.name" required placeholder="e.g. Shift Pagi / Shift Malam" class="input text-sm" />
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div class="space-y-1">
             <label class="text-xs font-semibold text-zinc-500">Jam Mulai *</label>
-            <input v-model="shiftForm.start_time" type="time" required class="input text-sm" />
+            <KInput  v-model="shiftForm.start_time" type="time" required class="input text-sm" />
           </div>
           <div class="space-y-1">
             <label class="text-xs font-semibold text-zinc-500">Jam Selesai *</label>
-            <input v-model="shiftForm.end_time" type="time" required class="input text-sm" />
+            <KInput  v-model="shiftForm.end_time" type="time" required class="input text-sm" />
           </div>
         </div>
         <div class="flex justify-end gap-2 pt-3">
-          <button type="button" @click="showShiftDrawer = false" class="btn-secondary text-xs">Batal</button>
-          <button type="submit" :disabled="shiftForm.processing" class="btn-primary text-xs">
+          <KButton  type="button" @click="showShiftDrawer = false" class="btn-secondary text-xs">Batal</KButton>
+          <KButton  type="submit" :disabled="shiftForm.processing" class="btn-primary text-xs">
             {{ shiftForm.processing ? 'Menyimpan...' : 'Simpan Shift' }}
-          </button>
+          </KButton>
         </div>
       </form>
     </Drawer>
@@ -280,30 +280,30 @@
       <form @submit.prevent="submitAttendance" class="space-y-4">
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Pilih Karyawan *</label>
-          <select v-model="attendanceForm.user_id" required class="input text-sm">
+          <KSelect  v-model="attendanceForm.user_id" required class="input text-sm">
             <option value="" disabled>-- Pilih Karyawan --</option>
             <option v-for="u in attendanceUsers" :key="u.id" :value="u.id">{{ u.name }} ({{ u.role }})</option>
-          </select>
+          </KSelect>
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Status Kehadiran *</label>
-          <select v-model="attendanceForm.status" required class="input text-sm">
+          <KSelect  v-model="attendanceForm.status" required class="input text-sm">
             <option value="present">Hadir</option>
             <option value="late">Terlambat</option>
             <option value="sick">Sakit</option>
             <option value="leave">Izin</option>
             <option value="absent">Alpa</option>
-          </select>
+          </KSelect>
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Waktu Masuk *</label>
-          <input v-model="attendanceForm.check_in" type="datetime-local" required class="input text-sm" />
+          <KInput  v-model="attendanceForm.check_in" type="datetime-local" required class="input text-sm" />
         </div>
         <div class="flex justify-end gap-2 pt-3">
-          <button type="button" @click="showAttendanceDrawer = false" class="btn-secondary text-xs">Batal</button>
-          <button type="submit" :disabled="attendanceForm.processing" class="btn-primary text-xs">
+          <KButton  type="button" @click="showAttendanceDrawer = false" class="btn-secondary text-xs">Batal</KButton>
+          <KButton  type="submit" :disabled="attendanceForm.processing" class="btn-primary text-xs">
             {{ attendanceForm.processing ? 'Menyimpan...' : 'Simpan Absensi' }}
-          </button>
+          </KButton>
         </div>
       </form>
     </Drawer>
@@ -318,14 +318,14 @@
               <p class="text-xs font-bold text-zinc-900">{{ menu.label }}</p>
               <p class="text-[10px] text-zinc-500">{{ menu.group }}</p>
             </div>
-            <input type="checkbox" :value="menu.id" v-model="selectedMenuIds" class="w-4 h-4 rounded accent-purple-600 cursor-pointer" />
+            <KCheckbox  :value="menu.id" v-model="selectedMenuIds" class="w-4 h-4 rounded accent-purple-600 cursor-pointer" />
           </div>
         </div>
         <div class="flex justify-between items-center pt-3 border-t border-zinc-200">
-          <button type="button" @click="resetMenuAccess" class="text-xs text-red-500 font-semibold hover:underline cursor-pointer">Reset Default Role</button>
+          <KButton  type="button" @click="resetMenuAccess" class="text-xs text-red-500 font-semibold hover:underline cursor-pointer">Reset Default Role</KButton>
           <div class="flex gap-2">
-            <button type="button" @click="showMenuAccessDrawer = false" class="btn-secondary text-xs">Batal</button>
-            <button type="button" @click="saveMenuAccess" class="btn-primary text-xs">Simpan Akses</button>
+            <KButton  type="button" @click="showMenuAccessDrawer = false" class="btn-secondary text-xs">Batal</KButton>
+            <KButton  type="button" @click="saveMenuAccess" class="btn-primary text-xs">Simpan Akses</KButton>
           </div>
         </div>
       </div>
@@ -334,6 +334,12 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+import KInput from '@/Components/KInput.vue';
+import KSelect from '@/Components/KSelect.vue';
+import KTextarea from '@/Components/KTextarea.vue';
+import KCheckbox from '@/Components/KCheckbox.vue';
+
 import { computed, ref } from 'vue';
 import { router, Link, useForm } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';

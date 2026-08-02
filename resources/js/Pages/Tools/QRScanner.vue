@@ -13,12 +13,12 @@
                 </div>
                 <p class="text-sm font-medium text-zinc-600 mb-6">Arahkan kamera ke QR code pada sticker device</p>
                 <div class="flex gap-3 justify-center">
-                    <button @click="startScan" class="px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors shadow-sm focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1">
+                    <KButton  @click="startScan" class="px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors shadow-sm focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1">
                         Mulai Scan
-                    </button>
-                    <button @click="stopScan" class="px-5 py-2.5 rounded-xl text-sm font-bold text-zinc-700 bg-white border border-zinc-300 hover:bg-zinc-50 transition-colors shadow-sm">
+                    </KButton>
+                    <KButton  @click="stopScan" class="px-5 py-2.5 rounded-xl text-sm font-bold text-zinc-700 bg-white border border-zinc-300 hover:bg-zinc-50 transition-colors shadow-sm">
                         Berhenti
-                    </button>
+                    </KButton>
                 </div>
                 <div v-if="result" class="mt-6 p-5 bg-emerald-50 border border-emerald-200 rounded-2xl flex flex-col items-center">
                     <p class="text-sm font-bold text-emerald-800 mb-2">Hasil Scan: <span class="font-mono bg-white px-2 py-1 rounded border border-emerald-100 ml-1">{{ result }}</span></p>
@@ -38,6 +38,8 @@
     </AuthenticatedLayout>
 </template>
 <script setup>
+import KButton from '@/Components/KButton.vue';
+
 import { ref, computed } from 'vue';
 import { route } from 'ziggy-js';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';

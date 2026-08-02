@@ -12,9 +12,9 @@
                 </div>
             </div>
             <div>
-                <select v-model="year" @change="changeYear" class="w-full sm:w-32 rounded-xl border border-zinc-300 px-4 py-2 text-sm font-semibold bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all cursor-pointer shadow-sm">
+                <KSelect  v-model="year" @change="changeYear" class="w-full sm:w-32 rounded-xl border border-zinc-300 px-4 py-2 text-sm font-semibold bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all cursor-pointer shadow-sm">
                     <option v-for="y in years" :key="y" :value="y">{{ y }}</option>
-                </select>
+                </KSelect>
             </div>
         </div>
 
@@ -61,6 +61,8 @@
 </template>
 
 <script setup>
+import KSelect from '@/Components/KSelect.vue';
+
 import { computed } from 'vue';
 import { router } from '@inertiajs/vue3';
 import { ref } from 'vue';

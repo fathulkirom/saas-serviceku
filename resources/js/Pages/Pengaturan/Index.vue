@@ -15,10 +15,10 @@
         
         <!-- Action Buttons -->
         <div class="flex flex-wrap items-center gap-2">
-          <button v-if="activeTab === 'custom-fields'" @click="openCustomFieldModal()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
+          <KButton  v-if="activeTab === 'custom-fields'" @click="openCustomFieldModal()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
             Tambah Kolom Kustom
-          </button>
+          </KButton>
         </div>
       </div>
 
@@ -43,7 +43,7 @@
                   <div class="flex-1 space-y-4">
                     <div>
                       <label class="text-sm font-semibold text-zinc-700">Nama Toko</label>
-                      <input v-model="profilForm.store_name" class="w-full rounded-xl border border-zinc-300 px-4 py-2 mt-1.5 text-sm bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all" />
+                      <KInput  v-model="profilForm.store_name" class="w-full rounded-xl border border-zinc-300 px-4 py-2 mt-1.5 text-sm bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all" />
                     </div>
                     <div class="flex flex-wrap items-center gap-3">
                       <Badge :variant="planVariant(profile?.plan?.name)">{{ profile?.plan?.name || 'Trial' }} Plan</Badge>
@@ -58,15 +58,15 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div class="space-y-1.5">
                     <label class="text-sm font-semibold text-zinc-700">Telepon Utama</label>
-                    <input v-model="profilForm.phone" class="w-full rounded-xl border border-zinc-300 px-4 py-2 text-sm bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all" />
+                    <KInput  v-model="profilForm.phone" class="w-full rounded-xl border border-zinc-300 px-4 py-2 text-sm bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all" />
                   </div>
                   <div class="space-y-1.5">
                     <label class="text-sm font-semibold text-zinc-700">Nomor WhatsApp Admin</label>
-                    <input v-model="profilForm.whatsapp_number" class="w-full rounded-xl border border-zinc-300 px-4 py-2 text-sm bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all" placeholder="08xxxxxxxxxx" />
+                    <KInput  v-model="profilForm.whatsapp_number" class="w-full rounded-xl border border-zinc-300 px-4 py-2 text-sm bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all" placeholder="08xxxxxxxxxx" />
                   </div>
                   <div class="space-y-1.5 sm:col-span-2">
                     <label class="text-sm font-semibold text-zinc-700">Alamat Toko</label>
-                    <textarea v-model="profilForm.address" rows="3" class="w-full rounded-xl border border-zinc-300 px-4 py-3 text-sm bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all"></textarea>
+                    <KTextarea  v-model="profilForm.address" rows="3" class="w-full rounded-xl border border-zinc-300 px-4 py-3 text-sm bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all"></KTextarea>
                   </div>
                 </div>
               </div>
@@ -78,7 +78,7 @@
                     <div class="space-y-2">
                       <label class="text-sm font-semibold text-zinc-700">Warna Aksen Utama</label>
                       <div class="flex items-center gap-3">
-                        <input type="color" v-model="profilForm.primary_color" class="w-12 h-12 rounded-xl border-none cursor-pointer p-0 bg-transparent" />
+                        <KInput  type="color" v-model="profilForm.primary_color" class="w-12 h-12 rounded-xl border-none cursor-pointer p-0 bg-transparent" />
                         <span class="text-sm font-mono font-bold text-zinc-600 bg-zinc-100 px-3 py-1.5 rounded-lg border border-zinc-200">{{ profilForm.primary_color }}</span>
                       </div>
                     </div>
@@ -86,7 +86,7 @@
                       <label class="text-sm font-semibold text-zinc-700">Logo Toko (Nota/Struk)</label>
                       <div class="flex items-center gap-3">
                         <span class="text-xs font-semibold px-2 py-1 rounded-md bg-zinc-100 text-zinc-600 border border-zinc-200">{{ profileSettings?.logo ? 'Logo Terunggah' : 'Belum ada logo' }}</span>
-                        <input type="file" accept="image/png,image/jpeg" class="text-sm text-zinc-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition-all cursor-pointer" @change="onLogoChange" />
+                        <KInput  type="file" accept="image/png,image/jpeg" class="text-sm text-zinc-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition-all cursor-pointer" @change="onLogoChange" />
                       </div>
                     </div>
                   </div>
@@ -97,12 +97,12 @@
                   <div class="space-y-5">
                     <div class="space-y-2">
                       <label class="text-sm font-semibold text-zinc-700">Ukuran Kertas Default</label>
-                      <select v-model="profilForm.paper_size" class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm font-medium bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all">
+                      <KSelect  v-model="profilForm.paper_size" class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm font-medium bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all">
                         <option value="a4">A4 Standard</option>
                         <option value="a5">A5 Half Sheet</option>
                         <option value="thermal_80">Thermal 80mm</option>
                         <option value="thermal_58">Thermal 58mm</option>
-                      </select>
+                      </KSelect>
                       <p class="text-xs text-zinc-500 mt-1">Ukuran ini akan digunakan saat mencetak nota servis / penjualan.</p>
                     </div>
                   </div>
@@ -110,9 +110,9 @@
               </div>
 
               <div class="flex justify-end gap-2 pt-2">
-                <button type="submit" :disabled="profilForm.processing" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md hover:shadow-lg transition-all">
+                <KButton  type="submit" :disabled="profilForm.processing" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md hover:shadow-lg transition-all">
                   {{ profilForm.processing ? 'Menyimpan...' : 'Simpan Perubahan Profil' }}
-                </button>
+                </KButton>
               </div>
             </form>
 
@@ -156,7 +156,7 @@
                   </div>
                   <p v-else class="text-sm text-zinc-400 italic mb-4">Belum ada data</p>
                 </div>
-                <button @click="openMasterDrawer('device_category', 'Kategori Perangkat', deviceCategories)" class="w-full py-2 rounded-xl text-sm font-semibold bg-zinc-50 hover:bg-zinc-100 text-zinc-700 transition-all border border-zinc-200">Kelola Data</button>
+                <KButton  @click="openMasterDrawer('device_category', 'Kategori Perangkat', deviceCategories)" class="w-full py-2 rounded-xl text-sm font-semibold bg-zinc-50 hover:bg-zinc-100 text-zinc-700 transition-all border border-zinc-200">Kelola Data</KButton>
               </div>
 
               <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
@@ -170,7 +170,7 @@
                   </div>
                   <p v-else class="text-sm text-zinc-400 italic mb-4">Belum ada data</p>
                 </div>
-                <button @click="openMasterDrawer('brand', 'Merek & Brand', brands)" class="w-full py-2 rounded-xl text-sm font-semibold bg-zinc-50 hover:bg-zinc-100 text-zinc-700 transition-all border border-zinc-200">Kelola Data</button>
+                <KButton  @click="openMasterDrawer('brand', 'Merek & Brand', brands)" class="w-full py-2 rounded-xl text-sm font-semibold bg-zinc-50 hover:bg-zinc-100 text-zinc-700 transition-all border border-zinc-200">Kelola Data</KButton>
               </div>
 
               <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
@@ -184,7 +184,7 @@
                   </div>
                   <p v-else class="text-sm text-zinc-400 italic mb-4">Belum ada data</p>
                 </div>
-                <button @click="openMasterDrawer('unit', 'Satuan Barang', units)" class="w-full py-2 rounded-xl text-sm font-semibold bg-zinc-50 hover:bg-zinc-100 text-zinc-700 transition-all border border-zinc-200">Kelola Data</button>
+                <KButton  @click="openMasterDrawer('unit', 'Satuan Barang', units)" class="w-full py-2 rounded-xl text-sm font-semibold bg-zinc-50 hover:bg-zinc-100 text-zinc-700 transition-all border border-zinc-200">Kelola Data</KButton>
               </div>
 
               <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
@@ -198,7 +198,7 @@
                   </div>
                   <p v-else class="text-sm text-zinc-400 italic mb-4">Belum ada data</p>
                 </div>
-                <button @click="openMasterDrawer('equipment', 'Peralatan Unit', equipment)" class="w-full py-2 rounded-xl text-sm font-semibold bg-zinc-50 hover:bg-zinc-100 text-zinc-700 transition-all border border-zinc-200">Kelola Data</button>
+                <KButton  @click="openMasterDrawer('equipment', 'Peralatan Unit', equipment)" class="w-full py-2 rounded-xl text-sm font-semibold bg-zinc-50 hover:bg-zinc-100 text-zinc-700 transition-all border border-zinc-200">Kelola Data</KButton>
               </div>
 
               <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
@@ -248,38 +248,38 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div class="space-y-2">
                     <label class="text-sm font-semibold text-zinc-700">Penyedia Gateway *</label>
-                    <select v-model="waForm.provider" required class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all">
+                    <KSelect  v-model="waForm.provider" required class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all">
                       <option value="fonnte">Fonnte (fonnte.com)</option>
                       <option value="wablas">Wablas (wablas.com)</option>
-                    </select>
+                    </KSelect>
                   </div>
                   <div class="space-y-2">
                     <label class="text-sm font-semibold text-zinc-700">Kunci API (API Token) *</label>
-                    <input v-model="waForm.api_key" type="password" required placeholder="Masukkan Token API Fonnte/Wablas" class="w-full rounded-xl border border-zinc-300 px-4 py-2 text-sm bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all" />
+                    <KInput  v-model="waForm.api_key" type="password" required placeholder="Masukkan Token API Fonnte/Wablas" class="w-full rounded-xl border border-zinc-300 px-4 py-2 text-sm bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all" />
                   </div>
                 </div>
 
                 <div class="space-y-2 pt-4 border-t border-zinc-100">
                   <label class="text-sm font-semibold text-zinc-700">Template Pesan: Servis Diterima</label>
-                  <textarea v-model="waForm.template_service_received" rows="3" class="w-full rounded-xl border border-zinc-300 px-4 py-3 text-sm bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all" placeholder="Halo {customer_name}, unit {unit_type} Anda telah kami terima dengan No. Servis {service_code}. Cek status di {tracking_url}"></textarea>
+                  <KTextarea  v-model="waForm.template_service_received" rows="3" class="w-full rounded-xl border border-zinc-300 px-4 py-3 text-sm bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all" placeholder="Halo {customer_name}, unit {unit_type} Anda telah kami terima dengan No. Servis {service_code}. Cek status di {tracking_url}"></KTextarea>
                   <p class="text-xs text-zinc-500">Variabel: {customer_name}, {unit_type}, {service_code}, {tracking_url}</p>
                 </div>
 
                 <div class="space-y-2 pt-4 border-t border-zinc-100">
                   <label class="text-sm font-semibold text-zinc-700">Template Pesan: Servis Selesai</label>
-                  <textarea v-model="waForm.template_service_finished" rows="3" class="w-full rounded-xl border border-zinc-300 px-4 py-3 text-sm bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all" placeholder="Halo {customer_name}, servis unit {unit_type} Anda telah SELESAI. Silakan ambil di toko kami."></textarea>
+                  <KTextarea  v-model="waForm.template_service_finished" rows="3" class="w-full rounded-xl border border-zinc-300 px-4 py-3 text-sm bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all" placeholder="Halo {customer_name}, servis unit {unit_type} Anda telah SELESAI. Silakan ambil di toko kami."></KTextarea>
                   <p class="text-xs text-zinc-500">Variabel: {customer_name}, {unit_type}, {service_code}</p>
                 </div>
 
                 <div class="flex items-center gap-3 pt-6">
-                  <input type="checkbox" v-model="waForm.is_active" id="wa_active" class="w-5 h-5 rounded border-zinc-300 text-indigo-600 focus:ring-indigo-500" />
+                  <KCheckbox  v-model="waForm.is_active" id="wa_active" class="w-5 h-5 rounded border-zinc-300 text-indigo-600 focus:ring-indigo-500" />
                   <label for="wa_active" class="text-sm font-bold text-zinc-800 cursor-pointer">Aktifkan Kirim Notifikasi WhatsApp Otomatis</label>
                 </div>
 
                 <div class="flex justify-end pt-4">
-                  <button type="submit" :disabled="waForm.processing" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md hover:shadow-lg transition-all">
+                  <KButton  type="submit" :disabled="waForm.processing" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md hover:shadow-lg transition-all">
                     {{ waForm.processing ? 'Menyimpan...' : 'Simpan Pengaturan WA' }}
-                  </button>
+                  </KButton>
                 </div>
               </div>
             </div>
@@ -310,11 +310,11 @@
               <h3 class="text-lg font-bold text-zinc-900 mb-4">Gunakan Kode Voucher / Promo</h3>
               <form @submit.prevent="applyVoucher" class="flex items-end gap-3">
                 <div class="flex-1 space-y-1.5">
-                  <input v-model="voucherCode" placeholder="Masukkan kode voucher discount" class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all uppercase placeholder-normal" />
+                  <KInput  v-model="voucherCode" placeholder="Masukkan kode voucher discount" class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all uppercase placeholder-normal" />
                 </div>
-                <button type="submit" :disabled="!voucherCode" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                <KButton  type="submit" :disabled="!voucherCode" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed">
                     Terapkan
-                </button>
+                </KButton>
               </form>
             </div>
 
@@ -348,9 +348,9 @@
                         </div>
                     </div>
 
-                    <button class="w-full py-3 rounded-xl text-sm font-bold text-center transition-all" :class="currentPlan?.id === plan.id ? 'bg-zinc-100 text-zinc-400 cursor-default' : 'bg-zinc-900 hover:bg-zinc-800 text-white shadow-md'">
+                    <KButton  class="w-full py-3 rounded-xl text-sm font-bold text-center transition-all" :class="currentPlan?.id === plan.id ? 'bg-zinc-100 text-zinc-400 cursor-default' : 'bg-zinc-900 hover:bg-zinc-800 text-white shadow-md'">
                         {{ currentPlan?.id === plan.id ? 'Dipilih' : 'Pilih Paket Ini' }}
-                    </button>
+                    </KButton>
                   </div>
                 </div>
             </div>
@@ -428,7 +428,7 @@
                 <span class="font-medium text-zinc-600">{{ row.ordering ?? 0 }}</span>
               </template>
               <template #cell-action="{ row }">
-                <button @click="deleteCustomField(row)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-50 text-red-600 hover:bg-red-100 transition-all border border-red-200">Hapus</button>
+                <KButton  @click="deleteCustomField(row)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-50 text-red-600 hover:bg-red-100 transition-all border border-red-200">Hapus</KButton>
               </template>
             </KTable>
           </div>
@@ -442,26 +442,26 @@
       <form @submit.prevent="submitCustomField" class="space-y-4">
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Nama Kolom / Label *</label>
-          <input v-model="customFieldForm.name" required placeholder="e.g. Nomor IMEI 2 / Kondisi Dus" class="input text-sm" />
+          <KInput  v-model="customFieldForm.name" required placeholder="e.g. Nomor IMEI 2 / Kondisi Dus" class="input text-sm" />
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Tipe Input *</label>
-          <select v-model="customFieldForm.type" required class="input text-sm">
+          <KSelect  v-model="customFieldForm.type" required class="input text-sm">
             <option value="text">Teks Singkat (Text)</option>
             <option value="textarea">Teks Panjang (Textarea)</option>
             <option value="number">Angka (Number)</option>
             <option value="date">Tanggal (Date)</option>
-          </select>
+          </KSelect>
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Urutan Tampilan</label>
-          <input v-model="customFieldForm.ordering" type="number" min="0" class="input text-sm" />
+          <KInput  v-model="customFieldForm.ordering" type="number" min="0" class="input text-sm" />
         </div>
         <div class="flex justify-end gap-2 pt-3">
-          <button type="button" @click="showCustomFieldDrawer = false" class="btn-secondary text-xs">Batal</button>
-          <button type="submit" :disabled="customFieldForm.processing" class="btn-primary text-xs">
+          <KButton  type="button" @click="showCustomFieldDrawer = false" class="btn-secondary text-xs">Batal</KButton>
+          <KButton  type="submit" :disabled="customFieldForm.processing" class="btn-primary text-xs">
             {{ customFieldForm.processing ? 'Menyimpan...' : 'Simpan Kolom' }}
-          </button>
+          </KButton>
         </div>
       </form>
     </Drawer>
@@ -471,8 +471,8 @@
       <div class="space-y-4">
         <!-- Form Tambah Baru -->
         <form @submit.prevent="submitMasterData" class="flex gap-2">
-          <input v-model="masterForm.name" required placeholder="Nama baru..." class="input text-sm flex-1" />
-          <button type="submit" :disabled="masterForm.processing" class="btn-primary text-xs whitespace-nowrap">+ Tambah</button>
+          <KInput  v-model="masterForm.name" required placeholder="Nama baru..." class="input text-sm flex-1" />
+          <KButton  type="submit" :disabled="masterForm.processing" class="btn-primary text-xs whitespace-nowrap">+ Tambah</KButton>
         </form>
 
         <!-- Daftar Item -->
@@ -480,7 +480,7 @@
           <div v-if="masterDrawerItems.length === 0" class="text-center py-6 text-xs text-muted">Belum ada data</div>
           <div v-for="item in masterDrawerItems" :key="item.id" class="flex items-center justify-between p-2.5 rounded-xl border" style="borderColor: var(--border-color); background: var(--bg-hover);">
             <span class="text-sm font-medium text-zinc-900">{{ item.name }}</span>
-            <button type="button" @click="deleteMasterData(item)" class="text-xs text-red-500 hover:underline font-semibold cursor-pointer">Hapus</button>
+            <KButton  type="button" @click="deleteMasterData(item)" class="text-xs text-red-500 hover:underline font-semibold cursor-pointer">Hapus</KButton>
           </div>
         </div>
       </div>
@@ -490,6 +490,12 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+import KInput from '@/Components/KInput.vue';
+import KSelect from '@/Components/KSelect.vue';
+import KTextarea from '@/Components/KTextarea.vue';
+import KCheckbox from '@/Components/KCheckbox.vue';
+
 import { computed, ref, reactive, watch } from 'vue';
 import { router, Link, useForm } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';

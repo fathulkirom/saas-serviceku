@@ -144,10 +144,45 @@ class ServiceController extends Controller
         $this->applyBranchOrGlobalScope($productsQuery, $userBranchId);
         $this->applyServiceBranchScope($previousServicesQuery, $userBranchId);
 
-        $service->load(['customer', 'technician', 'creator', 'branch', 'checklists.checklistTemplate.items', 'spareparts.product', 'indent', 'sale.items', 'parentService', 'jalurKedatangan', 'kategoriPerangkat', 'merek', 'photos.uploader', 'warrantyClaims']);
+        // Sprint 7.5B — Unified Service Workspace: eager-load EVERYTHING
+        $service->load([
+            'customer.tags', 'customer.devices.healthHistory',
+            'technician', 'creator', 'branch',
+            'checklists.checklistTemplate.items', 'checklistResults.item',
+            'spareparts.product', 'diagnosis', 'quotations',
+            'requiredParts.product', 'qcChecks',
+            'intakeSnapshot', 'delivery', 'warranty',
+            'photos.uploader', 'workOrders.technician', 'workOrders.worklogs',
+            'indent', 'sale.items', 'parentService',
+        ]);
 
-        return inertia('Services/Show', [
+        // Customer summary for right sidebar
+        $customerSummary = null;
+        if ($service->customer) {
+            $c = $service->customer;
+            $customerSummary = [
+                'id' => $c->id, 'name' => $c->name, 'phone' => $c->phone,
+                'is_member' => $c->is_member, 'customer_code' => $c->customer_code,
+                'service_count' => $c->serviceCount(), 'total_spending' => $c->totalSpending(),
+                'device_count' => $c->devices->count(), 'last_visit' => $c->services()->latest()->first()?->created_at?->format('d M Y'),
+                'risk' => $c->riskIndicator(), 'tags' => $c->tags->pluck('name'),
+            ];
+        }
+
+        // Technician summary
+        $techSummary = null;
+        if ($service->technician) {
+            $t = $service->technician;
+            $techSummary = [
+                'id' => $t->id, 'name' => $t->name,
+                'active_work_orders' => \App\Models\Tenant\WorkOrder::forTechnician($t->id)->active()->count(),
+            ];
+        }
+
+        return inertia('Services/Workspace', [
             'service' => $service,
+            'customerSummary' => $customerSummary,
+            'techSummary' => $techSummary,
             'templatesKeluar' => ChecklistTemplate::where('type', 'keluar')->where('is_active', true)->with('items')->get(),
             'templatesMasuk' => ChecklistTemplate::where('type', 'masuk')->where('is_active', true)->with('items')->get(),
             'products' => $productsQuery->get(),

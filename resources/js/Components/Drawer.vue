@@ -10,10 +10,10 @@
           @keydown.escape="$emit('close')">
           <div class="flex items-center justify-between px-5 py-4 border-b flex-shrink-0" :style="{ borderColor: 'var(--border-light)' }">
             <h2 class="text-base font-bold" :style="{ color: 'var(--text-primary)' }">{{ title }}</h2>
-            <button @click="$emit('close')" class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
+            <KButton  @click="$emit('close')" class="w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
               :style="{ color: 'var(--text-muted)' }">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
+            </KButton>
           </div>
           <div class="flex-1 overflow-y-auto px-5 py-4">
             <slot />
@@ -28,6 +28,8 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+
 import { ref, watch, onMounted, onUnmounted } from 'vue';
 
 const props = defineProps({

@@ -26,11 +26,11 @@
                             <div>
                                 <label class="block text-sm font-bold text-zinc-900 mb-2">Kode Voucher <span class="text-red-500">*</span></label>
                                 <div class="flex gap-3">
-                                    <input v-model="form.code" type="text" class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-zinc-900 font-mono tracking-widest uppercase focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all shadow-sm" placeholder="KOSONGKAN UNTUK AUTO-GENERATE" />
-                                    <button type="button" @click="generateCode" class="px-5 py-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-sm font-bold rounded-xl border border-zinc-200 transition-colors whitespace-nowrap flex items-center gap-2">
+                                    <KInput  v-model="form.code" type="text" class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-zinc-900 font-mono tracking-widest uppercase focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all shadow-sm" placeholder="KOSONGKAN UNTUK AUTO-GENERATE" />
+                                    <KButton  type="button" @click="generateCode" class="px-5 py-3 bg-zinc-100 hover:bg-zinc-200 text-zinc-700 text-sm font-bold rounded-xl border border-zinc-200 transition-colors whitespace-nowrap flex items-center gap-2">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                                         Generate
-                                    </button>
+                                    </KButton>
                                 </div>
                                 <p v-if="form.errors.code" class="mt-2 text-sm text-red-600 font-medium">{{ form.errors.code }}</p>
                                 <p v-else class="mt-2 text-xs text-zinc-500">Kosongkan kolom ini jika ingin sistem mengacak kode (8 karakter acak).</p>
@@ -40,23 +40,23 @@
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div>
                                     <label class="block text-sm font-bold text-zinc-900 mb-2">Tipe Diskon</label>
-                                    <select v-model="form.type" class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all shadow-sm appearance-none">
+                                    <KSelect  v-model="form.type" class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all shadow-sm appearance-none">
                                         <option value="percent">Persentase (%)</option>
                                         <option value="fixed">Harga Tetap (Rp)</option>
-                                    </select>
+                                    </KSelect>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-bold text-zinc-900 mb-2">
                                         {{ form.type === 'percent' ? 'Diskon (%)' : 'Potongan (Rp)' }} <span class="text-red-500">*</span>
                                     </label>
-                                    <input v-model="form.value" type="number" step="0.01" min="0" class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all shadow-sm" :placeholder="form.type === 'percent' ? 'Contoh: 10' : 'Contoh: 50000'" />
+                                    <KInput  v-model="form.value" type="number" step="0.01" min="0" class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all shadow-sm" :placeholder="form.type === 'percent' ? 'Contoh: 10' : 'Contoh: 50000'" />
                                     <p v-if="form.errors.value" class="mt-2 text-sm text-red-600 font-medium">{{ form.errors.value }}</p>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-bold text-zinc-900 mb-2">
                                         Gratis Bulan <span class="text-zinc-400 font-normal">(opsional)</span>
                                     </label>
-                                    <input v-model="form.extra_months" type="number" min="0" max="60" class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all shadow-sm" placeholder="Contoh: 1" />
+                                    <KInput  v-model="form.extra_months" type="number" min="0" max="60" class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all shadow-sm" placeholder="Contoh: 1" />
                                 </div>
                             </div>
                         </div>
@@ -73,11 +73,11 @@
                             <!-- Untuk -->
                             <div>
                                 <label class="block text-sm font-bold text-zinc-900 mb-2">Berlaku Untuk Transaksi</label>
-                                <select v-model="form.applicable_for" class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all shadow-sm appearance-none">
+                                <KSelect  v-model="form.applicable_for" class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all shadow-sm appearance-none">
                                     <option value="both">Semua (Pendaftaran Baru & Perpanjangan)</option>
                                     <option value="new">Hanya Pendaftaran Baru</option>
                                     <option value="existing">Hanya Perpanjangan / Upgrade</option>
-                                </select>
+                                </KSelect>
                             </div>
 
                             <!-- Khusus Tenant -->
@@ -86,10 +86,10 @@
                                     <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
                                     Batasi Khusus Tenant Tertentu <span class="text-amber-700/70 font-normal text-xs">(opsional)</span>
                                 </label>
-                                <select v-model="form.tenant_id" class="w-full px-4 py-3 rounded-xl border border-amber-200 bg-white text-zinc-900 focus:ring-2 focus:ring-amber-200 focus:border-amber-500 transition-all shadow-sm appearance-none">
+                                <KSelect  v-model="form.tenant_id" class="w-full px-4 py-3 rounded-xl border border-amber-200 bg-white text-zinc-900 focus:ring-2 focus:ring-amber-200 focus:border-amber-500 transition-all shadow-sm appearance-none">
                                     <option value="">Semua Tenant (Tidak dibatasi)</option>
                                     <option v-for="t in tenants" :key="t.id" :value="t.id">{{ t.tenant_name }}</option>
-                                </select>
+                                </KSelect>
                                 <p class="mt-2 text-xs text-amber-700">Jika Anda memilih tenant, maka voucher ini akan menjadi voucher eksklusif yang hanya bisa diklaim oleh tenant tersebut.</p>
                             </div>
 
@@ -97,18 +97,18 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div>
                                     <label class="block text-sm font-bold text-zinc-900 mb-2">Kuota Pemakaian <span class="text-zinc-400 font-normal">(opsional)</span></label>
-                                    <input v-model="form.max_uses" type="number" min="0" class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all shadow-sm" placeholder="Kosongkan = Tanpa batas kuota" />
+                                    <KInput  v-model="form.max_uses" type="number" min="0" class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all shadow-sm" placeholder="Kosongkan = Tanpa batas kuota" />
                                 </div>
                                 <div>
                                     <label class="block text-sm font-bold text-zinc-900 mb-2">Minimal Harga Paket <span class="text-zinc-400 font-normal">(opsional)</span></label>
-                                    <input v-model="form.min_plan_price" type="number" step="1000" min="0" class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all shadow-sm" placeholder="Kosongkan = Tanpa batas minimal" />
+                                    <KInput  v-model="form.min_plan_price" type="number" step="1000" min="0" class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all shadow-sm" placeholder="Kosongkan = Tanpa batas minimal" />
                                 </div>
                             </div>
 
                             <!-- Masa Berlaku -->
                             <div>
                                 <label class="block text-sm font-bold text-zinc-900 mb-2">Tanggal Berakhir <span class="text-zinc-400 font-normal">(opsional)</span></label>
-                                <input v-model="form.expires_at" type="datetime-local" class="w-full md:w-1/2 px-4 py-3 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all shadow-sm" />
+                                <KInput  v-model="form.expires_at" type="datetime-local" class="w-full md:w-1/2 px-4 py-3 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all shadow-sm" />
                                 <p class="mt-2 text-xs text-zinc-500">Kosongkan jika voucher berlaku selamanya.</p>
                             </div>
                         </div>
@@ -125,14 +125,14 @@
                             <!-- Deskripsi -->
                             <div>
                                 <label class="block text-sm font-bold text-zinc-900 mb-2">Catatan Internal <span class="text-zinc-400 font-normal">(opsional)</span></label>
-                                <textarea v-model="form.description" rows="3" class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all shadow-sm resize-none" placeholder="Catatan atau deskripsi untuk admin..."></textarea>
+                                <KTextarea  v-model="form.description" rows="3" class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all shadow-sm resize-none" placeholder="Catatan atau deskripsi untuk admin..."></KTextarea>
                             </div>
 
                             <!-- Status -->
                             <div>
                                 <label class="flex items-center gap-3 cursor-pointer group">
                                     <div class="relative flex items-center justify-center">
-                                        <input type="checkbox" v-model="form.is_active" class="w-5 h-5 rounded-md border-zinc-300 text-indigo-600 focus:ring-indigo-500 transition-all cursor-pointer" />
+                                        <KCheckbox  v-model="form.is_active" class="w-5 h-5 rounded-md border-zinc-300 text-indigo-600 focus:ring-indigo-500 transition-all cursor-pointer" />
                                     </div>
                                     <span class="text-sm font-bold text-zinc-900 group-hover:text-indigo-600 transition-colors">Voucher Aktif</span>
                                 </label>
@@ -146,11 +146,11 @@
                         <Link :href="route('admin.vouchers.index')" class="px-6 py-2.5 text-zinc-700 text-sm font-bold hover:text-zinc-900 transition-colors">
                             Batal
                         </Link>
-                        <button type="submit" class="flex items-center gap-2 px-8 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white text-sm font-bold rounded-xl shadow-md transition-all disabled:opacity-70" :disabled="form.processing">
+                        <KButton  type="submit" class="flex items-center gap-2 px-8 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white text-sm font-bold rounded-xl shadow-md transition-all disabled:opacity-70" :disabled="form.processing">
                             <svg v-if="form.processing" class="animate-spin w-4 h-4 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                             <svg v-else class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                             {{ form.processing ? 'Menyimpan...' : (isEditing ? 'Simpan Perubahan' : 'Buat Voucher') }}
-                        </button>
+                        </KButton>
                     </div>
                 </form>
             </div>
@@ -159,6 +159,12 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+import KInput from '@/Components/KInput.vue';
+import KSelect from '@/Components/KSelect.vue';
+import KTextarea from '@/Components/KTextarea.vue';
+import KCheckbox from '@/Components/KCheckbox.vue';
+
 import { useForm, Link } from '@inertiajs/vue3';
 import { watch } from 'vue';
 import AdminLayout from '@/Layouts/AdminLayout.vue';

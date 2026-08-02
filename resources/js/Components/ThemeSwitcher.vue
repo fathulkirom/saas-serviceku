@@ -1,5 +1,5 @@
 <template>
-    <button @click="toggle" class="w-7 h-7 rounded-lg flex items-center justify-center transition-all"
+    <KButton  @click="toggle" class="w-7 h-7 rounded-lg flex items-center justify-center transition-all"
         :style="{ background: 'var(--bg-hover)', color: 'var(--text-muted)' }"
         :title="isDark ? 'Mode Terang' : 'Mode Gelap'">
         <svg v-if="isDark" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -8,10 +8,12 @@
         <svg v-else class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
         </svg>
-    </button>
+    </KButton>
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+
 import { ref, onMounted } from 'vue';
 
 const isDark = ref(false);

@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 
 class Service extends Model
 {
+    use \App\Models\Tenant\Traits\HasOptimisticLocking;
     use SoftDeletes, \App\Models\Tenant\Traits\HasCustomFields;
 
     protected $fillable = [
@@ -191,6 +192,62 @@ class Service extends Model
     public function spareparts()
     {
         return $this->hasMany(ServiceSparepart::class);
+    }
+
+    // Sprint 7.3E-H
+    public function photos()
+    {
+        return $this->hasMany(ServicePhoto::class);
+    }
+
+    public function checklistResults()
+    {
+        return $this->hasMany(ServiceChecklistResult::class);
+    }
+
+    // Sprint 7.3F — Technician Workflow
+    public function diagnosis()
+    {
+        return $this->hasOne(ServiceDiagnosis::class);
+    }
+
+    public function quotations()
+    {
+        return $this->hasMany(ServiceQuotation::class);
+    }
+
+    public function requiredParts()
+    {
+        return $this->hasMany(ServiceRequiredPart::class);
+    }
+
+    // Sprint 7.3G — Service Delivery
+    public function delivery()
+    {
+        return $this->hasOne(ServiceDelivery::class);
+    }
+
+    // Sprint 7.4B — Audit Lock
+    public function lock(int $userId): void
+    {
+        $this->update(['is_locked' => true, 'locked_at' => now(), 'locked_by' => $userId]);
+        event(new \App\Events\Entity\ServiceLocked($this));
+    }
+
+    public function unlock(): void
+    {
+        $this->update(['is_locked' => false, 'locked_at' => null, 'locked_by' => null]);
+        event(new \App\Events\Entity\ServiceUnlocked($this));
+    }
+
+    public function isLocked(): bool
+    {
+        return $this->is_locked;
+    }
+
+    public function worklogs()
+    {
+        return $this->hasMany(Worklog::class)->latest();
     }
 
     public function indent()

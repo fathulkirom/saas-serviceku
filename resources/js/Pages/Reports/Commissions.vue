@@ -12,10 +12,10 @@
                 </div>
             </div>
             <div class="flex bg-zinc-100 p-1 rounded-xl">
-                <button v-for="p in periods" :key="p.key" @click="changePeriod(p.key)" class="px-4 py-2 text-sm font-bold rounded-lg transition-all"
+                <KButton  v-for="p in periods" :key="p.key" @click="changePeriod(p.key)" class="px-4 py-2 text-sm font-bold rounded-lg transition-all"
                     :class="period === p.key ? 'bg-white text-indigo-600 shadow-sm' : 'text-zinc-500 hover:text-zinc-700 hover:bg-zinc-200'">
                     {{ p.label }}
-                </button>
+                </KButton>
             </div>
         </div>
 
@@ -120,6 +120,8 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+
 import { router } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 

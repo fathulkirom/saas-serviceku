@@ -14,13 +14,12 @@
       >
         {{ actionLabel }}
       </Link>
-      <button
+      <KButton 
         v-else
         @click="$emit('action')"
-        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition-all duration-200 hover:-translate-y-0.5 shadow-sm hover:shadow-md cursor-pointer"
-      >
+        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-indigo-600 hover:bg-indigo-700 transition-all duration-200 hover:-translate-y-0.5 shadow-sm hover:shadow-md cursor-pointer">
         {{ actionLabel }}
-      </button>
+      </KButton>
     </template>
     
     <slot />
@@ -28,6 +27,8 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+
 import { computed } from 'vue';
 import { Link } from '@inertiajs/vue3';
 import { getIcon } from '@/Components/Icons.js';

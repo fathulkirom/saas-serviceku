@@ -29,24 +29,24 @@
                         <div class="grid grid-cols-2 gap-4">
                             <div class="col-span-2">
                                 <label class="block text-sm font-medium text-slate-300">Lokasi Backup (HDD)</label>
-                                <input v-model="form.backup_path" type="text"
+                                <KInput  v-model="form.backup_path" type="text"
                                     class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"
                                     placeholder="/mnt/hdd/Backup/ServiceKU" />
                                 <p class="mt-1 text-xs text-slate-400">Path ke direktori HDD untuk menyimpan backup</p>
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-slate-300">Simpan Backup (hari)</label>
-                                <input v-model.number="form.backup_retention_days" name="backup_retention_days" type="number" min="1" max="365"
+                                <KInput  v-model.number="form.backup_retention_days" name="backup_retention_days" type="number" min="1" max="365"
                                     class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
                             </div>
                             <div>
                                 <label class="block text-sm font-medium text-slate-300">Jam Backup Otomatis</label>
-                                <input v-model="form.backup_auto_time" type="time"
+                                <KInput  v-model="form.backup_auto_time" type="time"
                                     class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
                             </div>
                             <div class="col-span-2">
                                 <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" v-model="autoEnabled" class="sr-only peer" />
+                                    <KCheckbox  v-model="autoEnabled" class="sr-only peer" />
                                     <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
                                     <span class="ml-3 text-sm font-medium text-slate-300">Aktifkan Backup Otomatis (via cron)</span>
                                 </label>
@@ -61,20 +61,20 @@
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="col-span-2">
                                     <label class="relative inline-flex items-center cursor-pointer">
-                                        <input type="checkbox" v-model="gdriveEnabled" class="sr-only peer" />
+                                        <KCheckbox  v-model="gdriveEnabled" class="sr-only peer" />
                                         <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
                                         <span class="ml-3 text-sm font-medium text-slate-300">Upload ke Google Drive</span>
                                     </label>
                                 </div>
                                 <div class="col-span-2">
                                     <label class="block text-sm font-medium text-slate-300">Folder ID Google Drive</label>
-                                    <input v-model="form.gdrive_folder_id" type="text" placeholder="xxx_FOLDER_ID_xxx"
+                                    <KInput  v-model="form.gdrive_folder_id" type="text" placeholder="xxx_FOLDER_ID_xxx"
                                         class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
                                     <p class="mt-1 text-xs text-slate-400">Dapatkan dari URL folder Google Drive: <code class="bg-slate-800 px-1 rounded">https://drive.google.com/drive/folders/xxx_FOLDER_ID_xxx</code></p>
                                 </div>
                                 <div class="col-span-2">
                                     <label class="relative inline-flex items-center cursor-pointer">
-                                        <input type="checkbox" v-model="gdriveDeleteLocal" class="sr-only peer" />
+                                        <KCheckbox  v-model="gdriveDeleteLocal" class="sr-only peer" />
                                         <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
                                         <span class="ml-3 text-sm font-medium text-slate-300">Hapus file lokal setelah upload (hemat SSD)</span>
                                     </label>
@@ -82,10 +82,10 @@
                             </div>
                         </div>
                         <div class="flex justify-end mt-6 pt-4 border-t">
-                            <button type="submit" :disabled="form.processing"
+                            <KButton  type="submit" :disabled="form.processing"
                                 class="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 text-sm">
                                 Simpan Pengaturan
-                            </button>
+                            </KButton>
                         </div>
                     </form>
                 </div>
@@ -94,10 +94,10 @@
                 <div class="rounded-2xl p-6 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-semibold text-gray-900">📂 File Backup</h3>
-                        <button @click="runBackup" :disabled="form.processing"
+                        <KButton  @click="runBackup" :disabled="form.processing"
                             class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 text-sm">
                             🔄 Backup Sekarang
-                        </button>
+                        </KButton>
                     </div>
 
                     <div v-if="backupFiles.length === 0" class="text-center py-8 text-slate-400">
@@ -118,10 +118,10 @@
                                     <p class="text-xs text-slate-400">{{ file.date }} • {{ file.size }}</p>
                                 </div>
                             </div>
-                            <button @click="deleteBackup(file.path)"
+                            <KButton  @click="deleteBackup(file.path)"
                                 class="flex-shrink-0 px-2 py-1 text-xs text-red-600 hover:text-red-800 hover:bg-red-50 rounded">
                                 Hapus
-                            </button>
+                            </KButton>
                         </div>
                     </div>
                 </div>
@@ -207,10 +207,10 @@
                             <p class="text-xs text-yellow-700">{{ gdriveInfo.error }}</p>
                         </div>
                         <div v-if="gdriveInfo.remote_configured && !gdriveInfo.error" class="mt-3">
-                            <button @click="uploadToDrive" :disabled="form.processing"
+                            <KButton  @click="uploadToDrive" :disabled="form.processing"
                                 class="w-full px-3 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 text-sm">
                                 ☁️ Upload Backup ke Drive Sekarang
-                            </button>
+                            </KButton>
                         </div>
                     </div>
                 </div>
@@ -248,6 +248,10 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+import KInput from '@/Components/KInput.vue';
+import KCheckbox from '@/Components/KCheckbox.vue';
+
 import { ref, computed } from 'vue';
 import { useForm, router } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';

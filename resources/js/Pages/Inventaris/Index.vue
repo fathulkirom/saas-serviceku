@@ -15,25 +15,25 @@
       <!-- Action Buttons -->
       <div class="flex flex-wrap items-center gap-2">
         <div v-if="activeTab === 'stok'" class="flex gap-2">
-          <button @click="openQuickStockModal()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-700 text-sm font-semibold rounded-xl transition-all shadow-sm">
+          <KButton  @click="openQuickStockModal()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-white border border-zinc-200 hover:bg-zinc-50 text-zinc-700 text-sm font-semibold rounded-xl transition-all shadow-sm">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
             Adjust Stok
-          </button>
-          <button @click="openProductDrawer()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
+          </KButton>
+          <KButton  @click="openProductDrawer()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
             Produk Baru
-          </button>
+          </KButton>
         </div>
 
-        <button v-if="activeTab === 'transfer'" @click="openTransferDrawer()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
+        <KButton  v-if="activeTab === 'transfer'" @click="openTransferDrawer()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/></svg>
           Transfer Stok
-        </button>
+        </KButton>
 
-        <button v-if="activeTab === 'rusak'" @click="openDamagedModal()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
+        <KButton  v-if="activeTab === 'rusak'" @click="openDamagedModal()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
           Catat Stok Rusak
-        </button>
+        </KButton>
 
         <Link v-if="activeTab === 'reorder' || activeTab === 'forecast'" :href="route('keuangan.index', { tab: 'pembelian' })" class="inline-flex items-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
@@ -88,9 +88,9 @@
             </template>
             <template #cell-action="{ row }">
               <div class="flex items-center justify-end">
-                <button @click="openQuickStockModal(row)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 hover:text-indigo-600 hover:border-indigo-200 transition-all shadow-sm">
+                <KButton  @click="openQuickStockModal(row)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 hover:text-indigo-600 hover:border-indigo-200 transition-all shadow-sm">
                     Adjust
-                </button>
+                </KButton>
               </div>
             </template>
           </KTable>
@@ -134,8 +134,8 @@
             </template>
             <template #cell-action="{ row }">
               <div v-if="row.status === 'pending'" class="flex items-center justify-end gap-2">
-                <button @click="rejectTransfer(row)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white border border-red-200 text-red-600 hover:bg-red-50 transition-all">Tolak</button>
-                <button @click="confirmTransfer(row)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 text-white hover:bg-emerald-700 transition-all shadow-sm">Terima</button>
+                <KButton  @click="rejectTransfer(row)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white border border-red-200 text-red-600 hover:bg-red-50 transition-all">Tolak</KButton>
+                <KButton  @click="confirmTransfer(row)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 text-white hover:bg-emerald-700 transition-all shadow-sm">Terima</KButton>
               </div>
             </template>
           </KTable>
@@ -186,23 +186,23 @@
           <template v-else>
             <div class="bg-white p-4 rounded-2xl border border-zinc-200 shadow-sm flex flex-wrap items-center gap-3">
                 <div class="flex-1 min-w-[200px]">
-                    <select v-model="localMutationFilters.product_id" @change="applyMutationFilter" class="w-full text-sm font-medium rounded-xl border border-zinc-300 px-4 py-2 bg-white text-zinc-700 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all">
+                    <KSelect  v-model="localMutationFilters.product_id" @change="applyMutationFilter" class="w-full text-sm font-medium rounded-xl border border-zinc-300 px-4 py-2 bg-white text-zinc-700 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all">
                     <option value="">Semua Produk</option>
                     <option v-for="product in mutationProducts" :key="product.id" :value="product.id">{{ product.name }}</option>
-                    </select>
+                    </KSelect>
                 </div>
                 <div class="w-48">
-                    <select v-model="localMutationFilters.mutation_type" @change="applyMutationFilter" class="w-full text-sm font-medium rounded-xl border border-zinc-300 px-4 py-2 bg-white text-zinc-700 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all">
+                    <KSelect  v-model="localMutationFilters.mutation_type" @change="applyMutationFilter" class="w-full text-sm font-medium rounded-xl border border-zinc-300 px-4 py-2 bg-white text-zinc-700 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all">
                     <option value="">Semua Tipe Mutasi</option>
                     <option value="masuk">Masuk (In)</option>
                     <option value="keluar">Keluar (Out)</option>
                     <option value="transfer">Transfer</option>
                     <option value="rusak">Rusak</option>
-                    </select>
+                    </KSelect>
                 </div>
-                <button @click="resetMutationFilter" class="px-4 py-2 rounded-xl text-sm font-semibold border border-zinc-200 text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 transition-all bg-white shadow-sm">
+                <KButton  @click="resetMutationFilter" class="px-4 py-2 rounded-xl text-sm font-semibold border border-zinc-200 text-zinc-600 hover:bg-zinc-50 hover:text-zinc-900 transition-all bg-white shadow-sm">
                 Reset Filter
-                </button>
+                </KButton>
             </div>
 
             <div class="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden">
@@ -318,28 +318,28 @@
       <form @submit.prevent="submitQuickStock" class="p-6 space-y-5">
         <div>
           <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Pilih Produk <span class="text-red-500">*</span></label>
-          <select v-model="quickStockForm.product_id" required class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all">
+          <KSelect  v-model="quickStockForm.product_id" required class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all">
             <option value="" disabled>-- Pilih Produk --</option>
             <option v-for="p in (products?.data ?? [])" :key="p.id" :value="p.id">{{ p.name }} (Stok: {{ p.stock_quantity }})</option>
-          </select>
+          </KSelect>
         </div>
         <div>
           <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Tipe Penyesuaian <span class="text-red-500">*</span></label>
           <div class="grid grid-cols-3 gap-2">
               <label class="cursor-pointer">
-                  <input type="radio" v-model="quickStockForm.type" value="in" class="peer sr-only" />
+                  <KRadio  v-model="quickStockForm.type" value="in" class="peer sr-only" />
                   <div class="px-3 py-2 text-center rounded-lg border border-zinc-200 text-xs font-semibold text-zinc-500 peer-checked:bg-emerald-50 peer-checked:text-emerald-700 peer-checked:border-emerald-200 transition-all">
                       + Masuk
                   </div>
               </label>
               <label class="cursor-pointer">
-                  <input type="radio" v-model="quickStockForm.type" value="out" class="peer sr-only" />
+                  <KRadio  v-model="quickStockForm.type" value="out" class="peer sr-only" />
                   <div class="px-3 py-2 text-center rounded-lg border border-zinc-200 text-xs font-semibold text-zinc-500 peer-checked:bg-red-50 peer-checked:text-red-700 peer-checked:border-red-200 transition-all">
                       - Keluar
                   </div>
               </label>
               <label class="cursor-pointer">
-                  <input type="radio" v-model="quickStockForm.type" value="set" class="peer sr-only" />
+                  <KRadio  v-model="quickStockForm.type" value="set" class="peer sr-only" />
                   <div class="px-3 py-2 text-center rounded-lg border border-zinc-200 text-xs font-semibold text-zinc-500 peer-checked:bg-indigo-50 peer-checked:text-indigo-700 peer-checked:border-indigo-200 transition-all">
                       = Set Total
                   </div>
@@ -348,17 +348,17 @@
         </div>
         <div>
           <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Jumlah Unit <span class="text-red-500">*</span></label>
-          <input v-model="quickStockForm.quantity" type="number" min="1" required class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" />
+          <KInput  v-model="quickStockForm.quantity" type="number" min="1" required class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" />
         </div>
         <div>
           <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Alasan / Catatan</label>
-          <textarea v-model="quickStockForm.notes" rows="2" placeholder="e.g. Hasil Stock Opname" class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all resize-none"></textarea>
+          <KTextarea  v-model="quickStockForm.notes" rows="2" placeholder="e.g. Hasil Stock Opname" class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all resize-none"></KTextarea>
         </div>
         <div class="flex justify-end gap-3 pt-4 border-t border-zinc-100">
-          <button type="button" @click="showQuickStockDrawer = false" class="px-5 py-2.5 rounded-xl border border-zinc-300 text-zinc-700 text-sm font-bold hover:bg-zinc-50 transition-all">Batal</button>
-          <button type="submit" :disabled="quickStockForm.processing" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold shadow-sm transition-all disabled:opacity-50">
+          <KButton  type="button" @click="showQuickStockDrawer = false" class="px-5 py-2.5 rounded-xl border border-zinc-300 text-zinc-700 text-sm font-bold hover:bg-zinc-50 transition-all">Batal</KButton>
+          <KButton  type="submit" :disabled="quickStockForm.processing" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold shadow-sm transition-all disabled:opacity-50">
             {{ quickStockForm.processing ? 'Menyimpan...' : 'Simpan Stok' }}
-          </button>
+          </KButton>
         </div>
       </form>
     </Drawer>
@@ -368,32 +368,32 @@
       <form @submit.prevent="submitDamagedStock" class="p-6 space-y-5">
         <div>
           <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Pilih Produk <span class="text-red-500">*</span></label>
-          <select v-model="damagedForm.product_id" required class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all">
+          <KSelect  v-model="damagedForm.product_id" required class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all">
             <option value="" disabled>-- Pilih Produk --</option>
             <option v-for="p in mutationProducts" :key="p.id" :value="p.id">{{ p.name }}</option>
-          </select>
+          </KSelect>
         </div>
         <div>
           <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Kategori Kerusakan <span class="text-red-500">*</span></label>
-          <select v-model="damagedForm.type" required class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all">
+          <KSelect  v-model="damagedForm.type" required class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all">
             <option value="damaged">Fisik Rusak</option>
             <option value="lost">Hilang (Cacat)</option>
             <option value="expired">Expired / Kadaluarsa</option>
-          </select>
+          </KSelect>
         </div>
         <div>
           <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Jumlah Unit <span class="text-red-500">*</span></label>
-          <input v-model="damagedForm.quantity" type="number" min="1" required class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" />
+          <KInput  v-model="damagedForm.quantity" type="number" min="1" required class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" />
         </div>
         <div>
           <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Keterangan Tambahan</label>
-          <textarea v-model="damagedForm.notes" rows="2" placeholder="Detail kerusakan fisik..." class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all resize-none"></textarea>
+          <KTextarea  v-model="damagedForm.notes" rows="2" placeholder="Detail kerusakan fisik..." class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all resize-none"></KTextarea>
         </div>
         <div class="flex justify-end gap-3 pt-4 border-t border-zinc-100">
-          <button type="button" @click="showDamagedDrawer = false" class="px-5 py-2.5 rounded-xl border border-zinc-300 text-zinc-700 text-sm font-bold hover:bg-zinc-50 transition-all">Batal</button>
-          <button type="submit" :disabled="damagedForm.processing" class="px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-bold shadow-sm transition-all disabled:opacity-50">
+          <KButton  type="button" @click="showDamagedDrawer = false" class="px-5 py-2.5 rounded-xl border border-zinc-300 text-zinc-700 text-sm font-bold hover:bg-zinc-50 transition-all">Batal</KButton>
+          <KButton  type="submit" :disabled="damagedForm.processing" class="px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-sm font-bold shadow-sm transition-all disabled:opacity-50">
             {{ damagedForm.processing ? 'Mencatat...' : 'Simpan Data' }}
-          </button>
+          </KButton>
         </div>
       </form>
     </Drawer>
@@ -404,20 +404,20 @@
         <div class="grid grid-cols-2 gap-4">
           <div class="col-span-2">
             <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Nama Produk <span class="text-red-500">*</span></label>
-            <input v-model="productForm.name" type="text" required class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" placeholder="Contoh: Oli Mesin Yamalube 1L" />
+            <KInput  v-model="productForm.name" type="text" required class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" placeholder="Contoh: Oli Mesin Yamalube 1L" />
           </div>
           <div class="col-span-1">
             <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Kode / SKU</label>
-            <input v-model="productForm.code" type="text" class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" placeholder="YML-001" />
+            <KInput  v-model="productForm.code" type="text" class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" placeholder="YML-001" />
           </div>
           <div class="col-span-1">
             <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Satuan</label>
-            <input v-model="productForm.unit" type="text" class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" placeholder="pcs, botol, liter" />
+            <KInput  v-model="productForm.unit" type="text" class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" placeholder="pcs, botol, liter" />
           </div>
         </div>
         <div>
           <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Deskripsi Produk</label>
-          <textarea v-model="productForm.description" rows="2" class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all resize-none" placeholder="Opsional..."></textarea>
+          <KTextarea  v-model="productForm.description" rows="2" class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all resize-none" placeholder="Opsional..."></KTextarea>
         </div>
         
         <div class="bg-zinc-50 p-4 rounded-xl border border-zinc-200 grid grid-cols-2 gap-4">
@@ -425,14 +425,14 @@
             <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Harga Beli/Modal</label>
             <div class="relative">
                 <span class="absolute left-3 top-2.5 text-zinc-400 text-sm">Rp</span>
-                <input v-model="productForm.cost_price" type="number" min="0" class="w-full pl-9 rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" />
+                <KInput  v-model="productForm.cost_price" type="number" min="0" class="w-full pl-9 rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" />
             </div>
           </div>
           <div>
             <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Harga Jual <span class="text-red-500">*</span></label>
             <div class="relative">
                 <span class="absolute left-3 top-2.5 text-zinc-400 text-sm">Rp</span>
-                <input v-model="productForm.selling_price" type="number" min="0" required class="w-full pl-9 rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" />
+                <KInput  v-model="productForm.selling_price" type="number" min="0" required class="w-full pl-9 rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" />
             </div>
           </div>
         </div>
@@ -440,19 +440,19 @@
         <div class="grid grid-cols-2 gap-4">
           <div>
             <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Stok Awal</label>
-            <input v-model="productForm.stock_quantity" type="number" min="0" class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" />
+            <KInput  v-model="productForm.stock_quantity" type="number" min="0" class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" />
           </div>
           <div>
             <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Batas Minimum (Alert)</label>
-            <input v-model="productForm.min_stock" type="number" min="0" class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" />
+            <KInput  v-model="productForm.min_stock" type="number" min="0" class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" />
           </div>
         </div>
         
         <div class="flex justify-end gap-3 pt-4 border-t border-zinc-100">
-          <button type="button" @click="showProductDrawer = false" class="px-5 py-2.5 rounded-xl border border-zinc-300 text-zinc-700 text-sm font-bold hover:bg-zinc-50 transition-all">Batal</button>
-          <button type="submit" :disabled="productForm.processing" class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold shadow-sm transition-all disabled:opacity-50">
+          <KButton  type="button" @click="showProductDrawer = false" class="px-5 py-2.5 rounded-xl border border-zinc-300 text-zinc-700 text-sm font-bold hover:bg-zinc-50 transition-all">Batal</KButton>
+          <KButton  type="submit" :disabled="productForm.processing" class="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold shadow-sm transition-all disabled:opacity-50">
             {{ productForm.processing ? 'Menyimpan...' : 'Simpan Produk' }}
-          </button>
+          </KButton>
         </div>
       </form>
     </Drawer>
@@ -462,36 +462,36 @@
       <form @submit.prevent="submitTransfer" class="p-6 space-y-5">
         <div>
           <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Pilih Produk <span class="text-red-500">*</span></label>
-          <select v-model="transferForm.product_id" required class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all">
+          <KSelect  v-model="transferForm.product_id" required class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all">
             <option value="" disabled>-- Pilih Produk --</option>
             <option v-for="p in (products?.data ?? [])" :key="p.id" :value="p.id">{{ p.name }} (Stok saat ini: {{ p.stock_quantity }})</option>
-          </select>
+          </KSelect>
         </div>
         <div class="flex items-center gap-2">
             <div class="flex-1">
                 <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Cabang Asal</label>
-                <input type="text" disabled value="Cabang Saat Ini" class="w-full rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-500 bg-zinc-50" />
+                <KInput  type="text" disabled value="Cabang Saat Ini" class="w-full rounded-xl border border-zinc-200 px-4 py-2.5 text-sm text-zinc-500 bg-zinc-50" />
             </div>
             <div class="mt-6 text-zinc-400">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
             </div>
             <div class="flex-1">
                 <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Cabang Tujuan <span class="text-red-500">*</span></label>
-                <select v-model="transferForm.to_branch_id" required class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all">
+                <KSelect  v-model="transferForm.to_branch_id" required class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all">
                     <option value="" disabled>-- Tujuan --</option>
                     <option v-for="b in branches" :key="b.id" :value="b.id">{{ b.name }}</option>
-                </select>
+                </KSelect>
             </div>
         </div>
         <div>
           <label class="block text-sm font-semibold text-zinc-700 mb-1.5">Jumlah Transfer <span class="text-red-500">*</span></label>
-          <input v-model="transferForm.quantity" type="number" min="1" required class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" />
+          <KInput  v-model="transferForm.quantity" type="number" min="1" required class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" />
         </div>
         <div class="flex justify-end gap-3 pt-4 border-t border-zinc-100">
-          <button type="button" @click="showTransferDrawer = false" class="px-5 py-2.5 rounded-xl border border-zinc-300 text-zinc-700 text-sm font-bold hover:bg-zinc-50 transition-all">Batal</button>
-          <button type="submit" :disabled="transferForm.processing" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold shadow-sm transition-all disabled:opacity-50">
+          <KButton  type="button" @click="showTransferDrawer = false" class="px-5 py-2.5 rounded-xl border border-zinc-300 text-zinc-700 text-sm font-bold hover:bg-zinc-50 transition-all">Batal</KButton>
+          <KButton  type="submit" :disabled="transferForm.processing" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold shadow-sm transition-all disabled:opacity-50">
             {{ transferForm.processing ? 'Memproses...' : 'Transfer Stok' }}
-          </button>
+          </KButton>
         </div>
       </form>
     </Drawer>
@@ -499,6 +499,12 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+import KInput from '@/Components/KInput.vue';
+import KSelect from '@/Components/KSelect.vue';
+import KTextarea from '@/Components/KTextarea.vue';
+import KRadio from '@/Components/KRadio.vue';
+
 import { computed, reactive, ref } from 'vue';
 import { router, Link, useForm } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';

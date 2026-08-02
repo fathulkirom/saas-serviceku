@@ -19,20 +19,19 @@
         <form @submit.prevent="submit" class="space-y-5">
             <div>
                 <label for="email" class="block text-sm font-bold text-zinc-900 mb-2">Email</label>
-                <input
+                <KInput 
                     id="email"
                     v-model="form.email"
                     type="email"
                     class="w-full px-4 py-3 rounded-xl border border-zinc-200 bg-zinc-50 text-sm font-semibold text-zinc-500 focus:ring-0 outline-none shadow-sm cursor-not-allowed"
                     required
                     readonly
-                    autocomplete="email"
-                />
+                    autocomplete="email" />
             </div>
             
             <div>
                 <label for="password" class="block text-sm font-bold text-zinc-900 mb-2">Password Baru</label>
-                <input
+                <KInput 
                     id="password"
                     v-model="form.password"
                     type="password"
@@ -40,13 +39,12 @@
                     required
                     minlength="8"
                     placeholder="Minimal 8 karakter"
-                    autocomplete="new-password"
-                />
+                    autocomplete="new-password" />
             </div>
             
             <div>
                 <label for="password_confirmation" class="block text-sm font-bold text-zinc-900 mb-2">Konfirmasi Password Baru</label>
-                <input
+                <KInput 
                     id="password_confirmation"
                     v-model="form.password_confirmation"
                     type="password"
@@ -54,22 +52,20 @@
                     required
                     minlength="8"
                     placeholder="Ulangi password baru"
-                    autocomplete="new-password"
-                />
+                    autocomplete="new-password" />
             </div>
 
             <div class="pt-2 flex flex-col gap-4">
-                <button
+                <KButton 
                     type="submit"
                     class="w-full flex items-center justify-center px-6 py-3 rounded-xl bg-zinc-900 text-white text-sm font-bold shadow-md hover:bg-zinc-800 focus:ring-2 focus:ring-offset-2 focus:ring-zinc-900 transition-all disabled:opacity-70"
-                    :disabled="form.processing"
-                >
+                    :disabled="form.processing">
                     <svg v-if="form.processing" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                     </svg>
                     {{ form.processing ? 'Menyimpan...' : 'Simpan Password Baru' }}
-                </button>
+                </KButton>
                 <Link :href="route('login')" class="text-center text-sm font-bold text-indigo-600 hover:text-indigo-700 transition-colors">
                     Batalkan dan kembali ke Login
                 </Link>
@@ -79,6 +75,9 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+import KInput from '@/Components/KInput.vue';
+
 import { useForm, Link } from '@inertiajs/vue3';
 import GuestLayout from '@/Layouts/GuestLayout.vue';
 

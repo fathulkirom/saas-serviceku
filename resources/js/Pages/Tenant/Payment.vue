@@ -36,11 +36,11 @@
                         </div>
                         <div class="flex-1">
                             <p class="text-sm text-zinc-600 mb-5 font-medium leading-relaxed">Klik tombol di bawah untuk membayar melalui berbagai metode instan (Virtual Account, QRIS, E-Wallet, dll) yang diproses secara otomatis.</p>
-                            <button @click="payWithMidtrans"
+                            <KButton  @click="payWithMidtrans"
                                 class="w-full sm:w-auto px-8 py-3.5 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 font-bold transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 flex items-center justify-center gap-2">
                                 <span>Bayar Sekarang Rp {{ formatRupiah(payment.amount) }}</span>
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-                            </button>
+                            </KButton>
                         </div>
                     </div>
                 </KCard>
@@ -58,11 +58,11 @@
                             <p class="text-xs text-zinc-500 uppercase font-bold tracking-wider mb-2">{{ bank.bank }}</p>
                             <p class="text-xl font-black text-zinc-900 font-mono tracking-tight">{{ bank.account_number }}</p>
                             <p class="text-sm text-zinc-600 font-medium mt-1">a.n. {{ bank.account_name }}</p>
-                            <button @click="copyToClipboard(bank.account_number)"
+                            <KButton  @click="copyToClipboard(bank.account_number)"
                                 class="mt-4 text-xs font-bold text-indigo-600 hover:text-indigo-700 bg-indigo-50 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5 w-fit">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
                                 Salin Nomor
-                            </button>
+                            </KButton>
                         </div>
                     </div>
                 </KCard>
@@ -81,6 +81,8 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+
 import { ref, onMounted } from 'vue';
 import { router } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';

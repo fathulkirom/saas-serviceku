@@ -2,27 +2,24 @@
   <AuthenticatedLayout>
     <template #header>
       <PageHeader :title="pageTitle" :subtitle="subtitle">
-        <button
+        <KButton 
           v-if="activeTab === 'kb'"
           @click="openKbDrawer()"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer bg-indigo-600 text-white"
-        >
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer bg-indigo-600 text-white">
           + Artikel KB Baru
-        </button>
-        <button
+        </KButton>
+        <KButton 
           v-if="activeTab === 'sop'"
           @click="openSopDrawer()"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer bg-indigo-600 text-white"
-        >
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer bg-indigo-600 text-white">
           + SOP Baru
-        </button>
-        <button
+        </KButton>
+        <KButton 
           v-if="activeTab === 'balasan'"
           @click="openReplyModal()"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer bg-indigo-600 text-white"
-        >
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer bg-indigo-600 text-white">
           + Balasan Cepat Baru
-        </button>
+        </KButton>
       </PageHeader>
     </template>
 
@@ -53,9 +50,9 @@
             </template>
             <template #cell-action="{ row }">
               <div class="flex items-center justify-end gap-1">
-                <button @click="openKbDetail(row)" class="px-2.5 py-1 rounded text-xs font-semibold text-blue-600 border border-blue-200 hover:bg-blue-50">Baca</button>
-                <button @click="openKbDrawer(row)" class="px-2.5 py-1 rounded text-xs font-medium border border-zinc-200 text-indigo-600">Edit</button>
-                <button @click="deleteKb(row)" class="px-2.5 py-1 rounded text-xs font-medium text-red-600 border border-red-200 hover:bg-red-50">Hapus</button>
+                <KButton  @click="openKbDetail(row)" class="px-2.5 py-1 rounded text-xs font-semibold text-blue-600 border border-blue-200 hover:bg-blue-50">Baca</KButton>
+                <KButton  @click="openKbDrawer(row)" class="px-2.5 py-1 rounded text-xs font-medium border border-zinc-200 text-indigo-600">Edit</KButton>
+                <KButton  @click="deleteKb(row)" class="px-2.5 py-1 rounded text-xs font-medium text-red-600 border border-red-200 hover:bg-red-50">Hapus</KButton>
               </div>
             </template>
           </KTable>
@@ -89,9 +86,9 @@
             </template>
             <template #cell-action="{ row }">
               <div class="flex items-center justify-end gap-1">
-                <button @click="openSopDetail(row)" class="px-2.5 py-1 rounded text-xs font-semibold text-blue-600 border border-blue-200 hover:bg-blue-50">Lihat</button>
-                <button @click="openSopDrawer(row)" class="px-2.5 py-1 rounded text-xs font-medium border border-zinc-200 text-indigo-600">Edit</button>
-                <button @click="deleteSop(row)" class="px-2.5 py-1 rounded text-xs font-medium text-red-600 border border-red-200 hover:bg-red-50">Hapus</button>
+                <KButton  @click="openSopDetail(row)" class="px-2.5 py-1 rounded text-xs font-semibold text-blue-600 border border-blue-200 hover:bg-blue-50">Lihat</KButton>
+                <KButton  @click="openSopDrawer(row)" class="px-2.5 py-1 rounded text-xs font-medium border border-zinc-200 text-indigo-600">Edit</KButton>
+                <KButton  @click="deleteSop(row)" class="px-2.5 py-1 rounded text-xs font-medium text-red-600 border border-red-200 hover:bg-red-50">Hapus</KButton>
               </div>
             </template>
           </KTable>
@@ -124,8 +121,8 @@
             </template>
             <template #cell-action="{ row }">
               <div class="flex items-center justify-end gap-1">
-                <button @click="openReplyModal(row)" class="px-2.5 py-1 rounded text-xs font-medium border border-zinc-200 text-indigo-600">Edit</button>
-                <button @click="deleteReply(row)" class="px-2.5 py-1 rounded text-xs font-medium text-red-600 border border-red-200 hover:bg-red-50">Hapus</button>
+                <KButton  @click="openReplyModal(row)" class="px-2.5 py-1 rounded text-xs font-medium border border-zinc-200 text-indigo-600">Edit</KButton>
+                <KButton  @click="deleteReply(row)" class="px-2.5 py-1 rounded text-xs font-medium text-red-600 border border-red-200 hover:bg-red-50">Hapus</KButton>
               </div>
             </template>
           </KTable>
@@ -140,18 +137,18 @@
           <label class="text-xs font-semibold text-zinc-500">Kata Kunci (Shortcut) *</label>
           <div class="flex items-center gap-1">
             <span class="text-sm font-bold font-mono text-gray-500">/</span>
-            <input v-model="replyForm.keyword" required placeholder="e.g. rekening / lokasi / jam_buka" class="input text-sm flex-1" />
+            <KInput  v-model="replyForm.keyword" required placeholder="e.g. rekening / lokasi / jam_buka" class="input text-sm flex-1" />
           </div>
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Teks Balasan Lengkap *</label>
-          <textarea v-model="replyForm.reply" rows="4" required placeholder="Tuliskan isi pesan otomatis..." class="input text-sm"></textarea>
+          <KTextarea  v-model="replyForm.reply" rows="4" required placeholder="Tuliskan isi pesan otomatis..." class="input text-sm"></KTextarea>
         </div>
         <div class="flex justify-end gap-2 pt-3">
-          <button type="button" @click="showReplyDrawer = false" class="btn-secondary text-xs">Batal</button>
-          <button type="submit" :disabled="replyForm.processing" class="btn-primary text-xs">
+          <KButton  type="button" @click="showReplyDrawer = false" class="btn-secondary text-xs">Batal</KButton>
+          <KButton  type="submit" :disabled="replyForm.processing" class="btn-primary text-xs">
             {{ replyForm.processing ? 'Menyimpan...' : 'Simpan Balasan' }}
-          </button>
+          </KButton>
         </div>
       </form>
     </Drawer>
@@ -161,45 +158,45 @@
       <form @submit.prevent="submitKb" class="space-y-4">
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Judul *</label>
-          <input v-model="kbForm.judul" type="text" required class="input text-sm" placeholder="Judul artikel" />
+          <KInput  v-model="kbForm.judul" type="text" required class="input text-sm" placeholder="Judul artikel" />
         </div>
         <div class="grid grid-cols-3 gap-3">
           <div class="space-y-1">
             <label class="text-xs font-semibold text-zinc-500">Tipe Device</label>
-            <select v-model="kbForm.device_type" class="input text-sm">
+            <KSelect  v-model="kbForm.device_type" class="input text-sm">
               <option value="">Umum</option>
               <option v-for="t in kbDeviceTypes" :key="t" :value="t">{{ t }}</option>
-            </select>
+            </KSelect>
           </div>
           <div class="space-y-1">
             <label class="text-xs font-semibold text-zinc-500">Brand</label>
-            <select v-model="kbForm.device_brand" class="input text-sm">
+            <KSelect  v-model="kbForm.device_brand" class="input text-sm">
               <option value="">-</option>
               <option v-for="b in kbBrands" :key="b" :value="b">{{ b }}</option>
-            </select>
+            </KSelect>
           </div>
           <div class="space-y-1">
             <label class="text-xs font-semibold text-zinc-500">Model</label>
-            <input v-model="kbForm.device_model" type="text" class="input text-sm" placeholder="e.g. A52" />
+            <KInput  v-model="kbForm.device_model" type="text" class="input text-sm" placeholder="e.g. A52" />
           </div>
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Masalah *</label>
-          <textarea v-model="kbForm.masalah" rows="2" required class="input text-sm" placeholder="Gejala / masalah..."></textarea>
+          <KTextarea  v-model="kbForm.masalah" rows="2" required class="input text-sm" placeholder="Gejala / masalah..."></KTextarea>
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Solusi *</label>
-          <textarea v-model="kbForm.solusi" rows="4" required class="input text-sm" placeholder="Langkah solusi..."></textarea>
+          <KTextarea  v-model="kbForm.solusi" rows="4" required class="input text-sm" placeholder="Langkah solusi..."></KTextarea>
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Lampiran Gambar (opsional)</label>
-          <input type="file" accept="image/*" @change="kbForm.lampiran = $event.target.files[0] || null" class="input text-sm" />
+          <KInput  type="file" accept="image/*" @change="kbForm.lampiran = $event.target.files[0] || null" class="input text-sm" />
         </div>
         <div class="flex justify-end gap-2 pt-3">
-          <button type="button" @click="showKbDrawer = false" class="btn-secondary text-xs">Batal</button>
-          <button type="submit" :disabled="kbForm.processing" class="btn-primary text-xs">
+          <KButton  type="button" @click="showKbDrawer = false" class="btn-secondary text-xs">Batal</KButton>
+          <KButton  type="submit" :disabled="kbForm.processing" class="btn-primary text-xs">
             {{ kbForm.processing ? 'Menyimpan...' : 'Simpan Artikel' }}
-          </button>
+          </KButton>
         </div>
       </form>
     </Drawer>
@@ -233,31 +230,31 @@
       <form @submit.prevent="submitSop" class="space-y-4">
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Judul SOP *</label>
-          <input v-model="sopForm.title" type="text" required class="input text-sm" placeholder="Judul prosedur" />
+          <KInput  v-model="sopForm.title" type="text" required class="input text-sm" placeholder="Judul prosedur" />
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Isi Prosedur *</label>
-          <textarea v-model="sopForm.content" rows="6" required class="input text-sm" placeholder="Langkah-langkah prosedur..."></textarea>
+          <KTextarea  v-model="sopForm.content" rows="6" required class="input text-sm" placeholder="Langkah-langkah prosedur..."></KTextarea>
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Target Role</label>
           <div class="flex flex-wrap gap-2">
             <label v-for="r in sopRoles" :key="r" class="inline-flex items-center gap-1.5 text-xs cursor-pointer">
-              <input type="checkbox" :value="r" v-model="sopForm.target_roles" class="w-3.5 h-3.5 rounded accent-purple-600" />
+              <KCheckbox  :value="r" v-model="sopForm.target_roles" class="w-3.5 h-3.5 rounded accent-purple-600" />
               {{ r }}
             </label>
           </div>
           <p class="text-[11px] text-zinc-500">Kosongkan jika berlaku untuk semua role.</p>
         </div>
         <label class="inline-flex items-center gap-2 text-xs cursor-pointer">
-          <input type="checkbox" v-model="sopForm.is_mandatory" class="w-3.5 h-3.5 rounded accent-purple-600" />
+          <KCheckbox  v-model="sopForm.is_mandatory" class="w-3.5 h-3.5 rounded accent-purple-600" />
           Wajib dibaca semua karyawan
         </label>
         <div class="flex justify-end gap-2 pt-3">
-          <button type="button" @click="showSopDrawer = false" class="btn-secondary text-xs">Batal</button>
-          <button type="submit" :disabled="sopForm.processing" class="btn-primary text-xs">
+          <KButton  type="button" @click="showSopDrawer = false" class="btn-secondary text-xs">Batal</KButton>
+          <KButton  type="submit" :disabled="sopForm.processing" class="btn-primary text-xs">
             {{ sopForm.processing ? 'Menyimpan...' : 'Simpan SOP' }}
-          </button>
+          </KButton>
         </div>
       </form>
     </Drawer>
@@ -279,6 +276,12 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+import KInput from '@/Components/KInput.vue';
+import KSelect from '@/Components/KSelect.vue';
+import KTextarea from '@/Components/KTextarea.vue';
+import KCheckbox from '@/Components/KCheckbox.vue';
+
 import { computed, ref } from 'vue';
 import { router, useForm } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';

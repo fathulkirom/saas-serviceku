@@ -120,6 +120,9 @@
             </div>
           </div>
 
+          <!-- SETUP PROGRESS CARD (Owner only, Sprint 7.5F) -->
+          <SetupProgressCard v-if="setupSummary" :setupSummary="setupSummary" />
+
           <!-- MIDDLE SECTION -->
           <div class="grid grid-cols-1 lg:grid-cols-7 gap-6">
             <!-- CHART MOCKUP -->
@@ -129,9 +132,9 @@
                   <h3 class="font-bold text-lg text-zinc-900 tracking-tight">Tren Penjualan & Servis</h3>
                   <p class="text-sm text-zinc-500 font-medium">Statistik 7 hari terakhir</p>
                 </div>
-                <button class="text-zinc-400 hover:text-zinc-600 p-2 rounded-lg hover:bg-zinc-50 transition-colors">
+                <KButton  class="text-zinc-400 hover:text-zinc-600 p-2 rounded-lg hover:bg-zinc-50 transition-colors">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/></svg>
-                </button>
+                </KButton>
               </div>
               
               <!-- Dummy Chart Graphic (Enterprise Style) -->
@@ -293,11 +296,14 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+
 import { computed } from 'vue';
 import { Link, usePage } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Button from '@/Components/ui/button/Button.vue';
 import Badge from '@/Components/Badge.vue';
+import SetupProgressCard from '@/Components/SetupProgressCard.vue';
 import { useFormatter } from '@/Composables/useFormatter.js';
 import { statusLabel } from '@/Utils/statusMaps.js';
 
@@ -305,6 +311,7 @@ const props = defineProps({
   stats: Object,
   recentServices: Array,
   isNotTechnician: Boolean,
+  setupSummary: { type: Object, default: null },
 });
 
 const page = usePage();

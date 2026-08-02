@@ -37,18 +37,18 @@
                                     <div class="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-700 flex items-center justify-center text-xs font-bold">1</div>
                                     Informasi Pelanggan
                                 </h3>
-                                <button type="button" @click="openAddCustomerModal" class="inline-flex items-center text-sm font-bold text-indigo-600 hover:text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors">
+                                <KButton  type="button" @click="openAddCustomerModal" class="inline-flex items-center text-sm font-bold text-indigo-600 hover:text-indigo-700 bg-indigo-50 hover:bg-indigo-100 px-3 py-1.5 rounded-lg transition-colors">
                                     <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                                     Pelanggan Baru
-                                </button>
+                                </KButton>
                             </div>
                             <div class="p-6">
                                 <div class="space-y-2">
                                     <label for="customer_id" class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Cari / Pilih Pelanggan <span class="text-red-500">*</span></label>
-                                    <select ref="customerSelectEl" v-model="form.customer_id" id="customer_id" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-3 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white" required>
+                                    <KSelect  ref="customerSelectEl" v-model="form.customer_id" id="customer_id" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-3 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white" required>
                                         <option value="">-- Pilih Nama Pelanggan --</option>
                                         <option v-for="c in customerOptions" :key="c.id" :value="c.id">{{ c.name }} {{ c.phone ? ' (' + c.phone + ')' : '' }}</option>
-                                    </select>
+                                    </KSelect>
                                     <p v-if="form.errors.customer_id" class="text-xs text-red-500 font-medium">{{ form.errors.customer_id }}</p>
                                 </div>
                                 <div v-if="selectedCustomer" class="rounded-xl bg-zinc-50 border border-zinc-200 p-4 text-sm mt-4 animate-in slide-in-from-top-2">
@@ -72,30 +72,30 @@
                             <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-5">
                                 <div>
                                     <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Kategori Perangkat</label>
-                                    <select v-model="form.kategori_perangkat_id" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white">
+                                    <KSelect  v-model="form.kategori_perangkat_id" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white">
                                         <option value="">Pilih Kategori</option>
                                         <option v-for="dc in deviceCategories" :key="dc.id" :value="dc.id">{{ dc.name }}</option>
-                                    </select>
+                                    </KSelect>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Merek (Brand)</label>
-                                    <select v-model="form.merek_id" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white">
+                                    <KSelect  v-model="form.merek_id" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white">
                                         <option value="">Pilih Merek</option>
                                         <option v-for="b in brands" :key="b.id" :value="b.id">{{ b.name }}</option>
-                                    </select>
+                                    </KSelect>
                                 </div>
                                 <div class="md:col-span-2">
                                     <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Tipe / Model <span class="text-red-500">*</span></label>
-                                    <input ref="tipeUnitInputEl" type="text" v-model="form.tipe_unit" placeholder="Contoh: iPhone 13 Pro 256GB" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white" required />
+                                    <KInput  ref="tipeUnitInputEl" type="text" v-model="form.tipe_unit" placeholder="Contoh: iPhone 13 Pro 256GB" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white" required />
                                     <p v-if="form.errors.tipe_unit" class="text-xs text-red-500 font-medium mt-1">{{ form.errors.tipe_unit }}</p>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">IMEI / Serial Number</label>
-                                    <input type="text" v-model="form.imei_sn" placeholder="Nomor IMEI / SN" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white" />
+                                    <KInput  type="text" v-model="form.imei_sn" placeholder="Nomor IMEI / SN" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white" />
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Sandi / Pola / PIN Layar</label>
-                                    <input type="text" v-model="form.sandi_pola" placeholder="Contoh: 123456 atau huruf L" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white" />
+                                    <KInput  type="text" v-model="form.sandi_pola" placeholder="Contoh: 123456 atau huruf L" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white" />
                                 </div>
                             </div>
                         </div>
@@ -111,12 +111,12 @@
                             <div class="p-6 space-y-5">
                                 <div>
                                     <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Deskripsi Keluhan / Masalah <span class="text-red-500">*</span></label>
-                                    <textarea ref="problemDescriptionEl" v-model="form.problem_description" rows="3" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-3 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white resize-none" placeholder="Jelaskan secara detail keluhan pelanggan..." required></textarea>
+                                    <KTextarea  ref="problemDescriptionEl" v-model="form.problem_description" rows="3" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-3 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white resize-none" placeholder="Jelaskan secara detail keluhan pelanggan..." required></KTextarea>
                                     <p v-if="form.errors.problem_description" class="text-xs text-red-500 font-medium mt-1">{{ form.errors.problem_description }}</p>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Catatan Kondisi Fisik (Opsional)</label>
-                                    <textarea v-model="form.condition_note" rows="2" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-3 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white resize-none" placeholder="Layar retak rambut, casing lecet kiri atas..."></textarea>
+                                    <KTextarea  v-model="form.condition_note" rows="2" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-3 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white resize-none" placeholder="Layar retak rambut, casing lecet kiri atas..."></KTextarea>
                                 </div>
                             </div>
                         </div>
@@ -143,16 +143,16 @@
                             <div class="p-6 space-y-5">
                                 <div>
                                     <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Jalur Kedatangan</label>
-                                    <select v-model="form.jalur_kedatangan_id" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white">
+                                    <KSelect  v-model="form.jalur_kedatangan_id" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white">
                                         <option value="">Walk-in (Datang Langsung)</option>
                                         <option v-for="am in arrivalMethods" :key="am.id" :value="am.id">{{ am.name }}</option>
-                                    </select>
+                                    </KSelect>
                                 </div>
                                 <div class="pt-5 border-t border-zinc-100">
                                     <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-3">Kelengkapan Bawaan</label>
                                     <div class="flex flex-col gap-1.5">
                                         <label v-for="eq in equipment" :key="eq.id" class="flex items-center gap-3 text-sm cursor-pointer hover:bg-zinc-50 p-2 rounded-lg transition-colors -mx-2">
-                                            <input type="checkbox" :value="eq.name" v-model="form.kelengkapan" class="w-4 h-4 rounded border-zinc-300 text-indigo-600 focus:ring-indigo-600" />
+                                            <KCheckbox  :value="eq.name" v-model="form.kelengkapan" class="w-4 h-4 rounded border-zinc-300 text-indigo-600 focus:ring-indigo-600" />
                                             <span class="text-zinc-700 font-bold">{{ eq.name }}</span>
                                         </label>
                                     </div>
@@ -168,16 +168,16 @@
                             <div class="p-6 space-y-5">
                                 <div>
                                     <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Gunakan Template</label>
-                                    <select v-model="form.checklist_template_id" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white">
+                                    <KSelect  v-model="form.checklist_template_id" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white">
                                         <option value="">Tidak Menggunakan Template</option>
                                         <option v-for="t in templates" :key="t.id" :value="t.id">{{ t.name }}</option>
-                                    </select>
+                                    </KSelect>
                                 </div>
                                 <div v-if="selectedTemplate" class="pt-5 border-t border-zinc-100">
                                     <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-3">Kondisi Komponen (Centang jika OK)</label>
                                     <div class="flex flex-col gap-1.5 max-h-48 overflow-y-auto pr-2 custom-scrollbar">
                                         <label v-for="item in selectedTemplate.items" :key="item.id" class="flex items-center gap-3 text-sm cursor-pointer hover:bg-zinc-50 p-2 rounded-lg transition-colors -mx-2">
-                                            <input type="checkbox" :value="item.item_name" v-model="form.checked_items" class="w-4 h-4 rounded border-zinc-300 text-indigo-600 focus:ring-indigo-600" />
+                                            <KCheckbox  :value="item.item_name" v-model="form.checked_items" class="w-4 h-4 rounded border-zinc-300 text-indigo-600 focus:ring-indigo-600" />
                                             <span class="text-zinc-700 font-bold">{{ item.item_name }}</span>
                                         </label>
                                     </div>
@@ -192,13 +192,13 @@
                             </div>
                             <div class="p-6">
                                 <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-3">Upload Foto (Maks 10)</label>
-                                <input type="file" @change="onPhotosChange" accept="image/*" multiple class="block w-full text-sm text-zinc-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer transition-colors" />
+                                <KInput  type="file" @change="onPhotosChange" accept="image/*" multiple class="block w-full text-sm text-zinc-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer transition-colors" />
                                 <div v-if="photoPreviews.length" class="mt-4 grid grid-cols-4 gap-2">
                                     <div v-for="(preview, idx) in photoPreviews" :key="idx" class="relative group">
                                         <img :src="preview" class="w-full aspect-square object-cover rounded-lg border border-zinc-200 shadow-sm" />
-                                        <button type="button" @click="removePhoto(idx)" class="absolute -top-1.5 -right-1.5 w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-md">
+                                        <KButton  type="button" @click="removePhoto(idx)" class="absolute -top-1.5 -right-1.5 w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-md">
                                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                                        </button>
+                                        </KButton>
                                     </div>
                                 </div>
                             </div>
@@ -213,12 +213,12 @@
                     </div>
                     <div class="flex gap-3 w-full sm:w-auto">
                         <Link :href="route('services.index')" class="flex-1 sm:flex-none">
-                            <button type="button" class="w-full px-6 py-2.5 text-sm font-bold text-zinc-700 bg-white border border-zinc-300 hover:bg-zinc-50 rounded-xl transition-colors shadow-sm">Batal</button>
+                            <KButton  type="button" class="w-full px-6 py-2.5 text-sm font-bold text-zinc-700 bg-white border border-zinc-300 hover:bg-zinc-50 rounded-xl transition-colors shadow-sm">Batal</KButton>
                         </Link>
-                        <button type="submit" :disabled="form.processing || !canSubmitCore" class="flex-1 sm:flex-none min-w-[160px] px-6 py-2.5 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2">
+                        <KButton  type="submit" :disabled="form.processing || !canSubmitCore" class="flex-1 sm:flex-none min-w-[160px] px-6 py-2.5 text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2">
                             <svg v-if="form.processing" class="animate-spin w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                             {{ form.processing ? 'Menyimpan...' : 'Simpan Tiket' }}
-                        </button>
+                        </KButton>
                     </div>
                 </div>
             </form>
@@ -234,28 +234,28 @@
                             <div class="space-y-4">
                                 <div>
                                     <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Nama Pelanggan <span class="text-red-500">*</span></label>
-                                    <input ref="newCustomerNameEl" type="text" v-model="newCustomerForm.name" placeholder="Nama lengkap..." class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white" required />
+                                    <KInput  ref="newCustomerNameEl" type="text" v-model="newCustomerForm.name" placeholder="Nama lengkap..." class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white" required />
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">No. WhatsApp / Telepon <span class="text-red-500">*</span></label>
-                                    <input type="text" v-model="newCustomerForm.phone" placeholder="08xxxxxxxxxx" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white" required />
+                                    <KInput  type="text" v-model="newCustomerForm.phone" placeholder="08xxxxxxxxxx" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white" required />
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Alamat (Opsional)</label>
-                                    <textarea v-model="newCustomerForm.address" placeholder="Alamat pelanggan..." rows="2" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-3 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white resize-none"></textarea>
+                                    <KTextarea  v-model="newCustomerForm.address" placeholder="Alamat pelanggan..." rows="2" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-3 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white resize-none"></KTextarea>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Email (Opsional)</label>
-                                    <input type="email" v-model="newCustomerForm.email" placeholder="email@example.com" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white" />
+                                    <KInput  type="email" v-model="newCustomerForm.email" placeholder="email@example.com" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white" />
                                 </div>
                             </div>
                         </div>
                         <div class="p-6 pt-0 flex gap-3">
-                            <button type="button" @click="showAddCustomerModal = false" class="flex-1 px-4 py-2.5 rounded-xl text-sm font-bold text-zinc-700 bg-white border border-zinc-300 hover:bg-zinc-50 transition-colors">Batal</button>
-                            <button type="submit" :disabled="savingCustomer || !newCustomerForm.name" class="flex-1 px-4 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors disabled:opacity-50 flex justify-center items-center gap-2">
+                            <KButton  type="button" @click="showAddCustomerModal = false" class="flex-1 px-4 py-2.5 rounded-xl text-sm font-bold text-zinc-700 bg-white border border-zinc-300 hover:bg-zinc-50 transition-colors">Batal</KButton>
+                            <KButton  type="submit" :disabled="savingCustomer || !newCustomerForm.name" class="flex-1 px-4 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors disabled:opacity-50 flex justify-center items-center gap-2">
                                 <svg v-if="savingCustomer" class="animate-spin w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                                 Simpan
-                            </button>
+                            </KButton>
                         </div>
                     </form>
                 </div>
@@ -265,6 +265,12 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+import KInput from '@/Components/KInput.vue';
+import KSelect from '@/Components/KSelect.vue';
+import KTextarea from '@/Components/KTextarea.vue';
+import KCheckbox from '@/Components/KCheckbox.vue';
+
 import { useForm, Link } from '@inertiajs/vue3';
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';

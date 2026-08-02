@@ -43,12 +43,11 @@
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <svg class="w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                             </div>
-                            <input 
+                            <KInput  
                                 type="text" 
                                 v-model="search" 
                                 placeholder="Cari nama, telepon, email..." 
-                                class="w-full pl-9 pr-4 py-2 bg-white border border-zinc-300 rounded-lg text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all"
-                            />
+                                class="w-full pl-9 pr-4 py-2 bg-white border border-zinc-300 rounded-lg text-sm text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" />
                         </div>
                         <div class="text-sm font-medium text-zinc-500">
                             Menampilkan {{ filteredCustomers.length }} dari {{ customers.total }} data
@@ -108,9 +107,9 @@
                                             </span>
                                             <span class="text-[10px] font-mono text-emerald-600 mt-1 font-bold">{{ customer.card_number || 'ACS' + customer.id }}</span>
                                         </div>
-                                        <button v-else @click="registerMember(customer)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-900 transition-colors border border-zinc-200">
+                                        <KButton  v-else @click="registerMember(customer)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-900 transition-colors border border-zinc-200">
                                             + Terbitkan
-                                        </button>
+                                        </KButton>
                                     </td>
                                     <td class="px-6 py-4 text-center">
                                         <div class="flex items-center justify-center gap-4 text-xs">
@@ -145,6 +144,9 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+import KInput from '@/Components/KInput.vue';
+
 import { ref, computed } from 'vue';
 import { Link, router } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';

@@ -6,10 +6,10 @@
                     <h2 class="text-xl font-bold text-slate-100">Kelola Paket Langganan</h2>
                     <p class="text-sm text-slate-400 mt-0.5">Atur paket, harga, dan fitur per tipe bisnis</p>
                 </div>
-                <button @click="openCreateModal" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-white transition-all duration-200 hover:-translate-y-0.5 shadow-lg" style="background: var(--primary);">
+                <KButton  @click="openCreateModal" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-white transition-all duration-200 hover:-translate-y-0.5 shadow-lg" style="background: var(--primary);">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
                     Tambah Paket
-                </button>
+                </KButton>
             </div>
         </template>
 
@@ -57,15 +57,15 @@
 
                 <hr class="my-4">
                 <div class="flex gap-2">
-                    <button @click="openEditModal(plan)"
+                    <KButton  @click="openEditModal(plan)"
                         class="flex-1 px-3 py-1.5 text-sm bg-indigo-50 text-indigo-700 rounded-md hover:bg-indigo-100">
                         Edit
-                    </button>
-                    <button @click="toggleActive(plan)"
+                    </KButton>
+                    <KButton  @click="toggleActive(plan)"
                         class="flex-1 px-3 py-1.5 text-sm rounded-md"
                         :class="plan.is_active ? 'bg-yellow-50 text-yellow-700 hover:bg-yellow-100' : 'bg-green-50 text-green-700 hover:bg-green-100'">
                         {{ plan.is_active ? 'Nonaktifkan' : 'Aktifkan' }}
-                    </button>
+                    </KButton>
                 </div>
             </div>
         </div>
@@ -80,32 +80,32 @@
                         <div class="grid grid-cols-2 gap-4">
                             <div class="col-span-2 sm:col-span-1">
                                 <label class="block text-sm font-medium text-slate-300">Nama Paket</label>
-                                <input v-model="form.name" type="text" required
-                                    class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                <KInput  v-model="form.name" type="text" required
+                                    class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
                                 <p v-if="form.errors?.name" class="mt-1 text-xs text-red-600">{{ form.errors.name }}</p>
                             </div>
                             <div class="col-span-2 sm:col-span-1">
                                 <label class="block text-sm font-medium text-slate-300">Slug</label>
-                                <input v-model="form.slug" type="text" required
+                                <KInput  v-model="form.slug" type="text" required
                                     class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"
-                                    :readonly="isEditing">
+                                    :readonly="isEditing" />
                                 <p v-if="form.errors?.slug" class="mt-1 text-xs text-red-600">{{ form.errors.slug }}</p>
                             </div>
                             <div class="col-span-2">
                                 <label class="block text-sm font-medium text-slate-300">Deskripsi</label>
-                                <textarea v-model="form.description" rows="2"
-                                    class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"></textarea>
+                                <KTextarea  v-model="form.description" rows="2"
+                                    class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"></KTextarea>
                             </div>
                             <div class="col-span-2 sm:col-span-1">
                                 <label class="block text-sm font-medium text-slate-300">Harga Normal (Rp)</label>
-                                <input v-model.number="form.price" name="price" type="number" min="0" required
-                                    class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                <KInput  v-model.number="form.price" name="price" type="number" min="0" required
+                                    class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
                                 <p v-if="form.errors?.price" class="mt-1 text-xs text-red-600">{{ form.errors.price }}</p>
                             </div>
                             <div class="col-span-2 sm:col-span-1">
                                 <label class="block text-sm font-medium text-slate-300">Trial (hari)</label>
-                                <input v-model.number="form.trial_days" name="trial_days" type="number" min="0"
-                                    class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                <KInput  v-model.number="form.trial_days" name="trial_days" type="number" min="0"
+                                    class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
                             </div>
 
                             <!-- Promo Fields -->
@@ -117,30 +117,30 @@
                                 <div class="grid grid-cols-2 gap-4">
                                     <div>
                                         <label class="block text-sm font-medium text-slate-300">Harga Promo (Rp)</label>
-                                        <input v-model.number="form.promo_price" name="promo_price" type="number" min="0"
+                                        <KInput  v-model.number="form.promo_price" name="promo_price" type="number" min="0"
                                             class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-red-500 focus:ring-red-500 text-sm"
-                                            placeholder="Kosongkan jika tidak promo">
+                                            placeholder="Kosongkan jika tidak promo" />
                                     </div>
                                     <div></div>
                                     <div>
                                         <label class="block text-sm font-medium text-slate-300">Mulai Promo</label>
-                                        <input v-model="form.promo_start" type="date"
-                                            class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-red-500 focus:ring-red-500 text-sm">
+                                        <KInput  v-model="form.promo_start" type="date"
+                                            class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-red-500 focus:ring-red-500 text-sm" />
                                     </div>
                                     <div>
                                         <label class="block text-sm font-medium text-slate-300">Selesai Promo</label>
-                                        <input v-model="form.promo_end" type="date"
-                                            class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-red-500 focus:ring-red-500 text-sm">
+                                        <KInput  v-model="form.promo_end" type="date"
+                                            class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-red-500 focus:ring-red-500 text-sm" />
                                     </div>
                                 </div>
                             </div>
                             <div class="col-span-2">
                                 <label class="block text-sm font-medium text-slate-300">Status</label>
-                                <select v-model="form.is_active"
+                                <KSelect  v-model="form.is_active"
                                     class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
                                     <option :value="true">Aktif</option>
                                     <option :value="false">Nonaktif</option>
-                                </select>
+                                </KSelect>
                             </div>
                         </div>
 
@@ -150,11 +150,11 @@
                                 <label class="block text-sm font-semibold text-slate-200 mb-1">Akses Fitur per Tipe Bisnis</label>
                                 <p class="text-xs text-slate-400 mb-2">Pilih tipe bisnis di bawah ini untuk mengatur hak akses fiturnya secara khusus.</p>
                                 
-                                <select v-model="activeTabBusinessType" class="block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm bg-indigo-50/50">
+                                <KSelect  v-model="activeTabBusinessType" class="block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm bg-indigo-50/50">
                                     <option v-for="(label, key) in BUSINESS_TYPES" :key="key" :value="key">
                                         💼 Tipe: {{ label }}
                                     </option>
-                                </select>
+                                </KSelect>
                             </div>
 
                             <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700 mb-4">
@@ -170,12 +170,12 @@
                                 <div class="max-h-60 overflow-y-auto pr-1 space-y-2">
                                     <div v-for="(feature, key) in KNOWN_FEATURES" :key="key" class="flex items-center gap-2">
                                         <span class="w-1/2 text-xs font-medium text-slate-300">{{ feature }}</span>
-                                        <select v-model="featureLevels[activeTabBusinessType][key]"
+                                        <KSelect  v-model="featureLevels[activeTabBusinessType][key]"
                                             class="w-1/2 py-1 rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-xs">
                                             <option value="full">✅ Full Akses</option>
                                             <option value="read_only">👁️ Read Only</option>
                                             <option value="none">❌ Tidak Ada</option>
-                                        </select>
+                                        </KSelect>
                                     </div>
                                 </div>
                             </div>
@@ -186,13 +186,13 @@
                                 <div class="grid grid-cols-2 gap-3">
                                     <div>
                                         <label class="block text-xs text-slate-400">Max User</label>
-                                        <input v-model.number="numericLimits.max_users" name="max_users" type="number" min="0"
-                                            class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                        <KInput  v-model.number="numericLimits.max_users" name="max_users" type="number" min="0"
+                                            class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
                                     </div>
                                     <div>
                                         <label class="block text-xs text-slate-400">Max Cabang</label>
-                                        <input v-model.number="numericLimits.max_branches" name="max_branches" type="number" min="0"
-                                            class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm">
+                                        <KInput  v-model.number="numericLimits.max_branches" name="max_branches" type="number" min="0"
+                                            class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
                                     </div>
                                 </div>
                             </div>
@@ -207,23 +207,23 @@
                                 <label v-for="(label, key) in BUSINESS_TYPES" :key="key"
                                     class="flex items-start gap-2 p-2 rounded border cursor-pointer hover:bg-slate-800/50"
                                     :class="selectedBusinessTypes.includes(key) ? 'border-indigo-300 bg-indigo-50' : 'border-slate-700'">
-                                    <input type="checkbox" :value="key" v-model="selectedBusinessTypes"
-                                        class="mt-0.5 rounded border-slate-600 text-indigo-600 shadow-sm focus:ring-indigo-500">
+                                    <KCheckbox  :value="key" v-model="selectedBusinessTypes"
+                                        class="mt-0.5 rounded border-slate-600 text-indigo-600 shadow-sm focus:ring-indigo-500" />
                                     <span class="text-sm text-slate-300">{{ label }}</span>
                                 </label>
                             </div>
                         </div>
 
                         <div class="flex justify-end gap-3 mt-6 pt-4 border-t">
-                            <button type="button" @click="closeModal"
+                            <KButton  type="button" @click="closeModal"
                                 class="px-4 py-2 text-sm text-slate-300 bg-slate-800 rounded-md hover:bg-slate-700">
                                 Batal
-                            </button>
-                            <button type="submit"
+                            </KButton>
+                            <KButton  type="submit"
                                 class="px-4 py-2 text-sm text-white bg-indigo-600 rounded-md hover:bg-indigo-700"
                                 :disabled="form.processing">
                                 {{ isEditing ? 'Simpan' : 'Tambah' }}
-                            </button>
+                            </KButton>
                         </div>
                     </form>
                 </div>
@@ -233,6 +233,12 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+import KInput from '@/Components/KInput.vue';
+import KSelect from '@/Components/KSelect.vue';
+import KTextarea from '@/Components/KTextarea.vue';
+import KCheckbox from '@/Components/KCheckbox.vue';
+
 import { ref, reactive } from 'vue';
 import { router, useForm } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';

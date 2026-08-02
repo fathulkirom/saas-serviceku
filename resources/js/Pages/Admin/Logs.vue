@@ -6,7 +6,7 @@
                     <h2 class="text-xl font-bold text-slate-100">System Logs</h2>
                     <p class="text-sm text-slate-400 mt-0.5">Pantau aktivitas sistem dan error</p>
                 </div>
-                <button @click="clearLogs" class="px-4 py-2.5 rounded-xl text-xs font-bold text-red-400 border border-red-500/20 hover:bg-red-500/10 transition-all duration-200 bg-slate-900">🗑 Clear Logs</button>
+                <KButton  @click="clearLogs" class="px-4 py-2.5 rounded-xl text-xs font-bold text-red-400 border border-red-500/20 hover:bg-red-500/10 transition-all duration-200 bg-slate-900">🗑 Clear Logs</KButton>
             </div>
         </template>
 
@@ -14,32 +14,32 @@
             <form class="flex flex-wrap gap-4 items-end">
                 <div>
                     <label class="block text-xs font-semibold mb-1.5 text-slate-400">Level</label>
-                    <select v-model="filters.level" @change="filter" class="rounded-xl text-sm py-2.5 px-3 border transition-all duration-200 bg-slate-950/50 border-slate-800 text-slate-200 focus:border-indigo-500 focus:ring-indigo-500/20">
+                    <KSelect  v-model="filters.level" @change="filter" class="rounded-xl text-sm py-2.5 px-3 border transition-all duration-200 bg-slate-950/50 border-slate-800 text-slate-200 focus:border-indigo-500 focus:ring-indigo-500/20">
                         <option value="">Semua Level</option>
                         <option value="info">Info</option>
                         <option value="warning">Warning</option>
                         <option value="error">Error</option>
                         <option value="critical">Critical</option>
-                    </select>
+                    </KSelect>
                 </div>
                 <div>
                     <label class="block text-xs font-semibold mb-1.5 text-slate-400">Tipe</label>
-                    <select v-model="filters.type" @change="filter" class="rounded-xl text-sm py-2.5 px-3 border transition-all duration-200 bg-slate-950/50 border-slate-800 text-slate-200 focus:border-indigo-500 focus:ring-indigo-500/20">
+                    <KSelect  v-model="filters.type" @change="filter" class="rounded-xl text-sm py-2.5 px-3 border transition-all duration-200 bg-slate-950/50 border-slate-800 text-slate-200 focus:border-indigo-500 focus:ring-indigo-500/20">
                         <option value="">Semua Tipe</option>
                         <option value="system">System</option>
                         <option value="tenant">Tenant</option>
                         <option value="security">Security</option>
-                    </select>
+                    </KSelect>
                 </div>
                 <div>
                     <label class="block text-xs font-semibold mb-1.5 text-slate-400">Dari</label>
-                    <input type="date" v-model="filters.date_from" @change="filter" class="rounded-xl text-sm py-2.5 px-3 border transition-all duration-200 bg-slate-950/50 border-slate-800 text-slate-200 focus:border-indigo-500 focus:ring-indigo-500/20" />
+                    <KInput  type="date" v-model="filters.date_from" @change="filter" class="rounded-xl text-sm py-2.5 px-3 border transition-all duration-200 bg-slate-950/50 border-slate-800 text-slate-200 focus:border-indigo-500 focus:ring-indigo-500/20" />
                 </div>
                 <div>
                     <label class="block text-xs font-semibold mb-1.5 text-slate-400">Sampai</label>
-                    <input type="date" v-model="filters.date_to" @change="filter" class="rounded-xl text-sm py-2.5 px-3 border transition-all duration-200 bg-slate-950/50 border-slate-800 text-slate-200 focus:border-indigo-500 focus:ring-indigo-500/20" />
+                    <KInput  type="date" v-model="filters.date_to" @change="filter" class="rounded-xl text-sm py-2.5 px-3 border transition-all duration-200 bg-slate-950/50 border-slate-800 text-slate-200 focus:border-indigo-500 focus:ring-indigo-500/20" />
                 </div>
-                <button type="button" @click="reset" class="px-4 py-2.5 rounded-xl text-xs font-semibold border transition-all duration-200 bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700">Reset</button>
+                <KButton  type="button" @click="reset" class="px-4 py-2.5 rounded-xl text-xs font-semibold border transition-all duration-200 bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700">Reset</KButton>
             </form>
         </div>
 
@@ -61,6 +61,10 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+import KInput from '@/Components/KInput.vue';
+import KSelect from '@/Components/KSelect.vue';
+
 import { router } from '@inertiajs/vue3';
 import { reactive } from 'vue';
 import AdminLayout from '@/Layouts/AdminLayout.vue';

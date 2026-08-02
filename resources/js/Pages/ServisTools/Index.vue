@@ -2,34 +2,30 @@
   <AuthenticatedLayout>
     <template #header>
       <PageHeader :title="pageTitle" :subtitle="subtitle">
-        <button
+        <KButton 
           v-if="activeTab === 'ceklis'"
           @click="openCeklisModal()"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer bg-indigo-600"
-        >
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer bg-indigo-600">
           + Template Ceklis
-        </button>
-        <button
+        </KButton>
+        <KButton 
           v-if="activeTab === 'partner'"
           @click="openPartnerModal()"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer bg-indigo-600"
-        >
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer bg-indigo-600">
           + Partner Baru
-        </button>
-        <button
+        </KButton>
+        <KButton 
           v-if="activeTab === 'pickup'"
           @click="openPickupModal()"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer bg-indigo-600"
-        >
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer bg-indigo-600">
           + Jadwal Pickup/Delivery
-        </button>
-        <button
+        </KButton>
+        <KButton 
           v-if="activeTab === 'inden'"
           @click="openIndenModal()"
-          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer bg-indigo-600"
-        >
+          class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold text-white transition-all hover:shadow-md cursor-pointer bg-indigo-600">
           + Catat Inden Baru
-        </button>
+        </KButton>
       </PageHeader>
     </template>
 
@@ -61,8 +57,8 @@
             </template>
             <template #cell-action="{ row }">
               <div class="flex items-center justify-end gap-1">
-                <button @click="openCeklisModal(row)" class="px-2.5 py-1 rounded text-xs font-medium border border-zinc-200 text-indigo-600 hover:border-indigo-600 hover:bg-indigo-50">Edit</button>
-                <button @click="deleteTemplate(row)" class="px-2.5 py-1 rounded text-xs font-medium text-red-600 border border-red-200 hover:bg-red-50">Hapus</button>
+                <KButton  @click="openCeklisModal(row)" class="px-2.5 py-1 rounded text-xs font-medium border border-zinc-200 text-indigo-600 hover:border-indigo-600 hover:bg-indigo-50">Edit</KButton>
+                <KButton  @click="deleteTemplate(row)" class="px-2.5 py-1 rounded text-xs font-medium text-red-600 border border-red-200 hover:bg-red-50">Hapus</KButton>
               </div>
             </template>
           </KTable>
@@ -98,8 +94,8 @@
             </template>
             <template #cell-action="{ row }">
               <div class="flex items-center justify-end gap-1">
-                <button @click="openPartnerModal(row)" class="px-2.5 py-1 rounded text-xs font-medium border border-zinc-200 text-indigo-600 hover:border-indigo-600 hover:bg-indigo-50">Edit</button>
-                <button @click="deletePartner(row)" class="px-2.5 py-1 rounded text-xs font-medium text-red-600 border border-red-200 hover:bg-red-50">Hapus</button>
+                <KButton  @click="openPartnerModal(row)" class="px-2.5 py-1 rounded text-xs font-medium border border-zinc-200 text-indigo-600 hover:border-indigo-600 hover:bg-indigo-50">Edit</KButton>
+                <KButton  @click="deletePartner(row)" class="px-2.5 py-1 rounded text-xs font-medium text-red-600 border border-red-200 hover:bg-red-50">Hapus</KButton>
               </div>
             </template>
           </KTable>
@@ -138,14 +134,14 @@
             </template>
             <template #cell-action="{ row }">
               <div class="flex items-center justify-end gap-1">
-                <select @change="updatePickupStatus(row, $event.target.value)" class="text-xs py-1 px-2 rounded border font-semibold bg-white border-zinc-200 focus:border-indigo-500 focus:ring-indigo-200">
+                <KSelect  @change="updatePickupStatus(row, $event.target.value)" class="text-xs py-1 px-2 rounded border font-semibold bg-white border-zinc-200 focus:border-indigo-500 focus:ring-indigo-200">
                   <option disabled selected>Ubah Status</option>
                   <option value="pending">Pending</option>
                   <option value="scheduled">Terjadwal</option>
                   <option value="in_transit">Dalam Perjalanan</option>
                   <option value="completed">Selesai</option>
                   <option value="cancelled">Batal</option>
-                </select>
+                </KSelect>
               </div>
             </template>
           </KTable>
@@ -192,26 +188,25 @@
           <template v-else>
             <KCard title="Filter Inden">
               <div class="flex flex-wrap items-center gap-3">
-                <select v-model="indentFilters.status" @change="applyIndentFilter" class="text-xs font-semibold rounded-xl border px-3 py-2 bg-white text-zinc-700 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 focus:outline-none border-zinc-200 focus:border-indigo-500 focus:ring-indigo-200">
+                <KSelect  v-model="indentFilters.status" @change="applyIndentFilter" class="text-xs font-semibold rounded-xl border px-3 py-2 bg-white text-zinc-700 focus:ring-2 focus:ring-indigo-200 focus:border-indigo-500 focus:outline-none border-zinc-200 focus:border-indigo-500 focus:ring-indigo-200">
                   <option value="">Semua Status</option>
                   <option value="menunggu">Menunggu</option>
                   <option value="diproses">Diproses</option>
                   <option value="selesai">Selesai</option>
                   <option value="cancel">Cancel</option>
-                </select>
+                </KSelect>
                 <div class="relative flex-1 min-w-[180px]">
-                  <input
+                  <KInput 
                     type="text"
                     v-model="indentFilters.search"
                     @keyup.enter="applyIndentFilter"
                     placeholder="Cari nama barang / pelanggan..."
-                    class="w-full rounded-xl border text-xs px-3 py-2 pl-8 focus:ring-2 focus:outline-none bg-white text-zinc-700 focus:border-indigo-500 focus:ring-indigo-200 transition-all border-zinc-200 focus:border-indigo-500 focus:ring-indigo-200"
-                  />
+                    class="w-full rounded-xl border text-xs px-3 py-2 pl-8 focus:ring-2 focus:outline-none bg-white text-zinc-700 focus:border-indigo-500 focus:ring-indigo-200 transition-all border-zinc-200 focus:border-indigo-500 focus:ring-indigo-200" />
                   <svg class="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                 </div>
-                <button @click="resetIndentFilter" class="px-3 py-2 rounded-xl text-xs font-semibold border border-zinc-200 text-zinc-500 hover:bg-zinc-100 transition-all bg-white">
+                <KButton  @click="resetIndentFilter" class="px-3 py-2 rounded-xl text-xs font-semibold border border-zinc-200 text-zinc-500 hover:bg-zinc-100 transition-all bg-white">
                   ↺ Reset
-                </button>
+                </KButton>
               </div>
             </KCard>
 
@@ -241,7 +236,7 @@
               <template #cell-action="{ row }">
                 <div class="flex items-center justify-end gap-1">
                   <a :href="route('indents.print', row.id)" target="_blank" class="px-2.5 py-1 rounded text-xs font-semibold text-indigo-600 border border-blue-200 hover:bg-blue-50">Nota</a>
-                  <button @click="deleteInden(row)" class="px-2.5 py-1 rounded text-xs font-medium text-red-600 border border-red-200 hover:bg-red-50">Hapus</button>
+                  <KButton  @click="deleteInden(row)" class="px-2.5 py-1 rounded text-xs font-medium text-red-600 border border-red-200 hover:bg-red-50">Hapus</KButton>
                 </div>
               </template>
             </KTable>
@@ -257,27 +252,27 @@
       <form @submit.prevent="submitCeklis" class="space-y-4">
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Nama Template *</label>
-          <input v-model="ceklisForm.name" required placeholder="e.g. Ceklis Handphone / Laptop" class="input text-sm" />
+          <KInput  v-model="ceklisForm.name" required placeholder="e.g. Ceklis Handphone / Laptop" class="input text-sm" />
         </div>
         <div class="space-y-2">
           <label class="text-xs font-semibold flex items-center justify-between text-zinc-500">
             Item Ceklis (Daftar Fisik & Kelengkapan)
-            <button type="button" @click="addCeklisItem" class="text-xs text-indigo-600 font-bold hover:underline">+ Tambah Item</button>
+            <KButton  type="button" @click="addCeklisItem" class="text-xs text-indigo-600 font-bold hover:underline">+ Tambah Item</KButton>
           </label>
           <div v-for="(item, idx) in ceklisForm.items" :key="idx" class="flex gap-2 items-center">
-            <input v-model="ceklisForm.items[idx]" placeholder="e.g. Layar / Baterai / Charger" required class="input text-xs flex-1" />
-            <button type="button" @click="ceklisForm.items.splice(idx, 1)" class="text-red-500 font-bold text-xs px-2 py-1">✕</button>
+            <KInput  v-model="ceklisForm.items[idx]" placeholder="e.g. Layar / Baterai / Charger" required class="input text-xs flex-1" />
+            <KButton  type="button" @click="ceklisForm.items.splice(idx, 1)" class="text-red-500 font-bold text-xs px-2 py-1">✕</KButton>
           </div>
         </div>
         <div class="flex items-center gap-2 pt-2">
-          <input type="checkbox" v-model="ceklisForm.is_active" id="ceklis_active" class="rounded" />
+          <KCheckbox  v-model="ceklisForm.is_active" id="ceklis_active" class="rounded" />
           <label for="ceklis_active" class="text-xs font-medium">Aktifkan Template</label>
         </div>
         <div class="flex justify-end gap-2 pt-3">
-          <button type="button" @click="showCeklisDrawer = false" class="btn-secondary text-xs">Batal</button>
-          <button type="submit" :disabled="ceklisForm.processing" class="btn-primary text-xs">
+          <KButton  type="button" @click="showCeklisDrawer = false" class="btn-secondary text-xs">Batal</KButton>
+          <KButton  type="submit" :disabled="ceklisForm.processing" class="btn-primary text-xs">
             {{ ceklisForm.processing ? 'Menyimpan...' : 'Simpan' }}
-          </button>
+          </KButton>
         </div>
       </form>
     </Drawer>
@@ -287,32 +282,32 @@
       <form @submit.prevent="submitPartner" class="space-y-4">
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Nama Partner *</label>
-          <input v-model="partnerForm.name" required placeholder="e.g. Specialist Micro Soldering" class="input text-sm" />
+          <KInput  v-model="partnerForm.name" required placeholder="e.g. Specialist Micro Soldering" class="input text-sm" />
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Keahlian / Spesialisasi</label>
-          <input v-model="partnerForm.expertise" placeholder="e.g. Reball CPU, MacBook, TV LED" class="input text-sm" />
+          <KInput  v-model="partnerForm.expertise" placeholder="e.g. Reball CPU, MacBook, TV LED" class="input text-sm" />
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">No. Telepon / WA *</label>
-          <input v-model="partnerForm.phone" required placeholder="08xxxxxxxxxx" class="input text-sm" />
+          <KInput  v-model="partnerForm.phone" required placeholder="08xxxxxxxxxx" class="input text-sm" />
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Alamat / Lokasi Workshop</label>
-          <textarea v-model="partnerForm.address" rows="2" class="input text-sm"></textarea>
+          <KTextarea  v-model="partnerForm.address" rows="2" class="input text-sm"></KTextarea>
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Status</label>
-          <select v-model="partnerForm.status" class="input text-sm">
+          <KSelect  v-model="partnerForm.status" class="input text-sm">
             <option value="active">Aktif</option>
             <option value="inactive">Nonaktif</option>
-          </select>
+          </KSelect>
         </div>
         <div class="flex justify-end gap-2 pt-3">
-          <button type="button" @click="showPartnerDrawer = false" class="btn-secondary text-xs">Batal</button>
-          <button type="submit" :disabled="partnerForm.processing" class="btn-primary text-xs">
+          <KButton  type="button" @click="showPartnerDrawer = false" class="btn-secondary text-xs">Batal</KButton>
+          <KButton  type="submit" :disabled="partnerForm.processing" class="btn-primary text-xs">
             {{ partnerForm.processing ? 'Menyimpan...' : 'Simpan' }}
-          </button>
+          </KButton>
         </div>
       </form>
     </Drawer>
@@ -322,28 +317,28 @@
       <form @submit.prevent="submitPickup" class="space-y-4">
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Tipe Layanan *</label>
-          <select v-model="pickupForm.type" required class="input text-sm">
+          <KSelect  v-model="pickupForm.type" required class="input text-sm">
             <option value="pickup">Jemput Unit (Pickup)</option>
             <option value="delivery">Antar Unit (Delivery)</option>
-          </select>
+          </KSelect>
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Alamat Penjemputan / Pengantaran *</label>
-          <textarea v-model="pickupForm.address" required rows="2" placeholder="Jl. Anggrek No. 123..." class="input text-sm"></textarea>
+          <KTextarea  v-model="pickupForm.address" required rows="2" placeholder="Jl. Anggrek No. 123..." class="input text-sm"></KTextarea>
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Tanggal & Waktu Penjadwalan *</label>
-          <input v-model="pickupForm.scheduled_date" type="datetime-local" required class="input text-sm" />
+          <KInput  v-model="pickupForm.scheduled_date" type="datetime-local" required class="input text-sm" />
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Catatan / Instruksi Driver</label>
-          <textarea v-model="pickupForm.note" rows="2" placeholder="Hubungi wa dulu sebelum sampai..." class="input text-sm"></textarea>
+          <KTextarea  v-model="pickupForm.note" rows="2" placeholder="Hubungi wa dulu sebelum sampai..." class="input text-sm"></KTextarea>
         </div>
         <div class="flex justify-end gap-2 pt-3">
-          <button type="button" @click="showPickupDrawer = false" class="btn-secondary text-xs">Batal</button>
-          <button type="submit" :disabled="pickupForm.processing" class="btn-primary text-xs">
+          <KButton  type="button" @click="showPickupDrawer = false" class="btn-secondary text-xs">Batal</KButton>
+          <KButton  type="submit" :disabled="pickupForm.processing" class="btn-primary text-xs">
             {{ pickupForm.processing ? 'Menyimpan...' : 'Simpan' }}
-          </button>
+          </KButton>
         </div>
       </form>
     </Drawer>
@@ -353,25 +348,25 @@
       <form @submit.prevent="submitInden" class="space-y-4">
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Nama Barang / Sparepart *</label>
-          <input v-model="indenForm.product_name" required placeholder="e.g. LCD OLED iPhone 13 Pro Max Original" class="input text-sm" />
+          <KInput  v-model="indenForm.product_name" required placeholder="e.g. LCD OLED iPhone 13 Pro Max Original" class="input text-sm" />
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Estimasi Harga (Rp)</label>
-          <input v-model="indenForm.estimated_price" type="number" min="0" placeholder="0" class="input text-sm" />
+          <KInput  v-model="indenForm.estimated_price" type="number" min="0" placeholder="0" class="input text-sm" />
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Uang Muka / DP (Rp)</label>
-          <input v-model="indenForm.down_payment" type="number" min="0" placeholder="0" class="input text-sm" />
+          <KInput  v-model="indenForm.down_payment" type="number" min="0" placeholder="0" class="input text-sm" />
         </div>
         <div class="space-y-1">
           <label class="text-xs font-semibold text-zinc-500">Catatan / Deskripsi</label>
-          <textarea v-model="indenForm.notes" rows="2" placeholder="Pesanan warna Hitam..." class="input text-sm"></textarea>
+          <KTextarea  v-model="indenForm.notes" rows="2" placeholder="Pesanan warna Hitam..." class="input text-sm"></KTextarea>
         </div>
         <div class="flex justify-end gap-2 pt-3">
-          <button type="button" @click="showIndenDrawer = false" class="btn-secondary text-xs">Batal</button>
-          <button type="submit" :disabled="indenForm.processing" class="btn-primary text-xs">
+          <KButton  type="button" @click="showIndenDrawer = false" class="btn-secondary text-xs">Batal</KButton>
+          <KButton  type="submit" :disabled="indenForm.processing" class="btn-primary text-xs">
             {{ indenForm.processing ? 'Menyimpan...' : 'Simpan' }}
-          </button>
+          </KButton>
         </div>
       </form>
     </Drawer>
@@ -379,6 +374,12 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+import KInput from '@/Components/KInput.vue';
+import KSelect from '@/Components/KSelect.vue';
+import KTextarea from '@/Components/KTextarea.vue';
+import KCheckbox from '@/Components/KCheckbox.vue';
+
 import { computed, reactive, ref } from 'vue';
 import { router, Link, useForm } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';

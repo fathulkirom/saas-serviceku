@@ -28,37 +28,36 @@
             <form @submit.prevent="search" class="flex flex-wrap gap-4 items-end">
                 <div class="flex-1 min-w-[200px]">
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Cari Tenant</label>
-                    <input type="text" v-model="filters.search" placeholder="Nama, email, ID tenant..."
-                        class="w-full rounded-xl text-sm py-2.5 px-4 border transition-all duration-200 focus:ring-2 focus:ring-indigo-500/50 focus:outline-none bg-slate-900/50 border-slate-700 text-slate-200 placeholder-slate-500"
-                    />
+                    <KInput  type="text" v-model="filters.search" placeholder="Nama, email, ID tenant..."
+                        class="w-full rounded-xl text-sm py-2.5 px-4 border transition-all duration-200 focus:ring-2 focus:ring-indigo-500/50 focus:outline-none bg-slate-900/50 border-slate-700 text-slate-200 placeholder-slate-500" />
                 </div>
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Status</label>
-                    <select v-model="filters.status"
+                    <KSelect  v-model="filters.status"
                         class="rounded-xl text-sm py-2.5 px-3 border transition-all duration-200 focus:ring-2 focus:ring-indigo-500/50 focus:outline-none bg-slate-900/50 border-slate-700 text-slate-200">
                         <option value="">Semua</option>
                         <option value="trial">Trial</option>
                         <option value="active">Active</option>
                         <option value="expired">Expired</option>
                         <option value="suspended">Suspended</option>
-                    </select>
+                    </KSelect>
                 </div>
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Paket</label>
-                    <select v-model="filters.plan_id"
+                    <KSelect  v-model="filters.plan_id"
                         class="rounded-xl text-sm py-2.5 px-3 border transition-all duration-200 focus:ring-2 focus:ring-indigo-500/50 focus:outline-none bg-slate-900/50 border-slate-700 text-slate-200">
                         <option value="">Semua</option>
                         <option v-for="p in plans" :key="p.id" :value="p.id">{{ p.name }}</option>
-                    </select>
+                    </KSelect>
                 </div>
                 <div class="flex gap-2">
-                    <button type="submit" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white transition-all duration-200 hover:-translate-y-0.5 bg-indigo-600 hover:bg-indigo-700 shadow-sm flex items-center gap-2">
+                    <KButton  type="submit" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white transition-all duration-200 hover:-translate-y-0.5 bg-indigo-600 hover:bg-indigo-700 shadow-sm flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                         Cari
-                    </button>
-                    <button type="button" @click="resetFilters" class="px-5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 hover:-translate-y-0.5 border bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700">
+                    </KButton>
+                    <KButton  type="button" @click="resetFilters" class="px-5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 hover:-translate-y-0.5 border bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700">
                         Reset
-                    </button>
+                    </KButton>
                 </div>
             </form>
         </div>
@@ -106,8 +105,8 @@
                                     <Link :href="route('admin.tenant.show', t.id)" class="text-xs font-bold px-3 py-1.5 rounded-lg transition-all hover:-translate-y-0.5 hover:shadow-sm text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/20">Detail</Link>
                                     <Link :href="route('admin.tenant.edit', t.id)" class="text-xs font-bold px-3 py-1.5 rounded-lg transition-all hover:-translate-y-0.5 hover:shadow-sm text-blue-300 bg-blue-500/10 hover:bg-blue-500/20">Edit</Link>
                                     <a v-if="t.domains?.[0]?.domain" :href="'http://' + t.domains[0].domain + '/login'" target="_blank" class="text-xs font-bold px-3 py-1.5 rounded-lg transition-all hover:-translate-y-0.5 hover:shadow-sm text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20">Buka</a>
-                                    <button v-if="t.is_active" @click="suspend(t.id)" class="text-xs font-bold px-3 py-1.5 rounded-lg transition-all hover:-translate-y-0.5 hover:shadow-sm text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 cursor-pointer">Suspend</button>
-                                    <button v-else @click="activate(t.id)" class="text-xs font-bold px-3 py-1.5 rounded-lg transition-all hover:-translate-y-0.5 hover:shadow-sm text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 cursor-pointer">Aktifkan</button>
+                                    <KButton  v-if="t.is_active" @click="suspend(t.id)" class="text-xs font-bold px-3 py-1.5 rounded-lg transition-all hover:-translate-y-0.5 hover:shadow-sm text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 cursor-pointer">Suspend</KButton>
+                                    <KButton  v-else @click="activate(t.id)" class="text-xs font-bold px-3 py-1.5 rounded-lg transition-all hover:-translate-y-0.5 hover:shadow-sm text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 cursor-pointer">Aktifkan</KButton>
                                 </div>
                             </td>
                         </tr>
@@ -142,6 +141,10 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+import KInput from '@/Components/KInput.vue';
+import KSelect from '@/Components/KSelect.vue';
+
 import { Link, router } from '@inertiajs/vue3';
 import { reactive } from 'vue';
 import AdminLayout from '@/Layouts/AdminLayout.vue';

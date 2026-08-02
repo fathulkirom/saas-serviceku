@@ -4,12 +4,27 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Tenant\SetupController;
+use App\Http\Controllers\Tenant\ImportController;
+use App\Http\Controllers\Tenant\OperationalControlController;
+use App\Http\Controllers\Tenant\UniversalSearchController;
+use App\Http\Controllers\Tenant\PosController;
+use App\Http\Controllers\Tenant\DailyOperationsController;
+use App\Http\Controllers\Tenant\OperationalDashboardController;
+use App\Http\Controllers\Tenant\ServicePartController;
+use App\Http\Controllers\Tenant\WarehouseController;
+use App\Http\Controllers\Tenant\InventoryIntelligenceController;
+use App\Http\Controllers\Tenant\ServiceExceptionController;
+use App\Http\Controllers\Tenant\ServiceDeliveryController;
+use App\Http\Controllers\Tenant\TechnicianWorkflowController;
+use App\Http\Controllers\Tenant\ServiceIntakeController;
 use App\Http\Controllers\Tenant\ServiceController;
 use App\Http\Controllers\Tenant\ServiceWorkflowController;
 use App\Http\Controllers\Tenant\ServiceChecklistController;
 use App\Http\Controllers\Tenant\ServiceDocumentController;
 use App\Http\Controllers\Tenant\ServiceClaimController;
 use App\Http\Controllers\Tenant\CustomerController;
+use App\Http\Controllers\Tenant\CustomerCommunicationController;
 use App\Http\Controllers\Tenant\ProductController;
 use App\Http\Controllers\Tenant\SaleController;
 use App\Http\Controllers\Tenant\SaleStoreController;
@@ -125,6 +140,109 @@ Route::middleware([
     Route::resource('customers', CustomerController::class)->except(['edit'])->middleware('check.plan.feature:customers');
     Route::post('/customers/ajax-store', [CustomerController::class, 'storeApi'])->name('customers.ajax-store')->middleware('check.plan.feature:customers');
     Route::post('/customers/{customer}/register-member', [CustomerController::class, 'registerMember'])->name('customers.register-member')->middleware('check.plan.feature:customers');
+    // Sprint 7.3B — Customer Relationship Core
+    Route::post('/customers/{customer}/interactions', [CustomerController::class, 'storeInteraction'])->name('customers.interactions.store')->middleware('check.plan.feature:customers');
+    Route::post('/customers/{customer}/tags', [CustomerController::class, 'attachTag'])->name('customers.tags.attach')->middleware('check.plan.feature:customers');
+    Route::delete('/customers/{customer}/tags/{tag}', [CustomerController::class, 'detachTag'])->name('customers.tags.detach')->middleware('check.plan.feature:customers');
+    // Sprint 7.3C — Customer Communication
+    Route::post('/customers/{customer}/communications/send', [CustomerCommunicationController::class, 'send'])->name('customers.communications.send')->middleware('check.plan.feature:customers');
+    Route::get('/pengaturan/message-templates', [CustomerCommunicationController::class, 'templates'])->name('pengaturan.message-templates')->middleware('check.plan.feature:settings');
+    Route::post('/pengaturan/message-templates', [CustomerCommunicationController::class, 'storeTemplate'])->name('message-templates.store')->middleware('check.plan.feature:settings');
+    Route::put('/pengaturan/message-templates/{template}', [CustomerCommunicationController::class, 'updateTemplate'])->name('message-templates.update')->middleware('check.plan.feature:settings');
+    // Sprint 7.3D — Customer Intelligence
+    Route::post('/customers/{customer}/notes', [CustomerController::class, 'storeNote'])->name('customers.notes.store')->middleware('check.plan.feature:customers');
+    Route::post('/customers/{customer}/complaints', [CustomerController::class, 'storeComplaint'])->name('customers.complaints.store')->middleware('check.plan.feature:customers');
+    Route::post('/customers/{customer}/complaints/{complaint}/resolve', [CustomerController::class, 'resolveComplaint'])->name('customers.complaints.resolve')->middleware('check.plan.feature:customers');
+    Route::get('/customers/search', [CustomerController::class, 'search'])->name('customers.search')->middleware('check.plan.feature:customers');
+    // Sprint 7.3E-H — Service Intake Hardening
+    Route::post('/services/{service}/checklist-results', [ServiceIntakeController::class, 'storeChecklistResults'])->name('services.checklist-results.store')->middleware('check.plan.feature:services');
+    Route::post('/services/{service}/capture-snapshot', [ServiceIntakeController::class, 'captureSnapshot'])->name('services.snapshot.capture')->middleware('check.plan.feature:services');
+    Route::post('/services/{service}/confirm-condition', [ServiceIntakeController::class, 'confirmCondition'])->name('services.confirm-condition')->middleware('check.plan.feature:services');
+    Route::get('/devices/match', [ServiceIntakeController::class, 'matchDevice'])->name('devices.match')->middleware('check.plan.feature:services');
+    Route::get('/devices/{device}/health', [ServiceIntakeController::class, 'deviceHealth'])->name('devices.health')->middleware('check.plan.feature:services');
+    // Sprint 7.3F — Technician Workflow
+    Route::get('/technician/dashboard', [TechnicianWorkflowController::class, 'technicianDashboard'])->name('technician.dashboard')->middleware('check.plan.feature:services');
+    Route::post('/work-orders/{workOrder}/assign', [TechnicianWorkflowController::class, 'assignTechnician'])->name('work-orders.assign')->middleware('check.plan.feature:services');
+    Route::post('/work-orders/{workOrder}/accept', [TechnicianWorkflowController::class, 'accept'])->name('work-orders.accept')->middleware('check.plan.feature:services');
+    Route::post('/services/{service}/diagnosis', [TechnicianWorkflowController::class, 'storeDiagnosis'])->name('services.diagnosis.store')->middleware('check.plan.feature:services');
+    Route::post('/services/{service}/quotation', [TechnicianWorkflowController::class, 'createQuotation'])->name('services.quotation.create')->middleware('check.plan.feature:services');
+    Route::post('/quotations/{quotation}/approve', [TechnicianWorkflowController::class, 'approveQuotation'])->name('quotations.approve')->middleware('check.plan.feature:services');
+    Route::post('/services/{service}/parts', [TechnicianWorkflowController::class, 'requestPart'])->name('services.parts.request')->middleware('check.plan.feature:services');
+    Route::post('/services/{service}/qc', [TechnicianWorkflowController::class, 'storeQcCheck'])->name('services.qc.store')->middleware('check.plan.feature:services');
+    Route::post('/services/{service}/repair/start', [TechnicianWorkflowController::class, 'startRepair'])->name('services.repair.start')->middleware('check.plan.feature:services');
+    Route::post('/services/{service}/repair/complete', [TechnicianWorkflowController::class, 'completeRepair'])->name('services.repair.complete')->middleware('check.plan.feature:services');
+    // Sprint 7.3G — Service Delivery & Pickup
+    Route::post('/services/{service}/ready-pickup', [ServiceDeliveryController::class, 'markReady'])->name('services.ready-pickup')->middleware('check.plan.feature:services');
+    Route::post('/services/{service}/verify-payment', [ServiceDeliveryController::class, 'verifyPayment'])->name('services.verify-payment')->middleware('check.plan.feature:services');
+    Route::post('/services/{service}/pickup', [ServiceDeliveryController::class, 'pickup'])->name('services.pickup')->middleware('check.plan.feature:services');
+    Route::get('/customers/{customerId}/warranties', [ServiceDeliveryController::class, 'customerWarranties'])->name('customers.warranties')->middleware('check.plan.feature:customers');
+    // Sprint 7.3H — Service Exception & After Sales
+    Route::post('/services/{service}/warranty-claim', [ServiceExceptionController::class, 'createClaim'])->name('services.warranty-claim.create')->middleware('check.plan.feature:services');
+    Route::post('/warranty-claims/{claim}/decide', [ServiceExceptionController::class, 'decideClaim'])->name('warranty-claims.decide')->middleware('check.plan.feature:services');
+    Route::post('/services/{service}/revise-diagnosis', [ServiceExceptionController::class, 'reviseDiagnosis'])->name('services.diagnosis.revise')->middleware('check.plan.feature:services');
+    Route::get('/monitoring/unclaimed', [ServiceExceptionController::class, 'unclaimed'])->name('monitoring.unclaimed')->middleware('check.plan.feature:monitoring');
+    // Sprint 7.4 — Inventory Intelligence
+    Route::get('/inventaris/dashboard', [InventoryIntelligenceController::class, 'dashboard'])->name('inventaris.dashboard')->middleware('check.plan.feature:inventaris');
+    Route::get('/products/{product}/movements', [InventoryIntelligenceController::class, 'movements'])->name('products.movements')->middleware('check.plan.feature:inventaris');
+    // Sprint 7.4 Revision — Real Service Center Part Flow
+    Route::post('/services/{service}/parts/request', [ServicePartController::class, 'request'])->name('service-parts.request')->middleware('check.plan.feature:services');
+    Route::post('/service-parts/{part}/cancel', [ServicePartController::class, 'cancelRequest'])->name('service-parts.cancel')->middleware('check.plan.feature:services');
+    Route::post('/service-parts/{part}/approve', [ServicePartController::class, 'approveRequest'])->name('service-parts.approve')->middleware('check.plan.feature:services');
+    Route::post('/service-parts/{part}/use', [ServicePartController::class, 'usePart'])->name('service-parts.use')->middleware('check.plan.feature:services');
+    Route::post('/services/{service}/parts/return-request', [ServicePartController::class, 'requestReturn'])->name('service-parts.return-request')->middleware('check.plan.feature:services');
+    Route::post('/service-part-returns/{return}/process', [ServicePartController::class, 'processReturn'])->name('service-parts.process-return')->middleware('check.plan.feature:services');
+    Route::get('/services/{service}/profit', [ServicePartController::class, 'profit'])->name('services.profit')->middleware('check.plan.feature:services');
+    // Sprint 7.4A — Operational Refinement
+    Route::get('/inventaris/operational', [OperationalDashboardController::class, 'warehouse'])->name('inventaris.operational')->middleware('check.plan.feature:inventaris');
+    Route::get('/dashboard/cs-stats', [OperationalDashboardController::class, 'cs'])->name('dashboard.cs-stats')->middleware('check.plan.feature:services');
+    Route::get('/dashboard/owner-kpi', [OperationalDashboardController::class, 'owner'])->name('dashboard.owner-kpi')->middleware('check.plan.feature:dashboard');
+    Route::post('/service-parts/{part}/edit', [OperationalDashboardController::class, 'editRequest'])->name('service-parts.edit')->middleware('check.plan.feature:services');
+    Route::post('/service-parts/{part}/priority', [OperationalDashboardController::class, 'setPriority'])->name('service-parts.priority')->middleware('check.plan.feature:services');
+    // Sprint 7.4B — Daily Operations Hardening
+    Route::post('/work-orders/{workOrder}/worklog', [DailyOperationsController::class, 'addWorklog'])->name('work-orders.worklog')->middleware('check.plan.feature:services');
+    Route::post('/work-orders/{workOrder}/pause', [DailyOperationsController::class, 'pauseRepair'])->name('work-orders.pause')->middleware('check.plan.feature:services');
+    Route::post('/work-orders/{workOrder}/resume', [DailyOperationsController::class, 'resumeRepair'])->name('work-orders.resume')->middleware('check.plan.feature:services');
+    Route::post('/work-orders/{workOrder}/finish', [DailyOperationsController::class, 'finishWorkOrder'])->name('work-orders.finish')->middleware('check.plan.feature:services');
+    Route::post('/parts/book', [DailyOperationsController::class, 'bookPart'])->name('parts.book')->middleware('check.plan.feature:inventaris');
+    Route::post('/services/{service}/lock', [DailyOperationsController::class, 'lockService'])->name('services.lock')->middleware('check.plan.feature:services');
+    Route::post('/services/{service}/reopen', [DailyOperationsController::class, 'requestReopen'])->name('services.reopen')->middleware('check.plan.feature:services');
+    Route::post('/service-reopens/{reopen}/approve', [DailyOperationsController::class, 'approveReopen'])->name('service-reopens.approve')->middleware('check.plan.feature:services');
+    Route::post('/services/{service}/price-change', [DailyOperationsController::class, 'requestPriceChange'])->name('services.price-change')->middleware('check.plan.feature:services');
+    Route::post('/price-changes/{change}/approve', [DailyOperationsController::class, 'approvePrice'])->name('price-changes.approve')->middleware('check.plan.feature:services');
+    // Sprint 7.5 — Retail, POS & Sales
+    Route::post('/cashier-shifts/open', [PosController::class, 'openShift'])->name('shifts.open')->middleware('check.plan.feature:sales');
+    Route::post('/cashier-shifts/{shift}/close', [PosController::class, 'closeShift'])->name('shifts.close')->middleware('check.plan.feature:sales');
+    Route::post('/sales/{sale}/pay', [PosController::class, 'pay'])->name('sales.pay')->middleware('check.plan.feature:sales');
+    Route::post('/sales/{sale}/return', [PosController::class, 'requestReturn'])->name('sales.return')->middleware('check.plan.feature:sales');
+    Route::post('/sale-returns/{return}/approve', [PosController::class, 'approveReturn'])->name('sale-returns.approve')->middleware('check.plan.feature:sales');
+    Route::post('/sales/{sale}/serials', [PosController::class, 'recordSerial'])->name('sales.serials')->middleware('check.plan.feature:sales');
+    Route::get('/dashboard/cashier', [PosController::class, 'cashierDashboard'])->name('dashboard.cashier')->middleware('check.plan.feature:dashboard');
+    // Sprint 7.5A — UX & Productivity
+    Route::get('/search', [UniversalSearchController::class, 'search'])->name('search');
+    // Sprint 7.5C — Operational Control & Management
+    Route::get('/services/kanban', [OperationalControlController::class, 'kanban'])->name('services.kanban')->middleware('check.plan.feature:services');
+    Route::get('/services/pickup-queue', [OperationalControlController::class, 'pickupQueue'])->name('services.pickup-queue')->middleware('check.plan.feature:services');
+    Route::get('/services/approval-center', [OperationalControlController::class, 'approvalCenter'])->name('services.approval-center')->middleware('check.plan.feature:services');
+    Route::get('/dashboard/technician-performance', [OperationalControlController::class, 'technicianPerformance'])->name('dashboard.tech-performance')->middleware('check.plan.feature:dashboard');
+    Route::get('/dashboard/cs', [OperationalControlController::class, 'csDashboard'])->name('dashboard.cs')->middleware('check.plan.feature:dashboard');
+    Route::get('/dashboard/owner', [OperationalControlController::class, 'ownerDashboard'])->name('dashboard.owner')->middleware('check.plan.feature:dashboard');
+    Route::get('/dashboard/load-balancer', [OperationalControlController::class, 'loadBalancer'])->name('dashboard.load-balancer')->middleware('check.plan.feature:dashboard');
+    Route::get('/dashboard/sla', [OperationalControlController::class, 'slaOverview'])->name('dashboard.sla')->middleware('check.plan.feature:dashboard');
+    // Sprint 7.5E — Tenant Onboarding & Data Migration
+    Route::get('/pengaturan/import', [ImportController::class, 'index'])->name('import.index')->middleware('check.plan.feature:settings');
+    Route::post('/import/preview', [ImportController::class, 'preview'])->name('import.preview')->middleware('check.plan.feature:settings');
+    Route::post('/import/process', [ImportController::class, 'import'])->name('import.process')->middleware('check.plan.feature:settings');
+    // Sprint 7.5F — Tenant Go-Live & Setup Assistant
+    Route::get('/setup', [SetupController::class, 'index'])->name('setup')->middleware('check.plan.feature:settings');
+    Route::post('/setup/dismiss', [SetupController::class, 'dismiss'])->name('setup.dismiss')->middleware('check.plan.feature:settings');
+    Route::post('/setup/dismiss-first-login', [SetupController::class, 'dismissFirstLogin'])->name('setup.dismiss-first-login')->middleware('check.plan.feature:settings');
+    // Sprint 7.4B — Warehouse Operations
+    Route::post('/stock-opnames', [WarehouseController::class, 'createOpname'])->name('stock-opnames.create')->middleware('check.plan.feature:inventaris');
+    Route::post('/stock-opnames/{opname}/count', [WarehouseController::class, 'recordCount'])->name('stock-opnames.count')->middleware('check.plan.feature:inventaris');
+    Route::post('/stock-opnames/{opname}/approve', [WarehouseController::class, 'approveOpname'])->name('stock-opnames.approve')->middleware('check.plan.feature:inventaris');
+    Route::post('/product-serials/{serial}/assign', [WarehouseController::class, 'assignSerial'])->name('serials.assign')->middleware('check.plan.feature:inventaris');
+    Route::post('/technician-stock/transfer', [WarehouseController::class, 'transferToTechnician'])->name('technician-stock.transfer')->middleware('check.plan.feature:inventaris');
+    Route::post('/stock-transfers/{transfer}/receive', [WarehouseController::class, 'receiveTransfer'])->name('stock-transfers.receive')->middleware('check.plan.feature:inventaris');
 
     // ========== PRODUCTS ==========
     Route::resource('products', ProductController::class)->except(['create', 'edit', 'show'])->middleware('check.plan.feature:products');
@@ -362,5 +480,25 @@ Route::middleware([
     // Pengaturan
     Route::get('/pengaturan', [SettingController::class, 'index'])->name('pengaturan.index');
 
+    // Sprint 7.2E — Enterprise Admin Panel (thin controllers → engine delegation)
+    Route::middleware(['check.plan.feature:settings'])->group(function () {
+        // Provider Center
+        Route::get('/pengaturan/providers', [App\Http\Controllers\Tenant\ProviderApiController::class, 'page'])->name('pengaturan.providers');
+        Route::post('/providers/{category}/{provider}/test', [App\Http\Controllers\Tenant\ProviderApiController::class, 'test'])->name('tenant.providers.test');
+        Route::post('/providers/{category}/{provider}/toggle', [App\Http\Controllers\Tenant\ProviderApiController::class, 'toggle'])->name('tenant.providers.toggle');
+
+        // Workflow Builder
+        Route::get('/sistem/workflows', [App\Http\Controllers\Tenant\WorkflowAdminController::class, 'index'])->name('sistem.workflows');
+        Route::get('/sistem/workflows/graph', [App\Http\Controllers\Tenant\WorkflowAdminController::class, 'graph'])->name('tenant.workflows.graph');
+
+        // Automation Builder
+        Route::get('/sistem/automations', [App\Http\Controllers\Tenant\AutomationAdminController::class, 'index'])->name('sistem.automations');
+        Route::post('/sistem/automations', [App\Http\Controllers\Tenant\AutomationAdminController::class, 'store'])->name('tenant.automation.store');
+        Route::put('/sistem/automations/{rule}', [App\Http\Controllers\Tenant\AutomationAdminController::class, 'update'])->name('tenant.automation.update');
+        Route::post('/sistem/automations/{rule}/toggle', [App\Http\Controllers\Tenant\AutomationAdminController::class, 'toggle'])->name('tenant.automation.toggle');
+
+        // Event Log
+        Route::get('/monitoring/event-log', [App\Http\Controllers\Tenant\EventLogController::class, 'index'])->name('tenant.event-log.index');
+    });
 });
 

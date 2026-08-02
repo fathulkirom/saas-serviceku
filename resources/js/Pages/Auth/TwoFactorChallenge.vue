@@ -32,19 +32,18 @@
         <form v-if="!showBackup && !showEmailCode" @submit.prevent="submit" class="space-y-6">
             <div>
                 <label class="block text-sm font-bold text-zinc-900 mb-2 text-center">Kode Aplikasi Authenticator</label>
-                <input
+                <KInput 
                     v-model="form.code"
                     type="text"
                     inputmode="numeric"
                     maxlength="6"
                     placeholder="000000"
                     class="w-full text-center text-3xl font-black tracking-[0.5em] px-4 py-4 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
-                    autofocus
-                />
+                    autofocus />
             </div>
             
             <div class="pt-2 flex flex-col gap-4">
-                <button type="submit"
+                <KButton  type="submit"
                     :disabled="form.processing || form.code.length !== 6"
                     class="w-full flex items-center justify-center px-6 py-3 rounded-xl bg-zinc-900 text-white text-sm font-bold shadow-md hover:bg-zinc-800 focus:ring-2 focus:ring-offset-2 focus:ring-zinc-900 transition-all disabled:opacity-70">
                     <svg v-if="form.processing" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
@@ -52,7 +51,7 @@
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                     </svg>
                     Verifikasi Kode
-                </button>
+                </KButton>
             </div>
         </form>
 
@@ -63,17 +62,16 @@
             </div>
             <div>
                 <label class="block text-sm font-bold text-zinc-900 mb-2 text-center">Kode Cadangan</label>
-                <input
+                <KInput 
                     v-model="form.code"
                     type="text"
                     placeholder="XXXXXX-XXXXXX"
                     class="w-full text-center text-xl font-bold tracking-widest px-4 py-4 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
-                    autofocus
-                />
+                    autofocus />
             </div>
             
             <div class="pt-2 flex flex-col gap-4">
-                <button type="submit"
+                <KButton  type="submit"
                     :disabled="form.processing || !form.code"
                     class="w-full flex items-center justify-center px-6 py-3 rounded-xl bg-zinc-900 text-white text-sm font-bold shadow-md hover:bg-zinc-800 focus:ring-2 focus:ring-offset-2 focus:ring-zinc-900 transition-all disabled:opacity-70">
                     <svg v-if="form.processing" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
@@ -81,11 +79,11 @@
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                     </svg>
                     Gunakan Kode Cadangan
-                </button>
-                <button type="button" @click="showBackup = false; form.code = ''"
+                </KButton>
+                <KButton  type="button" @click="showBackup = false; form.code = ''"
                     class="w-full py-2 text-sm font-bold text-zinc-500 hover:text-zinc-900 transition-colors">
                     Kembali ke Authenticator
-                </button>
+                </KButton>
             </div>
         </form>
 
@@ -96,19 +94,18 @@
             </div>
             <div>
                 <label class="block text-sm font-bold text-zinc-900 mb-2 text-center">Kode dari Email</label>
-                <input
+                <KInput 
                     v-model="form.code"
                     type="text"
                     inputmode="numeric"
                     maxlength="6"
                     placeholder="000000"
                     class="w-full text-center text-3xl font-black tracking-[0.5em] px-4 py-4 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
-                    autofocus
-                />
+                    autofocus />
             </div>
             
             <div class="pt-2 flex flex-col gap-4">
-                <button type="submit"
+                <KButton  type="submit"
                     :disabled="form.processing || form.code.length !== 6"
                     class="w-full flex items-center justify-center px-6 py-3 rounded-xl bg-zinc-900 text-white text-sm font-bold shadow-md hover:bg-zinc-800 focus:ring-2 focus:ring-offset-2 focus:ring-zinc-900 transition-all disabled:opacity-70">
                     <svg v-if="form.processing" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
@@ -116,29 +113,32 @@
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                     </svg>
                     Verifikasi Kode Email
-                </button>
-                <button type="button" @click="showEmailCode = false; form.code = ''"
+                </KButton>
+                <KButton  type="button" @click="showEmailCode = false; form.code = ''"
                     class="w-full py-2 text-sm font-bold text-zinc-500 hover:text-zinc-900 transition-colors">
                     Kembali ke Authenticator
-                </button>
+                </KButton>
             </div>
         </form>
 
         <!-- Options -->
         <div v-if="!showBackup && !showEmailCode" class="mt-8 space-y-3 pt-6 border-t border-zinc-100">
-            <button @click="sendEmailCode" class="w-full flex items-center justify-center gap-2 py-2 text-sm font-bold text-indigo-600 hover:text-indigo-700 transition-colors">
+            <KButton  @click="sendEmailCode" class="w-full flex items-center justify-center gap-2 py-2 text-sm font-bold text-indigo-600 hover:text-indigo-700 transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
                 Kirim kode keamanan via Email
-            </button>
-            <button @click="showBackup = true" class="w-full flex items-center justify-center gap-2 py-2 text-sm font-bold text-zinc-500 hover:text-zinc-900 transition-colors">
+            </KButton>
+            <KButton  @click="showBackup = true" class="w-full flex items-center justify-center gap-2 py-2 text-sm font-bold text-zinc-500 hover:text-zinc-900 transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" /></svg>
                 Gunakan Kode Cadangan (Backup)
-            </button>
+            </KButton>
         </div>
     </GuestLayout>
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+import KInput from '@/Components/KInput.vue';
+
 import { Head, useForm, usePage } from '@inertiajs/vue3';
 import { ref } from 'vue';
 

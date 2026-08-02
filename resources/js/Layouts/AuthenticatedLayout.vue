@@ -4,7 +4,6 @@
         :menuStyle="menuStyle"
         :allowedMenuItems="allowedMenuItems"
         :groupedMenuItems="groupedMenuItems"
-        :topMenuItems="topMenuItems"
         :topbarPrimaryItems="topbarPrimaryItems"
         :topbarOverflowItems="topbarOverflowItems"
         :branches="branches"
@@ -16,7 +15,6 @@
         :searchOpen="showSearch"
         :sidebarPosition="sidebarPosition"
         :sidebarHidden="localSidebarHidden"
-        :visibleGroups="visibleGroups"
         @toggle-mobile="showMobileMenu = !showMobileMenu"
         @close-mobile="showMobileMenu = false"
         @open-search="showSearch = true"
@@ -110,7 +108,6 @@ const activeLayout = computed(() => {
 const menuStyle = computed(() => uiPrefs.value.menu_style || 'expanded');
 const sidebarPosition = computed(() => uiPrefs.value.sidebar_position || 'left');
 const sidebarHidden = computed(() => uiPrefs.value.sidebar_hidden || false);
-const visibleGroups = computed(() => uiPrefs.value.visible_groups || null);
 
 watch(() => page.props.auth.user?.ui_preferences, () => {
     // reactivity will handle via computed
@@ -204,6 +201,4 @@ const topbarOverflowItems = computed(() => {
   const primary = new Set(['dashboard', 'services', 'customers', 'keuangan', 'kas', 'inventaris', 'laporan', 'servis_tools']);
   return allowedMenuItems.value.filter(i => !primary.has(i.id));
 });
-
-const topMenuItems = computed(() => allowedMenuItems.value);
 </script>

@@ -17,11 +17,16 @@ class SaleController extends Controller
 
     public function create(Request $request)
     {
+        $this->authorize('create', Sale::class);
+
         $products = \App\Models\Tenant\Product::where('stock_quantity', '>', 0)
             ->where('branch_id', auth()->user()->branch_id)
+            ->take(200)
             ->get();
             
-        $customers = \App\Models\Tenant\Customer::all();
+        $customers = \App\Models\Tenant\Customer::orderBy('name')
+            ->take(200)
+            ->get();
 
         return \Inertia\Inertia::render('Sales/Create', [
             'products' => $products,

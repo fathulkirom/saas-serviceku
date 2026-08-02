@@ -2,7 +2,7 @@
   <div>
     <div class="flex gap-1 p-1.5 rounded-2xl bg-zinc-100/80 border border-zinc-200 mb-6 overflow-x-auto scrollbar-hide shadow-sm"
       role="tablist">
-      <button v-for="tab in tabs" :key="tab.key"
+      <KButton  v-for="tab in tabs" :key="tab.key"
         class="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold whitespace-nowrap transition-all duration-200"
         :class="tab.key === modelValue 
           ? 'bg-white text-indigo-600 shadow-sm ring-1 ring-zinc-200/50' 
@@ -18,7 +18,7 @@
             : 'bg-zinc-200 text-zinc-500'">
           {{ tab.count }}
         </span>
-      </button>
+      </KButton>
     </div>
     <div class="tab-content">
       <slot :name="modelValue" />
@@ -27,6 +27,8 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+
 const props = defineProps({
   tabs: { type: Array, required: true },
   modelValue: { type: String, required: true },

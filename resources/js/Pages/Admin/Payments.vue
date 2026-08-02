@@ -60,14 +60,14 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-400">{{ p.created_at }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm">
                             <div class="flex gap-2">
-                                <button v-if="p.status === 'pending'" @click="confirmPayment(p.id)"
+                                <KButton  v-if="p.status === 'pending'" @click="confirmPayment(p.id)"
                                     class="text-green-600 hover:text-green-800 text-xs font-medium">
                                     Konfirmasi
-                                </button>
-                                <button v-if="p.status === 'pending'" @click="cancelPayment(p.id)"
+                                </KButton>
+                                <KButton  v-if="p.status === 'pending'" @click="cancelPayment(p.id)"
                                     class="text-red-600 hover:text-red-800 text-xs font-medium">
                                     Batal
-                                </button>
+                                </KButton>
                             </div>
                         </td>
                     </tr>
@@ -84,6 +84,8 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+
 import { router } from '@inertiajs/vue3';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 

@@ -40,6 +40,9 @@ class DashboardController extends Controller
         $user = auth()->user();
         $branchId = $user?->branch_id;
 
+        // Sprint 7.5F Final — NO auto-redirect.
+        // Welcome Card shown on Dashboard; Owner chooses "Continue Setup" or "Later".
+
         $stats = Cache::remember("dashboard_stats_{$tenantId}_{$branchId}", 300, function () use ($branchId) {
             return [
                 'services_today' => $this->scopeBranch(Service::class, $branchId)->whereDate('created_at', today())->count(),
@@ -75,6 +78,7 @@ class DashboardController extends Controller
             'stats'          => $stats,
             'recentServices' => $recentServices,
             'statusCounts'   => $statusCounts,
+            'setupSummary'   => $this->getSetupSummary(),
         ]);
     }
 
@@ -287,5 +291,58 @@ class DashboardController extends Controller
         }
 
         return $query;
+    }
+
+    /**
+     * Sprint 7.5F Final — Setup summary for Dashboard Welcome Card.
+     *
+     * Visibility: permission-based via existing PermissionEngine.
+     *   Default: Owner, Manager
+     *   Optional: Admin (TenantSetting: setup_card_show_admin = true)
+     *   Never: CS, Technician, Cashier, Warehouse (head_store), Courier
+     *
+     * Card shown when: setup not fully complete OR health has warnings.
+     * Owner chooses "Continue Setup" or "Later" — NO auto-redirect.
+     */
+    private function getSetupSummary(): ?array
+    {
+        $user = auth()->user();
+        if (!$user) return null;
+
+        if (!$this->canViewSetupCard($user)) return null;
+
+        $summary = app(\App\Http\Controllers\Tenant\SetupController::class)->summary();
+
+        // Hidden explicitly by user
+        if ($summary['isHidden']) return null;
+
+        // Fully complete AND healthy → no card needed
+        if ($summary['configComplete'] && $summary['healthStatus'] === 'ready') return null;
+
+        return $summary;
+    }
+
+    /**
+     * Check if user is allowed to see the Setup Progress Card.
+     * Uses role-based check + PermissionEngine fallback for custom roles.
+     */
+    private function canViewSetupCard($user): bool
+    {
+        $role = $user->role;
+
+        // ── Never show to operational roles ──
+        $blocked = ['cs', 'technician', 'cashier', 'head_store', 'courier'];
+        if (in_array($role, $blocked)) return false;
+
+        // ── Default: Owner, Manager always see it ──
+        if (in_array($role, ['owner', 'manager'])) return true;
+
+        // ── Admin: configurable via TenantSetting ──
+        if ($role === 'admin') {
+            return \App\Models\Tenant\TenantSetting::getValue('setup_card_show_admin', 'false') === 'true';
+        }
+
+        // ── Custom roles: check via PermissionEngine ──
+        return $user->canViaPermission('manage_settings');
     }
 }

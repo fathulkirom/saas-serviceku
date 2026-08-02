@@ -20,47 +20,47 @@
                 <div class="grid grid-cols-2 gap-5">
                     <div class="col-span-2">
                         <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Nama Toko</label>
-                        <input v-model="form.tenant_name" type="text" required
+                        <KInput  v-model="form.tenant_name" type="text" required
                             class="w-full rounded-xl text-sm py-2.5 px-4 border transition-all duration-200 focus:ring-2 focus:ring-indigo-500/50 focus:outline-none bg-slate-900/50 border-slate-700 text-slate-200 placeholder-slate-500"
                             placeholder="Contoh: Toko Servis ABC" />
                         <p v-if="form.errors.tenant_name" class="mt-1.5 text-xs font-medium text-rose-400">{{ form.errors.tenant_name }}</p>
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Email Owner</label>
-                        <input v-model="form.email" type="email" required
+                        <KInput  v-model="form.email" type="email" required
                             class="w-full rounded-xl text-sm py-2.5 px-4 border transition-all duration-200 focus:ring-2 focus:ring-indigo-500/50 focus:outline-none bg-slate-900/50 border-slate-700 text-slate-200 placeholder-slate-500"
                             placeholder="owner@email.com" />
                         <p v-if="form.errors.email" class="mt-1.5 text-xs font-medium text-rose-400">{{ form.errors.email }}</p>
                     </div>
                     <div class="col-span-2 sm:col-span-1">
                         <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Password Owner</label>
-                        <input v-model="form.password" type="password" required
+                        <KInput  v-model="form.password" type="password" required
                             class="w-full rounded-xl text-sm py-2.5 px-4 border transition-all duration-200 focus:ring-2 focus:ring-indigo-500/50 focus:outline-none bg-slate-900/50 border-slate-700 text-slate-200" />
                         <p v-if="form.errors.password" class="mt-1.5 text-xs font-medium text-rose-400">{{ form.errors.password }}</p>
                     </div>
                     <div>
                         <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">No. Telepon</label>
-                        <input v-model="form.phone" type="text"
+                        <KInput  v-model="form.phone" type="text"
                             class="w-full rounded-xl text-sm py-2.5 px-4 border transition-all duration-200 focus:ring-2 focus:ring-indigo-500/50 focus:outline-none bg-slate-900/50 border-slate-700 text-slate-200 placeholder-slate-500" />
                     </div>
                     <div>
                         <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Paket Langganan</label>
-                        <select v-model="form.plan_id"
+                        <KSelect  v-model="form.plan_id"
                             class="w-full rounded-xl text-sm py-2.5 px-4 border transition-all duration-200 focus:ring-2 focus:ring-indigo-500/50 focus:outline-none bg-slate-900/50 border-slate-700 text-slate-200">
                             <option value="">Trial (Gratis)</option>
                             <option v-for="p in plans" :key="p.id" :value="p.id">{{ p.name }} - Rp {{ formatNumber(p.price) }}/bln</option>
-                        </select>
+                        </KSelect>
                     </div>
                     <div class="col-span-2">
                         <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Tipe Bisnis</label>
-                        <select v-model="form.business_type"
+                        <KSelect  v-model="form.business_type"
                             class="w-full rounded-xl text-sm py-2.5 px-4 border transition-all duration-200 focus:ring-2 focus:ring-indigo-500/50 focus:outline-none bg-slate-900/50 border-slate-700 text-slate-200">
                             <option value="full_service">Servis & Sparepart</option>
                             <option value="aksesoris_service">Aksesoris & Servis</option>
                             <option value="aksespare_service">Pusat Servis & Sparepart</option>
                             <option value="gadget_full">Gadget & Servis</option>
                             <option value="retail_only">Retail Saja</option>
-                        </select>
+                        </KSelect>
                     </div>
                 </div>
 
@@ -77,11 +77,11 @@
                         class="px-5 py-2.5 rounded-xl text-sm font-bold transition-colors text-slate-300 bg-slate-700/50 hover:bg-slate-700">
                         Batal
                     </Link>
-                    <button type="submit" :disabled="form.processing"
+                    <KButton  type="submit" :disabled="form.processing"
                         class="px-6 py-2.5 rounded-xl text-sm font-bold text-white transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:hover:translate-y-0 flex items-center gap-2">
                         <svg v-if="form.processing" class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                         {{ form.processing ? 'Membuat...' : 'Buat Tenant' }}
-                    </button>
+                    </KButton>
                 </div>
             </form>
         </div>
@@ -89,6 +89,10 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+import KInput from '@/Components/KInput.vue';
+import KSelect from '@/Components/KSelect.vue';
+
 import { useForm, Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import AdminLayout from '@/Layouts/AdminLayout.vue';

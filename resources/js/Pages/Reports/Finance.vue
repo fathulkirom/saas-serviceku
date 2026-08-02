@@ -12,12 +12,12 @@
                 </div>
             </div>
             <div>
-                <select v-model="period" @change="changePeriod" class="w-full sm:w-48 rounded-xl border border-zinc-300 px-4 py-2 text-sm font-semibold bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all cursor-pointer shadow-sm">
+                <KSelect  v-model="period" @change="changePeriod" class="w-full sm:w-48 rounded-xl border border-zinc-300 px-4 py-2 text-sm font-semibold bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all cursor-pointer shadow-sm">
                     <option value="today">Hari Ini</option>
                     <option value="week">Minggu Ini</option>
                     <option value="month">Bulan Ini</option>
                     <option value="year">Tahun Ini</option>
-                </select>
+                </KSelect>
             </div>
         </div>
 
@@ -130,6 +130,8 @@
 </template>
 
 <script setup>
+import KSelect from '@/Components/KSelect.vue';
+
 import { router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';

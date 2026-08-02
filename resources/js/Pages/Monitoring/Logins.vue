@@ -17,18 +17,18 @@
             <form class="flex flex-wrap gap-4 items-end" @submit.prevent="filter">
                 <div class="flex-1 min-w-[200px]">
                     <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">User</label>
-                    <select v-model="filters.user_id" @change="filter" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white">
+                    <KSelect  v-model="filters.user_id" @change="filter" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white">
                         <option value="">Semua User</option>
                         <option v-for="u in users" :key="u.id" :value="u.id">{{ u.name }}</option>
-                    </select>
+                    </KSelect>
                 </div>
                 <div class="flex-1 min-w-[200px]">
                     <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Status</label>
-                    <select v-model="filters.status" @change="filter" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white">
+                    <KSelect  v-model="filters.status" @change="filter" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white">
                         <option value="">Semua Status</option>
                         <option value="success">Success</option>
                         <option value="failed">Failed</option>
-                    </select>
+                    </KSelect>
                 </div>
             </form>
         </div>
@@ -72,6 +72,8 @@
 </template>
 
 <script setup>
+import KSelect from '@/Components/KSelect.vue';
+
 import { Link, router } from '@inertiajs/vue3';
 import { reactive } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';

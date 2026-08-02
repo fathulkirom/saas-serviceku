@@ -21,31 +21,31 @@
                     <div class="grid grid-cols-2 gap-5">
                         <div class="col-span-2">
                             <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Nama Toko</label>
-                            <input v-model="form.tenant_name" type="text" required
+                            <KInput  v-model="form.tenant_name" type="text" required
                                 class="w-full rounded-xl text-sm py-2.5 px-4 border transition-all duration-200 focus:ring-2 focus:ring-indigo-500/50 focus:outline-none bg-slate-900/50 border-slate-700 text-slate-200 placeholder-slate-500" />
                             <p v-if="form.errors.tenant_name" class="mt-1.5 text-xs font-medium text-rose-400">{{ form.errors.tenant_name }}</p>
                         </div>
                         <div>
                             <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Email</label>
-                            <input v-model="form.email" type="email" required
+                            <KInput  v-model="form.email" type="email" required
                                 class="w-full rounded-xl text-sm py-2.5 px-4 border transition-all duration-200 focus:ring-2 focus:ring-indigo-500/50 focus:outline-none bg-slate-900/50 border-slate-700 text-slate-200 placeholder-slate-500" />
                             <p v-if="form.errors.email" class="mt-1.5 text-xs font-medium text-rose-400">{{ form.errors.email }}</p>
                         </div>
                         <div>
                             <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Telepon</label>
-                            <input v-model="form.phone" type="text"
+                            <KInput  v-model="form.phone" type="text"
                                 class="w-full rounded-xl text-sm py-2.5 px-4 border transition-all duration-200 focus:ring-2 focus:ring-indigo-500/50 focus:outline-none bg-slate-900/50 border-slate-700 text-slate-200 placeholder-slate-500" />
                         </div>
                         <div class="col-span-2">
                             <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Tipe Bisnis</label>
-                            <select v-model="form.business_type"
+                            <KSelect  v-model="form.business_type"
                                 class="w-full rounded-xl text-sm py-2.5 px-4 border transition-all duration-200 focus:ring-2 focus:ring-indigo-500/50 focus:outline-none bg-slate-900/50 border-slate-700 text-slate-200">
                                 <option value="full_service">Servis & Sparepart</option>
                                 <option value="aksesoris_service">Aksesoris & Servis</option>
                                 <option value="aksespare_service">Pusat Servis & Sparepart</option>
                                 <option value="gadget_full">Gadget & Servis</option>
                                 <option value="retail_only">Retail Saja</option>
-                            </select>
+                            </KSelect>
                         </div>
                     </div>
 
@@ -54,11 +54,11 @@
                             class="px-5 py-2.5 rounded-xl text-sm font-bold transition-colors text-slate-300 bg-slate-700/50 hover:bg-slate-700">
                             Batal
                         </Link>
-                        <button type="submit" :disabled="form.processing"
+                        <KButton  type="submit" :disabled="form.processing"
                             class="px-6 py-2.5 rounded-xl text-sm font-bold text-white transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:hover:translate-y-0 flex items-center gap-2">
                             <svg v-if="form.processing" class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                             {{ form.processing ? 'Menyimpan...' : 'Simpan Perubahan' }}
-                        </button>
+                        </KButton>
                     </div>
                 </form>
             </div>
@@ -88,14 +88,14 @@
                         📦 Ganti Paket
                     </h3>
                     <form @submit.prevent="changePlan">
-                        <select v-model="planForm.plan_id" required
+                        <KSelect  v-model="planForm.plan_id" required
                             class="w-full rounded-xl text-sm py-2.5 px-4 border transition-all duration-200 focus:ring-2 focus:ring-indigo-500/50 focus:outline-none bg-slate-900/50 border-slate-700 text-slate-200 mb-4"
                             @change="onPlanChange">
                             <option value="">Pilih Paket</option>
                             <option v-for="p in plans" :key="p.id" :value="p.id" :selected="tenant.plan_id === p.id">
                                 {{ p.name }} - Rp {{ formatNumber(p.effective_price || p.price) }}/bln
                             </option>
-                        </select>
+                        </KSelect>
 
                         <!-- Simulasi Upgrade/Downgrade -->
                         <div v-if="simulation" class="p-4 rounded-xl mb-4 text-sm"
@@ -127,11 +127,11 @@
                             </div>
                         </div>
 
-                        <button type="submit" :disabled="planForm.processing"
+                        <KButton  type="submit" :disabled="planForm.processing"
                             class="w-full px-4 py-2.5 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 disabled:opacity-50 text-sm flex items-center justify-center gap-2">
                             <svg v-if="planForm.processing" class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                             {{ planForm.processing ? 'Menyimpan...' : 'Simpan Paket' }}
-                        </button>
+                        </KButton>
                     </form>
                 </div>
 
@@ -141,18 +141,18 @@
                     <p class="text-xs text-slate-400 mb-3">Trial saat ini: <span class="text-slate-200">{{ tenant.trial_ends_at || 'Tidak ada' }}</span></p>
                     <form @submit.prevent="extendTrial">
                         <div class="flex gap-2">
-                            <select v-model="trialForm.days"
+                            <KSelect  v-model="trialForm.days"
                                 class="flex-1 rounded-xl text-sm py-2.5 px-4 border transition-all duration-200 focus:ring-2 focus:ring-indigo-500/50 focus:outline-none bg-slate-900/50 border-slate-700 text-slate-200">
                                 <option value="7">7 hari</option>
                                 <option value="14">14 hari</option>
                                 <option value="30">30 hari</option>
                                 <option value="60">60 hari</option>
                                 <option value="90">90 hari</option>
-                            </select>
-                            <button type="submit" :disabled="trialForm.processing"
+                            </KSelect>
+                            <KButton  type="submit" :disabled="trialForm.processing"
                                 class="px-5 py-2.5 bg-yellow-500 text-yellow-950 font-bold rounded-xl hover:bg-yellow-400 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 disabled:opacity-50 text-sm">
                                 Perpanjang
-                            </button>
+                            </KButton>
                         </div>
                     </form>
                 </div>
@@ -168,19 +168,19 @@
                                 🛑 Tenant masih <strong class="text-amber-400 font-bold">aktif</strong>. Untuk menghapus, harus di-<strong class="text-amber-400 font-bold">Suspend</strong> terlebih dahulu.
                             </p>
                         </div>
-                        <button @click="suspendTenant" :disabled="suspendForm.processing"
+                        <KButton  @click="suspendTenant" :disabled="suspendForm.processing"
                             class="w-full px-4 py-2.5 bg-orange-600/20 border border-orange-500/30 text-orange-400 font-bold rounded-xl hover:bg-orange-600/30 transition-all shadow-sm hover:-translate-y-0.5 disabled:opacity-50 text-sm">
                             🔒 Suspend Tenant
-                        </button>
+                        </KButton>
                     </template>
 
                     <!-- Tenant Tidak Aktif -> Bisa Hapus -->
                     <template v-else>
                         <p class="text-sm font-medium text-rose-400/80 mb-4 leading-relaxed">Menghapus tenant akan menghapus semua data termasuk database tenant permanen.</p>
-                        <button @click="confirmDelete"
+                        <KButton  @click="confirmDelete"
                             class="w-full px-4 py-2.5 bg-rose-600 text-white font-bold rounded-xl hover:bg-rose-700 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 text-sm">
                             🗑️ Hapus Tenant
-                        </button>
+                        </KButton>
                     </template>
                 </div>
             </div>
@@ -195,14 +195,14 @@
                     Tindakan ini <strong class="text-rose-400">tidak bisa dibatalkan</strong>. Semua data termasuk database tenant akan dihapus permanen.
                 </p>
                 <div class="flex justify-end gap-3">
-                    <button @click="showDeleteModal = false" class="px-5 py-2.5 bg-slate-800 text-slate-300 font-bold rounded-xl hover:bg-slate-700 transition-colors text-sm">
+                    <KButton  @click="showDeleteModal = false" class="px-5 py-2.5 bg-slate-800 text-slate-300 font-bold rounded-xl hover:bg-slate-700 transition-colors text-sm">
                         Batal
-                    </button>
-                    <button @click="deleteTenant" :disabled="deleteForm.processing"
+                    </KButton>
+                    <KButton  @click="deleteTenant" :disabled="deleteForm.processing"
                         class="px-6 py-2.5 bg-rose-600 text-white font-bold rounded-xl hover:bg-rose-700 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 disabled:opacity-50 text-sm flex items-center gap-2">
                         <svg v-if="deleteForm.processing" class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                         {{ deleteForm.processing ? 'Menghapus...' : 'Ya, Hapus' }}
-                    </button>
+                    </KButton>
                 </div>
             </div>
         </div>
@@ -210,6 +210,10 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+import KInput from '@/Components/KInput.vue';
+import KSelect from '@/Components/KSelect.vue';
+
 import { useForm, Link, router } from '@inertiajs/vue3';
 import { ref, computed, reactive } from 'vue';
 import AdminLayout from '@/Layouts/AdminLayout.vue';

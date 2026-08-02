@@ -38,7 +38,7 @@
 
         <!-- Search Type Tabs -->
         <div class="flex p-1 bg-zinc-100 rounded-xl mb-6 shadow-inner">
-            <button
+            <KButton 
                 v-for="opt in searchOptions"
                 :key="opt.value"
                 type="button"
@@ -46,25 +46,23 @@
                 class="flex-1 px-3 py-2 text-xs font-bold rounded-lg transition-all duration-200"
                 :class="searchType === opt.value
                     ? 'bg-white text-zinc-900 shadow-sm border border-zinc-200/50'
-                    : 'text-zinc-500 hover:text-zinc-700'"
-            >
+                    : 'text-zinc-500 hover:text-zinc-700'">
                 {{ opt.label }}
-            </button>
+            </KButton>
         </div>
 
         <form @submit.prevent="submit" class="space-y-6">
             <div>
                 <label class="block text-sm font-bold text-zinc-900 mb-2">{{ currentLabel }}</label>
                 <div class="relative">
-                    <input
+                    <KInput 
                         v-model="form.search_value"
                         type="text"
                         name="search_value"
                         class="w-full pl-11 pr-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
                         :placeholder="currentPlaceholder"
                         required
-                        autofocus
-                    />
+                        autofocus />
                     <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                         <!-- Icon: Store -->
                         <svg v-if="searchType === 'name'" class="w-5 h-5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -83,17 +81,16 @@
             </div>
 
             <div class="pt-2">
-                <button
+                <KButton 
                     type="submit"
                     class="w-full flex items-center justify-center px-6 py-3 rounded-xl bg-zinc-900 text-white text-sm font-bold shadow-md hover:bg-zinc-800 focus:ring-2 focus:ring-offset-2 focus:ring-zinc-900 transition-all disabled:opacity-70"
-                    :disabled="form.processing"
-                >
+                    :disabled="form.processing">
                     <svg v-if="form.processing" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
                         <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                     </svg>
                     Lanjutkan
-                </button>
+                </KButton>
             </div>
             
             <div class="text-center mt-6">
@@ -106,6 +103,9 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+import KInput from '@/Components/KInput.vue';
+
 import { useForm, usePage } from '@inertiajs/vue3';
 import { Link } from '@inertiajs/vue3';
 import GuestLayout from '@/Layouts/GuestLayout.vue';

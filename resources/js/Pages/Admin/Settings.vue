@@ -13,19 +13,19 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div class="col-span-2">
                         <label class="block text-sm font-medium text-slate-300 mb-1">Nama Aplikasi</label>
-                        <input type="text" v-model="form.app_name" name="app_name" class="w-full rounded-md border-slate-600 shadow-sm" required />
+                        <KInput  type="text" v-model="form.app_name" name="app_name" class="w-full rounded-md border-slate-600 shadow-sm" required />
                     </div>
                     <div class="col-span-2">
                         <label class="block text-sm font-medium text-slate-300 mb-1">Deskripsi</label>
-                        <textarea v-model="form.app_description" rows="2" name="app_description" class="w-full rounded-md border-slate-600 shadow-sm"></textarea>
+                        <KTextarea  v-model="form.app_description" rows="2" name="app_description" class="w-full rounded-md border-slate-600 shadow-sm"></KTextarea>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-300 mb-1">Max Tenant</label>
-                        <input type="number" v-model="form.max_tenants" name="max_tenants" class="w-full rounded-md border-slate-600 shadow-sm" />
+                        <KInput  type="number" v-model="form.max_tenants" name="max_tenants" class="w-full rounded-md border-slate-600 shadow-sm" />
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-300 mb-1">Notifikasi Email</label>
-                        <input type="email" v-model="form.notify_email" name="notify_email" class="w-full rounded-md border-slate-600 shadow-sm" />
+                        <KInput  type="email" v-model="form.notify_email" name="notify_email" class="w-full rounded-md border-slate-600 shadow-sm" />
                     </div>
                 </div>
             </div>
@@ -35,23 +35,23 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="flex items-center">
-                            <input type="checkbox" v-model="form.registration_open_bool" name="registration_open_bool" class="rounded border-slate-600 text-indigo-600 shadow-sm" />
+                            <KCheckbox  v-model="form.registration_open_bool" name="registration_open_bool" class="rounded border-slate-600 text-indigo-600 shadow-sm" />
                             <span class="ml-2 text-sm text-slate-300">Buka Registrasi</span>
                         </label>
                     </div>
                     <div>
                         <label class="flex items-center">
-                            <input type="checkbox" v-model="form.require_approval_bool" name="require_approval_bool" class="rounded border-slate-600 text-indigo-600 shadow-sm" />
+                            <KCheckbox  v-model="form.require_approval_bool" name="require_approval_bool" class="rounded border-slate-600 text-indigo-600 shadow-sm" />
                             <span class="ml-2 text-sm text-slate-300">Perlu Persetujuan Admin</span>
                         </label>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-300 mb-1">Default Plan</label>
-                        <input type="text" v-model="form.default_plan_slug" name="default_plan_slug" class="w-full rounded-md border-slate-600 shadow-sm" />
+                        <KInput  type="text" v-model="form.default_plan_slug" name="default_plan_slug" class="w-full rounded-md border-slate-600 shadow-sm" />
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-300 mb-1">Masa Trial (hari)</label>
-                        <input type="number" v-model="form.default_trial_days" name="default_trial_days" class="w-full rounded-md border-slate-600 shadow-sm" />
+                        <KInput  type="number" v-model="form.default_trial_days" name="default_trial_days" class="w-full rounded-md border-slate-600 shadow-sm" />
                     </div>
                 </div>
             </div>
@@ -60,13 +60,13 @@
                 <h3 class="text-lg font-semibold text-gray-900 mb-4">Maintenance</h3>
                 <div class="mb-4">
                     <label class="flex items-center">
-                        <input type="checkbox" v-model="form.maintenance_mode_bool" name="maintenance_mode_bool" class="rounded border-slate-600 text-indigo-600 shadow-sm" />
+                        <KCheckbox  v-model="form.maintenance_mode_bool" name="maintenance_mode_bool" class="rounded border-slate-600 text-indigo-600 shadow-sm" />
                         <span class="ml-2 text-sm text-slate-300">Mode Maintenance</span>
                     </label>
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-slate-300 mb-1">Pesan Maintenance</label>
-                    <textarea v-model="form.maintenance_message" rows="2" name="maintenance_message" class="w-full rounded-md border-slate-600 shadow-sm"></textarea>
+                    <KTextarea  v-model="form.maintenance_message" rows="2" name="maintenance_message" class="w-full rounded-md border-slate-600 shadow-sm"></KTextarea>
                 </div>
             </div>
 
@@ -82,14 +82,14 @@
                             <p class="text-xs text-slate-400">{{ flag.description }}</p>
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" v-model="featureFlagsForm[key]" class="sr-only peer" />
+                            <KCheckbox  v-model="featureFlagsForm[key]" class="sr-only peer" />
                             <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
                         </label>
                     </div>
                     <div class="flex justify-end pt-2">
-                        <button type="submit" :disabled="featureFlagsForm.processing" class="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 text-sm">
+                        <KButton  type="submit" :disabled="featureFlagsForm.processing" class="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 text-sm">
                             {{ featureFlagsForm.processing ? 'Menyimpan...' : 'Simpan Feature Flags' }}
-                        </button>
+                        </KButton>
                     </div>
                 </form>
             </div>
@@ -101,44 +101,44 @@
 
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-slate-300 mb-1">Mail Driver</label>
-                    <select v-model="form.mail_driver" name="mail_driver" class="w-full rounded-md border-slate-600 shadow-sm">
+                    <KSelect  v-model="form.mail_driver" name="mail_driver" class="w-full rounded-md border-slate-600 shadow-sm">
                         <option value="log">Log (hanya untuk testing)</option>
                         <option value="smtp">SMTP (kirim email sungguhan)</option>
-                    </select>
+                    </KSelect>
                 </div>
 
                 <div v-if="form.mail_driver === 'smtp'" class="grid grid-cols-2 gap-4">
                     <div class="col-span-2">
                         <label class="block text-sm font-medium text-slate-300 mb-1">SMTP Host</label>
-                        <input type="text" v-model="form.mail_host" placeholder="smtp.gmail.com" name="mail_host" class="w-full rounded-md border-slate-600 shadow-sm" />
+                        <KInput  type="text" v-model="form.mail_host" placeholder="smtp.gmail.com" name="mail_host" class="w-full rounded-md border-slate-600 shadow-sm" />
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-300 mb-1">Port</label>
-                        <input type="number" v-model="form.mail_port" placeholder="587" name="mail_port" class="w-full rounded-md border-slate-600 shadow-sm" />
+                        <KInput  type="number" v-model="form.mail_port" placeholder="587" name="mail_port" class="w-full rounded-md border-slate-600 shadow-sm" />
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-300 mb-1">Encryption</label>
-                        <select v-model="form.mail_encryption" name="mail_encryption" class="w-full rounded-md border-slate-600 shadow-sm">
+                        <KSelect  v-model="form.mail_encryption" name="mail_encryption" class="w-full rounded-md border-slate-600 shadow-sm">
                             <option value="tls">TLS</option>
                             <option value="ssl">SSL</option>
                             <option value="null">Tidak Ada</option>
-                        </select>
+                        </KSelect>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-300 mb-1">Username</label>
-                        <input type="text" v-model="form.mail_username" name="mail_username" class="w-full rounded-md border-slate-600 shadow-sm" />
+                        <KInput  type="text" v-model="form.mail_username" name="mail_username" class="w-full rounded-md border-slate-600 shadow-sm" />
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-300 mb-1">Password</label>
-                        <input type="password" v-model="form.mail_password" name="mail_password" class="w-full rounded-md border-slate-600 shadow-sm" />
+                        <KInput  type="password" v-model="form.mail_password" name="mail_password" class="w-full rounded-md border-slate-600 shadow-sm" />
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-300 mb-1">From Address</label>
-                        <input type="email" v-model="form.mail_from_address" placeholder="notifications@serviceku.my.id" name="mail_from_address" class="w-full rounded-md border-slate-600 shadow-sm" />
+                        <KInput  type="email" v-model="form.mail_from_address" placeholder="notifications@serviceku.my.id" name="mail_from_address" class="w-full rounded-md border-slate-600 shadow-sm" />
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-300 mb-1">From Name</label>
-                        <input type="text" v-model="form.mail_from_name" placeholder="ServiceKU" name="mail_from_name" class="w-full rounded-md border-slate-600 shadow-sm" />
+                        <KInput  type="text" v-model="form.mail_from_name" placeholder="ServiceKU" name="mail_from_name" class="w-full rounded-md border-slate-600 shadow-sm" />
                     </div>
                 </div>
 
@@ -147,26 +147,32 @@
                     <h4 class="text-sm font-medium text-slate-300 mb-2">🔍 Test Email</h4>
                     <p class="text-xs text-slate-400 mb-2">Kirim email test untuk memastikan konfigurasi SMTP berfungsi.</p>
                     <div class="flex gap-2">
-                        <input type="email" v-model="testEmail" placeholder="email@example.com"
+                        <KInput  type="email" v-model="testEmail" placeholder="email@example.com"
                             class="flex-1 rounded-md border-slate-600 shadow-sm text-sm" />
-                        <button @click="sendTestEmail"
+                        <KButton  @click="sendTestEmail"
                             class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm whitespace-nowrap">
                             Kirim Test
-                        </button>
+                        </KButton>
                     </div>
                 </div>
             </div>
 
             <div class="flex justify-end gap-3">
-                <button type="submit" :disabled="form.processing" class="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50">
+                <KButton  type="submit" :disabled="form.processing" class="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50">
                     Simpan Pengaturan
-                </button>
+                </KButton>
             </div>
         </form>
     </AdminLayout>
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+import KInput from '@/Components/KInput.vue';
+import KSelect from '@/Components/KSelect.vue';
+import KTextarea from '@/Components/KTextarea.vue';
+import KCheckbox from '@/Components/KCheckbox.vue';
+
 import { useForm, router } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import AdminLayout from '@/Layouts/AdminLayout.vue';

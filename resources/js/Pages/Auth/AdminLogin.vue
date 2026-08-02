@@ -28,26 +28,26 @@
                 <form @submit.prevent="submit" class="space-y-5">
                     <div>
                         <label class="block text-sm font-bold text-zinc-900 mb-2">Email</label>
-                        <input type="email" v-model="form.email" required autofocus
+                        <KInput  type="email" v-model="form.email" required autofocus
                             class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
                             placeholder="admin@serviceku.com" />
                         <p v-if="form.errors.email" class="mt-1.5 text-xs font-semibold text-red-600">{{ form.errors.email }}</p>
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-zinc-900 mb-2">Password</label>
-                        <input type="password" v-model="form.password" required
+                        <KInput  type="password" v-model="form.password" required
                             class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
                             placeholder="••••••••" />
                     </div>
                     <div class="pt-2">
-                        <button type="submit" :disabled="form.processing"
+                        <KButton  type="submit" :disabled="form.processing"
                             class="w-full flex items-center justify-center px-6 py-3 rounded-xl bg-zinc-900 text-white text-sm font-bold shadow-md hover:bg-zinc-800 focus:ring-2 focus:ring-offset-2 focus:ring-zinc-900 transition-all disabled:opacity-70">
                             <svg v-if="form.processing" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                             </svg>
                             {{ form.processing ? 'Memproses...' : 'Masuk ke Panel' }}
-                        </button>
+                        </KButton>
                     </div>
                 </form>
             </div>
@@ -63,6 +63,9 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+import KInput from '@/Components/KInput.vue';
+
 import { useForm } from '@inertiajs/vue3';
 
 const form = useForm({

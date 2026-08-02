@@ -24,12 +24,12 @@
                         <Link :href="route('login')" class="px-3 py-1.5 bg-indigo-600 text-white rounded-md text-xs hover:bg-indigo-700">
                             Login
                         </Link>
-                        <button @click="showMobileMenu = !showMobileMenu" class="p-2 text-gray-600 hover:text-gray-900">
+                        <KButton  @click="showMobileMenu = !showMobileMenu" class="p-2 text-gray-600 hover:text-gray-900">
                             <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path v-if="!showMobileMenu" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                                 <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                             </svg>
-                        </button>
+                        </KButton>
                     </div>
                 </div>
                 <!-- Mobile Menu -->
@@ -106,11 +106,11 @@
                 <!-- Business Type Selector -->
                 <div class="max-w-xs mx-auto mb-12">
                     <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider text-center mb-2">Tipe Bisnis Toko Anda</label>
-                    <select v-model="selectedBusinessType" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm bg-white py-2.5 px-3">
+                    <KSelect  v-model="selectedBusinessType" class="block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm bg-white py-2.5 px-3">
                         <option v-for="(label, key) in BUSINESS_TYPES" :key="key" :value="key">
                             💼 {{ label }}
                         </option>
-                    </select>
+                    </KSelect>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-8 max-w-5xl mx-auto">
@@ -162,6 +162,9 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+import KSelect from '@/Components/KSelect.vue';
+
 import { ref } from 'vue';
 import { Link } from '@inertiajs/vue3';
 

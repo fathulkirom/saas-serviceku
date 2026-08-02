@@ -31,7 +31,7 @@
         </div>
 
         <form @submit.prevent="resend" class="space-y-4">
-            <button type="submit"
+            <KButton  type="submit"
                 :disabled="form.processing"
                 class="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-zinc-900 text-white text-sm font-bold shadow-md hover:bg-zinc-800 focus:ring-2 focus:ring-offset-2 focus:ring-zinc-900 transition-all disabled:opacity-70">
                 <svg v-if="form.processing" class="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
@@ -39,7 +39,7 @@
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                 </svg>
                 {{ form.processing ? 'Mengirim...' : 'Kirim Ulang Link Verifikasi' }}
-            </button>
+            </KButton>
         </form>
 
         <div class="mt-6 text-center">
@@ -52,6 +52,8 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+
 import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
 
 const user = usePage().props.auth?.user ?? {};

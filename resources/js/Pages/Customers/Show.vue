@@ -14,18 +14,208 @@
                             <span v-if="customer.is_member" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">
                                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Member
                             </span>
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold"
+                                :class="risk.level === 'high' ? 'bg-red-100 text-red-800 border-red-200' : risk.level === 'medium' ? 'bg-amber-100 text-amber-800 border-amber-200' : 'bg-green-100 text-green-800 border-green-200'">
+                                {{ risk.icon }} {{ risk.label }}
+                            </span>
                         </div>
                         <p class="text-sm text-zinc-500 font-medium mt-1">Pelanggan sejak {{ formatDate(customer.created_at) }}</p>
                     </div>
                 </div>
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-2">
                     <Link :href="route('customers.index')" class="px-4 py-2 bg-white border border-zinc-200 rounded-xl text-zinc-700 text-sm font-semibold hover:bg-zinc-50 transition-colors shadow-sm">
-                        Kembali ke Daftar
+                        ← Kembali
+                    </Link>
+                    <Link :href="route('customers.create')" class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-sm">
+                        Edit
                     </Link>
                 </div>
             </div>
 
-            <!-- CRM 2-Column Layout -->
+            <!-- Sprint 7.3: Stats Quick View -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
+                <div class="bg-white p-4 rounded-2xl border border-zinc-200 shadow-sm text-center">
+                    <p class="text-xs text-zinc-500">Total Spending</p>
+                    <p class="text-lg font-bold text-indigo-600">Rp {{ formatNumber(props.stats.total_spending || 0) }}</p>
+                </div>
+                <div class="bg-white p-4 rounded-2xl border border-zinc-200 shadow-sm text-center">
+                    <p class="text-xs text-zinc-500">Servis</p>
+                    <p class="text-lg font-bold text-zinc-900">{{ props.stats.service_count || 0 }}</p>
+                </div>
+                <div class="bg-white p-4 rounded-2xl border border-zinc-200 shadow-sm text-center">
+                    <p class="text-xs text-zinc-500">Pembelian</p>
+                    <p class="text-lg font-bold text-zinc-900">{{ props.stats.sales_count || 0 }}</p>
+                </div>
+                <div class="bg-white p-4 rounded-2xl border border-zinc-200 shadow-sm text-center">
+                    <p class="text-xs text-zinc-500">Perangkat</p>
+                    <p class="text-lg font-bold text-zinc-900">{{ props.stats.device_count || 0 }}</p>
+                </div>
+            </div>
+
+            <!-- Sprint 7.3: Tabs -->
+            <div class="flex border-b border-zinc-200 mb-6 overflow-x-auto">
+                <button v-for="tab in [
+                    {key:'overview',label:'Overview',icon:'👤'},
+                    {key:'timeline',label:'Timeline',icon:'📅',count:timeline.length},
+                    {key:'devices',label:'Perangkat',icon:'💻',count:devices.length},
+                    {key:'communication',label:'Komunikasi',icon:'💬',count:communications.length},
+                    {key:'notes',label:'Catatan',icon:'📝',count:notes.length},
+                    {key:'complaints',label:'Komplain',icon:'🚨',count:complaints.length},
+                ]" :key="tab.key" @click="activeTab = tab.key"
+                    class="px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors flex items-center gap-1.5"
+                    :class="activeTab === tab.key ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-zinc-500 hover:text-zinc-700'">
+                    {{ tab.icon }} {{ tab.label }}
+                    <span v-if="tab.count !== undefined" class="text-xs bg-zinc-100 px-1.5 py-0.5 rounded-full">{{ tab.count }}</span>
+                </button>
+            </div>
+
+            <!-- Sprint 7.3: Unified Timeline Tab -->
+            <div v-if="activeTab === 'timeline'" class="mb-8">
+                <div v-if="timeline.length === 0" class="text-center py-12 text-zinc-500">Belum ada aktivitas.</div>
+                <div v-for="item in timeline" :key="`${item.type}-${item.id}`" class="flex gap-3 pl-4 border-l-2 pb-5 last:pb-0"
+                    :class="{'border-blue-400': item.type === 'request', 'border-amber-400': item.type === 'service', 'border-green-400': item.type === 'sale'}">
+                    <div class="text-lg shrink-0 mt-0.5">{{ {request:'📋',service:'🔧',sale:'🛒'}[item.type] || '📌' }}</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="text-sm font-medium text-zinc-900">{{ item.title }}</div>
+                        <div v-if="item.description" class="text-xs text-zinc-500 mt-0.5 line-clamp-2">{{ item.description }}</div>
+                        <div class="text-xs text-zinc-400 mt-1">{{ formatDateTime(item.created_at) }}</div>
+                    </div>
+                    <KBadge v-if="item.status" size="xs" :class="statusClass(item.status)">{{ item.status }}</KBadge>
+                </div>
+            </div>
+
+            <!-- Sprint 7.3: Devices Tab -->
+            <div v-if="activeTab === 'devices'" class="mb-8">
+                <div v-if="devices.length === 0" class="text-center py-12 text-zinc-500">
+                    <p class="font-medium">Belum ada perangkat terdaftar.</p>
+                    <p class="text-sm mt-1">Perangkat ditambahkan saat membuat Request servis.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div v-for="d in devices" :key="d.id" class="bg-white rounded-xl border border-zinc-200 p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="font-semibold text-zinc-900">{{ d.brand }} {{ d.model }}</h4>
+                            <span class="text-xs px-2 py-0.5 rounded-full" :class="d.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-zinc-100 text-zinc-500'">{{ d.status }}</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-x-3 gap-y-1 text-xs">
+                            <span class="text-zinc-400">Type:</span><span>{{ d.type || '-' }}</span>
+                            <span class="text-zinc-400">IMEI:</span><span class="font-mono">{{ d.imei || '-' }}</span>
+                            <span class="text-zinc-400">S/N:</span><span class="font-mono">{{ d.serial_number || '-' }}</span>
+                            <span class="text-zinc-400">Garansi:</span><span>{{ d.warranty_until || '-' }}</span>
+                            <span class="text-zinc-400">Servis:</span><span>{{ d.repair_count || 0 }}x</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sprint 7.3C: Communication Tab -->
+            <div v-if="activeTab === 'communication'" class="mb-8">
+                <!-- Send Form -->
+                <div class="bg-white rounded-2xl border border-zinc-200 shadow-sm p-6 mb-6">
+                    <h3 class="font-bold text-zinc-900 mb-4">Kirim Pesan</h3>
+                    <form @submit.prevent="sendMessage" class="space-y-3">
+                        <div class="flex gap-2">
+                            <select v-model="commForm.type" class="px-3 py-2 border border-zinc-200 rounded-lg text-sm">
+                                <option value="whatsapp">📱 WhatsApp</option>
+                                <option value="email">📧 Email</option>
+                            </select>
+                            <select v-model="commForm.template_id" @change="applyTemplate" class="px-3 py-2 border border-zinc-200 rounded-lg text-sm flex-1">
+                                <option value="">-- Pilih Template --</option>
+                                <option v-for="t in templates" :key="t.id" :value="t.id">{{ t.name }} ({{ t.channel }})</option>
+                            </select>
+                        </div>
+                        <textarea v-model="commForm.message" rows="3" class="w-full px-3 py-2 border border-zinc-200 rounded-lg text-sm" placeholder="Tulis pesan... Gunakan {{customer_name}} untuk nama customer." required></textarea>
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-zinc-400">
+                                <template v-if="commForm.type === 'whatsapp'">Ke: {{ customer.phone || 'Tidak ada nomor' }}</template>
+                                <template v-else>Ke: {{ customer.email || 'Tidak ada email' }}</template>
+                            </span>
+                            <button type="submit" :disabled="sending" class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold hover:bg-indigo-700 disabled:opacity-50">
+                                {{ sending ? 'Mengirim...' : 'Kirim' }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- History -->
+                <div v-if="communications.length === 0" class="text-center py-12 text-zinc-500">
+                    <p class="font-medium">Belum ada riwayat komunikasi.</p>
+                </div>
+                <div v-for="c in communications" :key="c.id" class="bg-white rounded-xl border border-zinc-200 p-4 mb-3">
+                    <div class="flex items-center justify-between mb-1">
+                        <div class="flex items-center gap-2">
+                            <span class="text-lg">{{ c.type === 'whatsapp' ? '💬' : '📧' }}</span>
+                            <span class="font-medium text-zinc-900 text-sm">{{ c.type === 'whatsapp' ? 'WhatsApp' : 'Email' }}</span>
+                            <span class="text-xs px-2 py-0.5 rounded-full"
+                                :class="c.status === 'sent' ? 'bg-green-100 text-green-700' : c.status === 'failed' ? 'bg-red-100 text-red-700' : 'bg-zinc-100 text-zinc-500'">
+                                {{ c.status }}
+                            </span>
+                        </div>
+                        <span class="text-xs text-zinc-400">{{ formatDateTime(c.created_at) }}</span>
+                    </div>
+                    <p class="text-sm text-zinc-600 mt-1 line-clamp-3">{{ c.message }}</p>
+                    <div class="text-xs text-zinc-400 mt-1">Ke: {{ c.recipient }} · {{ c.direction === 'outbound' ? 'Keluar' : 'Masuk' }}</div>
+                </div>
+            </div>
+
+            <!-- Sprint 7.3D: Notes Tab -->
+            <div v-if="activeTab === 'notes'" class="mb-8">
+                <form @submit.prevent="addNote" class="bg-white rounded-2xl border border-zinc-200 shadow-sm p-4 mb-4 space-y-3">
+                    <div class="flex gap-2">
+                        <select v-model="noteForm.type" class="px-3 py-2 border border-zinc-200 rounded-lg text-sm">
+                            <option v-for="(label, key) in noteTypes" :key="key" :value="key">{{ label }}</option>
+                        </select>
+                        <select v-model="noteForm.priority" class="px-3 py-2 border border-zinc-200 rounded-lg text-sm">
+                            <option value="low">🟢 Low</option><option value="medium">🟡 Medium</option><option value="high">🔴 High</option>
+                        </select>
+                    </div>
+                    <input v-model="noteForm.title" class="w-full px-3 py-2 border border-zinc-200 rounded-lg text-sm" placeholder="Judul (opsional)" />
+                    <textarea v-model="noteForm.note" rows="2" class="w-full px-3 py-2 border border-zinc-200 rounded-lg text-sm" placeholder="Tulis catatan..." required></textarea>
+                    <div class="flex justify-end"><button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold">Simpan Catatan</button></div>
+                </form>
+                <div v-if="notes.length === 0" class="text-center py-8 text-zinc-400">Belum ada catatan.</div>
+                <div v-for="n in notes" :key="n.id" class="bg-white rounded-xl border p-3 mb-2"
+                    :class="n.priority === 'high' ? 'border-red-200 bg-red-50/30' : n.type === 'warning' ? 'border-amber-200 bg-amber-50/30' : 'border-zinc-200'">
+                    <div class="flex items-center justify-between mb-1">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs px-2 py-0.5 rounded-full bg-zinc-100">{{ noteTypes[n.type] || n.type }}</span>
+                            <span class="text-xs text-zinc-400">{{ formatDateTime(n.created_at) }}</span>
+                        </div>
+                        <span v-if="n.creator" class="text-xs text-zinc-400">{{ n.creator.name }}</span>
+                    </div>
+                    <p v-if="n.title" class="text-sm font-medium text-zinc-900">{{ n.title }}</p>
+                    <p class="text-sm text-zinc-600 mt-0.5">{{ n.note }}</p>
+                </div>
+            </div>
+
+            <!-- Sprint 7.3D: Complaints Tab -->
+            <div v-if="activeTab === 'complaints'" class="mb-8">
+                <form @submit.prevent="addComplaint" class="bg-white rounded-2xl border border-zinc-200 shadow-sm p-4 mb-4 space-y-3">
+                    <div class="flex gap-2">
+                        <input v-model="complaintForm.title" class="flex-1 px-3 py-2 border border-zinc-200 rounded-lg text-sm" placeholder="Judul komplain" required />
+                        <select v-model="complaintForm.priority" class="px-3 py-2 border border-zinc-200 rounded-lg text-sm">
+                            <option value="low">🟢 Low</option><option value="medium">🟡 Medium</option><option value="high">🔴 High</option>
+                        </select>
+                    </div>
+                    <textarea v-model="complaintForm.description" rows="2" class="w-full px-3 py-2 border border-zinc-200 rounded-lg text-sm" placeholder="Deskripsi..."></textarea>
+                    <div class="flex justify-end"><button type="submit" class="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-semibold">Catat Komplain</button></div>
+                </form>
+                <div v-if="complaints.length === 0" class="text-center py-8 text-zinc-400">Tidak ada komplain — customer baik! 🎉</div>
+                <div v-for="c in complaints" :key="c.id" class="bg-white rounded-xl border p-3 mb-2"
+                    :class="c.status === 'open' ? 'border-red-200 bg-red-50/30' : c.status === 'resolved' ? 'border-green-200 bg-green-50/30' : 'border-zinc-200'">
+                    <div class="flex items-center justify-between mb-1">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs px-2 py-0.5 rounded-full" :class="c.status === 'open' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'">{{ complaintStatuses[c.status] || c.status }}</span>
+                            <span class="text-xs text-zinc-400">{{ formatDateTime(c.created_at) }}</span>
+                        </div>
+                    </div>
+                    <p class="text-sm font-medium text-zinc-900">{{ c.title }}</p>
+                    <p v-if="c.description" class="text-xs text-zinc-500 mt-0.5">{{ c.description }}</p>
+                    <div v-if="c.resolution" class="mt-2 text-xs bg-green-50 border border-green-200 rounded p-2 text-green-800">✅ {{ c.resolution }}</div>
+                    <button v-if="c.status !== 'resolved'" @click="resolveComplaint(c)" class="mt-2 text-xs text-indigo-600 hover:underline">Resolve</button>
+                </div>
+            </div>
+
+            <div v-if="activeTab === 'overview'">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 
                 <!-- KIRI: Informasi Profil -->
@@ -165,13 +355,76 @@
 </template>
 
 <script setup>
-import { computed } from 'vue';
-import { Link } from '@inertiajs/vue3';
+import { ref, computed } from 'vue';
+import { Link, router } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import KBadge from '@/Components/KBadge.vue';
 
 const props = defineProps({
     customer: { type: Object, required: true },
+    timeline: { type: Array, default: () => [] },
+    devices: { type: Array, default: () => [] },
+    communications: { type: Array, default: () => [] },
+    notes: { type: Array, default: () => [] },
+    complaints: { type: Array, default: () => [] },
+    risk: { type: Object, default: () => ({ level: 'low', label: 'Normal', icon: '🟢', factors: [] }) },
+    noteTypes: { type: Object, default: () => ({}) },
+    complaintStatuses: { type: Object, default: () => ({}) },
+    templates: { type: Array, default: () => [] },
+    stats: { type: Object, default: () => ({}) },
 });
+
+const activeTab = ref('overview')
+const sending = ref(false)
+const commForm = ref({ type: 'whatsapp', message: '', template_id: '' })
+
+function applyTemplate() {
+    const t = props.templates.find(t => t.id == commForm.value.template_id)
+    if (t) {
+        commForm.value.message = t.body
+            .replace('{{customer_name}}', props.customer.name)
+            .replace('{{device}}', props.devices[0]?.brand + ' ' + props.devices[0]?.model || 'unit Anda')
+            .replace('{{service_number}}', props.customer.services?.[0]?.id || '-')
+            .replace('{{amount}}', '...')
+            .replace('{{warranty_date}}', props.devices[0]?.warranty_until || '-')
+    }
+}
+
+function sendMessage() {
+    sending.value = true
+    router.post(route('customers.communications.send', props.customer.id), {
+        type: commForm.value.type,
+        message: commForm.value.message,
+        template_id: commForm.value.template_id || null,
+    }, {
+        preserveScroll: true,
+        onSuccess: () => { commForm.value.message = ''; commForm.value.template_id = ''; sending.value = false },
+        onError: () => { sending.value = false },
+    })
+}
+
+// Sprint 7.3D: Notes
+const noteForm = ref({ type: 'general', title: '', note: '', priority: 'medium' })
+function addNote() {
+    router.post(route('customers.notes.store', props.customer.id), noteForm.value, {
+        preserveScroll: true,
+        onSuccess: () => { noteForm.value.note = ''; noteForm.value.title = '' },
+    })
+}
+
+// Sprint 7.3D: Complaints
+const complaintForm = ref({ title: '', description: '', priority: 'medium' })
+function addComplaint() {
+    router.post(route('customers.complaints.store', props.customer.id), complaintForm.value, {
+        preserveScroll: true,
+        onSuccess: () => { complaintForm.value = { title: '', description: '', priority: 'medium' } },
+    })
+}
+function resolveComplaint(c) {
+    const resolution = prompt('Resolusi untuk komplain ini:')
+    if (!resolution) return
+    router.post(route('customers.complaints.resolve', { customer: props.customer.id, complaint: c.id }), { resolution }, { preserveScroll: true })
+}
 
 const totalBelanja = computed(() => {
     if (!props.customer.sales) return 0;

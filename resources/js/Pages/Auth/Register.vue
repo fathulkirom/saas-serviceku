@@ -49,14 +49,14 @@
                     </div>
 
                     <div class="mt-5 pt-4 border-t border-zinc-100">
-                        <button type="button"
+                        <KButton  type="button"
                             class="w-full py-2.5 text-sm font-bold rounded-xl transition-colors flex items-center justify-center gap-2"
                             :class="selectedPlan?.id === p.id
                                 ? 'bg-zinc-900 text-white'
                                 : 'bg-zinc-100 text-zinc-600 group-hover:bg-zinc-200'">
                             <svg v-if="selectedPlan?.id === p.id" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
                             {{ selectedPlan?.id === p.id ? 'Paket Dipilih' : 'Pilih Paket Ini' }}
-                        </button>
+                        </KButton>
                     </div>
                 </div>
             </div>
@@ -65,10 +65,10 @@
         <!-- Step 2: Form Registrasi -->
         <div v-else class="w-full">
             <div class="mb-8">
-                <button @click="step = 'plan'" class="text-xs font-bold text-zinc-500 hover:text-zinc-900 mb-4 flex items-center gap-1 transition-colors uppercase tracking-wider">
+                <KButton  @click="step = 'plan'" class="text-xs font-bold text-zinc-500 hover:text-zinc-900 mb-4 flex items-center gap-1 transition-colors uppercase tracking-wider">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                     Ganti Paket
-                </button>
+                </KButton>
                 <h2 class="text-2xl font-black text-zinc-900 tracking-tight">Lengkapi Data Toko</h2>
                 <div class="mt-2 p-3 bg-zinc-50 border border-zinc-200 rounded-xl flex items-center gap-2">
                     <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -89,7 +89,7 @@
             <form @submit.prevent="submit" class="space-y-5">
                 <div>
                     <label class="block text-sm font-bold text-zinc-900 mb-2">Nama Toko</label>
-                    <input v-model="form.tenant_name" type="text" required
+                    <KInput  v-model="form.tenant_name" type="text" required
                         class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
                         placeholder="Contoh: Servis Maju Jaya" />
                     <p v-if="form.errors.tenant_name" class="mt-1.5 text-xs font-semibold text-red-600">{{ form.errors.tenant_name }}</p>
@@ -97,7 +97,7 @@
                 
                 <div>
                     <label class="block text-sm font-bold text-zinc-900 mb-2">Nama Pemilik</label>
-                    <input v-model="form.name" type="text" required
+                    <KInput  v-model="form.name" type="text" required
                         class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
                         placeholder="Nama lengkap pemilik" />
                     <p v-if="form.errors.name" class="mt-1.5 text-xs font-semibold text-red-600">{{ form.errors.name }}</p>
@@ -106,14 +106,14 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
                         <label class="block text-sm font-bold text-zinc-900 mb-2">Email</label>
-                        <input v-model="form.email" type="email" required
+                        <KInput  v-model="form.email" type="email" required
                             class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
                             placeholder="owner@email.com" />
                         <p v-if="form.errors.email" class="mt-1.5 text-xs font-semibold text-red-600">{{ form.errors.email }}</p>
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-zinc-900 mb-2">No. Telepon / WhatsApp</label>
-                        <input v-model="form.phone" type="text"
+                        <KInput  v-model="form.phone" type="text"
                             class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
                             placeholder="0812..." />
                         <p v-if="form.errors.phone" class="mt-1.5 text-xs font-semibold text-red-600">{{ form.errors.phone }}</p>
@@ -122,11 +122,11 @@
 
                 <div>
                     <label class="block text-sm font-bold text-zinc-900 mb-2">Tipe Bisnis</label>
-                    <select v-model="form.business_type"
+                    <KSelect  v-model="form.business_type"
                         class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm">
                         <option v-if="filteredBusinessTypes.length === 0" value="">Pilih tipe bisnis...</option>
                         <option v-for="(label, key) in filteredBusinessTypes" :key="key" :value="key">{{ label }}</option>
-                    </select>
+                    </KSelect>
                     <p v-if="form.errors.business_type" class="mt-1.5 text-xs font-semibold text-red-600">{{ form.errors.business_type }}</p>
                     <p v-if="!filteredBusinessTypes.length" class="mt-1.5 text-xs font-medium text-zinc-500">Semua tipe bisnis didukung untuk paket ini.</p>
                 </div>
@@ -135,15 +135,15 @@
                 <div>
                     <label class="block text-sm font-bold text-zinc-900 mb-2">Kode Promo <span class="text-xs font-medium text-zinc-400 font-normal">(opsional)</span></label>
                     <div class="flex gap-2">
-                        <input v-model="voucherCode" type="text"
+                        <KInput  v-model="voucherCode" type="text"
                             class="flex-1 px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-bold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm uppercase tracking-wider"
                             placeholder="Masukkan kode promo"
                             @input="voucherStatus = null" />
-                        <button type="button" @click="applyVoucher"
+                        <KButton  type="button" @click="applyVoucher"
                             class="px-6 py-3 rounded-xl bg-white border border-zinc-300 text-zinc-900 text-sm font-bold shadow-sm hover:bg-zinc-50 transition-colors disabled:opacity-50"
                             :disabled="voucherLoading || !voucherCode">
                             {{ voucherLoading ? '...' : 'Gunakan' }}
-                        </button>
+                        </KButton>
                     </div>
                     <!-- Voucher Success -->
                     <div v-if="voucherStatus?.valid" class="mt-3 p-4 bg-emerald-50 border border-emerald-100 rounded-xl">
@@ -167,21 +167,21 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t border-zinc-100">
                     <div>
                         <label class="block text-sm font-bold text-zinc-900 mb-2">Password Akun</label>
-                        <input v-model="form.password" type="password" required minlength="8"
+                        <KInput  v-model="form.password" type="password" required minlength="8"
                             class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
                             placeholder="Minimal 8 karakter" />
                         <p v-if="form.errors.password" class="mt-1.5 text-xs font-semibold text-red-600">{{ form.errors.password }}</p>
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-zinc-900 mb-2">Konfirmasi Password</label>
-                        <input v-model="form.password_confirmation" type="password" required minlength="8"
+                        <KInput  v-model="form.password_confirmation" type="password" required minlength="8"
                             class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
                             placeholder="Ulangi password" />
                     </div>
                 </div>
 
                 <div class="pt-6">
-                    <button type="submit"
+                    <KButton  type="submit"
                         class="w-full flex items-center justify-center px-6 py-4 rounded-xl bg-zinc-900 text-white text-base font-black tracking-wide shadow-md hover:bg-zinc-800 focus:ring-2 focus:ring-offset-2 focus:ring-zinc-900 transition-all disabled:opacity-70"
                         :disabled="form.processing">
                         <svg v-if="form.processing" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
@@ -189,7 +189,7 @@
                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                         </svg>
                         {{ form.processing ? 'Sedang Memproses...' : 'Daftar Sekarang' }}
-                    </button>
+                    </KButton>
                     
                     <div class="text-center mt-6">
                         <p class="text-sm font-medium text-zinc-500">Sudah memiliki akun? 
@@ -203,6 +203,10 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+import KInput from '@/Components/KInput.vue';
+import KSelect from '@/Components/KSelect.vue';
+
 import { ref, computed } from 'vue';
 import { useForm, Link } from '@inertiajs/vue3';
 import GuestLayout from '@/Layouts/GuestLayout.vue';

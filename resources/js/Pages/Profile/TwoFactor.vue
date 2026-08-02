@@ -15,11 +15,11 @@
                     <p class="text-yellow-600 text-sm mt-1">Akun Anda belum memiliki autentikasi dua langkah. Aktifkan sekarang untuk keamanan ekstra.</p>
                 </div>
 
-                <button @click="enable2FA"
+                <KButton  @click="enable2FA"
                     :disabled="processing"
                     class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition">
                     Aktifkan 2FA
-                </button>
+                </KButton>
 
                 <!-- QR Code Step -->
                 <div v-if="showQr" class="mt-6 space-y-4">
@@ -31,18 +31,18 @@
 
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Masukkan kode 6 digit dari aplikasi</label>
-                        <input v-model="confirmCode" type="text" inputmode="numeric" maxlength="6"
+                        <KInput  v-model="confirmCode" type="text" inputmode="numeric" maxlength="6"
                             class="w-full text-center text-2xl tracking-[0.5em] px-4 py-3 border rounded-lg"
                             placeholder="000000" />
                     </div>
 
                     <div v-if="confirmError" class="text-red-600 text-sm">{{ confirmError }}</div>
 
-                    <button @click="confirm2FA"
+                    <KButton  @click="confirm2FA"
                         :disabled="confirmProcessing"
                         class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 transition">
                         Konfirmasi & Aktifkan
-                    </button>
+                    </KButton>
                 </div>
             </div>
 
@@ -60,22 +60,25 @@
                     <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
                         <div v-for="(code, i) in recoveryCodes" :key="i" class="py-1">{{ code }}</div>
                     </div>
-                    <button @click="regenerateCodes" class="mt-2 text-sm text-blue-600 hover:text-blue-800">
+                    <KButton  @click="regenerateCodes" class="mt-2 text-sm text-blue-600 hover:text-blue-800">
                         🔄 Generate ulang kode cadangan
-                    </button>
+                    </KButton>
                 </div>
 
-                <button @click="disable2FA"
+                <KButton  @click="disable2FA"
                     :disabled="processing"
                     class="px-6 py-3 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 disabled:opacity-50 transition">
                     Nonaktifkan 2FA
-                </button>
+                </KButton>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+import KInput from '@/Components/KInput.vue';
+
 import { ref, onMounted } from 'vue';
 import { router } from '@inertiajs/vue3';
 import axios from 'axios';

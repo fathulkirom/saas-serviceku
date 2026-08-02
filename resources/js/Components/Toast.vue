@@ -16,15 +16,17 @@
             <div class="h-full rounded-full transition-all duration-[5000ms] linear" :style="{ width: toast.progress + '%', background: toast.color }" />
           </div>
         </div>
-        <button @click="dismiss(toast.id)" class="flex-shrink-0 w-5 h-5 flex items-center justify-center rounded-full transition-colors" :style="{ color: 'var(--text-muted)' }">
+        <KButton  @click="dismiss(toast.id)" class="flex-shrink-0 w-5 h-5 flex items-center justify-center rounded-full transition-colors" :style="{ color: 'var(--text-muted)' }">
           <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-        </button>
+        </KButton>
       </div>
     </div>
   </Teleport>
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+
 import { ref, onUnmounted } from 'vue';
 
 const toasts = ref([]);

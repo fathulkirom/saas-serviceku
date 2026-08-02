@@ -58,11 +58,11 @@
                     <Link :href="route('admin.tenant.login-as', tenant.id)" method="post" as="button" class="px-4 py-2 bg-emerald-600 text-white rounded-md text-sm hover:bg-emerald-700">
                         🔑 Login as Tenant
                     </Link>
-                    <button v-if="tenant.is_active" @click="suspend" class="px-4 py-2 bg-red-600 text-white rounded-md text-sm hover:bg-red-700">Suspend</button>
-                    <button v-else @click="activate" class="px-4 py-2 bg-green-600 text-white rounded-md text-sm hover:bg-green-700">Aktifkan</button>
-                    <button @click="resetPassword" class="px-4 py-2 bg-yellow-600 text-white rounded-md text-sm hover:bg-yellow-700">
+                    <KButton  v-if="tenant.is_active" @click="suspend" class="px-4 py-2 bg-red-600 text-white rounded-md text-sm hover:bg-red-700">Suspend</KButton>
+                    <KButton  v-else @click="activate" class="px-4 py-2 bg-green-600 text-white rounded-md text-sm hover:bg-green-700">Aktifkan</KButton>
+                    <KButton  @click="resetPassword" class="px-4 py-2 bg-yellow-600 text-white rounded-md text-sm hover:bg-yellow-700">
                         Reset Password
-                    </button>
+                    </KButton>
                     <Link :href="route('admin.sync-tenant-stats', tenant.id)" method="post" as="button" class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-md text-sm hover:bg-indigo-200">
                         Sync Stats
                     </Link>
@@ -77,8 +77,8 @@
                     </div>
                     <p v-else class="text-xs text-slate-400 mb-2">Belum ada domain</p>
                     <form @submit.prevent="updateDomain" class="flex gap-2">
-                        <input type="text" v-model="domainForm.domain" class="flex-1 rounded-md border-slate-600 shadow-sm text-sm" placeholder="contoh: tokoku.serviceku.app" required />
-                        <button type="submit" :disabled="domainForm.processing" class="px-3 py-2 bg-indigo-600 text-white rounded-md text-sm hover:bg-indigo-700 disabled:opacity-50">Simpan</button>
+                        <KInput  type="text" v-model="domainForm.domain" class="flex-1 rounded-md border-slate-600 shadow-sm text-sm" placeholder="contoh: tokoku.serviceku.app" required />
+                        <KButton  type="submit" :disabled="domainForm.processing" class="px-3 py-2 bg-indigo-600 text-white rounded-md text-sm hover:bg-indigo-700 disabled:opacity-50">Simpan</KButton>
                     </form>
                     <p class="text-xs text-slate-400 mt-2">Gunakan Cloudflare Tunnel untuk mengarahkan domain ke server lokal.</p>
                 </div>
@@ -187,6 +187,9 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+import KInput from '@/Components/KInput.vue';
+
 import { useForm, Link, router } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import AdminLayout from '@/Layouts/AdminLayout.vue';

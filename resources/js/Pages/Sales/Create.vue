@@ -30,12 +30,11 @@
               <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <SearchIcon class="w-5 h-5 text-zinc-400" />
               </div>
-              <input
+              <KInput 
                 type="text"
                 v-model="searchQuery"
                 placeholder="Cari produk (Nama atau Kategori)..."
-                class="w-full pl-10 pr-4 py-3 bg-zinc-50 border-transparent rounded-xl text-zinc-900 placeholder-zinc-400 focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all sm:text-sm font-medium"
-              />
+                class="w-full pl-10 pr-4 py-3 bg-zinc-50 border-transparent rounded-xl text-zinc-900 placeholder-zinc-400 focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all sm:text-sm font-medium" />
             </div>
           </div>
 
@@ -83,13 +82,12 @@
           <div class="p-5 border-b border-zinc-200 bg-white shadow-sm z-10">
             <label class="block text-[10px] font-black text-zinc-400 mb-2 uppercase tracking-widest">Pelanggan</label>
             <div class="relative group">
-              <select
+              <KSelect 
                 v-model="form.customer_id"
-                class="w-full pl-11 pr-4 py-3 bg-white border border-zinc-200 rounded-xl text-sm font-bold text-zinc-800 hover:border-indigo-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all appearance-none cursor-pointer"
-              >
+                class="w-full pl-11 pr-4 py-3 bg-white border border-zinc-200 rounded-xl text-sm font-bold text-zinc-800 hover:border-indigo-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all appearance-none cursor-pointer">
                 <option :value="null">Walk-in Customer (Umum)</option>
                 <option v-for="c in customers" :key="c.id" :value="c.id">{{ c.name }} {{ c.phone ? `(${c.phone})` : '' }}</option>
-              </select>
+              </KSelect>
               <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-zinc-400 group-hover:text-indigo-500 transition-colors">
                 <UserIcon class="w-5 h-5" />
               </div>
@@ -120,19 +118,19 @@
               </div>
               <div class="flex flex-col items-end gap-3 ml-3">
                 <div class="flex items-center bg-zinc-50 border border-zinc-200 rounded-lg p-1 shadow-inner">
-                  <button @click="updateQty(index, -1)" class="w-7 h-7 flex items-center justify-center rounded-md text-zinc-600 bg-white shadow-sm hover:text-indigo-600 hover:scale-105 transition-all" :disabled="item.quantity <= 1">
+                  <KButton  @click="updateQty(index, -1)" class="w-7 h-7 flex items-center justify-center rounded-md text-zinc-600 bg-white shadow-sm hover:text-indigo-600 hover:scale-105 transition-all" :disabled="item.quantity <= 1">
                     <MinusIcon class="w-3.5 h-3.5" />
-                  </button>
+                  </KButton>
                   <span class="w-10 text-center text-sm font-black text-zinc-900">{{ item.quantity }}</span>
-                  <button @click="updateQty(index, 1)" class="w-7 h-7 flex items-center justify-center rounded-md text-zinc-600 bg-white shadow-sm hover:text-indigo-600 hover:scale-105 transition-all">
+                  <KButton  @click="updateQty(index, 1)" class="w-7 h-7 flex items-center justify-center rounded-md text-zinc-600 bg-white shadow-sm hover:text-indigo-600 hover:scale-105 transition-all">
                     <PlusIcon class="w-3.5 h-3.5" />
-                  </button>
+                  </KButton>
                 </div>
                 <div class="flex items-center gap-3">
                   <span class="text-sm font-black text-indigo-600 tracking-tight">Rp {{ formatNumber(item.price * item.quantity) }}</span>
-                  <button @click="removeFromCart(index)" class="w-6 h-6 flex items-center justify-center rounded-md text-zinc-400 hover:bg-rose-50 hover:text-rose-600 transition-colors">
+                  <KButton  @click="removeFromCart(index)" class="w-6 h-6 flex items-center justify-center rounded-md text-zinc-400 hover:bg-rose-50 hover:text-rose-600 transition-colors">
                     <TrashIcon class="w-4 h-4" />
-                  </button>
+                  </KButton>
                 </div>
               </div>
             </div>
@@ -147,13 +145,12 @@
               </div>
               <div class="flex justify-between items-center text-sm">
                 <span class="text-zinc-500 font-semibold">Diskon (Rp)</span>
-                <input
+                <KInput 
                   type="number"
                   v-model.number="form.discount"
                   class="w-32 text-right py-1.5 px-3 text-sm font-bold border-zinc-200 rounded-xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
                   min="0"
-                  placeholder="0"
-                />
+                  placeholder="0" />
               </div>
               <div class="pt-4 border-t border-zinc-100 flex justify-between items-center">
                 <span class="text-base font-black text-zinc-900 uppercase tracking-widest">Total</span>
@@ -166,20 +163,18 @@
               <div>
                 <label class="block text-[10px] font-black text-zinc-400 mb-2 uppercase tracking-widest">Metode Pembayaran</label>
                 <div class="grid grid-cols-2 gap-3">
-                  <button
+                  <KButton 
                     type="button"
                     @click="form.payment_method = 'cash'"
-                    :class="['py-3 px-3 text-sm font-bold rounded-xl border-2 transition-all flex items-center justify-center gap-2', form.payment_method === 'cash' ? 'border-indigo-600 bg-indigo-50 text-indigo-700 shadow-sm' : 'border-zinc-100 bg-white text-zinc-500 hover:bg-zinc-50 hover:border-zinc-300']"
-                  >
+                    :class="['py-3 px-3 text-sm font-bold rounded-xl border-2 transition-all flex items-center justify-center gap-2', form.payment_method === 'cash' ? 'border-indigo-600 bg-indigo-50 text-indigo-700 shadow-sm' : 'border-zinc-100 bg-white text-zinc-500 hover:bg-zinc-50 hover:border-zinc-300']">
                     <BanknoteIcon class="w-4 h-4" /> Tunai
-                  </button>
-                  <button
+                  </KButton>
+                  <KButton 
                     type="button"
                     @click="form.payment_method = 'transfer'"
-                    :class="['py-3 px-3 text-sm font-bold rounded-xl border-2 transition-all flex items-center justify-center gap-2', form.payment_method === 'transfer' ? 'border-indigo-600 bg-indigo-50 text-indigo-700 shadow-sm' : 'border-zinc-100 bg-white text-zinc-500 hover:bg-zinc-50 hover:border-zinc-300']"
-                  >
+                    :class="['py-3 px-3 text-sm font-bold rounded-xl border-2 transition-all flex items-center justify-center gap-2', form.payment_method === 'transfer' ? 'border-indigo-600 bg-indigo-50 text-indigo-700 shadow-sm' : 'border-zinc-100 bg-white text-zinc-500 hover:bg-zinc-50 hover:border-zinc-300']">
                     <CreditCardIcon class="w-4 h-4" /> Transfer
-                  </button>
+                  </KButton>
                 </div>
               </div>
               
@@ -187,18 +182,17 @@
                 <label class="block text-[10px] font-black text-zinc-400 mb-2 uppercase tracking-widest">Jumlah Dibayar (Rp)</label>
                 <div class="relative">
                   <span class="absolute inset-y-0 left-0 pl-4 flex items-center text-zinc-400 font-black">Rp</span>
-                  <input
+                  <KInput 
                     type="number"
                     v-model.number="form.paid_amount"
                     class="w-full pl-12 pr-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl text-zinc-900 font-black focus:bg-white focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all text-xl"
-                    min="0"
-                  />
+                    min="0" />
                 </div>
                 <!-- Quick Money Buttons -->
                 <div class="flex gap-2 mt-3 overflow-x-auto pb-1 no-scrollbar">
-                  <button @click="form.paid_amount = total" class="whitespace-nowrap px-4 py-2 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100 rounded-lg text-xs font-bold text-indigo-700 transition-colors shadow-sm">Uang Pas</button>
-                  <button @click="addQuickMoney(50000)" class="whitespace-nowrap px-4 py-2 bg-white hover:bg-zinc-50 border border-zinc-200 rounded-lg text-xs font-bold text-zinc-700 transition-colors shadow-sm">+50k</button>
-                  <button @click="addQuickMoney(100000)" class="whitespace-nowrap px-4 py-2 bg-white hover:bg-zinc-50 border border-zinc-200 rounded-lg text-xs font-bold text-zinc-700 transition-colors shadow-sm">+100k</button>
+                  <KButton  @click="form.paid_amount = total" class="whitespace-nowrap px-4 py-2 bg-indigo-50 hover:bg-indigo-100 border border-indigo-100 rounded-lg text-xs font-bold text-indigo-700 transition-colors shadow-sm">Uang Pas</KButton>
+                  <KButton  @click="addQuickMoney(50000)" class="whitespace-nowrap px-4 py-2 bg-white hover:bg-zinc-50 border border-zinc-200 rounded-lg text-xs font-bold text-zinc-700 transition-colors shadow-sm">+50k</KButton>
+                  <KButton  @click="addQuickMoney(100000)" class="whitespace-nowrap px-4 py-2 bg-white hover:bg-zinc-50 border border-zinc-200 rounded-lg text-xs font-bold text-zinc-700 transition-colors shadow-sm">+100k</KButton>
                 </div>
               </div>
 
@@ -209,18 +203,17 @@
               </div>
             </div>
 
-            <button
+            <KButton 
               @click="submitSale"
               :disabled="!canSubmit"
               :class="[
                 'w-full py-4 rounded-xl text-white font-black text-lg transition-all flex justify-center items-center gap-2',
                 canSubmit ? 'bg-indigo-600 hover:bg-indigo-500 hover:-translate-y-1 shadow-lg shadow-indigo-500/30' : 'bg-zinc-200 cursor-not-allowed text-zinc-400'
-              ]"
-            >
+              ]">
               <CheckCircleIcon class="w-6 h-6" v-if="!form.processing && canSubmit" />
               <Loader2Icon class="w-6 h-6 animate-spin" v-else-if="form.processing" />
               {{ form.processing ? 'Memproses...' : 'BAYAR SEKARANG' }}
-            </button>
+            </KButton>
           </div>
         </div>
 
@@ -230,6 +223,10 @@
 </template>
 
 <script setup>
+import KButton from '@/Components/KButton.vue';
+import KInput from '@/Components/KInput.vue';
+import KSelect from '@/Components/KSelect.vue';
+
 import { ref, computed, watch } from 'vue';
 import { useForm, Link } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
