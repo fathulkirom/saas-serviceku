@@ -22,11 +22,12 @@ class ResendTransactionalMail
     public static function deliver(string $to, Mailable $mail, array $from): bool
     {
         return self::send($to, function ($mailer) use ($to, $mail, $from) {
-            $pending = $mailer->to($to);
+            // MAIL-UI-FIX-01: reply-to must be set on the Mailable, NOT on the
+            // PendingMail — PendingMail has no replyTo() method (would throw).
             if (!empty($from['reply_to'])) {
-                $pending->replyTo($from['reply_to']);
+                $mail->replyTo($from['reply_to']);
             }
-            $pending->send($mail);
+            $mailer->to($to)->send($mail);
         });
     }
 
@@ -34,11 +35,11 @@ class ResendTransactionalMail
     public static function sendRawTest(string $to, array $from): bool
     {
         return self::send($to, function ($mailer) use ($to, $from) {
-            $pending = $mailer->to($to);
+            $mail = new \App\Mail\SystemTestMail();
             if (!empty($from['reply_to'])) {
-                $pending->replyTo($from['reply_to']);
+                $mail->replyTo($from['reply_to']);
             }
-            $pending->send(new \App\Mail\SystemTestMail());
+            $mailer->to($to)->send($mail);
         });
     }
 

@@ -250,4 +250,87 @@ class PilotMailSettingsTest extends TestCase
         $reuse = RegistrationVerification::verifyOtp('once@example.com', $record->otp);
         $this->assertNull($reuse, 'Reused OTP must be rejected.');
     }
+
+    // ── MAIL-UI-FIX-01 ─────────────────────────────────────────────────────
+    // Test recipient (temporary) and Reply-To (persistent setting) are fully
+    // separate end-to-end.
+
+    // ── 13. Saving Reply-To persists as its own setting ──
+    public function test_reply_to_persists_correctly(): void
+    {
+        $admin = $this->makeAdmin();
+        $this->actingAs($admin);
+
+        $this->post(route('admin.settings.update'), [
+            'app_name' => 'ServiceKU', 'app_description' => '',
+            'registration_open' => 'true', 'require_approval' => 'false',
+            'default_plan_slug' => 'pro', 'default_trial_days' => '14',
+            'maintenance_mode' => 'false', 'maintenance_message' => '',
+            'max_tenants' => '100', 'notify_email' => '',
+            'mail_driver' => 'log',
+            'mail_resend_provider' => 'resend',
+            'mail_resend_api_key' => '',
+            'mail_resend_from_address' => 'noreply@serviceku.my.id',
+            'mail_resend_from_name' => 'ServiceKU',
+            'mail_resend_reply_to' => 'support@serviceku.my.id',
+        ])->assertSessionHas('success');
+
+        $this->assertSame('support@serviceku.my.id', SystemSetting::getValue('mail_resend_reply_to'));
+    }
+
+    // ── 14. Blank Reply-To is allowed (optional field) ──
+    public function test_blank_reply_to_is_allowed(): void
+    {
+        $admin = $this->makeAdmin();
+        $this->actingAs($admin);
+
+        $this->post(route('admin.settings.update'), [
+            'app_name' => 'ServiceKU', 'app_description' => '',
+            'registration_open' => 'true', 'require_approval' => 'false',
+            'default_plan_slug' => 'pro', 'default_trial_days' => '14',
+            'maintenance_mode' => 'false', 'maintenance_message' => '',
+            'max_tenants' => '100', 'notify_email' => '',
+            'mail_driver' => 'log',
+            'mail_resend_provider' => 'resend',
+            'mail_resend_api_key' => '',
+            'mail_resend_from_address' => 'noreply@serviceku.my.id',
+            'mail_resend_from_name' => 'ServiceKU',
+            'mail_resend_reply_to' => '',
+        ])->assertSessionHas('success');
+
+        $this->assertSame('', SystemSetting::getValue('mail_resend_reply_to') ?? '');
+    }
+
+    // ── 15. Test email goes to the given recipient and does NOT touch Reply-To ──
+    public function test_test_mail_does_not_modify_stored_reply_to(): void
+    {
+        Mail::fake();
+        $admin = $this->makeAdmin();
+        $this->actingAs($admin);
+        $this->configureResend();
+        SystemSetting::setValue('mail_resend_reply_to', 'persistent@serviceku.my.id', 'mail_resend');
+
+        $this->post(route('admin.settings.test-mail'), ['email' => 'user@example.com'])
+            ->assertSessionHas('success');
+
+        // Sent to the request recipient (not Reply-To)...
+        Mail::assertSent(\App\Mail\SystemTestMail::class, fn ($m) => $m->hasTo('user@example.com'));
+        // ...and the stored Reply-To is untouched.
+        $this->assertSame('persistent@serviceku.my.id', SystemSetting::getValue('mail_resend_reply_to'));
+    }
+
+    // ── 16. Test email with blank Reply-To leaves it blank ──
+    public function test_test_mail_with_blank_reply_to_leaves_it_blank(): void
+    {
+        Mail::fake();
+        $admin = $this->makeAdmin();
+        $this->actingAs($admin);
+        $this->configureResend(); // does NOT set reply_to → blank
+
+        $this->post(route('admin.settings.test-mail'), ['email' => 'user@example.com'])
+            ->assertSessionHas('success');
+
+        $this->assertSame('', SystemSetting::getValue('mail_resend_reply_to') ?? '');
+        Mail::assertSent(\App\Mail\SystemTestMail::class, fn ($m) => $m->hasTo('user@example.com'));
+    }
 }

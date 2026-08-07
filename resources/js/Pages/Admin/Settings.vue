@@ -205,11 +205,11 @@
 
                 <div class="mt-4 pt-4 border-t border-slate-700">
                     <h4 class="text-sm font-medium text-slate-300 mb-2">🔍 Kirim Email Tes</h4>
-                    <p class="text-xs text-slate-400 mb-2">Kirim email tes via provider transaksional (Resend bila aktif). Hasil ditampilkan jujur — bukan sekadar "masuk antrean".</p>
+                    <p class="text-xs text-slate-400 mb-2">Email Tujuan Tes hanya menentukan penerima email tes — tidak mengubah Reply-To atau pengaturan tersimpan.</p>
                     <div class="flex gap-2">
-                        <KInput  type="email" v-model="testEmail" placeholder="email@example.com"
+                        <KInput  type="email" v-model="testEmailRecipient" placeholder="email@example.com"
                             class="flex-1 rounded-md border-slate-600 shadow-sm text-sm" />
-                        <KButton  @click="sendTestEmail"
+                        <KButton  @click="sendResendTestEmail"
                             class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm whitespace-nowrap">
                             Kirim Test
                         </KButton>
@@ -246,6 +246,11 @@ const props = defineProps({
 const resendStatus = computed(() => props.settings.mail_resend || {});
 
 const testEmail = ref('');
+// MAIL-UI-FIX-01 — dedicated TEMPORARY recipient for the Resend test email.
+// Completely separate from the persistent Reply-To setting
+// (mail_resend_reply_to) and from the SMTP test email input. It is never
+// persisted into system_settings and never becomes from/reply-to.
+const testEmailRecipient = ref('');
 
 const form = useForm({
     app_name: props.settings.general?.app_name || 'ServiceKU',
@@ -287,6 +292,18 @@ const sendTestEmail = () => {
     }, {
         preserveScroll: true,
         onSuccess: () => { testEmail.value = ''; },
+    });
+};
+
+// MAIL-UI-FIX-01 — Resend test recipient handler. Sends only the temporary
+// recipient value; never touches form.mail_resend_reply_to.
+const sendResendTestEmail = () => {
+    if (!testEmailRecipient.value) return;
+    router.post(route('admin.settings.test-mail'), {
+        email: testEmailRecipient.value,
+    }, {
+        preserveScroll: true,
+        onSuccess: () => { testEmailRecipient.value = ''; },
     });
 };
 
