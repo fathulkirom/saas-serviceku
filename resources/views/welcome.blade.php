@@ -4,488 +4,461 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>ServiceKU - Sistem Manajemen Bengkel & Servis</title>
-    <meta name="description" content="Aplikasi kasir, inventaris, dan manajemen servis untuk bengkel elektronik modern.">
+    <title>ServiceKU - Operasi Servis, POS, dan Stok dalam Satu Sistem</title>
+    <meta name="description" content="ServiceKU membantu bengkel HP, laptop, elektronik, dan retail sparepart mengelola servis, teknisi, stok, POS, cabang, garansi, dan laporan.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css'])
     <style>
-        body { 
-            font-family: 'Inter', system-ui, -apple-system, sans-serif; 
-            background-color: #fafafa; /* zinc-50 */
-            color: #18181b; /* zinc-900 */
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
+        :root {
+            --ink: #111827;
+            --muted: #64748b;
+            --line: #dbe3ef;
+            --paper: #ffffff;
+            --cream: #f8fafc;
+            --teal: #0f766e;
+            --teal-2: #14b8a6;
+            --amber: #f59e0b;
+            --rose: #f43f5e;
+            --blue: #2563eb;
         }
 
-        /* Subtle grid background for modern SaaS look */
-        .bg-grid {
-            background-size: 40px 40px;
-            background-image: 
-                linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
-            mask-image: linear-gradient(to bottom, black 20%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to bottom, black 20%, transparent 100%);
-            z-index: -1;
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--cream);
+            color: var(--ink);
         }
 
-        .glass-header {
-            background: rgba(250, 250, 250, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        .hero-scene {
+            background:
+                radial-gradient(circle at 18% 20%, rgba(20, 184, 166, .20), transparent 30%),
+                radial-gradient(circle at 82% 18%, rgba(245, 158, 11, .18), transparent 26%),
+                linear-gradient(135deg, #f8fafc 0%, #eef7f5 45%, #f7f2e8 100%);
         }
 
-        .btn-primary {
-            background-color: #18181b; /* zinc-900 */
-            color: #ffffff;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        .nav-glass {
+            background: rgba(248, 250, 252, .86);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(148, 163, 184, .28);
         }
-        .btn-primary:hover {
-            background-color: #27272a; /* zinc-800 */
+
+        .brand-mark {
+            box-shadow: 0 18px 40px rgba(15, 118, 110, .26);
+        }
+
+        .btn-main {
+            background: #0f766e;
+            color: white;
+            box-shadow: 0 14px 32px rgba(15, 118, 110, .25);
+        }
+
+        .btn-main:hover {
+            background: #115e59;
             transform: translateY(-1px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
 
-        .btn-secondary {
-            background-color: #ffffff;
-            color: #18181b;
-            border: 1px solid #e4e4e7; /* zinc-200 */
-            transition: all 0.2s ease;
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-        }
-        .btn-secondary:hover {
-            background-color: #f4f4f5; /* zinc-100 */
-            border-color: #d4d4d8; /* zinc-300 */
+        .btn-soft {
+            background: rgba(255, 255, 255, .82);
+            color: #0f172a;
+            border: 1px solid rgba(148, 163, 184, .36);
         }
 
-        .feature-card {
-            background: #ffffff;
-            border: 1px solid #e4e4e7; /* zinc-200 */
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-            transition: all 0.3s ease;
-        }
-        .feature-card:hover {
-            border-color: #a1a1aa; /* zinc-400 */
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
-            transform: translateY(-2px);
+        .btn-soft:hover {
+            background: white;
+            transform: translateY(-1px);
         }
 
-        .pricing-card {
-            background: #ffffff;
-            border: 1px solid #e4e4e7;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-        }
-        .pricing-card.featured {
-            border: 2px solid #18181b; /* zinc-900 */
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            transform: scale(1.02);
-            z-index: 10;
+        .app-frame {
+            background: rgba(255, 255, 255, .92);
+            border: 1px solid rgba(15, 23, 42, .10);
+            box-shadow: 0 34px 90px rgba(15, 23, 42, .18);
         }
 
-        /* Mockup Window Styling */
-        .mockup-window {
-            border-radius: 16px;
-            border: 1px solid rgba(0,0,0,0.1);
-            background-color: #ffffff;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
-            overflow: hidden;
+        .device-card,
+        .module-card,
+        .price-card {
+            background: var(--paper);
+            border: 1px solid var(--line);
+            box-shadow: 0 12px 35px rgba(15, 23, 42, .06);
         }
-        .mockup-header {
-            background-color: #f4f4f5;
-            border-bottom: 1px solid #e4e4e7;
-            padding: 12px 16px;
-            display: flex;
-            align-items: center;
+
+        .module-card:hover,
+        .price-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 46px rgba(15, 23, 42, .10);
         }
-        .mockup-dots {
-            display: flex;
-            gap: 6px;
+
+        .status-line {
+            background: linear-gradient(90deg, var(--teal), var(--amber), var(--blue), var(--rose));
         }
-        .mockup-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
+
+        .timeline-step::before {
+            content: '';
+            position: absolute;
+            left: 1.125rem;
+            top: 2.75rem;
+            bottom: -1.25rem;
+            width: 1px;
+            background: #cbd5e1;
         }
-        .mockup-dot.red { background-color: #ff5f56; }
-        .mockup-dot.yellow { background-color: #ffbd2e; }
-        .mockup-dot.green { background-color: #27c93f; }
+
+        .timeline-step:last-child::before {
+            display: none;
+        }
     </style>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
-<body class="antialiased selection:bg-zinc-200">
-    <!-- Navigation -->
-    <nav class="fixed top-0 left-0 right-0 z-50 glass-header">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-lg bg-zinc-900 flex items-center justify-center text-white font-black text-sm">SK</div>
-                    <span class="text-lg font-bold tracking-tight text-zinc-900">ServiceKU</span>
-                </div>
-                <div class="hidden md:flex items-center gap-8">
-                    <a href="#features" class="text-sm font-semibold text-zinc-600 hover:text-zinc-900 transition-colors">Fitur</a>
-                    <a href="#pricing" class="text-sm font-semibold text-zinc-600 hover:text-zinc-900 transition-colors">Harga</a>
-                </div>
-                <div class="flex items-center gap-4">
-                    <a href="{{ route('login.find') }}" class="text-sm font-semibold text-zinc-600 hover:text-zinc-900 transition-colors hidden sm:block">Masuk</a>
-                    <a href="{{ route('register') }}" class="inline-flex items-center justify-center px-4 py-2 rounded-lg btn-primary text-sm font-semibold">
-                        Coba Gratis
-                    </a>
-                </div>
+<body class="antialiased selection:bg-teal-100 selection:text-teal-950">
+    <nav class="fixed inset-x-0 top-0 z-50 nav-glass">
+        <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+            <a href="{{ route('home') }}" class="flex items-center gap-3" aria-label="ServiceKU">
+                <span class="brand-mark flex h-10 w-10 items-center justify-center rounded-xl bg-teal-700">
+                    <img src="/images/logo.svg" alt="" class="h-6 w-6 brightness-0 invert">
+                </span>
+                <span class="text-lg font-black tracking-tight text-slate-950">ServiceKU</span>
+            </a>
+
+            <div class="hidden items-center gap-7 md:flex">
+                <a href="#workflow" class="text-sm font-bold text-slate-600 hover:text-slate-950">Workflow</a>
+                <a href="#features" class="text-sm font-bold text-slate-600 hover:text-slate-950">Modul</a>
+                <a href="#pricing" class="text-sm font-bold text-slate-600 hover:text-slate-950">Harga</a>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <a href="{{ route('login.find') }}" class="hidden text-sm font-bold text-slate-600 hover:text-slate-950 sm:inline">Masuk</a>
+                <a href="{{ route('register') }}" class="btn-main inline-flex h-10 items-center justify-center rounded-xl px-4 text-sm font-extrabold transition">
+                    Coba Gratis
+                </a>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="relative pt-32 pb-24 overflow-hidden min-h-[90vh] flex flex-col justify-center">
-        <div class="absolute inset-0 bg-grid"></div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-zinc-200 shadow-sm text-zinc-600 text-xs font-bold uppercase tracking-wider mb-8">
-                Platform Operasional Bengkel
-            </div>
-            
-            <h1 class="text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter text-zinc-900 mb-6 max-w-4xl mx-auto leading-[1.1]">
-                Sistem Servis & Kasir. <br>
-                <span class="text-zinc-400">Mudah & Otomatis.</span>
-            </h1>
-            
-            <p class="text-lg md:text-xl text-zinc-600 max-w-2xl mx-auto mb-10 font-medium">
-                Satu aplikasi untuk mengelola penerimaan servis, stok sparepart, dan laporan penjualan secara akurat dan profesional.
-            </p>
-            
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <a href="{{ route('register') }}" class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 rounded-xl btn-primary text-base font-bold">
-                    Mulai Trial 14 Hari
-                </a>
-                <a href="#features" class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 rounded-xl btn-secondary text-base font-bold">
-                    Jelajahi Fitur
-                </a>
-            </div>
-
-            <!-- UI Mockup Dashboard Abstract -->
-            <div class="mt-20 flex justify-center max-w-6xl mx-auto">
-                <div class="mockup-window w-full">
-                    <div class="mockup-header">
-                        <div class="mockup-dots">
-                            <div class="mockup-dot red"></div>
-                            <div class="mockup-dot yellow"></div>
-                            <div class="mockup-dot green"></div>
-                        </div>
+    <main>
+        <section class="hero-scene relative overflow-hidden pt-28">
+            <div class="mx-auto grid min-h-[calc(100vh-4rem)] max-w-7xl items-center gap-12 px-4 pb-12 sm:px-6 lg:grid-cols-[.92fr_1.08fr] lg:px-8">
+                <div class="relative z-10">
+                    <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-teal-200 bg-white/70 px-3 py-1.5 text-xs font-black uppercase tracking-[.18em] text-teal-800 shadow-sm">
+                        <span class="h-2 w-2 rounded-full bg-teal-500"></span>
+                        Control tower untuk bengkel servis
                     </div>
-                    <div class="bg-zinc-50 flex border-t border-zinc-100">
-                        <!-- Sidebar -->
-                        <div class="w-64 border-r border-zinc-200 bg-white p-6 hidden md:block min-h-[400px]">
-                            <div class="space-y-4">
-                                <div class="h-8 flex items-center gap-3 mb-8">
-                                    <div class="w-6 h-6 rounded bg-zinc-900"></div>
-                                    <div class="h-4 w-24 bg-zinc-200 rounded"></div>
-                                </div>
-                                <div class="space-y-2">
-                                    <div class="h-10 w-full bg-zinc-100 rounded-lg flex items-center px-3 gap-3">
-                                        <div class="w-4 h-4 bg-zinc-300 rounded"></div>
-                                        <div class="h-3 w-16 bg-zinc-300 rounded"></div>
-                                    </div>
-                                    <div class="h-10 w-full rounded-lg flex items-center px-3 gap-3">
-                                        <div class="w-4 h-4 bg-zinc-200 rounded"></div>
-                                        <div class="h-3 w-20 bg-zinc-200 rounded"></div>
-                                    </div>
-                                    <div class="h-10 w-full rounded-lg flex items-center px-3 gap-3">
-                                        <div class="w-4 h-4 bg-zinc-200 rounded"></div>
-                                        <div class="h-3 w-14 bg-zinc-200 rounded"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Main Content Area -->
-                        <div class="flex-1 p-8">
-                            <div class="flex justify-between items-center mb-8">
-                                <div>
-                                    <div class="h-6 w-32 bg-zinc-800 rounded mb-2"></div>
-                                    <div class="h-4 w-48 bg-zinc-300 rounded"></div>
-                                </div>
-                                <div class="h-10 w-32 bg-zinc-900 rounded-lg"></div>
-                            </div>
-                            <div class="grid grid-cols-3 gap-6 mb-8">
-                                <div class="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm">
-                                    <div class="h-3 w-24 bg-zinc-300 rounded mb-4"></div>
-                                    <div class="h-8 w-16 bg-zinc-800 rounded"></div>
-                                </div>
-                                <div class="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm">
-                                    <div class="h-3 w-24 bg-zinc-300 rounded mb-4"></div>
-                                    <div class="h-8 w-20 bg-zinc-800 rounded"></div>
-                                </div>
-                                <div class="bg-white border border-zinc-200 rounded-xl p-5 shadow-sm">
-                                    <div class="h-3 w-24 bg-zinc-300 rounded mb-4"></div>
-                                    <div class="h-8 w-32 bg-zinc-800 rounded"></div>
-                                </div>
-                            </div>
-                            <div class="bg-white border border-zinc-200 rounded-xl shadow-sm overflow-hidden">
-                                <div class="h-12 bg-zinc-50 border-b border-zinc-200"></div>
-                                <div class="p-4 space-y-4">
-                                    <div class="h-10 bg-zinc-50 rounded"></div>
-                                    <div class="h-10 bg-zinc-50 rounded"></div>
-                                    <div class="h-10 bg-zinc-50 rounded"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Stats Section -->
-    <section class="border-y border-zinc-200 bg-white">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-zinc-100">
-                <div>
-                    <p class="text-4xl font-black text-zinc-900 mb-1">500+</p>
-                    <p class="text-xs font-bold text-zinc-500 uppercase tracking-wider">Toko Aktif</p>
-                </div>
-                <div>
-                    <p class="text-4xl font-black text-zinc-900 mb-1">15K+</p>
-                    <p class="text-xs font-bold text-zinc-500 uppercase tracking-wider">Servis Selesai</p>
-                </div>
-                <div>
-                    <p class="text-4xl font-black text-zinc-900 mb-1">8</p>
-                    <p class="text-xs font-bold text-zinc-500 uppercase tracking-wider">Modul Inti</p>
-                </div>
-                <div>
-                    <p class="text-4xl font-black text-zinc-900 mb-1">99%</p>
-                    <p class="text-xs font-bold text-zinc-500 uppercase tracking-wider">Reliabilitas</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section id="features" class="py-24 bg-zinc-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-3xl font-black text-zinc-900 mb-4 tracking-tight">
-                    Fitur Lengkap Bengkel Modern
-                </h2>
-                <p class="text-zinc-600 font-medium">
-                    Semua yang Anda butuhkan untuk mengoperasikan layanan servis dan penjualan dalam satu tempat.
-                </p>
-            </div>
-            
-            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Feature 1 -->
-                <div class="feature-card p-8 rounded-2xl">
-                    <div class="w-12 h-12 rounded-xl bg-zinc-100 flex items-center justify-center text-zinc-900 mb-6">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-zinc-900 mb-2">Manajemen Tiket</h3>
-                    <p class="text-sm text-zinc-600 leading-relaxed font-medium">Pencatatan servis masuk yang rapi dengan status tracking yang jelas. Meminimalkan risiko kehilangan barang.</p>
-                </div>
-                <!-- Feature 2 -->
-                <div class="feature-card p-8 rounded-2xl">
-                    <div class="w-12 h-12 rounded-xl bg-zinc-100 flex items-center justify-center text-zinc-900 mb-6">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-zinc-900 mb-2">Kasir (POS)</h3>
-                    <p class="text-sm text-zinc-600 leading-relaxed font-medium">Lakukan transaksi untuk biaya jasa servis maupun penjualan produk secara instan dan akurat.</p>
-                </div>
-                <!-- Feature 3 -->
-                <div class="feature-card p-8 rounded-2xl">
-                    <div class="w-12 h-12 rounded-xl bg-zinc-100 flex items-center justify-center text-zinc-900 mb-6">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-zinc-900 mb-2">Inventaris Sparepart</h3>
-                    <p class="text-sm text-zinc-600 leading-relaxed font-medium">Pantau pergerakan stok komponen. Sistem memberi tahu saat stok menipis secara otomatis.</p>
-                </div>
-                <!-- Feature 4 -->
-                <div class="feature-card p-8 rounded-2xl">
-                    <div class="w-12 h-12 rounded-xl bg-zinc-100 flex items-center justify-center text-zinc-900 mb-6">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h2a2 2 0 01-2-2z"/></svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-zinc-900 mb-2">Laporan Analitik</h3>
-                    <p class="text-sm text-zinc-600 leading-relaxed font-medium">Lihat ringkasan laba rugi, performa teknisi, dan transaksi penjualan dalam satu dasbor yang bersih.</p>
-                </div>
-                <!-- Feature 5 -->
-                <div class="feature-card p-8 rounded-2xl">
-                    <div class="w-12 h-12 rounded-xl bg-zinc-100 flex items-center justify-center text-zinc-900 mb-6">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-zinc-900 mb-2">Dukungan Multi-Cabang</h3>
-                    <p class="text-sm text-zinc-600 leading-relaxed font-medium">Buka cabang baru tanpa ribet. Sentralisasi laporan dan mutasi stok antar cabang dengan mudah.</p>
-                </div>
-                <!-- Feature 6 -->
-                <div class="feature-card p-8 rounded-2xl">
-                    <div class="w-12 h-12 rounded-xl bg-zinc-100 flex items-center justify-center text-zinc-900 mb-6">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"/></svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-zinc-900 mb-2">WhatsApp Gateway</h3>
-                    <p class="text-sm text-zinc-600 leading-relaxed font-medium">Otomatis kirim nota, update status servis, dan tagihan ke WhatsApp pelanggan Anda.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Pricing Section -->
-    <section id="pricing" class="py-24 bg-white" x-data="{
-        selectedBusinessType: 'full_service',
-        plans: {{ json_encode($plans) }},
-        businessTypes: {
-            full_service: 'Servis & Sparepart',
-            aksesoris_service: 'Aksesoris & Jasa Servis',
-            aksespare_service: 'Pusat Servis & Sparepart',
-            gadget_full: 'HP/Laptop Baru + Servis',
-            retail_only: 'Retail Saja (Jualan)'
-        },
-        mapping: {
-            services: 'Manajemen Servis',
-            customers: 'Database Pelanggan',
-            products: 'Stok Barang',
-            sales: 'Point of Sales (Kasir)',
-            reports: 'Laporan Finansial',
-            settings: 'Pengaturan & WA',
-            monitoring: 'Audit Log',
-            multi_branch: 'Multi Cabang',
-            transfer_stock: 'Mutasi Stok',
-            users: 'Manajemen Staf',
-            expenses: 'Pencatatan Biaya'
-        },
-        getFeaturesList(plan) {
-            const features = plan.features || {};
-            const type = this.selectedBusinessType;
-            
-            let typeFeatures = features[type] || features;
-            if (typeof typeFeatures !== 'object') typeFeatures = features;
-            
-            const list = [];
-            const maxUsers = typeFeatures.max_users || features.max_users || 0;
-            const maxBranches = typeFeatures.max_branches || features.max_branches || 0;
-
-            list.push(maxUsers > 0 ? `Maks. ${maxUsers} Karyawan` : 'Karyawan Tanpa Batas');
-            list.push(maxBranches > 0 ? `Maks. ${maxBranches} Cabang` : 'Cabang Tanpa Batas');
-
-            for (const [key, label] of Object.entries(this.mapping)) {
-                if (type === 'retail_only' && key === 'services') continue;
-
-                const val = typeFeatures[key];
-                if (val === true || val === 'full' || val === 1 || val === '1') {
-                    list.push(label);
-                } else if (val === 'read_only') {
-                    list.push(`${label} (Read Only)`);
-                }
-            }
-            return list;
-        },
-        formatNumber(num) {
-            return new Intl.NumberFormat('id-ID').format(num || 0);
-        }
-    }">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-2xl mx-auto mb-16">
-                <h2 class="text-3xl font-black text-zinc-900 mb-4 tracking-tight">Harga Transparan</h2>
-                <p class="text-zinc-600 font-medium">Pilih paket berlangganan sesuai skala bisnis Anda.</p>
-            </div>
-
-            <div class="max-w-xs mx-auto mb-12">
-                <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2 text-center">Fokus Bisnis Anda</label>
-                <select x-model="selectedBusinessType" class="block w-full rounded-xl bg-white border border-zinc-200 text-zinc-900 text-sm font-semibold py-2.5 px-4 focus:border-zinc-900 focus:ring-zinc-900 outline-none transition-colors shadow-sm">
-                    <template x-for="(label, key) in businessTypes" :key="key">
-                        <option :value="key" x-text="label"></option>
-                    </template>
-                </select>
-            </div>
-
-            <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto items-start">
-                <template x-for="pkg in plans" :key="pkg.name">
-                    <div class="pricing-card rounded-2xl p-8 relative flex flex-col h-full" :class="pkg.featured ? 'featured md:-translate-y-4' : ''">
-                        <template x-if="pkg.featured">
-                            <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-zinc-900 text-white text-[10px] font-bold tracking-widest uppercase shadow-sm">
-                                Paling Diminati
-                            </div>
-                        </template>
-
-                        <div class="mb-6 text-center">
-                            <h3 class="text-2xl font-black text-zinc-900 mb-2" x-text="pkg.name"></h3>
-                        </div>
-                        
-                        <div class="mb-8 pb-8 border-b border-zinc-100 text-center">
-                            <template x-if="pkg.is_promo_active">
-                                <div class="flex flex-col items-center justify-center gap-1 mb-1">
-                                    <span class="text-sm font-medium text-zinc-400 line-through">Rp <span x-text="formatNumber(pkg.price)"></span></span>
-                                    <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-50 text-red-600">Hemat <span x-text="pkg.discount_percent"></span>%</span>
-                                </div>
-                            </template>
-                            <div class="flex items-end justify-center gap-1">
-                                <span class="text-4xl font-black text-zinc-900 tracking-tight">
-                                    <span class="text-2xl font-bold align-top">Rp</span>
-                                    <span x-text="formatNumber(pkg.is_promo_active ? pkg.promo_price : pkg.price)"></span>
-                                </span>
-                                <span class="text-sm font-bold text-zinc-400 mb-1">/bln</span>
-                            </div>
-                        </div>
-
-                        <ul class="space-y-4 mb-8 flex-1">
-                            <template x-for="f in getFeaturesList(pkg)" :key="f">
-                                <li class="flex items-start gap-3 text-sm font-medium text-zinc-700">
-                                    <svg class="w-5 h-5 text-zinc-900 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-                                    <span x-text="f"></span>
-                                </li>
-                            </template>
-                        </ul>
-
-                        <a :href="'{{ route('register') }}?plan=' + pkg.slug + '&business_type=' + selectedBusinessType"
-                            class="block w-full text-center px-6 py-3 rounded-xl text-sm font-bold transition-all"
-                            :class="pkg.featured ? 'btn-primary' : 'btn-secondary'">
-                            <span x-text="pkg.name === 'Enterprise' ? 'Hubungi Sales' : 'Mulai Trial'"></span>
+                    <h1 class="max-w-4xl text-4xl font-black leading-[1.05] tracking-tight text-slate-950 sm:text-5xl lg:text-7xl">
+                        Servis masuk, teknisi, stok, kasir, dan garansi bergerak dalam satu alur.
+                    </h1>
+                    <p class="mt-6 max-w-2xl text-base font-semibold leading-8 text-slate-600 sm:text-lg">
+                        ServiceKU dibuat untuk operasional harian bengkel HP, laptop, elektronik, dan toko sparepart yang perlu rapi dari meja CS sampai laporan owner.
+                    </p>
+                    <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+                        <a href="{{ route('register') }}" class="btn-main inline-flex h-12 items-center justify-center rounded-xl px-6 text-sm font-black transition">
+                            Mulai Trial 14 Hari
+                        </a>
+                        <a href="#workflow" class="btn-soft inline-flex h-12 items-center justify-center rounded-xl px-6 text-sm font-black transition">
+                            Lihat Alur Servis
                         </a>
                     </div>
-                </template>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="border-t border-zinc-200 bg-zinc-50">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
-                <div class="col-span-2 md:col-span-1">
-                    <div class="flex items-center gap-2 mb-4">
-                        <div class="w-6 h-6 rounded bg-zinc-900 flex items-center justify-center text-white text-[10px] font-bold">SK</div>
-                        <span class="text-base font-bold text-zinc-900">ServiceKU</span>
+                    <div class="mt-10 grid max-w-xl grid-cols-3 gap-4">
+                        <div>
+                            <p class="text-3xl font-black text-slate-950">8+</p>
+                            <p class="mt-1 text-xs font-bold uppercase tracking-wide text-slate-500">Modul inti</p>
+                        </div>
+                        <div>
+                            <p class="text-3xl font-black text-slate-950">24/7</p>
+                            <p class="mt-1 text-xs font-bold uppercase tracking-wide text-slate-500">Tracking publik</p>
+                        </div>
+                        <div>
+                            <p class="text-3xl font-black text-slate-950">Multi</p>
+                            <p class="mt-1 text-xs font-bold uppercase tracking-wide text-slate-500">Cabang & role</p>
+                        </div>
                     </div>
-                    <p class="text-sm font-medium text-zinc-500 leading-relaxed">Platform kasir & manajemen modern untuk standar operasional bengkel servis dan retail elektronik.</p>
                 </div>
-                <div>
-                    <h4 class="text-xs font-bold text-zinc-900 uppercase tracking-wider mb-4">Produk</h4>
-                    <ul class="space-y-3">
-                        <li><a href="#features" class="text-sm font-medium text-zinc-500 hover:text-zinc-900 transition-colors">Fitur Utama</a></li>
-                        <li><a href="#pricing" class="text-sm font-medium text-zinc-500 hover:text-zinc-900 transition-colors">Harga</a></li>
-                        <li><a href="{{ route('login') }}" class="text-sm font-medium text-zinc-500 hover:text-zinc-900 transition-colors">Masuk</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-xs font-bold text-zinc-900 uppercase tracking-wider mb-4">Dukungan</h4>
-                    <ul class="space-y-3">
-                        <li><a href="#" class="text-sm font-medium text-zinc-500 hover:text-zinc-900 transition-colors">Dokumentasi</a></li>
-                        <li><a href="#" class="text-sm font-medium text-zinc-500 hover:text-zinc-900 transition-colors">FAQ</a></li>
-                        <li><a href="#" class="text-sm font-medium text-zinc-500 hover:text-zinc-900 transition-colors">Kontak Support</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="text-xs font-bold text-zinc-900 uppercase tracking-wider mb-4">Hubungi Kami</h4>
-                    <ul class="space-y-3">
-                        <li class="text-sm font-medium text-zinc-500">support@serviceku.com</li>
-                        <li class="text-sm font-medium text-zinc-500">+62 812 3456 7890</li>
-                    </ul>
+
+                <div class="relative z-10 pb-8 lg:pb-0">
+                    <div class="app-frame overflow-hidden rounded-[1.75rem]">
+                        <div class="flex items-center justify-between border-b border-slate-200 bg-slate-950 px-5 py-4 text-white">
+                            <div class="flex items-center gap-3">
+                                <div class="flex gap-1.5">
+                                    <span class="h-2.5 w-2.5 rounded-full bg-rose-400"></span>
+                                    <span class="h-2.5 w-2.5 rounded-full bg-amber-300"></span>
+                                    <span class="h-2.5 w-2.5 rounded-full bg-teal-300"></span>
+                                </div>
+                                <span class="text-xs font-black uppercase tracking-[.2em] text-slate-300">Live service desk</span>
+                            </div>
+                            <span class="rounded-full bg-teal-400/20 px-3 py-1 text-xs font-black text-teal-200">Online</span>
+                        </div>
+
+                        <div class="grid bg-white lg:grid-cols-[220px_1fr]">
+                            <aside class="hidden border-r border-slate-200 bg-slate-50 p-5 lg:block">
+                                <div class="mb-7 flex items-center gap-3">
+                                    <div class="h-9 w-9 rounded-xl bg-teal-700"></div>
+                                    <div>
+                                        <div class="h-3 w-24 rounded bg-slate-900"></div>
+                                        <div class="mt-2 h-2 w-16 rounded bg-slate-300"></div>
+                                    </div>
+                                </div>
+                                <div class="space-y-2">
+                                    @foreach (['Dashboard', 'Servis', 'POS', 'Stok', 'Teknisi', 'Laporan'] as $item)
+                                        <div class="{{ $loop->index === 1 ? 'bg-teal-50 text-teal-800' : 'text-slate-500' }} flex h-10 items-center gap-3 rounded-xl px-3 text-xs font-extrabold">
+                                            <span class="{{ $loop->index === 1 ? 'bg-teal-600' : 'bg-slate-300' }} h-2.5 w-2.5 rounded-full"></span>
+                                            {{ $item }}
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </aside>
+
+                            <div class="p-4 sm:p-6">
+                                <div class="mb-5 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+                                    <div>
+                                        <p class="text-xs font-black uppercase tracking-[.18em] text-teal-700">Hari ini</p>
+                                        <h2 class="mt-1 text-2xl font-black text-slate-950">12 unit sedang dikerjakan</h2>
+                                    </div>
+                                    <button class="h-10 rounded-xl bg-slate-950 px-4 text-xs font-black text-white">+ Intake servis</button>
+                                </div>
+
+                                <div class="mb-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                                    @foreach ([['Masuk', '28', 'teal'], ['QC', '7', 'amber'], ['Siap Ambil', '15', 'blue'], ['Garansi', '3', 'rose']] as $metric)
+                                        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                                            <p class="text-xs font-extrabold text-slate-500">{{ $metric[0] }}</p>
+                                            <p class="mt-2 text-2xl font-black text-slate-950">{{ $metric[1] }}</p>
+                                            <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-slate-200">
+                                                <div class="h-full rounded-full {{ $metric[2] === 'teal' ? 'bg-teal-500 w-4/5' : '' }}{{ $metric[2] === 'amber' ? 'bg-amber-400 w-2/5' : '' }}{{ $metric[2] === 'blue' ? 'bg-blue-500 w-3/5' : '' }}{{ $metric[2] === 'rose' ? 'bg-rose-500 w-1/4' : '' }}"></div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                                <div class="grid gap-4 xl:grid-cols-[1.15fr_.85fr]">
+                                    <div class="device-card rounded-2xl p-4">
+                                        <div class="mb-4 flex items-center justify-between">
+                                            <h3 class="text-sm font-black text-slate-950">Antrian Prioritas</h3>
+                                            <span class="rounded-full bg-amber-100 px-2.5 py-1 text-[11px] font-black text-amber-700">SLA aktif</span>
+                                        </div>
+                                        <div class="space-y-3">
+                                            @foreach ([['MacBook Pro A2338', 'Ganti IC charging', 'Dikerjakan', 'teal'], ['iPhone 13', 'LCD blank setelah jatuh', 'Menunggu sparepart', 'amber'], ['Samsung A52', 'Klaim garansi servis', 'QC ulang', 'blue']] as $row)
+                                                <div class="rounded-xl border border-slate-200 bg-white p-3">
+                                                    <div class="flex items-start justify-between gap-3">
+                                                        <div>
+                                                            <p class="text-sm font-black text-slate-950">{{ $row[0] }}</p>
+                                                            <p class="mt-1 text-xs font-semibold text-slate-500">{{ $row[1] }}</p>
+                                                        </div>
+                                                        <span class="whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-black {{ $row[3] === 'teal' ? 'bg-teal-50 text-teal-700' : '' }}{{ $row[3] === 'amber' ? 'bg-amber-50 text-amber-700' : '' }}{{ $row[3] === 'blue' ? 'bg-blue-50 text-blue-700' : '' }}">{{ $row[2] }}</span>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+
+                                    <div class="device-card rounded-2xl p-4">
+                                        <h3 class="mb-4 text-sm font-black text-slate-950">Profit & Stok</h3>
+                                        <div class="rounded-2xl bg-slate-950 p-4 text-white">
+                                            <p class="text-xs font-bold text-slate-400">Omzet hari ini</p>
+                                            <p class="mt-2 text-3xl font-black">Rp 8,7 jt</p>
+                                            <div class="mt-4 grid grid-cols-5 items-end gap-2">
+                                                @foreach ([35, 54, 42, 76, 68] as $height)
+                                                    <span class="rounded-t-lg bg-teal-400" style="height: {{ $height }}px"></span>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                        <div class="mt-4 space-y-3">
+                                            <div class="flex items-center justify-between text-sm">
+                                                <span class="font-bold text-slate-600">Baterai iPhone</span>
+                                                <span class="font-black text-rose-600">Stok rendah</span>
+                                            </div>
+                                            <div class="flex items-center justify-between text-sm">
+                                                <span class="font-bold text-slate-600">Adaptor laptop</span>
+                                                <span class="font-black text-teal-700">Aman</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="border-t border-zinc-200 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-                <p class="text-xs font-semibold text-zinc-400">&copy; {{ date('Y') }} ServiceKU. All rights reserved.</p>
-                <div class="flex items-center gap-6">
-                    <a href="#" class="text-xs font-semibold text-zinc-400 hover:text-zinc-600 transition-colors">Kebijakan Privasi</a>
-                    <a href="#" class="text-xs font-semibold text-zinc-400 hover:text-zinc-600 transition-colors">Syarat & Ketentuan</a>
+        </section>
+
+        <section id="workflow" class="bg-white py-20">
+            <div class="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-[.8fr_1.2fr] lg:px-8">
+                <div>
+                    <p class="text-xs font-black uppercase tracking-[.2em] text-teal-700">Workflow servis</p>
+                    <h2 class="mt-3 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">Dari unit diterima sampai pelanggan mengambil barang, semua tercatat.</h2>
+                    <p class="mt-5 text-base font-semibold leading-8 text-slate-600">Setiap perpindahan status punya jejak audit. CS, teknisi, kasir, owner, dan pelanggan melihat informasi sesuai kebutuhannya.</p>
                 </div>
+                <div class="grid gap-4 sm:grid-cols-2">
+                    @foreach ([
+                        ['01', 'Intake CS', 'Data pelanggan, kondisi unit, foto, keluhan, dan estimasi awal dicatat saat barang masuk.'],
+                        ['02', 'Diagnosis teknisi', 'Teknisi membuat diagnosis, quotation, kebutuhan sparepart, dan catatan kerja.'],
+                        ['03', 'QC & pembayaran', 'Unit yang selesai masuk QC, dibuat invoice, dibayar di POS, lalu siap diambil.'],
+                        ['04', 'Garansi & riwayat', 'Garansi servis, klaim, timeline, dan histori customer tersimpan untuk kunjungan berikutnya.'],
+                    ] as $step)
+                        <div class="timeline-step relative rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                            <div class="mb-4 flex h-9 w-9 items-center justify-center rounded-xl bg-teal-700 text-xs font-black text-white">{{ $step[0] }}</div>
+                            <h3 class="text-lg font-black text-slate-950">{{ $step[1] }}</h3>
+                            <p class="mt-2 text-sm font-semibold leading-7 text-slate-600">{{ $step[2] }}</p>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="bg-slate-950 py-20 text-white">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="mb-12 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
+                    <div class="max-w-2xl">
+                        <p class="text-xs font-black uppercase tracking-[.2em] text-teal-300">Modul operasional</p>
+                        <h2 class="mt-3 text-3xl font-black tracking-tight sm:text-4xl">Bukan cuma landing page cantik. Ini sistem kerja harian.</h2>
+                    </div>
+                    <p class="max-w-md text-sm font-semibold leading-7 text-slate-300">Semua modul dibuat saling terhubung agar data tidak tercecer di chat, nota manual, dan spreadsheet terpisah.</p>
+                </div>
+
+                <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                    @foreach ([
+                        ['Servis Center', 'Tiket, status, teknisi, QC, warranty claim, pickup, dan tracking publik.', 'bg-teal-400'],
+                        ['POS & Invoice', 'Penjualan langsung, pembayaran servis, void, retur, dan cetak invoice.', 'bg-amber-300'],
+                        ['Inventory', 'Stok sparepart, mutasi, damaged stock, reorder alert, dan multi-branch.', 'bg-blue-400'],
+                        ['Monitoring', 'Dashboard owner, audit log, performa teknisi, dan laporan finance.', 'bg-rose-400'],
+                    ] as $module)
+                        <div class="rounded-2xl border border-white/10 bg-white/5 p-6 transition hover:bg-white/10">
+                            <div class="mb-7 h-2 w-14 rounded-full {{ $module[2] }}"></div>
+                            <h3 class="text-lg font-black">{{ $module[0] }}</h3>
+                            <p class="mt-3 text-sm font-semibold leading-7 text-slate-300">{{ $module[1] }}</p>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </section>
+
+        <section id="pricing" class="bg-slate-50 py-20" x-data="{
+            selectedBusinessType: 'full_service',
+            plans: {{ json_encode($plans) }},
+            businessTypes: {
+                full_service: 'Servis & Sparepart',
+                aksesoris_service: 'Aksesoris & Jasa Servis',
+                aksespare_service: 'Pusat Servis & Sparepart',
+                gadget_full: 'HP/Laptop Baru + Servis',
+                retail_only: 'Retail Saja'
+            },
+            mapping: {
+                services: 'Manajemen servis',
+                customers: 'Database pelanggan',
+                products: 'Stok barang',
+                sales: 'POS dan invoice',
+                reports: 'Laporan bisnis',
+                settings: 'Pengaturan toko',
+                monitoring: 'Monitoring dan audit',
+                multi_branch: 'Multi cabang',
+                transfer_stock: 'Mutasi stok',
+                users: 'Manajemen staf',
+                expenses: 'Catatan biaya'
+            },
+            getFeaturesList(plan) {
+                const features = plan.features || {};
+                const typeFeatures = typeof features[this.selectedBusinessType] === 'object' ? features[this.selectedBusinessType] : features;
+                const list = [];
+                const maxUsers = typeFeatures.max_users || features.max_users || 0;
+                const maxBranches = typeFeatures.max_branches || features.max_branches || 0;
+                list.push(maxUsers > 0 ? `Maks. ${maxUsers} karyawan` : 'Karyawan tanpa batas');
+                list.push(maxBranches > 0 ? `Maks. ${maxBranches} cabang` : 'Cabang tanpa batas');
+                for (const [key, label] of Object.entries(this.mapping)) {
+                    if (this.selectedBusinessType === 'retail_only' && key === 'services') continue;
+                    const val = typeFeatures[key];
+                    if (val === true || val === 'full' || val === 1 || val === '1') list.push(label);
+                    if (val === 'read_only') list.push(`${label} read only`);
+                }
+                return list.slice(0, 9);
+            },
+            formatNumber(num) {
+                return new Intl.NumberFormat('id-ID').format(num || 0);
+            }
+        }">
+            <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="mx-auto mb-10 max-w-2xl text-center">
+                    <p class="text-xs font-black uppercase tracking-[.2em] text-teal-700">Paket berlangganan</p>
+                    <h2 class="mt-3 text-3xl font-black tracking-tight text-slate-950 sm:text-4xl">Mulai kecil, tetap siap naik kelas.</h2>
+                    <p class="mt-4 text-sm font-semibold leading-7 text-slate-600">Pilih paket sesuai fokus toko. Data paket tetap mengikuti konfigurasi plan di sistem.</p>
+                </div>
+
+                <div class="mx-auto mb-10 max-w-sm">
+                    <label class="mb-2 block text-xs font-black uppercase tracking-[.16em] text-slate-500">Fokus bisnis</label>
+                    <select x-model="selectedBusinessType" class="h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm font-extrabold text-slate-900 outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-100">
+                        <template x-for="(label, key) in businessTypes" :key="key">
+                            <option :value="key" x-text="label"></option>
+                        </template>
+                    </select>
+                </div>
+
+                <div class="grid gap-6 lg:grid-cols-3">
+                    <template x-for="pkg in plans" :key="pkg.slug || pkg.name">
+                        <article class="price-card relative flex rounded-2xl p-6 transition" :class="pkg.featured ? 'ring-2 ring-teal-700 lg:-translate-y-3' : ''">
+                            <div class="flex min-h-[520px] w-full flex-col">
+                                <template x-if="pkg.featured">
+                                    <div class="absolute -top-3 left-6 rounded-full bg-teal-700 px-3 py-1 text-[11px] font-black uppercase tracking-wide text-white">Rekomendasi</div>
+                                </template>
+                                <h3 class="text-2xl font-black text-slate-950" x-text="pkg.name"></h3>
+                                <div class="mt-6 border-b border-slate-200 pb-6">
+                                    <template x-if="pkg.is_promo_active">
+                                        <p class="mb-1 text-sm font-bold text-slate-400 line-through">Rp <span x-text="formatNumber(pkg.price)"></span></p>
+                                    </template>
+                                    <p class="text-4xl font-black tracking-tight text-slate-950">
+                                        <span class="text-xl">Rp</span>
+                                        <span x-text="formatNumber(pkg.is_promo_active ? pkg.promo_price : pkg.price)"></span>
+                                    </p>
+                                    <p class="mt-1 text-sm font-bold text-slate-500" x-text="pkg.trial_days > 0 ? 'per bulan, trial tersedia' : 'per bulan'"></p>
+                                </div>
+                                <ul class="mt-6 flex-1 space-y-3">
+                                    <template x-for="feature in getFeaturesList(pkg)" :key="feature">
+                                        <li class="flex gap-3 text-sm font-bold leading-6 text-slate-700">
+                                            <span class="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-teal-100 text-[10px] text-teal-800">✓</span>
+                                            <span x-text="feature"></span>
+                                        </li>
+                                    </template>
+                                </ul>
+                                <a :href="'{{ route('register') }}?plan=' + pkg.slug + '&business_type=' + selectedBusinessType"
+                                   class="mt-8 inline-flex h-12 items-center justify-center rounded-xl text-sm font-black transition"
+                                   :class="pkg.featured ? 'btn-main' : 'btn-soft'">
+                                    <span x-text="pkg.name === 'Enterprise' ? 'Konsultasi Paket' : (pkg.trial_days > 0 ? 'Mulai Trial' : 'Pilih Paket')"></span>
+                                </a>
+                            </div>
+                        </article>
+                    </template>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-white py-20">
+            <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+                <div class="overflow-hidden rounded-[2rem] bg-slate-950">
+                    <div class="status-line h-2"></div>
+                    <div class="grid gap-8 p-8 text-white sm:p-10 lg:grid-cols-[1fr_auto] lg:items-center">
+                        <div>
+                            <p class="text-xs font-black uppercase tracking-[.2em] text-teal-300">Siap operasional</p>
+                            <h2 class="mt-3 text-3xl font-black tracking-tight sm:text-4xl">Bawa alur bengkelmu ke sistem yang lebih rapi minggu ini.</h2>
+                            <p class="mt-4 max-w-2xl text-sm font-semibold leading-7 text-slate-300">Mulai dari trial, setup toko, import data produk/customer, lalu jalankan servis harian tanpa pindah-pindah aplikasi.</p>
+                        </div>
+                        <a href="{{ route('register') }}" class="inline-flex h-12 items-center justify-center rounded-xl bg-white px-6 text-sm font-black text-slate-950 transition hover:bg-teal-50">
+                            Daftar Sekarang
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-slate-200 bg-slate-50">
+        <div class="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-10 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
+            <div class="flex items-center gap-3">
+                <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-700">
+                    <img src="/images/logo.svg" alt="" class="h-5 w-5 brightness-0 invert">
+                </span>
+                <div>
+                    <p class="text-sm font-black text-slate-950">ServiceKU</p>
+                    <p class="text-xs font-bold text-slate-500">Operasi bengkel lebih rapi.</p>
+                </div>
+            </div>
+            <div class="flex flex-wrap items-center gap-4 text-xs font-bold text-slate-500">
+                <a href="{{ route('privacy') }}" class="hover:text-teal-700">Kebijakan Privasi</a>
+                <a href="{{ route('terms') }}" class="hover:text-teal-700">Syarat Layanan</a>
+                <span>&copy; {{ date('Y') }} ServiceKU. All rights reserved.</span>
             </div>
         </div>
     </footer>

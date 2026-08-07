@@ -1,14 +1,14 @@
 <template>
     <div
         :class="[
-            'rounded-2xl border border-zinc-200 bg-white shadow-sm transition-all',
+            'rounded-xl border border-slate-200 bg-white shadow-sm transition-all',
             paddingClass,
             hoverClass,
         ]"
         :style="cardStyle"
     >
         <div v-if="title || $slots.title" class="flex items-center justify-between mb-4">
-            <h3 class="text-sm font-bold text-zinc-900">
+            <h3 class="text-sm font-black text-slate-950">
                 <slot name="title">{{ title }}</slot>
             </h3>
             <slot name="action" />
@@ -30,7 +30,7 @@ const props = defineProps({
 const paddingMap = { none: 'p-0', sm: 'p-4', md: 'p-6', lg: 'p-8' };
 const paddingClass = computed(() => paddingMap[props.padding] || 'p-6');
 
-const hoverClass = computed(() => props.hover ? 'hover:shadow-md hover:-translate-y-1 hover:border-indigo-200 cursor-pointer' : '');
+const hoverClass = computed(() => props.hover ? 'hover:shadow-md hover:-translate-y-0.5 hover:border-teal-200 cursor-pointer' : '');
 const cardStyle = computed(() => ({
     ...(props.borderColor ? { borderColor: props.borderColor } : {}),
 }));

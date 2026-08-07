@@ -28,6 +28,8 @@ class PermissionEngineSeeder extends Seeder
         ['key' => 'service.assign', 'label' => 'Assign Teknisi', 'module' => 'service', 'action' => 'assign'],
         ['key' => 'service.void', 'label' => 'Void Servis', 'module' => 'service', 'action' => 'void'],
         ['key' => 'service.finish', 'label' => 'Selesaikan Servis', 'module' => 'service', 'action' => 'finish'],
+        // BR-FIX-03: pickup is a granular capability (role-hardcoded list replaced)
+        ['key' => 'service.pickup', 'label' => 'Proses Pickup Servis', 'module' => 'service', 'action' => 'pickup'],
 
         // Sales
         ['key' => 'sales.view', 'label' => 'Lihat Penjualan', 'module' => 'sales', 'action' => 'view'],
@@ -184,7 +186,7 @@ class PermissionEngineSeeder extends Seeder
             'purchase.view', 'purchase.create', 'purchase.update', 'purchase.void',
             'branch.view', 'branch.create', 'branch.update', 'branch.delete',
             'indent.view', 'indent.create', 'indent.update',
-            'service.view', 'service.create', 'service.update', 'service.delete', 'service.work', 'service.assign', 'service.void', 'service.finish',
+            'service.view', 'service.create', 'service.update', 'service.delete', 'service.work', 'service.assign', 'service.void', 'service.finish', 'service.pickup',
             'report.view', 'report.export',
             'monitoring.view',
             'dashboard.view',
@@ -210,7 +212,7 @@ class PermissionEngineSeeder extends Seeder
             'deposit.view', 'deposit.create', 'deposit.confirm',
             'purchase.view', 'purchase.create', 'purchase.update', 'purchase.void',
             'indent.view', 'indent.create', 'indent.update',
-            'service.view', 'service.create', 'service.update', 'service.delete', 'service.work', 'service.assign', 'service.void', 'service.finish',
+            'service.view', 'service.create', 'service.update', 'service.delete', 'service.work', 'service.assign', 'service.void', 'service.finish', 'service.pickup',
             'report.view', 'report.export',
             'monitoring.view',
             'dashboard.view',
@@ -219,6 +221,7 @@ class PermissionEngineSeeder extends Seeder
             'expense.view', 'expense.create',
             'warranty.view', 'warranty.claim',
             'request.view', 'request.create', 'request.assign', 'request.cancel',
+            'delegation.grant', 'delegation.revoke',
         ],
         'manager' => [
             'finance.view', 'finance.manage',
@@ -229,12 +232,13 @@ class PermissionEngineSeeder extends Seeder
             'deposit.view', 'deposit.create',
             'purchase.view', 'purchase.create', 'purchase.update',
             'indent.view', 'indent.create', 'indent.update',
-            'service.view', 'service.create', 'service.update', 'service.work', 'service.finish',
+            'service.view', 'service.create', 'service.update', 'service.work', 'service.finish', 'service.pickup',
             'dashboard.view',
             'checklist.view', 'checklist.create', 'checklist.update',
             'supplier.view', 'supplier.create', 'supplier.update', 'supplier.delete',
             'expense.view', 'expense.create',
             'request.view', 'request.create', 'request.assign',
+            'delegation.grant', 'delegation.revoke',
         ],
         'head_store' => [
             'finance.view', 'finance.manage',
@@ -243,7 +247,7 @@ class PermissionEngineSeeder extends Seeder
             'sales.view', 'sales.create', 'sales.update',
             'cash_register.view', 'cash_register.manage',
             'deposit.view', 'deposit.create',
-            'service.view', 'service.create', 'service.work', 'service.finish',
+            'service.view', 'service.create', 'service.work', 'service.finish', 'service.pickup',
             'dashboard.view',
             'expense.view', 'expense.create',
             'request.view', 'request.create',
@@ -251,7 +255,8 @@ class PermissionEngineSeeder extends Seeder
         'cs' => [
             'customer.view', 'customer.create', 'customer.update', 'customer.delete',
             'indent.view', 'indent.create', 'indent.update',
-            'service.view', 'service.create', 'service.work', 'service.assign', 'service.finish',
+            'service.view', 'service.create', 'service.work', 'service.assign', 'service.finish', 'service.pickup',
+            'sales.view', 'sales.create',
             'dashboard.view',
             'request.view', 'request.create', 'request.assign',
         ],
@@ -264,6 +269,9 @@ class PermissionEngineSeeder extends Seeder
         'cashier' => [
             'sales.view', 'sales.create', 'sales.update',
             'cash_register.view', 'cash_register.manage',
+            // PILOT-READY-01: cashier opens the service page and performs
+            // counter pickup (matches the menu + toolbar).
+            'service.view', 'service.pickup',
             'dashboard.view',
         ],
         'courier' => [

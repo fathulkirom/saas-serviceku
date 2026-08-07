@@ -60,12 +60,14 @@ class SearchController extends Controller
         // Search products
         $products = Product::when($userBranchId, fn($q) => $q->where('branch_id', $userBranchId))
             ->where('name', 'like', "%{$query}%")
+            ->take(5)
+            ->get()
             ->map(fn($p) => [
                 'type' => 'product',
                 'icon' => '📦',
                 'label' => $p->name,
                 'description' => "Stok: {$p->stock_quantity} | Rp " . number_format($p->selling_price, 0, ',', '.'),
-                'url' => route('products.show', $p->id),
+                'url' => route('products.index'),
             ]);
 
         return response()->json([

@@ -9,11 +9,6 @@ use PragmaRX\Google2FA\Google2FA;
 
 class TwoFactorSetupController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     /**
      * Cek status 2FA user.
      */

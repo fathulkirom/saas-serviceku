@@ -32,7 +32,7 @@ class TenantStockWorkflowTest extends TestCase
             'branch_id' => $branch->id,
             'customer_id' => $customer->id,
             'created_by' => $owner->id,
-            'status' => Service::STATUS_DIKERJAKAN,
+            'status' => Service::STATUS_SELESAI,
         ]);
 
         $product = Product::create([
@@ -45,7 +45,7 @@ class TenantStockWorkflowTest extends TestCase
 
         $this->actingAs($owner);
 
-        $request = Request::create('/services/' . $service->id . '/complete', 'POST', [
+        $request = Request::create('/services/'.$service->id.'/complete', 'POST', [
             'spareparts' => [
                 ['product_id' => $product->id, 'quantity' => 2],
             ],
@@ -81,7 +81,7 @@ class TenantStockWorkflowTest extends TestCase
         $service = $this->createService([
             'branch_id' => $branch->id,
             'created_by' => $owner->id,
-            'status' => Service::STATUS_DIKERJAKAN,
+            'status' => Service::STATUS_SELESAI,
         ]);
 
         $product = Product::create([
@@ -94,7 +94,7 @@ class TenantStockWorkflowTest extends TestCase
 
         $this->actingAs($owner);
 
-        $firstRequest = Request::create('/services/' . $service->id . '/complete', 'POST', [
+        $firstRequest = Request::create('/services/'.$service->id.'/complete', 'POST', [
             'spareparts' => [
                 ['product_id' => $product->id, 'quantity' => 2],
             ],
@@ -102,7 +102,7 @@ class TenantStockWorkflowTest extends TestCase
         ]);
         app(ServiceDocumentController::class)->complete($firstRequest, $service);
 
-        $secondRequest = Request::create('/services/' . $service->id . '/complete', 'POST', [
+        $secondRequest = Request::create('/services/'.$service->id.'/complete', 'POST', [
             'spareparts' => [
                 ['product_id' => $product->id, 'quantity' => 3],
             ],
@@ -226,7 +226,7 @@ class TenantStockWorkflowTest extends TestCase
         ]);
 
         $this->actingAs($owner);
-        $request = Request::create('/sales/' . $sale->id . '/pay-draft', 'POST', [
+        $request = Request::create('/sales/'.$sale->id.'/pay-draft', 'POST', [
             'paid_amount' => 300000,
             'payment_method' => 'cash',
         ]);
@@ -292,7 +292,7 @@ class TenantStockWorkflowTest extends TestCase
         ]);
 
         $this->actingAs($owner);
-        $request = Request::create('/sales/' . $sale->id . '/pay-draft', 'POST', [
+        $request = Request::create('/sales/'.$sale->id.'/pay-draft', 'POST', [
             'paid_amount' => 240000,
             'payment_method' => 'cash',
         ]);

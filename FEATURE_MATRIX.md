@@ -48,14 +48,28 @@ Tenants can disable modules via `tenant_modules` table:
 - No entry → defaults to Plan check
 
 ### Available Modules
+> Sinkron dengan `database/seeders/Tenant/ModuleRegistrySeeder.php`.
+> Modul bertanda **Future** belum aktif (lihat docs/specification/ModuleSpecification.md §3).
+
 | Module Key | Name | Default |
 |-----------|------|---------|
-| `core` | Core System | ✅ |
-| `services` | Service Center | ✅ |
+| `dashboard` | Dashboard | ✅ |
+| `customer` | Customer | ✅ |
+| `service` | Service Center | ✅ |
 | `inventory` | Inventory | ✅ |
-| `pos` | Point of Sale | ✅ |
-| `crm` | Customer Relations | ✅ |
-| `hr` | Human Resources | ✅ |
+| `sales` | POS / Sales | ✅ |
+| `purchase` | Purchase | ✅ |
+| `supplier` | Supplier | ✅ |
+| `cash_register` | Cash Register | ✅ |
+| `expense` | Expense | ✅ |
 | `finance` | Finance & Accounting | ✅ |
-| `reports` | Reports & Analytics | ✅ |
+| `report` | Reports & Analytics | ✅ |
+| `monitoring` | Monitoring | ✅ |
+| `branch` | Multi Branch | ✅ |
+| `user` | User Management | ✅ |
 | `settings` | Settings | ✅ |
+| `warranty` | Warranty | 🔄 Future |
+| `provider` | Provider Integrations | ✅ |
+| `subscription` | Subscription | ✅ |
+| `marketplace` | Marketplace | 🔄 Future |
+| `ai` | AI Assistant | 🔄 Future |

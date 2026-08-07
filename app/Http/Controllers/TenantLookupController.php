@@ -18,8 +18,15 @@ class TenantLookupController extends Controller
         $searchType = $request->search_type;
         $searchValue = trim((string) $request->search_value);
 
-        // Pencarian parsial & case-insensitive (bukan exact match)
-        $tenants = Tenant::all()->filter(function ($tenant) use ($searchType, $searchValue) {
+        // Pencarian parsial & case-insensitive (bukan exact match).
+        // PLATFORM-SYNC-01 (STEP 21): reserved platform slugs (kirom, admin,
+        // www, …) are NEVER returned as a tenant store — even if a row with
+        // such a slug somehow existed.
+        $reserved = \App\Models\Tenant::reservedSlugs();
+        $tenants = Tenant::all()->filter(function ($tenant) use ($searchType, $searchValue, $reserved) {
+            if (in_array($tenant->slug, $reserved, true)) {
+                return false;
+            }
             $value = match ($searchType) {
                 'name' => $tenant->tenant_name ?? '',
                 'email' => $tenant->email ?? ($tenant->data['email'] ?? ''),

@@ -22,7 +22,15 @@ class GoogleDrivePhotoService
         }
 
         if ($this->token && $this->token->access_token) {
-            $this->initClient();
+            if (config('services.google.client_id') && config('services.google.drive_redirect')) {
+                try {
+                    $this->initClient();
+                } catch (\Exception $e) {
+                    Log::warning('GoogleDrivePhotoService init failed: ' . $e->getMessage());
+                    $this->client = null;
+                    $this->driveService = null;
+                }
+            }
         }
     }
 
@@ -69,14 +77,15 @@ class GoogleDrivePhotoService
     public function getAuthUrl(): string
     {
         $clientId = config('services.google.client_id');
-        if (!$clientId) {
+        $redirectUri = config('services.google.drive_redirect');
+        if (!$clientId || !$redirectUri) {
             return '';
         }
 
         $client = new GoogleClient();
         $client->setClientId($clientId);
         $client->setClientSecret(config('services.google.client_secret'));
-        $client->setRedirectUri(config('services.google.drive_redirect'));
+        $client->setRedirectUri($redirectUri);
         $client->setScopes([Drive::DRIVE_FILE]);
         $client->setAccessType('offline');
         $client->setPrompt('consent');

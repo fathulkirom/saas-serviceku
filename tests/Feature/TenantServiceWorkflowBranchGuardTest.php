@@ -114,7 +114,7 @@ class TenantServiceWorkflowBranchGuardTest extends TestCase
 
         $response = $this->post(route('services.cancel', $service));
 
-        $response->assertSessionHasErrors(['service']);
+        $response->assertStatus(403);
 
         $service->refresh();
         $this->assertSame(Service::STATUS_DIKERJAKAN, $service->status);

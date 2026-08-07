@@ -175,6 +175,8 @@ class Customer extends Model
             event(new \App\Events\Entity\CustomerMerged($this, $other));
         });
     }
+
+    /**
      * Returns ['level' => 'low|medium|high', 'label' => 'Normal|Attention|Risk', 'icon' => '🟢|🟡|🔴', 'factors' => [...]]
      */
     public function riskIndicator(): array

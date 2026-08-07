@@ -55,7 +55,11 @@ class PlanSeeder extends Seeder
                 'monitoring' => true,
                 'multi_branch' => 'none',
                 'transfer_stock' => 'none',
-                'users' => 'read_only',
+                // PLATFORM-SYNC-01 (STEP 3): Basic must honor its product
+                // promise — creating users up to max_users (3). It previously
+                // said `read_only`, which made the landing's "Maks. 3 karyawan"
+                // a lie (POST users.store was blocked). Now full + enforced.
+                'users' => true,
                 'expenses' => true,
                 'purchases' => true,
                 'deposits' => true,

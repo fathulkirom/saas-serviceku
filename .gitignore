@@ -5,17 +5,23 @@
 /public/storage
 /storage/*.key
 /storage/pail
+/storage/tenant*
 /vendor
 .env
 .env.backup
+.DS_Store
+serviceku_master
+serviceku_master-journal
 # Runtime database artifacts (tenant SQLite & testing files)
 /database/tenant_*
 /database/testing_tenant_*
 /database/central.sqlite
 /database/database.sqlite
+/database/*.sqlite
 /database/*.sqlite-journal
 /test-results/
 /playwright-report/
+/.hypothesis/
 /.schemathesis/
 .env.production
 .phpactor.json
@@ -31,3 +37,11 @@ yarn-error.log
 /.vscode
 /.zed
 /.ua/
+
+# GIT-SYNC-01 — secret/sensitive protection (must never be committed)
+/storage/backups/
+*.sql
+*.sql.gz
+# Cloudflare Tunnel credentials copied into this folder by setup scripts
+docker/cloudflare/*.json
+

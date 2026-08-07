@@ -18,6 +18,18 @@ class FinanceController extends Controller
     {
         $tab = $request->get('tab', 'penjualan');
         $user = auth()->user();
+
+        // PILOT-READY-01 (P0): financial data is restricted to finance-capable
+        // roles (owner/admin/manager/head_store) plus roles whose view is limited
+        // to today's completed transactions (cs/cashier/custom 'admin harian' —
+        // see shouldRestrictToTodayCompletedTransactions). All other roles are
+        // denied so e.g. a technician cannot read full financial data by URL.
+        $user = auth()->user();
+        $hasRestrictedView = $this->shouldRestrictToTodayCompletedTransactions($user);
+        if (!$user->canManageFinance() && !$hasRestrictedView) {
+            abort(403, 'Anda tidak memiliki akses ke halaman keuangan.');
+        }
+
         $restrictToTodayCompletedTransactions = $this->shouldRestrictToTodayCompletedTransactions($user);
         $today = now()->toDateString();
 

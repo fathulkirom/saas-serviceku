@@ -23,6 +23,14 @@ class SalePaymentController extends Controller
     public function payDraft(Request $request, Sale $sale)
     {
         $user = Auth::user();
+
+        // BR-FIX-03 (BR-001): recording payment is gated by the sales.create
+        // capability (owner/admin/manager/cs/cashier hold it by role, or via an
+        // ACTIVE granular sales.create delegation), scoped to the sale's branch.
+        if (!$user->canViaPermissionInBranch('sales.create', $sale->branch_id)) {
+            abort(403, 'Anda tidak memiliki izin untuk mencatat pembayaran.');
+        }
+
         $idempotencyKey = $this->extractIdempotencyKey($request);
 
         if (!empty($idempotencyKey)) {
@@ -115,12 +123,15 @@ class SalePaymentController extends Controller
                 if ($lockedSale->service_id) {
                     $paidService = Service::query()->lockForUpdate()->find($lockedSale->service_id);
                     if ($paidService) {
-                        $paidService->update([
-                            'status' => Service::STATUS_SELESAI,
+                        $updateData = [
                             'payment_status' => 'paid',
                             'warranty_days' => $validated['warranty_days'] ?? 0,
                             'warranty_expired_at' => ($validated['warranty_days'] ?? 0) > 0 ? now()->addDays($validated['warranty_days']) : null,
-                        ]);
+                        ];
+                        if ($paidService->status === Service::STATUS_DIKERJAKAN) {
+                            $updateData['status'] = Service::STATUS_SELESAI;
+                        }
+                        $paidService->update($updateData);
                         Commission::autoCreateForService($paidService);
                     }
                 }

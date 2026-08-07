@@ -9,6 +9,7 @@ use App\Models\Tenant\ActivityLog;
 use App\Models\Tenant\ServicePhoto;
 use App\Models\Tenant\Customer;
 use App\Models\Tenant\User;
+use App\Models\Tenant\ServiceWarrantyClaim;
 use App\Services\GoogleDrivePhotoService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,85 +18,7 @@ use Illuminate\Validation\ValidationException;
 
 class ServiceWorkflowController extends Controller
 {
-    public function store(StoreServiceRequest $request)
-    {
-        $this->authorize('create', Service::class);
 
-        $validated = $request->validated();
-        $user = Auth::user();
-
-        // Idempotency guard: cegah double-submit saat network down
-        $idempotencyKey = 'svc_' . md5(($user->id ?? '0') . '_' . ($validated['customer_id'] ?? '0') . '_' . ($validated['tipe_unit'] ?? '') . '_' . now()->format('YmdHi'));
-
-        $existing = \App\Models\Tenant\RequestIdempotency::query()
-            ->where('key', $idempotencyKey)
-            ->where('action', 'service.store')
-            ->where('user_id', $user->id)
-            ->first();
-
-        if ($existing) {
-            return redirect()->route('services.show', $existing->resource_id)
-                ->with('info', 'Servis ini sudah dibuat sebelumnya.');
-        }
-
-        $this->ensureCustomerBranchAccess((int) $validated['customer_id'], $user?->branch_id);
-
-        $service = DB::transaction(function () use ($validated, $user, $request, $idempotencyKey) {
-            $userCount = \App\Models\Tenant\User::count();
-            $status = Service::STATUS_MENUNGGU_ALOKASI;
-            $technicianId = null;
-
-            if ($userCount <= 1 || $user->isOwner()) {
-                $technicianId = $user->id;
-                $status = Service::STATUS_DIKERJAKAN;
-            } elseif ($user->canWorkOnServices()) {
-                if (!\App\Models\Tenant\User::where('role', 'technician')->exists()) {
-                    $technicianId = $user->id;
-                    $status = Service::STATUS_DIKERJAKAN;
-                }
-            }
-
-            $service = Service::create(array_merge($validated, [
-                'branch_id' => $user->branch_id, 'created_by' => $user->id,
-                'technician_id' => $technicianId, 'status' => $status,
-                'problem_description' => $validated['problem_description'] ?? '',
-                'condition_note' => $validated['condition_note'] ?? '',
-                'dikerjakan_at' => $status === Service::STATUS_DIKERJAKAN ? now() : null,
-            ]));
-
-            if ($request->filled('checklist_template_id')) {
-                $service->checklists()->create(['checklist_template_id' => $validated['checklist_template_id'], 'type' => 'masuk', 'checked_items' => $validated['checked_items'] ?? []]);
-            }
-
-            \App\Models\Tenant\RequestIdempotency::create([
-                'key' => $idempotencyKey,
-                'action' => 'service.store',
-                'user_id' => $user->id,
-                'resource_type' => 'service',
-                'resource_id' => (string) $service->id,
-            ]);
-
-            return $service;
-        });
-
-        // Photo upload di luar transaction (external service)
-        if ($request->hasFile('photos')) {
-            $driveService = new GoogleDrivePhotoService(tenancy()->tenant->id);
-            if ($driveService->isConnected()) {
-                foreach ($request->file('photos') as $file) {
-                    $path = $file->store('services/' . $service->id, 'public');
-                    $driveUrl = $driveService->upload(storage_path('app/public/' . $path), 'service_' . $service->id . '_' . time() . '_' . uniqid() . '.jpg', 'services');
-                    ServicePhoto::create(['service_id' => $service->id, 'photo_path' => $driveUrl ?: $path, 'uploaded_by' => auth()->id()]);
-                }
-            }
-        }
-
-        // Simpan custom field values untuk service
-        $service->saveCustomFieldValues($request->all());
-
-        ActivityLog::log('created', 'Membuat servis baru #' . $service->id, $service, ['customer_id' => $service->customer_id, 'status' => $service->status]);
-        return redirect()->route('services.show', $service->id)->with('success', 'Servis berhasil dibuat.');
-    }
 
     public function accept(Service $service)
     {
@@ -130,6 +53,10 @@ class ServiceWorkflowController extends Controller
             return $invalid;
         }
         ActivityLog::log('finished', $user->name . ' menyelesaikan pekerjaan servis #' . $service->id, $service);
+
+        // BR-FIX-04.1: technician repair completion is NOT warranty resolution.
+        // The warranty claim stays OPEN until QC passes (see storeQcCheck).
+
         return back()->with('success', 'Pekerjaan selesai. Servis siap dibuatkan nota.');
     }
 
@@ -143,6 +70,63 @@ class ServiceWorkflowController extends Controller
         }
         ActivityLog::log('cancelled', $user->name . ' membatalkan servis #' . $service->id, $service);
         return back()->with('success', 'Servis dibatalkan.');
+    }
+
+    /**
+     * Sprint v4.0B: Close service — terminal state with full precondition validation.
+     * Requires: QC done, pickup completed, payment verified, warranty active.
+     */
+    public function close(Service $service)
+    {
+        $user = Auth::user();
+
+        // Only owner/admin/manager can close
+        if (!in_array($user->role, ['owner', 'admin', 'manager'])) {
+            abort(403, 'Hanya owner/admin/manager yang dapat menutup servis.');
+        }
+
+        $this->ensureServiceBranchAccess($service, $user?->branch_id);
+
+        // Idempotency: already closed
+        if ($service->status === Service::STATUS_CLOSE) {
+            return back()->with('error', 'Servis sudah ditutup sebelumnya.');
+        }
+
+        // Status gate: must be SIAP_DIAMBIL, DIAMBIL, or SELESAI
+        if (!in_array($service->status, [Service::STATUS_SIAP_DIAMBIL, Service::STATUS_DIAMBIL, Service::STATUS_SELESAI])) {
+            return back()->with('error', 'Servis harus siap diambil, sudah diambil, atau selesai untuk ditutup. Status: ' . $service->status);
+        }
+
+        // Precondition 1: QC must have been done (QC checks exist)
+        $qcDone = \App\Models\Tenant\ServiceQcCheck::where('service_id', $service->id)->exists();
+        if (!$qcDone) {
+            return back()->with('error', 'QC belum dilakukan. Tidak dapat menutup servis.');
+        }
+
+        // Precondition 2: Delivery/pickup must be completed
+        $delivery = \App\Models\Tenant\ServiceDelivery::where('service_id', $service->id)->first();
+        if (!$delivery || !$delivery->picked_up_at) {
+            return back()->with('error', 'Pickup belum selesai. Tidak dapat menutup servis.');
+        }
+
+        // Precondition 3: Payment must be verified
+        if (!$delivery->payment_verified && $service->payment_status !== 'paid') {
+            return back()->with('error', 'Pembayaran belum diverifikasi. Tidak dapat menutup servis.');
+        }
+
+        if ($invalid = $this->attemptTransition($service, Service::STATUS_CLOSE)) {
+            return $invalid;
+        }
+
+        ActivityLog::log('closed', "{$user->name} menutup servis #{$service->tracking_code}.", $service);
+
+        if ($service->customer) {
+            \App\Models\Tenant\ActivityLog::log('service_closed_customer',
+                "Servis #{$service->tracking_code} closed untuk {$service->customer->name}.",
+                $service->customer);
+        }
+
+        return back()->with('success', 'Servis #' . $service->tracking_code . ' ditutup. Riwayat tersimpan.');
     }
 
     public function requestReallocation(Service $service)
@@ -186,11 +170,12 @@ class ServiceWorkflowController extends Controller
         $this->authorize('approve', $service);
         $user = Auth::user();
         $this->ensureServiceBranchAccess($service, $user?->branch_id);
-        if ($invalid = $this->attemptTransition($service, Service::STATUS_DIKERJAKAN, ['dikerjakan_at' => $service->dikerjakan_at ?? now()])) {
+        // Sesuai docs: konfirmasi disetujui → siap_diambil
+        if ($invalid = $this->attemptTransition($service, Service::STATUS_SIAP_DIAMBIL, ['selesai_at' => $service->selesai_at ?? now()])) {
             return $invalid;
         }
         ActivityLog::log('confirmed', 'Konfirmasi disetujui untuk servis #' . $service->id, $service);
-        return back()->with('success', 'Konfirmasi disetujui.');
+        return back()->with('success', 'Konfirmasi disetujui — servis siap diambil.');
     }
 
     public function takeOver(Service $service)

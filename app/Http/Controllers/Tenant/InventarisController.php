@@ -22,7 +22,13 @@ class InventarisController extends Controller
         return Inertia::render('Inventaris/Index', [
             'activeTab' => $tab,
 
-            'products' => fn() => $this->scopeProductBranch(Product::query(), $branchId)->with('branch')->latest()->paginate(15),
+            // BR-FIX-02 (BR-005): product list is READ scoped to own branch +
+            // configured visible branches (branch_visibility). Mutation is still
+            // limited to the actor's own branch elsewhere (stock transfer/request).
+            'products' => fn() => \App\Services\BranchAccessService::stockVisibilityScope(Product::query(), auth()->user())
+                ->with('branch')
+                ->latest()
+                ->paginate(15),
 
             // Untuk drawer Transfer Stok (cabang tujuan)
             'branches' => fn() => \App\Models\Tenant\Branch::where('is_active', true)->orderBy('name')->get(['id', 'name']),

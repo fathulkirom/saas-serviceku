@@ -63,6 +63,10 @@ class DailyOperationsController extends Controller
     // ======== SERVICE REOPEN ========
     public function requestReopen(Request $request, Service $service)
     {
+        // PILOT-READY-01 (BR-020): reopen is an owner/admin/manager operation.
+        $user = auth()->user();
+        abort_unless(in_array($user->role, ['owner', 'admin', 'manager'], true), 403, 'Tidak berwenang meminta reopen.');
+
         $data = $request->validate(['reason' => 'required|string']);
         ServiceReopen::create([
             'service_id' => $service->id,
@@ -74,6 +78,10 @@ class DailyOperationsController extends Controller
 
     public function approveReopen(ServiceReopen $reopen)
     {
+        // PILOT-READY-01 (BR-020): approval is owner/admin/manager only.
+        $user = auth()->user();
+        abort_unless(in_array($user->role, ['owner', 'admin', 'manager'], true), 403, 'Tidak berwenang menyetujui reopen.');
+
         $reopen->approve(auth()->id());
         return back()->with('success', 'Reopen disetujui. Service dapat diedit kembali.');
     }

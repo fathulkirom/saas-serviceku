@@ -44,6 +44,19 @@ class MonitoringController extends Controller
         ];
         try { DB::connection()->getPdo(); $health["db_status"] = "Connected"; } catch (\Exception $e) { $health["db_status"] = "Error"; }
 
+        $storageHealth = $this->checkStorageHealth();
+        $backupHealth = $this->checkBackupHealth();
+
+        // PLATFORM-SYNC-01 (STEP 17): Monitoring.vue rendered 3 undefined props
+        // (health.system_alerts, storageHealth.mysql_data_size,
+        // backupHealth.file_count). Wire real values — no fake metrics.
+        $health["system_alerts"] = array_merge(
+            $storageHealth["alerts"] ?? [],
+            $backupHealth["alerts"] ?? []
+        );
+        $storageHealth["mysql_data_size"] = $this->getMysqlDataSize();
+        $backupHealth["file_count"] = $this->countBackupFiles();
+
         return inertia("Admin/Monitoring", [
             "tenants" => $tenants,
             "aggregate" => $aggregate,
@@ -51,9 +64,48 @@ class MonitoringController extends Controller
             "errorsToday" => $errorsToday,
             "registrationsToday" => $registrationsToday,
             "health" => $health,
-            "storageHealth" => $this->checkStorageHealth(),
-            "backupHealth" => $this->checkBackupHealth(),
+            "storageHealth" => $storageHealth,
+            "backupHealth" => $backupHealth,
         ]);
+    }
+
+    /**
+     * Real MySQL data size (MB) when the default connection is MySQL; null
+     * otherwise (UI hides the card — no invented metrics).
+     */
+    private function getMysqlDataSize(): ?string
+    {
+        if (config("database.default") !== "mysql") {
+            return null;
+        }
+        try {
+            $db = config("database.connections.mysql.database");
+            $row = DB::selectOne(
+                "SELECT ROUND((SUM(data_length + index_length) / 1024 / 1024), 2) AS size_mb
+                 FROM information_schema.TABLES WHERE table_schema = ?",
+                [$db]
+            );
+            return $row ? ($row->size_mb !== null ? $row->size_mb . " MB" : "0 MB") : "0 MB";
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Count backup files on disk (real count, not guessed).
+     */
+    private function countBackupFiles(): int
+    {
+        try {
+            $path = SystemSetting::getValue("backup_path", storage_path("app/backups"));
+            if (!is_dir($path)) {
+                return 0;
+            }
+            $files = glob(rtrim($path, "/") . "/*");
+            return $files === false ? 0 : count(array_filter($files, "is_file"));
+        } catch (\Exception $e) {
+            return 0;
+        }
     }
 
     private function checkStorageHealth(): array

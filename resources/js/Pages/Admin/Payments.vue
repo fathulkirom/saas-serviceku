@@ -28,7 +28,7 @@
         </div>
 
         <!-- Flash Message -->
-        <div v-if="$page.props.flash?.success" class="mb-4 p-4 rounded-xl border flex items-center gap-3" style="background: rgba(34,197,94,0.1); border-color: rgba(34,197,94,0.2);">
+        <div v-if="$page.props.flash?.success" class="mb-4 p-4 rounded-xl border flex items-center gap-3 bg-emerald-500/10 border-emerald-500/20">
             <p class="text-sm text-emerald-300">{{ $page.props.flash.success }}</p>
         </div>
 
@@ -49,9 +49,9 @@
                 <tbody class="bg-slate-900">
                     <tr v-for="p in payments.data" :key="p.id" class="hover:bg-slate-800/50">
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-indigo-600">{{ p.invoice_number }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ p.tenant?.tenant_name || '-' }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-100">{{ p.tenant?.tenant_name || '-' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-400">{{ p.plan_slug }}</td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Rp {{ formatNumber(p.amount) }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-100">Rp {{ formatNumber(p.amount) }}</td>
                         <td class="px-6 py-4 whitespace-nowrap">
                             <span class="px-2 py-1 text-xs font-medium rounded-full" :class="statusClass(p.status)">
                                 {{ statusLabel(p.status) }}
@@ -61,11 +61,11 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm">
                             <div class="flex gap-2">
                                 <KButton  v-if="p.status === 'pending'" @click="confirmPayment(p.id)"
-                                    class="text-green-600 hover:text-green-800 text-xs font-medium">
+                                    class="text-emerald-400 hover:text-green-800 text-xs font-medium">
                                     Konfirmasi
                                 </KButton>
                                 <KButton  v-if="p.status === 'pending'" @click="cancelPayment(p.id)"
-                                    class="text-red-600 hover:text-red-800 text-xs font-medium">
+                                    class="text-red-400 hover:text-red-800 text-xs font-medium">
                                     Batal
                                 </KButton>
                             </div>

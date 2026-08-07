@@ -73,7 +73,7 @@ const sizeClass = computed(() => {
 });
 
 const baseClasses = computed(() => {
-    const list = ['rounded-xl', 'border', 'transition-all', sizeClass.value];
+    const list = ['rounded-lg', 'border', 'font-semibold', 'transition-all', sizeClass.value];
     list.push(props.widthClass || 'w-full');
     if (props.as === 'textarea') list.push('resize-none');
     if (props.extraClass) list.push(props.extraClass);
@@ -86,6 +86,7 @@ const inputStyle = {
     background: 'var(--bg-input)',
     color: 'var(--text-primary)',
     borderColor: 'var(--border-color)',
+    boxShadow: 'var(--shadow-xs)',
 };
 const computedStyle = computed(() => (hasParentStyle.value ? undefined : inputStyle));
 

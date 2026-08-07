@@ -39,3 +39,12 @@ export function useFormatter() {
 
   return { formatNumber, formatCurrency, formatDate, currentDate, greeting, getInitials };
 }
+
+export const formatCurrency = (num) => 'Rp ' + new Intl.NumberFormat('id-ID').format(num || 0);
+export const formatDate = (dateStr, options = {}) => {
+    if (!dateStr) return '-';
+    const defaults = { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' };
+    return new Date(dateStr).toLocaleDateString('id-ID', { ...defaults, ...options });
+};
+export const formatDateTime = (dateStr) => formatDate(dateStr, {});
+export const formatNumber = (num) => new Intl.NumberFormat('id-ID').format(num || 0);

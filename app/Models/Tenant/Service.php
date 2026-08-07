@@ -14,6 +14,7 @@ class Service extends Model
     protected $fillable = [
         'branch_id',
         'customer_id',
+        'device_id',
         'created_by',
         'technician_id',
         'status',
@@ -39,6 +40,11 @@ class Service extends Model
         'dikerjakan_at',
         'selesai_at',
         'cancel_at',
+        // PILOT-READY-01 (BR-020): audit-lock fields were missing from fillable,
+        // so Service::lock()/unlock() silently never persisted.
+        'is_locked',
+        'locked_at',
+        'locked_by',
     ];
 
     protected $casts = [
@@ -50,6 +56,8 @@ class Service extends Model
         'dikerjakan_at' => 'datetime',
         'selesai_at' => 'datetime',
         'cancel_at' => 'datetime',
+        'is_locked' => 'boolean',
+        'locked_at' => 'datetime',
     ];
 
     public function getCompletedAtAttribute()
@@ -65,6 +73,7 @@ class Service extends Model
     const STATUS_KONFIRMASI_PELANGGAN = 'menunggu_konfirmasi_pelanggan';
     const STATUS_KONFIRMASI_INTERNAL  = 'menunggu_konfirmasi_internal';
     const STATUS_SIAP_DIAMBIL     = 'siap_diambil';
+    const STATUS_DIAMBIL          = 'diambil';
     const STATUS_INDENT           = 'indent';
     const STATUS_ONPARTNER        = 'onpartner';
     const STATUS_SELESAI          = 'selesai';
@@ -74,6 +83,7 @@ class Service extends Model
 
     /**
      * Daftar transisi status yang diizinkan.
+     * Sinkron dengan docs/specification/WorkflowSpecification.md (14 status).
      */
     private const ALLOWED_TRANSITIONS = [
         self::STATUS_MENUNGGU_ALOKASI => [
@@ -84,6 +94,7 @@ class Service extends Model
             self::STATUS_CANCEL,
         ],
         self::STATUS_DITERIMA => [
+            self::STATUS_DIAGNOSA,
             self::STATUS_DIKERJAKAN,
             self::STATUS_MENUNGGU_ALOKASI,
             self::STATUS_INDENT,
@@ -106,10 +117,12 @@ class Service extends Model
         ],
         self::STATUS_KONFIRMASI_PELANGGAN => [
             self::STATUS_DIKERJAKAN,
+            self::STATUS_SIAP_DIAMBIL,
             self::STATUS_CANCEL,
         ],
         self::STATUS_KONFIRMASI_INTERNAL => [
             self::STATUS_DIKERJAKAN,
+            self::STATUS_SIAP_DIAMBIL,
             self::STATUS_CANCEL,
         ],
         self::STATUS_INDENT => [
@@ -123,13 +136,23 @@ class Service extends Model
         ],
         self::STATUS_SELESAI => [
             self::STATUS_SIAP_DIAMBIL,
+            self::STATUS_DIAMBIL,
             self::STATUS_CLOSE,
         ],
         self::STATUS_SIAP_DIAMBIL => [
+            self::STATUS_SELESAI,
+            self::STATUS_DIAMBIL,
             self::STATUS_CLOSE,
         ],
-        self::STATUS_CANCEL => [],
-        self::STATUS_VOID => [],
+        self::STATUS_DIAMBIL => [
+            self::STATUS_CLOSE,
+        ],
+        self::STATUS_CANCEL => [
+            self::STATUS_CLOSE,
+        ],
+        self::STATUS_VOID => [
+            self::STATUS_CLOSE,
+        ],
         self::STATUS_CLOSE => [],
     ];
 
@@ -192,6 +215,11 @@ class Service extends Model
     public function spareparts()
     {
         return $this->hasMany(ServiceSparepart::class);
+    }
+
+    public function qcChecks()
+    {
+        return $this->hasMany(ServiceQcCheck::class);
     }
 
     // Sprint 7.3E-H
@@ -270,14 +298,38 @@ class Service extends Model
         return $this->hasMany(self::class, 'parent_service_id');
     }
 
+    /** BR-FIX-04 — The store warranty row for this service. */
+    public function warranty()
+    {
+        return $this->hasOne(ServiceWarranty::class, 'service_id')->latestOfMany();
+    }
+
+    /** Device record (device_id). Relation was referenced but missing — added BR-FIX-04. */
+    public function device()
+    {
+        return $this->belongsTo(Device::class, 'device_id');
+    }
+
     public function transfers()
     {
         return $this->hasMany(ServiceTransfer::class);
     }
 
-    public function photos()
+    /**
+     * BR-FIX-02 (BR-004) — Current custody branch for a service.
+     *
+     * Origin branch (service.branch_id) is NEVER rewritten. If a cross-branch
+     * transfer has been RECEIVED, custody moves to the transfer destination;
+     * otherwise custody = origin branch.
+     */
+    public function currentCustodyBranchId(): ?int
     {
-        return $this->hasMany(ServicePhoto::class);
+        $received = $this->transfers()
+            ->whereNotNull('received_at')
+            ->latest('received_at')
+            ->first();
+
+        return $received ? (int) $received->to_branch_id : $this->branch_id;
     }
 
     public function jalurKedatangan()
@@ -380,6 +432,15 @@ class Service extends Model
         return self::canTransition((string) $this->status, $to);
     }
 
+    /**
+     * Allowed transitions from the service's current status.
+     * (Consumed by ServiceWorkspaceService::getAvailableTransitions.)
+     */
+    public function getAllowedTransitions(): array
+    {
+        return self::ALLOWED_TRANSITIONS[$this->status] ?? [];
+    }
+
     public static function statusLabel(string $status): string
     {
         return match ($status) {
@@ -390,6 +451,7 @@ class Service extends Model
             self::STATUS_KONFIRMASI_PELANGGAN => 'Menunggu Konfirmasi Pelanggan',
             self::STATUS_KONFIRMASI_INTERNAL => 'Menunggu Konfirmasi Internal',
             self::STATUS_SIAP_DIAMBIL => 'Siap Diambil',
+            self::STATUS_DIAMBIL => 'Diambil',
             self::STATUS_INDENT => 'Menunggu Sparepart',
             self::STATUS_ONPARTNER => 'Dikerjakan Partner',
             self::STATUS_SELESAI => 'Selesai',
@@ -415,6 +477,7 @@ class Service extends Model
             self::STATUS_KONFIRMASI_PELANGGAN => 'pink',
             self::STATUS_KONFIRMASI_INTERNAL => 'pink',
             self::STATUS_SIAP_DIAMBIL => 'green',
+            self::STATUS_DIAMBIL => 'green',
             self::STATUS_INDENT => 'purple',
             self::STATUS_ONPARTNER => 'purple',
             self::STATUS_SELESAI => 'green',

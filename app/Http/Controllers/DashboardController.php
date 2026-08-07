@@ -225,6 +225,9 @@ class DashboardController extends Controller
             'recentSales'    => $recentSales,
             'pickupServices' => $pickupServices,
             'cashRegister'   => $cashRegister,
+            // PILOT-READY-01: CashierDashboard.vue reads these names.
+            'readyServices'  => $pickupServices,
+            'cashRegisterOpen' => (bool) $cashRegister,
         ]);
     }
 

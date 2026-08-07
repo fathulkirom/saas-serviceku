@@ -3,18 +3,28 @@
 namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
-use App\Models\Tenant\Service;
-use App\Models\Tenant\Customer;
+use App\Models\Tenant\ActivityLog;
 use App\Models\Tenant\ChecklistTemplate;
-use App\Models\Tenant\Product;
+use App\Models\Tenant\Customer;
+use App\Models\Tenant\CustomField;
 use App\Models\Tenant\MasterData;
+use App\Models\Tenant\Product;
+use App\Models\Tenant\Service;
 use App\Models\Tenant\User;
+use App\Models\Tenant\WorkOrder;
 use App\Services\GoogleDrivePhotoService;
+use App\Services\ServiceWorkspaceService;
+use App\Services\WorkspaceMetaPresenter;
+use App\Workspace\WorkspaceService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 class ServiceController extends Controller
 {
+    public function __construct(
+        protected WorkspaceService $workspaceService,
+        protected ServiceWorkspaceService $serviceWorkspaceService,
+    ) {}
     public function index(Request $request)
     {
         $this->authorize('viewAny', Service::class);
@@ -40,10 +50,14 @@ class ServiceController extends Controller
 
         if ($request->filled('search')) {
             $search = $request->search;
-            $query->where(fn($q) => $q->where('id', 'like', "%{$search}%")->orWhereHas('customer', fn($c) => $c->where('name', 'like', "%{$search}%")));
+            $query->where(fn ($q) => $q->where('id', 'like', "%{$search}%")->orWhereHas('customer', fn ($c) => $c->where('name', 'like', "%{$search}%")));
         }
-        if ($request->filled('date_from')) $query->whereDate('created_at', '>=', $request->date_from);
-        if ($request->filled('date_to')) $query->whereDate('created_at', '<=', $request->date_to);
+        if ($request->filled('date_from')) {
+            $query->whereDate('created_at', '>=', $request->date_from);
+        }
+        if ($request->filled('date_to')) {
+            $query->whereDate('created_at', '<=', $request->date_to);
+        }
 
         return inertia('Services/Index', [
             'services' => $query->latest()->paginate(15),
@@ -75,7 +89,7 @@ class ServiceController extends Controller
 
     private function shouldRestrictToTodayCompletedTransactions($user): bool
     {
-        if (!$user) {
+        if (! $user) {
             return false;
         }
 
@@ -120,7 +134,7 @@ class ServiceController extends Controller
             'arrivalMethods' => MasterData::getByCategory('arrival_method'),
             'equipment' => MasterData::getByCategory('equipment'),
             'driveConnected' => $driveService->isConnected(),
-            'customFields' => \App\Models\Tenant\CustomField::where('module', 'service')
+            'customFields' => CustomField::where('module', 'service')
                 ->where('is_active', true)->orderBy('ordering')->get(),
         ]);
     }
@@ -130,67 +144,63 @@ class ServiceController extends Controller
         $this->authorize('view', $service);
         $this->ensureServiceBranchAccess($service, auth()->user()?->branch_id);
 
-        $userBranchId = auth()->user()?->branch_id;
+        // Rich workspace payload — single source of truth for all tab sections
+        // (Overview / Timeline / Sparepart / Foto / Invoice / Diagnosa / QC / Garansi).
+        $rich = $this->serviceWorkspaceService->build($service);
+        $svc = $rich['service'];
 
-        $productsQuery = Product::query()->where('stock_quantity', '>', 0);
-        $usersQuery = $this->buildAssignableUsersQuery(auth()->user());
-        $previousServicesQuery = Service::with('customer')
-            ->where('status', Service::STATUS_SELESAI)
-            ->where('payment_status', 'paid')
-            ->where('id', '!=', $service->id)
-            ->latest()
-            ->take(10);
+        $role = auth()->user()?->role;
 
-        $this->applyBranchOrGlobalScope($productsQuery, $userBranchId);
-        $this->applyServiceBranchScope($previousServicesQuery, $userBranchId);
+        $dataContext = [
+            // ── Lean top-level keys used by the Workspace Engine + toolbar handlers ──
+            'id' => $service->id,
+            'tracking_code' => $service->tracking_code,
+            'status' => $service->status,
+            'status_label' => $service->getStatusLabel(),
+            'device_type' => $service->tipe_unit,
+            'imei_sn' => $service->imei_sn,
+            'problem_description' => $service->problem_description,
+            'total_cost' => (float) $service->total_cost,
+            'service_charge' => (float) $service->service_charge,
+            'customer' => $service->customer?->only(['id', 'name', 'phone']),
+            'technician' => $service->technician?->only(['id', 'name']),
+            'sale' => $svc['sale'] ?? null,
+            'spareparts' => $svc['spareparts'] ?? [],
+            'photos' => $svc['photos'] ?? [],
+            'diagnosis' => $svc['diagnosis'] ?? null,
+            'worklogs' => $svc['worklogs'] ?? [],
+            'qc_checks' => $svc['qc_checks'] ?? [],
+            'required_parts' => $svc['required_parts'] ?? [],
+            'checklists' => $svc['checklists'] ?? [],
+            'checklist_results' => $service->checklistResults?->toArray() ?? [],
 
-        // Sprint 7.5B — Unified Service Workspace: eager-load EVERYTHING
-        $service->load([
-            'customer.tags', 'customer.devices.healthHistory',
-            'technician', 'creator', 'branch',
-            'checklists.checklistTemplate.items', 'checklistResults.item',
-            'spareparts.product', 'diagnosis', 'quotations',
-            'requiredParts.product', 'qcChecks',
-            'intakeSnapshot', 'delivery', 'warranty',
-            'photos.uploader', 'workOrders.technician', 'workOrders.worklogs',
-            'indent', 'sale.items', 'parentService',
-        ]);
+            // ── Rich section props (spread by the engine onto each tab component) ──
+            'service' => $svc,
+            'customerSummary' => $rich['customerSummary'],
+            'previousServices' => $rich['previousServices']->toArray(),
+            'relatedServices' => $rich['relatedServices']->toArray(),
+            'serviceId' => $service->id,
+            'availableProducts' => $svc['available_products'] ?? [],
+            'serviceCharge' => (float) $service->service_charge,
+            'totalCost' => (float) $service->total_cost,
+            'paymentStatus' => $service->payment_status,
+            'quotations' => $service->quotations?->map(fn ($q) => $q->toArray())->values()->toArray() ?? [],
+            'qcChecks' => $svc['qc_checks'] ?? [],
+            'canQC' => in_array($role, ['owner', 'admin', 'manager'], true),
+            'canRequestPart' => in_array($role, ['owner', 'admin', 'manager', 'technician'], true),
+            'canManageParts' => in_array($role, ['owner', 'admin', 'manager'], true),
+            'canConsumeParts' => in_array($role, ['owner', 'admin', 'manager', 'cs', 'cashier'], true),
+            'canUpload' => true,
+            'canDelete' => true,
+        ];
 
-        // Customer summary for right sidebar
-        $customerSummary = null;
-        if ($service->customer) {
-            $c = $service->customer;
-            $customerSummary = [
-                'id' => $c->id, 'name' => $c->name, 'phone' => $c->phone,
-                'is_member' => $c->is_member, 'customer_code' => $c->customer_code,
-                'service_count' => $c->serviceCount(), 'total_spending' => $c->totalSpending(),
-                'device_count' => $c->devices->count(), 'last_visit' => $c->services()->latest()->first()?->created_at?->format('d M Y'),
-                'risk' => $c->riskIndicator(), 'tags' => $c->tags->pluck('name'),
-            ];
-        }
+        $meta = WorkspaceMetaPresenter::for($service)->toArray();
 
-        // Technician summary
-        $techSummary = null;
-        if ($service->technician) {
-            $t = $service->technician;
-            $techSummary = [
-                'id' => $t->id, 'name' => $t->name,
-                'active_work_orders' => \App\Models\Tenant\WorkOrder::forTechnician($t->id)->active()->count(),
-            ];
-        }
+        $workspace = $this->workspaceService->build('service', $dataContext);
+        $workspace['meta'] = array_merge($workspace['meta'] ?? [], $meta);
 
-        return inertia('Services/Workspace', [
-            'service' => $service,
-            'customerSummary' => $customerSummary,
-            'techSummary' => $techSummary,
-            'templatesKeluar' => ChecklistTemplate::where('type', 'keluar')->where('is_active', true)->with('items')->get(),
-            'templatesMasuk' => ChecklistTemplate::where('type', 'masuk')->where('is_active', true)->with('items')->get(),
-            'products' => $productsQuery->get(),
-            'users' => $usersQuery->get(),
-            'previousServices' => $service->customer_id
-                ? $previousServicesQuery->where('customer_id', $service->customer_id)->get()
-                : [],
-            'driveConnected' => (new GoogleDrivePhotoService(tenancy()->tenant->id))->isConnected(),
+        return inertia('Enterprise/Workspace/Index', [
+            'workspaceConfig' => $workspace,
         ]);
     }
 
@@ -209,6 +219,7 @@ class ServiceController extends Controller
 
         $service->load(['customer', 'checklists.checklistTemplate.items', 'spareparts.product']);
         $driveService = new GoogleDrivePhotoService(tenancy()->tenant->id);
+
         return inertia('Services/Edit', [
             'service' => $service,
             'customers' => $customersQuery->get(),
@@ -228,7 +239,8 @@ class ServiceController extends Controller
         $this->ensureServiceBranchAccess($service, auth()->user()?->branch_id);
 
         $service->delete();
-        \App\Models\Tenant\ActivityLog::log('deleted', 'Menghapus servis #' . $service->id, $service);
+        ActivityLog::log('deleted', 'Menghapus servis #'.$service->id, $service);
+
         return redirect()->route('services.index')->with('success', 'Servis berhasil dihapus.');
     }
 
@@ -238,7 +250,7 @@ class ServiceController extends Controller
         $this->ensureServiceBranchAccess($service, auth()->user()?->branch_id);
 
         if ($request->filled('status') && (string) $request->input('status') !== (string) $service->status) {
-            throw ValidationException::withMessages([
+            return redirect()->route('services.edit', $service)->withErrors([
                 'status' => 'Perubahan status harus melalui aksi workflow resmi pada halaman detail servis.',
             ]);
         }
@@ -251,7 +263,7 @@ class ServiceController extends Controller
         ]);
 
         $service->update($validated);
-        \App\Models\Tenant\ActivityLog::log('updated', 'Update servis #' . $service->id, $service);
+        ActivityLog::log('updated', 'Update servis #'.$service->id, $service);
 
         return back()->with('success', 'Servis berhasil diperbarui.');
     }
@@ -292,7 +304,7 @@ class ServiceController extends Controller
             $query->where(function ($innerQuery) use ($userBranchId, $isCs) {
                 $innerQuery->where('branch_id', $userBranchId);
 
-                if (!$isCs) {
+                if (! $isCs) {
                     $innerQuery->orWhereNull('branch_id');
                 }
             });
@@ -303,7 +315,7 @@ class ServiceController extends Controller
 
     private function ensureServiceBranchAccess(Service $service, $userBranchId): void
     {
-        if (!$userBranchId || !$service->branch_id) {
+        if (! $userBranchId || ! $service->branch_id) {
             return;
         }
 

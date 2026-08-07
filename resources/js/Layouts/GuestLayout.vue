@@ -1,22 +1,42 @@
 <template>
-    <div class="min-h-screen flex items-center justify-center relative overflow-hidden bg-zinc-50">
-        <!-- Background Decor -->
-        <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
-            <!-- Subtle grid background similar to landing page -->
-            <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(#000 1px, transparent 1px); background-size: 24px 24px;"></div>
-            
-            <div class="absolute -top-40 -right-40 w-96 h-96 rounded-full blur-[100px] bg-indigo-500/10"></div>
-            <div class="absolute -bottom-40 -left-40 w-96 h-96 rounded-full blur-[100px] bg-blue-500/10"></div>
-        </div>
-
-        <div class="w-full max-w-[440px] relative z-10 px-4 py-12 flex flex-col justify-center min-h-screen">
-            <!-- Logo -->
-            <div class="text-center mb-8 animate-fade-in flex flex-col items-center">
-                <div class="w-12 h-12 rounded-xl bg-zinc-900 flex items-center justify-center text-white font-black text-xl mb-4 shadow-md">
-                    SK
+    <div class="min-h-screen bg-[#f6f8fb] text-slate-900">
+        <div class="grid min-h-screen lg:grid-cols-[1.05fr_.95fr]">
+            <section class="hidden border-r border-slate-200 bg-white lg:flex lg:flex-col lg:justify-between">
+                <div class="px-10 py-8">
+                    <a href="/" class="inline-flex items-center gap-3">
+                        <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-700">
+                            <img :src="logoSrc" alt="" class="h-6 w-6 brightness-0 invert">
+                        </span>
+                        <span class="text-lg font-black tracking-tight text-slate-950">ServiceKU</span>
+                    </a>
                 </div>
-                <h1 class="text-2xl md:text-3xl font-black tracking-tight text-zinc-900 mb-1">ServiceKU</h1>
-                <p class="font-medium text-sm text-zinc-500">Platform Manajemen Toko Servis</p>
+                <div class="px-10 pb-12">
+                    <p class="text-xs font-black uppercase tracking-[.18em] text-teal-700">Service operations suite</p>
+                    <h1 class="mt-4 max-w-xl text-5xl font-black leading-tight tracking-tight text-slate-950">
+                        Satu meja kerja untuk servis, stok, POS, dan tim toko.
+                    </h1>
+                    <div class="mt-8 grid max-w-xl gap-3">
+                        <div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                            <p class="text-sm font-black text-slate-950">Tracking servis rapi</p>
+                            <p class="mt-1 text-sm font-semibold leading-6 text-slate-500">Status, teknisi, sparepart, foto, dan garansi tetap dalam satu alur.</p>
+                        </div>
+                        <div class="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                            <p class="text-sm font-black text-slate-950">Data tenant terpisah</p>
+                            <p class="mt-1 text-sm font-semibold leading-6 text-slate-500">Setiap toko punya user, cabang, stok, dan laporan sendiri.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="flex min-h-screen items-center justify-center px-4 py-10 sm:px-6">
+                <div class="w-full max-w-[440px]">
+            <!-- Logo -->
+            <div class="mb-8 flex flex-col items-center text-center lg:hidden">
+                <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-teal-700 shadow-md">
+                    <img :src="logoSrc" alt="" class="h-7 w-7 brightness-0 invert">
+                </div>
+                <h1 class="mb-1 text-2xl font-black tracking-tight text-slate-950 md:text-3xl">ServiceKU</h1>
+                <p class="text-sm font-semibold text-slate-500">Platform Manajemen Toko Servis</p>
             </div>
 
             <!-- Flash Notifications -->
@@ -51,7 +71,7 @@
             </div>
 
             <!-- Card -->
-            <div class="bg-white rounded-2xl p-6 md:p-8 border border-zinc-200 shadow-xl shadow-zinc-200/40 animate-slide-up w-full">
+            <div class="w-full rounded-xl border border-slate-200 bg-white p-6 shadow-[0_24px_70px_rgba(15,23,42,.10)] md:p-8">
                 <slot />
             </div>
 
@@ -61,12 +81,14 @@
                     &copy; {{ new Date().getFullYear() }} ServiceKU. All rights reserved.
                 </p>
                 <div class="flex items-center justify-center gap-3 text-xs font-semibold text-zinc-400">
-                    <a href="#" class="hover:text-zinc-600 transition-colors">Privasi</a>
+                    <a href="/privacy-policy" class="hover:text-zinc-600 transition-colors">Privasi</a>
                     <span>•</span>
-                    <a href="#" class="hover:text-zinc-600 transition-colors">Ketentuan</a>
+                    <a href="/terms" class="hover:text-zinc-600 transition-colors">Ketentuan</a>
                     <span v-if="appVersion">· v{{ appVersion }}</span>
                 </div>
             </div>
+        </div>
+            </section>
         </div>
     </div>
 </template>

@@ -46,6 +46,7 @@ class TenantWarrantyClaimWorkflowTest extends TestCase
         $this->assertSame((int) $cs->branch_id, (int) $parentService->branch_id);
         $this->assertTrue((bool) $parentService->fresh()->isWarrantyValid());
 
+        // BR-FIX-04.1: OPEN records the complaint only (submitted, no rework).
         $this->actingAs($cs);
 
         $response = $this->post(route('services.warranty-claim', $parentService), [
@@ -54,16 +55,30 @@ class TenantWarrantyClaimWorkflowTest extends TestCase
 
         $response->assertRedirect();
 
+        $claim = \App\Models\Tenant\ServiceWarrantyClaim::where('service_id', $parentService->id)->first();
+        $this->assertNotNull($claim);
+        $this->assertSame('submitted', $claim->status);
+        $this->assertNull($claim->approved_by);
+        $this->assertNull($claim->rework_service_id);
+        $this->assertSame(0, Service::where('parent_service_id', $parentService->id)->count());
+
+        // AUTHORIZED APPROVAL creates the rework (created_by = approver).
+        $this->actingAs($owner);
+        $this->post(route('warranty-claims.decide', $claim), [
+            'decision' => 'approve', 'note' => 'Disetujui',
+        ]);
+
         $claimService = Service::query()
             ->where('parent_service_id', $parentService->id)
             ->latest('id')
             ->first();
 
         $this->assertNotNull($claimService);
-        $this->assertSame($cs->id, $claimService->created_by);
+        $this->assertSame($owner->id, $claimService->created_by);
         $this->assertTrue((bool) $claimService->is_warranty_claim);
         $this->assertSame($parentService->customer_id, $claimService->customer_id);
         $this->assertSame('Klaim layar berkedip', $claimService->problem_description);
+        $this->assertSame($claimService->id, $claim->fresh()->rework_service_id);
     }
 
     public function test_cannot_create_warranty_claim_when_warranty_expired(): void

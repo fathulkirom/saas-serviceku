@@ -13,6 +13,8 @@ use App\Models\Tenant\Indent;
 use App\Models\Tenant\InventoryMutation;
 use App\Models\Tenant\Supplier;
 use App\Models\Tenant\User;
+use App\Models\Tenant\Request;
+use App\Models\Tenant\ServiceRequiredPart;
 use App\Policies\ServicePolicy;
 use App\Policies\SalePolicy;
 use App\Policies\ExpensePolicy;
@@ -26,6 +28,8 @@ use App\Policies\IndentPolicy;
 use App\Policies\InventoryMutationPolicy;
 use App\Policies\SupplierPolicy;
 use App\Policies\TenantUserPolicy;
+use App\Policies\RequestPolicy;
+use App\Policies\ServiceRequiredPartPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -44,6 +48,8 @@ class AuthServiceProvider extends ServiceProvider
         InventoryMutation::class => InventoryMutationPolicy::class,
         Supplier::class => SupplierPolicy::class,
         User::class => TenantUserPolicy::class,
+        Request::class => RequestPolicy::class,
+        ServiceRequiredPart::class => ServiceRequiredPartPolicy::class,
     ];
 
     public function boot(): void

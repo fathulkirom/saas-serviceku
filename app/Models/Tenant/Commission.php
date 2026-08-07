@@ -10,6 +10,10 @@ class Commission extends Model
 
     public static function autoCreateForService(Service $service): void
     {
+        // BR-FIX-04: warranty rework services never auto-generate commission —
+        // a fully-covered warranty rework must not duplicate original revenue.
+        if ($service->is_warranty_claim) return;
+
         if (!$service->technician_id) return;
         if (self::where('service_id', $service->id)->exists()) return;
 

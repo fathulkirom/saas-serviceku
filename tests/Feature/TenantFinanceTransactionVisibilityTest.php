@@ -76,7 +76,17 @@ class TenantFinanceTransactionVisibilityTest extends TestCase
         $today = now()->toDateString();
         foreach ($rows as $row) {
             $this->assertSame(Sale::STATUS_PAID, $row['status'] ?? null);
-            $this->assertStringStartsWith($today, (string) ($row['created_at'] ?? ''));
+            // PLATFORM-SYNC-01/GIT-SYNC-01: timestamps are stored/serialized in
+            // UTC ("...Z") but the app runs in Asia/Jakarta (UTC+7). Comparing
+            // the raw UTC string against the LOCAL date fails between 00:00 and
+            // 07:00 Jakarta time. Parse the value and compare its date in the
+            // APP timezone against local today — deterministic at any hour.
+            $this->assertSame(
+                $today,
+                Carbon::parse((string) ($row['created_at'] ?? ''))
+                    ->setTimezone(config('app.timezone'))
+                    ->toDateString()
+            );
         }
 
         $this->assertSame(Sale::STATUS_PAID, $page['props']['salesFilters']['status'] ?? null);

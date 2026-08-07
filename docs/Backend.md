@@ -57,7 +57,7 @@
 
 ## 4. Controllers
 
-Jumlah: **79** — `Tenant/` (54), `Admin/` (9), `Auth/` (7), `Api/` (2), root (7).
+Jumlah: **104** — `Tenant/` (78), `Admin/` (9), `Auth/` (7), `Api/` (2), root (8).
 
 ### Pola
 - **Resource controller** untuk CRUD standar (mis. `CustomerController`, `ProductController`).
@@ -83,8 +83,8 @@ public function store(StoreServiceRequest $request) // pakai FormRequest
 ### Central (`app/Models/`) — 11 model, connection `central`
 `Tenant` (HasDatabase+HasDomains, `data` JSON untuk business_type), `Plan` (features JSON), `Payment`, `Voucher`, `User` (admin), `SystemSetting`, `SystemLog`, `TenantStat`, `TenantOtp`, `RegistrationVerification`, `GoogleDriveToken`.
 
-### Tenant (`app/Models/Tenant/`) — 46 model, connection tenant dinamis
-`User`, `Service`, `Sale`, `Customer`, `Product`, `Branch`, `Expense`, `Indent`, `InventoryMutation`, `CashRegister`, `DailyDeposit`, `ChecklistTemplate`, `TenantSetting`, `ActivityLog`, dll. + `Traits/HasRoles.php`, `Traits/HasCustomFields.php`.
+### Tenant (`app/Models/Tenant/`) — 92 model, connection tenant dinamis
+`User`, `Service`, `Sale`, `Customer`, `Product`, `Branch`, `Expense`, `Indent`, `InventoryMutation`, `CashRegister`, `DailyDeposit`, `ChecklistTemplate`, `TenantSetting`, `ActivityLog`, dll. + `Traits/HasRoles.php`, `Traits/HasCustomFields.php`. Sebagian dikonsolidasi dalam 4 file multi-class (`RetailModels.php`, `WarehouseModels.php`, `InventoryModels.php`, `DailyOpsModels.php`).
 
 ### Konvensi Model
 - **Central**: set `protected $connection = 'central';`
@@ -96,13 +96,13 @@ public function store(StoreServiceRequest $request) // pakai FormRequest
 
 ---
 
-## 6. Middleware (`app/Http/Middleware/`) — 10
+## 6. Middleware (`app/Http/Middleware/`) — 11
 
 | Middleware | Alias | Fungsi |
 |---|---|---|
 | `AdminAuthenticate` | `admin.auth` | Guard panel superadmin |
 | `CheckPlanFeature` | `check.plan.feature` | Gate fitur plan (none/read_only/full) per route |
-| `CheckSubscription` | `check.subscription` | Auto-expire trial/langganan, blokir kecuali `settings.*` |
+| `CheckSubscription` | `check.subscription` | Auto-expire trial/langganan, blokir kecuali route upgrade (`pengaturan.index`, `settings.*`, `payment.*`, `billing.apply-voucher`) |
 | `EnsureJsonForApi` | `ensure.json` | Paksa JSON untuk `/api/*` |
 | `HandleCors` | `cors` | CORS |
 | `HandleInertiaRequests` | — | Shared props Inertia (auth, tenant, plan_access, role_permissions, flash, dll) |
@@ -121,18 +121,18 @@ public function store(StoreServiceRequest $request) // pakai FormRequest
 
 ---
 
-## 8. Policies — 13 (semua terdaftar di `AuthServiceProvider`)
+## 8. Policies — 14 (semua terdaftar di `AuthServiceProvider`)
 
-`ServicePolicy`, `SalePolicy`, `CustomerPolicy`, `ProductPolicy`, `BranchPolicy`, `ExpensePolicy`, `PurchasePolicy`, `CashRegisterPolicy`, `DailyDepositPolicy`, `IndentPolicy`, `InventoryMutationPolicy`, `SupplierPolicy`, `TenantUserPolicy`.
+`ServicePolicy`, `SalePolicy`, `CustomerPolicy`, `ProductPolicy`, `BranchPolicy`, `ExpensePolicy`, `PurchasePolicy`, `CashRegisterPolicy`, `DailyDepositPolicy`, `IndentPolicy`, `InventoryMutationPolicy`, `SupplierPolicy`, `TenantUserPolicy`, `RequestPolicy`.
 
 - `$this->authorize(...)` dipakai di workflow controller utama (mis. `ServiceWorkflowController`).
 - CRUD sederhana boleh memakai cek role (`canManageX()` dari `HasRoles`) bila policy belum diterapkan — target: penuhi `authorize()` di semua aksi mutasi.
 
 ---
 
-## 9. Services — `app/Services/` (6)
+## 9. Services — `app/Services/` (31 file, 22 top-level + subdirs)
 
-Semua service ini adalah **integrasi eksternal**, bukan domain service:
+Mencakup integrasi eksternal **dan** domain service/engine:
 
 - `PaymentGatewayService` — Midtrans (snap, webhook, status).
 - `GoogleDriveService` / `GoogleDrivePhotoService` — backup & foto servis ke Drive.

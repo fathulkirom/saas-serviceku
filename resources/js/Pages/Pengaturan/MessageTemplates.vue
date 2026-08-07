@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from 'vue'
 import { router, useForm } from '@inertiajs/vue3'
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue'
 import PageHeader from '@/Components/PageHeader.vue'
@@ -33,6 +34,7 @@ function save() {
 
 const variables = ['customer_name', 'device', 'service_number', 'amount', 'warranty_date']
 function insertVar(v) { form.body += '{{' + v + '}}' }
+const varLabel = (v) => '{' + '{' + v + '}' + '}'
 </script>
 
 <template>
@@ -69,7 +71,7 @@ function insertVar(v) { form.body += '{{' + v + '}}' }
           <label class="block text-sm font-medium mb-1">Body</label>
           <textarea v-model="form.body" rows="6" class="w-full px-3 py-2 border border-zinc-200 rounded-lg text-sm dark:bg-gray-800 dark:border-gray-700" required></textarea>
           <div class="flex flex-wrap gap-1 mt-1">
-            <button v-for="v in variables" :key="v" type="button" @click="insertVar(v)" class="text-xs px-2 py-0.5 bg-zinc-100 hover:bg-zinc-200 rounded-full dark:bg-gray-700 dark:hover:bg-gray-600">{{ '{{' + v + '}}' }}</button>
+            <button v-for="v in variables" :key="v" type="button" @click="insertVar(v)" class="text-xs px-2 py-0.5 bg-zinc-100 hover:bg-zinc-200 rounded-full dark:bg-gray-700 dark:hover:bg-gray-600">{{ varLabel(v) }}</button>
           </div>
         </div>
         <div class="flex justify-end gap-2 pt-4 border-t dark:border-gray-700">

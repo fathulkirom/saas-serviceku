@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+
+// Health check (no auth, no tenant)
+Route::get('/health', [App\Http\Controllers\HealthController::class, '__invoke']);
 use App\Http\Controllers\Auth\RegisteredTenantController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\BackupController;
@@ -56,58 +59,16 @@ Route::get('/', function () {
         ];
     });
 
-    if ($plans->isEmpty()) {
-        $plans = collect([
-            [
-                'name' => 'Basic',
-                'price' => 99000,
-                'promo_price' => null,
-                'is_promo_active' => false,
-                'discount_percent' => 0,
-                'effective_price' => 99000,
-                'featured' => false,
-                'features' => [
-                    'full_service' => ['services' => 'full', 'customers' => 'full', 'products' => 'full', 'sales' => 'full', 'reports' => 'read_only', 'users' => 'none'],
-                    'retail_only' => ['customers' => 'full', 'products' => 'full', 'sales' => 'full', 'reports' => 'read_only', 'users' => 'none']
-                ],
-                'trial_days' => 14,
-                'slug' => 'basic'
-            ],
-            [
-                'name' => 'Pro',
-                'price' => 199000,
-                'promo_price' => null,
-                'is_promo_active' => false,
-                'discount_percent' => 0,
-                'effective_price' => 199000,
-                'featured' => true,
-                'features' => [
-                    'full_service' => ['services' => 'full', 'customers' => 'full', 'products' => 'full', 'sales' => 'full', 'reports' => 'full', 'multi_branch' => 'full', 'transfer_stock' => 'full', 'users' => 'full', 'monitoring' => 'full'],
-                    'retail_only' => ['customers' => 'full', 'products' => 'full', 'sales' => 'full', 'reports' => 'full', 'multi_branch' => 'full', 'transfer_stock' => 'full', 'users' => 'full', 'monitoring' => 'full']
-                ],
-                'trial_days' => 14,
-                'slug' => 'pro'
-            ],
-            [
-                'name' => 'Enterprise',
-                'price' => 499000,
-                'promo_price' => null,
-                'is_promo_active' => false,
-                'discount_percent' => 0,
-                'effective_price' => 499000,
-                'featured' => false,
-                'features' => [
-                    'full_service' => ['services' => 'full', 'customers' => 'full', 'products' => 'full', 'sales' => 'full', 'reports' => 'full', 'multi_branch' => 'full', 'transfer_stock' => 'full', 'users' => 'full', 'monitoring' => 'full'],
-                    'retail_only' => ['customers' => 'full', 'products' => 'full', 'sales' => 'full', 'reports' => 'full', 'multi_branch' => 'full', 'transfer_stock' => 'full', 'users' => 'full', 'monitoring' => 'full']
-                ],
-                'trial_days' => 14,
-                'slug' => 'enterprise'
-            ]
-        ]);
-    }
+    // PLATFORM-SYNC-01 (STEP 2/6): the DB `plans` table is the single source
+    // of truth. A hardcoded fallback array (previously here) contradicted the
+    // seeder (e.g. trial_days 14 on paid plans, users none on Basic) and was a
+    // hidden stale constant — removed. Landing shows only real plan data.
 
     return view('welcome', compact('plans'));
 })->name('home');
+
+Route::view('/privacy-policy', 'legal.privacy')->name('privacy');
+Route::view('/terms', 'legal.terms')->name('terms');
 
 // ========== DEV QUICK LOGIN (development only) ==========
 Route::get('/dev-login', App\Http\Controllers\DevLoginController::class)->name('dev.login')->middleware('guest');
@@ -173,6 +134,7 @@ Route::prefix('admin')->name('admin.')->middleware('admin.auth')->group(function
     Route::post('/tenants/{tenant}/sync-stats', [TenantManagementController::class, 'syncStats'])->name('sync-tenant-stats');
     Route::post('/tenants/sync-all-stats', [TenantManagementController::class, 'syncAllStats'])->name('sync-all-stats');
     Route::post('/tenants/{tenant}/extend-trial', [TenantManagementController::class, 'extendTrial'])->name('tenant.extend-trial');
+    Route::post('/tenants/{tenant}/extend-subscription', [TenantManagementController::class, 'extendSubscription'])->name('tenant.extend-subscription');
     Route::post('/tenants/{tenant}/change-plan', [TenantManagementController::class, 'changePlan'])->name('tenant.change-plan');
     Route::post('/tenants/{tenant}/login-as', [TenantManagementController::class, 'loginAs'])->name('tenant.login-as');
     Route::post('/tenants/{tenant}/reset-password', [TenantManagementController::class, 'resetPassword'])->name('tenant.reset-password');

@@ -18,6 +18,10 @@
           class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white transition-all shadow-sm hover:shadow-md">
           + Catat Absensi Manual
         </KButton>
+        <KButton  v-if="canManageDelegations && activeTab === 'delegasi'" @click="openDelegationModal()"
+          class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white transition-all shadow-sm hover:shadow-md">
+          + Beri Delegasi
+        </KButton>
       </PageHeader>
     </template>
 
@@ -49,7 +53,16 @@
               <Badge :variant="roleVariant(row.role)">{{ row.role }}</Badge>
             </template>
             <template #cell-branch_name="{ row }">
-              {{ row.branch?.name ?? '-' }}
+              <!-- BR-FIX-02: primary/home branch + additional branch access -->
+              <div class="flex flex-wrap items-center gap-1">
+                <Badge variant="blue">{{ row.branch?.name ?? '-' }}</Badge>
+                <template v-if="(row.branches ?? []).length">
+                  <span v-for="b in row.branches" :key="b.id">
+                    <Badge variant="indigo">{{ b.name }}</Badge>
+                  </span>
+                </template>
+                <span v-else-if="!row.branch" class="text-[11px] text-zinc-400">Global</span>
+              </div>
             </template>
             <template #cell-active="{ row }">
               <Badge :variant="row.active ? 'green' : 'red'">{{ row.active ? 'Aktif' : 'Nonaktif' }}</Badge>
@@ -181,7 +194,96 @@
           <Pagination :meta="attendances" />
         </div>
       </template>
+
+      <!-- BR-FIX-03: DELEGASI AKSES (temporary/restricted capability grants) -->
+      <template v-if="canManageDelegations" #delegasi>
+        <div class="space-y-6">
+          <Skeleton v-if="!delegations" type="table" :count="5" />
+          <KTable
+            v-else
+            :columns="delegationColumns"
+            :rows="delegations ?? []"
+            :emptyTitle="'Belum ada delegasi akses'"
+            :emptyDescription="'Delegasi akses memungkinkan karyawan menangani tugas tertentu tanpa mengganti role-nya.'"
+            :emptyActionLabel="'+ Beri Delegasi'"
+            @empty-action="openDelegationModal()"
+          >
+            <template #cell-user_name="{ row }">
+              <div>
+                <span class="font-medium text-sm">{{ row.user_name }}</span>
+                <Badge class="ml-1.5" :variant="roleVariant(row.user_role)">{{ row.user_role }}</Badge>
+              </div>
+            </template>
+            <template #cell-permission="{ row }">
+              <Badge variant="indigo">{{ permissionLabel(row.permission) }}</Badge>
+            </template>
+            <template #cell-branch_name="{ row }">
+              <Badge variant="blue">{{ row.branch_name }}</Badge>
+            </template>
+            <template #cell-active="{ row }">
+              <Badge :variant="row.active ? 'green' : 'red'">{{ row.active ? 'Aktif' : row.revoked_at ? 'Dicabut' : 'Kadaluarsa' }}</Badge>
+            </template>
+            <template #cell-expires_at="{ row }">
+              <span class="text-xs text-zinc-600">{{ row.expires_at ? formatDate(row.expires_at) : 'Tanpa batas' }}</span>
+            </template>
+            <template #cell-action="{ row }">
+              <div class="flex items-center gap-1 justify-end">
+                <KButton v-if="row.active" @click="revokeDelegation(row)" class="text-xs px-2 py-1 rounded border font-medium transition-colors"
+                  style="borderColor: '#fca5a5'; color: '#ef4444';">Cabut</KButton>
+                <span v-else class="text-[11px] text-zinc-400">—</span>
+              </div>
+            </template>
+          </KTable>
+        </div>
+      </template>
     </TabPage>
+
+    <!-- BR-FIX-03: DRAWER BERI DELEGASI AKSES -->
+    <Drawer :open="showDelegationDrawer" title="Beri Delegasi Akses (Sementara)" @close="showDelegationDrawer = false" width="460px">
+      <form @submit.prevent="submitDelegation" class="space-y-4">
+        <div class="space-y-1">
+          <label class="text-xs font-semibold text-zinc-500">Karyawan (penerima) *</label>
+          <KSelect v-model="delegationForm.user_id" class="input text-sm" required>
+            <option value="" disabled>Pilih karyawan</option>
+            <option v-for="u in users?.data ?? []" :key="u.id" :value="u.id">
+              {{ u.name }} — {{ u.role }} ({{ u.branch?.name ?? 'Global' }})
+            </option>
+          </KSelect>
+        </div>
+        <div class="space-y-1">
+          <label class="text-xs font-semibold text-zinc-500">Capability yang didelegasikan *</label>
+          <KSelect v-model="delegationForm.permission" class="input text-sm" required>
+            <option value="" disabled>Pilih capability</option>
+            <option v-for="(label, key) in delegationCapabilities" :key="key" :value="key">{{ label }}</option>
+          </KSelect>
+        </div>
+        <div class="space-y-1">
+          <label class="text-xs font-semibold text-zinc-500">Cabang (kosongkan = semua cabang yang terjangkau)</label>
+          <KSelect v-model="delegationForm.branch_id" class="input text-sm">
+            <option value="">Semua cabang</option>
+            <option v-for="b in branchesForSelect" :key="b.id" :value="b.id">{{ b.name }}</option>
+          </KSelect>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div class="space-y-1">
+            <label class="text-xs font-semibold text-zinc-500">Mulai (opsional)</label>
+            <KInput type="datetime-local" v-model="delegationForm.starts_at" class="input text-sm" />
+          </div>
+          <div class="space-y-1">
+            <label class="text-xs font-semibold text-zinc-500">Berakhir (opsional)</label>
+            <KInput type="datetime-local" v-model="delegationForm.expires_at" class="input text-sm" />
+          </div>
+        </div>
+        <div class="space-y-1">
+          <label class="text-xs font-semibold text-zinc-500">Alasan (opsional)</label>
+          <KInput type="textarea" v-model="delegationForm.reason" class="input text-sm" placeholder="Mis: CS cuti, bantu kasir hari ini" />
+        </div>
+        <div class="flex items-center justify-end gap-2 pt-2">
+          <KButton type="button" @click="showDelegationDrawer = false" class="btn-secondary text-xs">Batal</KButton>
+          <KButton type="submit" class="btn-primary text-xs" :disabled="delegationForm.processing">Beri Delegasi</KButton>
+        </div>
+      </form>
+    </Drawer>
 
     <!-- DRAWER TAMBAH / EDIT PENGGUNA -->
     <Drawer :open="showUserDrawer" :title="editingUser ? 'Edit Pengguna' : 'Tambah Pengguna Baru'" @close="showUserDrawer = false" width="420px">
@@ -202,15 +304,30 @@
           <label class="text-xs font-semibold text-zinc-500">Role *</label>
           <KSelect  v-model="userForm.role" required class="input text-sm">
             <option value="" disabled>Pilih Role</option>
-            <option v-for="r in roles" :key="r" :value="r">{{ r }}</option>
+            <option v-for="r in roleOptions" :key="r.value" :value="r.value">{{ r.label }}</option>
           </KSelect>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Cabang</label>
+          <label class="text-xs font-semibold text-zinc-500">Cabang Utama (Home)</label>
           <KSelect  v-model="userForm.branch_id" class="input text-sm">
             <option value="">Pilih Cabang</option>
             <option v-for="b in branchesForSelect" :key="b.id" :value="b.id">{{ b.name }}</option>
           </KSelect>
+        </div>
+        <div class="space-y-1">
+          <label class="text-xs font-semibold text-zinc-500">Akses Cabang Tambahan</label>
+          <div class="space-y-1.5 border rounded-xl p-2.5" style="borderColor: var(--border-light); background: var(--bg-hover);">
+            <label v-for="b in branchesForSelect" :key="b.id" class="flex items-center gap-2 cursor-pointer">
+              <KCheckbox
+                :value="b.id"
+                :checked="userForm.additional_branches.includes(b.id)"
+                @change="toggleAdditionalBranch(b.id)"
+                class="w-4 h-4 rounded"
+              />
+              <span class="text-xs text-zinc-700">{{ b.name }}</span>
+            </label>
+            <p v-if="!branchesForSelect.length" class="text-[11px] text-zinc-400">Tidak ada cabang lain.</p>
+          </div>
         </div>
         <div class="flex justify-end gap-2 pt-3">
           <KButton  type="button" @click="showUserDrawer = false" class="btn-secondary text-xs">Batal</KButton>
@@ -364,6 +481,9 @@ const props = defineProps({
   attendances: { type: [Object, Array], default: null },
   attendanceUsers: { type: Array, default: () => [] },
   attendanceShifts: { type: Array, default: () => [] },
+  // BR-FIX-03: delegation management
+  canManageDelegations: { type: Boolean, default: false },
+  delegations: { type: Array, default: () => [] },
 });
 
 const activeTab = ref(props.activeTab);
@@ -371,8 +491,30 @@ const activeTab = ref(props.activeTab);
 // User Drawer
 const showUserDrawer = ref(false);
 const editingUser = ref(null);
-const userForm = useForm({ name: '', email: '', password: '', role: '', branch_id: '' });
-const roles = ['owner', 'admin', 'manager', 'head_store', 'cs', 'technician', 'cashier', 'courier'];
+const userForm = useForm({ name: '', email: '', password: '', role: '', branch_id: '', additional_branches: [] });
+// PILOT-UAT-02 STEP 9: official tenant roles listed first; head_store/courier
+// are legacy/compatibility values (kept for history, NOT newly-approved).
+const roleOptions = [
+  { value: 'owner', label: 'Owner (Pemilik)' },
+  { value: 'admin', label: 'Admin' },
+  { value: 'manager', label: 'Manager' },
+  { value: 'cs', label: 'CS (Customer Service)' },
+  { value: 'technician', label: 'Teknisi' },
+  { value: 'cashier', label: 'Kasir' },
+  { value: 'head_store', label: 'Head Store (legacy)' },
+  { value: 'courier', label: 'Kurir (legacy)' },
+];
+const roles = roleOptions.map(r => r.value);
+
+// BR-FIX-02: toggle an additional branch in the multi-branch access list.
+const toggleAdditionalBranch = (id) => {
+  const idx = userForm.additional_branches.indexOf(id);
+  if (idx >= 0) {
+    userForm.additional_branches.splice(idx, 1);
+  } else {
+    userForm.additional_branches.push(id);
+  }
+};
 
 const openUserModal = (row = null) => {
   editingUser.value = row;
@@ -382,6 +524,7 @@ const openUserModal = (row = null) => {
     userForm.role = row.role;
     userForm.branch_id = row.branch_id || '';
     userForm.password = '';
+    userForm.additional_branches = (row.branches ?? []).map(b => b.id);
   } else {
     userForm.reset();
   }
@@ -476,21 +619,27 @@ const getInitials = (name) => {
   return name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2);
 };
 
-const tabs = [
-  { key: 'pengguna', label: 'Pengguna' },
-  { key: 'cabang', label: 'Cabang' },
-  { key: 'shift', label: 'Shift' },
-  { key: 'absensi', label: 'Absensi' },
-];
+const tabs = computed(() => {
+  const base = [
+    { key: 'pengguna', label: 'Pengguna' },
+    { key: 'cabang', label: 'Cabang' },
+    { key: 'shift', label: 'Shift' },
+    { key: 'absensi', label: 'Absensi' },
+  ];
+  if (props.canManageDelegations) {
+    base.push({ key: 'delegasi', label: 'Delegasi Akses' });
+  }
+  return base;
+});
 
-const tabLabels = { pengguna: 'Pengguna', cabang: 'Cabang', shift: 'Shift', absensi: 'Absensi' };
+const tabLabels = { pengguna: 'Pengguna', cabang: 'Cabang', shift: 'Shift', absensi: 'Absensi', delegasi: 'Delegasi Akses' };
 const pageTitle = computed(() => 'Sistem — ' + (tabLabels[activeTab.value] || 'Pengguna'));
 const subtitle = computed(() => currentDate.value);
 
 const userColumns = [
   { key: 'name', label: 'Nama' },
   { key: 'role', label: 'Role' },
-  { key: 'branch_name', label: 'Cabang' },
+  { key: 'branch_name', label: 'Cabang / Akses' },
   { key: 'active', label: 'Aktif' },
   { key: 'action', label: '', align: 'right' },
 ];
@@ -575,6 +724,58 @@ const resetMenuAccess = () => {
   }, {
     preserveScroll: true,
     onSuccess: () => { showMenuAccessDrawer.value = false; }
+  });
+};
+
+// BR-FIX-03: Delegation management (grant/revoke granular capabilities)
+const showDelegationDrawer = ref(false);
+const delegationForm = useForm({
+  user_id: '',
+  permission: '',
+  branch_id: '',
+  starts_at: '',
+  expires_at: '',
+  reason: '',
+});
+
+const delegationCapabilities = {
+  'service.create': 'Buat Service / CS Intake',
+  'service.pickup': 'Proses Pickup Service',
+  'sales.create': 'Catat Pembayaran / Kasir',
+  'finance.view': 'Lihat Laporan Keuangan',
+  'report.view': 'Lihat Laporan',
+};
+
+const delegationColumns = [
+  { key: 'user_name', label: 'Karyawan' },
+  { key: 'permission', label: 'Capability' },
+  { key: 'branch_name', label: 'Cabang' },
+  { key: 'expires_at', label: 'Berakhir' },
+  { key: 'active', label: 'Status' },
+  { key: 'action', label: '', align: 'right' },
+];
+
+const permissionLabel = (key) => delegationCapabilities[key] || key;
+
+const openDelegationModal = () => {
+  delegationForm.reset();
+  showDelegationDrawer.value = true;
+};
+
+const submitDelegation = () => {
+  delegationForm.post(route('delegations.store'), {
+    preserveScroll: true,
+    onSuccess: () => {
+      showDelegationDrawer.value = false;
+      delegationForm.reset();
+    },
+  });
+};
+
+const revokeDelegation = (row) => {
+  if (!window.confirm('Cabut delegasi akses ini? Efeknya langsung berlaku.')) return;
+  router.post(route('delegations.revoke', row.id), {}, {
+    preserveScroll: true,
   });
 };
 

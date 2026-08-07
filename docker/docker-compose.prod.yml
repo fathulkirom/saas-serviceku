@@ -1,0 +1,109 @@
+# ============================================
+# ServiceKU — Production Docker Compose
+# ============================================
+# Usage:
+#   docker compose -f docker/docker-compose.prod.yml up -d
+# ============================================
+
+services:
+  # ========== MySQL 8.0 ==========
+  mysql:
+    image: mysql:8.0
+    container_name: serviceku-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-serviceku_root}
+      MYSQL_DATABASE: ${DB_DATABASE:-serviceku_master}
+      MYSQL_USER: ${DB_USERNAME:-serviceku}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-serviceku_pass}
+    ports:
+      - "${DB_PORT:-3306}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf:ro
+    networks:
+      - serviceku-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${DB_ROOT_PASSWORD:-serviceku_root}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ========== Redis 7 ==========
+  redis:
+    image: redis:7-alpine
+    container_name: serviceku-redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - serviceku-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ========== ServiceKU Application ==========
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.prod
+    container_name: serviceku-app
+    restart: unless-stopped
+    environment:
+      APP_ENV: ${APP_ENV:-production}
+      APP_DEBUG: ${APP_DEBUG:-false}
+      APP_URL: ${APP_URL:-http://localhost}
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_DATABASE: ${DB_DATABASE:-serviceku_master}
+      DB_USERNAME: ${DB_USERNAME:-serviceku}
+      DB_PASSWORD: ${DB_PASSWORD:-serviceku_pass}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      QUEUE_CONNECTION: ${QUEUE_CONNECTION:-database}
+      CACHE_DRIVER: ${CACHE_DRIVER:-redis}
+      SESSION_DRIVER: ${SESSION_DRIVER:-redis}
+      FILESYSTEM_DISK: ${FILESYSTEM_DISK:-local}
+      SEED_DEMO: ${SEED_DEMO:-false}
+    ports:
+      - "${APP_PORT:-80}:80"
+    volumes:
+      - app_storage:/var/www/html/storage
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - serviceku-network
+
+  # ========== Optional: phpMyAdmin ==========
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: serviceku-phpmyadmin
+    restart: unless-stopped
+    profiles: [management]
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+    ports:
+      - "8080:80"
+    networks:
+      - serviceku-network
+
+networks:
+  serviceku-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+  app_storage:
+    driver: local

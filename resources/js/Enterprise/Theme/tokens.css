@@ -1,0 +1,231 @@
+/**
+ * ═══════════════════════════════════════════════════════════
+ * SERVICEKU ENTERPRISE DESIGN SYSTEM — CSS TOKENS v1.0
+ * ═══════════════════════════════════════════════════════════
+ *
+ * Layer di atas themes.css. Tidak menghapus/mengubah themes.css.
+ * Semua variabel baru menggunakan prefix --sk- untuk menghindari
+ * konflik dengan variabel existing.
+ *
+ * Import: setelah themes.css di app.css
+ *   @import './themes.css';
+ *   @import '../js/Enterprise/Theme/tokens.css';
+ */
+
+:root {
+  /* ═══════════════════════════════════════════════════════
+     TYPOGRAPHY SYSTEM
+     ═══════════════════════════════════════════════════════ */
+  --sk-font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --sk-font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+
+  /* Font Sizes — consistent scale */
+  --sk-text-caption: 0.6875rem;   /* 11px */
+  --sk-text-xs: 0.75rem;          /* 12px */
+  --sk-text-sm: 0.8125rem;        /* 13px */
+  --sk-text-base: 0.875rem;       /* 14px */
+  --sk-text-lg: 1rem;             /* 16px */
+  --sk-text-xl: 1.125rem;         /* 18px */
+  --sk-text-2xl: 1.5rem;          /* 24px */
+  --sk-text-3xl: 1.875rem;        /* 30px */
+  --sk-text-4xl: 2.25rem;         /* 36px */
+  --sk-text-5xl: 3rem;            /* 48px */
+
+  /* Font Weights */
+  --sk-font-light: 300;
+  --sk-font-normal: 400;
+  --sk-font-medium: 500;
+  --sk-font-semibold: 600;
+  --sk-font-bold: 700;
+  --sk-font-extrabold: 800;
+
+  /* Line Heights */
+  --sk-leading-none: 1;
+  --sk-leading-tight: 1.25;
+  --sk-leading-snug: 1.375;
+  --sk-leading-normal: 1.5;
+  --sk-leading-relaxed: 1.625;
+  --sk-leading-loose: 2;
+
+  /* Letter Spacing */
+  --sk-tracking-tighter: -0.05em;
+  --sk-tracking-tight: -0.025em;
+  --sk-tracking-normal: 0;
+  --sk-tracking-wide: 0.025em;
+  --sk-tracking-wider: 0.05em;
+  --sk-tracking-widest: 0.1em;
+
+  /* ═══════════════════════════════════════════════════════
+     EXTENDED COLOR SYSTEM
+     ═══════════════════════════════════════════════════════ */
+
+  /* Primary Scale */
+  --sk-primary-50: #EFF6FF;
+  --sk-primary-100: #DBEAFE;
+  --sk-primary-200: #BFDBFE;
+  --sk-primary-300: #93C5FD;
+  --sk-primary-400: #60A5FA;
+  --sk-primary-500: #3B82F6;
+  --sk-primary-600: #2563EB;
+  --sk-primary-700: #1D4ED8;
+  --sk-primary-800: #1E40AF;
+  --sk-primary-900: #1E3A8A;
+  --sk-primary-950: #172554;
+
+  /* Neutral / Surface Scale */
+  --sk-neutral-0: #FFFFFF;
+  --sk-neutral-25: #FCFCFD;
+  --sk-neutral-50: #F9FAFB;
+  --sk-neutral-100: #F3F4F6;
+  --sk-neutral-200: #E5E7EB;
+  --sk-neutral-300: #D1D5DB;
+  --sk-neutral-400: #9CA3AF;
+  --sk-neutral-500: #6B7280;
+  --sk-neutral-600: #4B5563;
+  --sk-neutral-700: #374151;
+  --sk-neutral-800: #1F2937;
+  --sk-neutral-900: #111827;
+  --sk-neutral-950: #030712;
+
+  /* Success Scale */
+  --sk-success-50: #F0FDF4;
+  --sk-success-100: #DCFCE7;
+  --sk-success-200: #BBF7D0;
+  --sk-success-300: #86EFAC;
+  --sk-success-400: #4ADE80;
+  --sk-success-500: #22C55E;
+  --sk-success-600: #16A34A;
+  --sk-success-700: #15803D;
+  --sk-success-800: #166534;
+  --sk-success-900: #14532D;
+
+  /* Warning Scale */
+  --sk-warning-50: #FFFBEB;
+  --sk-warning-100: #FEF3C7;
+  --sk-warning-200: #FDE68A;
+  --sk-warning-300: #FCD34D;
+  --sk-warning-400: #FBBF24;
+  --sk-warning-500: #F59E0B;
+  --sk-warning-600: #D97706;
+  --sk-warning-700: #B45309;
+  --sk-warning-800: #92400E;
+  --sk-warning-900: #78350F;
+
+  /* Danger Scale */
+  --sk-danger-50: #FEF2F2;
+  --sk-danger-100: #FEE2E2;
+  --sk-danger-200: #FECACA;
+  --sk-danger-300: #FCA5A5;
+  --sk-danger-400: #F87171;
+  --sk-danger-500: #EF4444;
+  --sk-danger-600: #DC2626;
+  --sk-danger-700: #B91C1C;
+  --sk-danger-800: #991B1B;
+  --sk-danger-900: #7F1D1D;
+
+  /* Info Scale */
+  --sk-info-50: #F0F9FF;
+  --sk-info-100: #E0F2FE;
+  --sk-info-200: #BAE6FD;
+  --sk-info-300: #7DD3FC;
+  --sk-info-400: #38BDF8;
+  --sk-info-500: #0EA5E9;
+  --sk-info-600: #0284C7;
+  --sk-info-700: #0369A1;
+  --sk-info-800: #075985;
+  --sk-info-900: #0C4A6E;
+
+  /* ═══════════════════════════════════════════════════════
+     SPACING SYSTEM (4px base grid)
+     ═══════════════════════════════════════════════════════ */
+  --sk-space-0: 0;
+  --sk-space-1: 0.25rem;   /* 4px */
+  --sk-space-2: 0.5rem;    /* 8px */
+  --sk-space-3: 0.75rem;   /* 12px */
+  --sk-space-4: 1rem;      /* 16px */
+  --sk-space-5: 1.25rem;   /* 20px */
+  --sk-space-6: 1.5rem;    /* 24px */
+  --sk-space-8: 2rem;      /* 32px */
+  --sk-space-10: 2.5rem;   /* 40px */
+  --sk-space-12: 3rem;     /* 48px */
+  --sk-space-16: 4rem;     /* 64px */
+  --sk-space-20: 5rem;     /* 80px */
+  --sk-space-24: 6rem;     /* 96px */
+
+  /* ═══════════════════════════════════════════════════════
+     CARD TOKENS
+     ═══════════════════════════════════════════════════════ */
+  --sk-card-radius: 1rem;
+  --sk-card-radius-lg: 1.25rem;
+  --sk-card-radius-sm: 0.75rem;
+  --sk-card-padding: 1.5rem;
+  --sk-card-padding-sm: 1rem;
+  --sk-card-padding-lg: 2rem;
+  --sk-card-gap: 1.5rem;
+
+  /* ═══════════════════════════════════════════════════════
+     TABLE TOKENS
+     ═══════════════════════════════════════════════════════ */
+  --sk-table-header-height: 3rem;
+  --sk-table-row-height: 3rem;
+  --sk-table-cell-px: 1rem;
+  --sk-table-cell-py: 0.75rem;
+
+  /* ═══════════════════════════════════════════════════════
+     INPUT TOKENS
+     ═══════════════════════════════════════════════════════ */
+  --sk-input-height: 2.75rem;
+  --sk-input-height-sm: 2.25rem;
+  --sk-input-height-lg: 3.25rem;
+  --sk-input-radius: 0.75rem;
+  --sk-input-padding-x: 0.875rem;
+  --sk-input-gap: 0.5rem;
+
+  /* ═══════════════════════════════════════════════════════
+     LAYOUT TOKENS
+     ═══════════════════════════════════════════════════════ */
+  --sk-sidebar-width: 16rem;
+  --sk-sidebar-collapsed: 4rem;
+  --sk-header-height: 3.5rem;
+  --sk-content-max-width: 1440px;
+  --sk-content-padding: 2rem;
+
+  /* ═══════════════════════════════════════════════════════
+     Z-INDEX SCALE
+     ═══════════════════════════════════════════════════════ */
+  --sk-z-dropdown: 100;
+  --sk-z-sticky: 200;
+  --sk-z-fixed: 300;
+  --sk-z-modal-backdrop: 400;
+  --sk-z-modal: 500;
+  --sk-z-popover: 600;
+  --sk-z-tooltip: 700;
+  --sk-z-toast: 9999;
+
+  /* ═══════════════════════════════════════════════════════
+     BREAKPOINTS (reference only, use Tailwind)
+     ═══════════════════════════════════════════════════════ */
+  /* sm: 640px, md: 768px, lg: 1024px, xl: 1280px, 2xl: 1536px */
+
+  /* ═══════════════════════════════════════════════════════
+     DURATION TOKENS
+     ═══════════════════════════════════════════════════════ */
+  --sk-duration-75: 75ms;
+  --sk-duration-100: 100ms;
+  --sk-duration-150: 150ms;
+  --sk-duration-200: 200ms;
+  --sk-duration-300: 300ms;
+  --sk-duration-500: 500ms;
+  --sk-duration-700: 700ms;
+  --sk-duration-1000: 1000ms;
+
+  /* ═══════════════════════════════════════════════════════
+     EASING CURVES
+     ═══════════════════════════════════════════════════════ */
+  --sk-ease-linear: linear;
+  --sk-ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --sk-ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --sk-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --sk-ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+  --sk-ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}

@@ -2,9 +2,8 @@
 
 namespace App\Services;
 
-use App\Models\Tenant\WaGatewayConfig;
 use App\Models\GoogleDriveToken;
-use Illuminate\Support\Facades\Cache;
+use App\Models\Tenant\WaGatewayConfig;
 
 /**
  * Provider Service — unified management layer for ALL providers.
@@ -57,7 +56,7 @@ class ProviderService
             'messaging.whatsapp_cloud_api' => $this->checkWhatsAppCloudApi() ? 'connected' : 'disconnected',
 
             // Email
-            'email.brevo' => 'connected', // Default — always available
+            'email.resend' => $this->checkSmtpConfigured() ? 'connected' : 'disconnected',
             'email.smtp' => $this->checkSmtpConfigured() ? 'connected' : 'disconnected',
 
             // Payment
@@ -91,7 +90,7 @@ class ProviderService
         return match ("{$category}.{$key}") {
             'storage.gdrive' => $this->healthGoogleDrive(),
             'messaging.whatsapp_web' => $this->healthWhatsAppWeb(),
-            'email.brevo' => $this->healthBrevo(),
+            'email.resend' => $this->healthResend(),
             'payment.midtrans' => $this->healthMidtrans(),
             default => 'unknown',
         };
@@ -111,7 +110,7 @@ class ProviderService
                 'storage.gdrive' => $this->testGoogleDrive(),
                 'messaging.whatsapp_web' => $this->testWhatsAppWeb(),
                 'messaging.whatsapp_cloud_api' => $this->testWhatsAppCloudApi(),
-                'email.brevo' => $this->testBrevo(),
+                'email.resend' => $this->testResend(),
                 'email.smtp' => $this->testSmtp(),
                 'payment.midtrans' => $this->testMidtrans(),
                 'payment.qris' => $this->testQris(),
@@ -119,7 +118,7 @@ class ProviderService
             };
 
             $settings->set("provider_{$category}_{$key}_last_check", $now);
-            if (!$result['success']) {
+            if (! $result['success']) {
                 $settings->set("provider_{$category}_{$key}_last_error", $result['message']);
             }
 
@@ -127,7 +126,8 @@ class ProviderService
         } catch (\Throwable $e) {
             $settings->set("provider_{$category}_{$key}_last_check", $now);
             $settings->set("provider_{$category}_{$key}_last_error", $e->getMessage());
-            return ['success' => false, 'message' => 'Error: ' . $e->getMessage()];
+
+            return ['success' => false, 'message' => 'Error: '.$e->getMessage()];
         }
     }
 
@@ -137,6 +137,7 @@ class ProviderService
     {
         try {
             $token = GoogleDriveToken::where('tenant_id', tenant()->id)->first();
+
             return $token && $token->token_expiry && now()->lt($token->token_expiry);
         } catch (\Throwable) {
             return false;
@@ -145,9 +146,12 @@ class ProviderService
 
     protected function healthGoogleDrive(): string
     {
-        if (!$this->checkGoogleDrive()) return 'disconnected';
+        if (! $this->checkGoogleDrive()) {
+            return 'disconnected';
+        }
         try {
             app(GoogleDriveService::class)->getStorageQuota();
+
             return 'ok';
         } catch (\Throwable) {
             return 'error';
@@ -156,26 +160,33 @@ class ProviderService
 
     protected function testGoogleDrive(): array
     {
-        if (!$this->checkGoogleDrive()) return ['success' => false, 'message' => 'Google Drive belum terkoneksi. Silakan hubungkan terlebih dahulu.'];
+        if (! $this->checkGoogleDrive()) {
+            return ['success' => false, 'message' => 'Google Drive belum terkoneksi. Silakan hubungkan terlebih dahulu.'];
+        }
         try {
             $quota = app(GoogleDriveService::class)->getStorageQuota();
+
             return ['success' => true, 'message' => "Google Drive terkoneksi. Quota: {$quota['used']} / {$quota['total']}."];
         } catch (\Throwable $e) {
-            return ['success' => false, 'message' => 'Gagal mengakses Google Drive: ' . $e->getMessage()];
+            return ['success' => false, 'message' => 'Gagal mengakses Google Drive: '.$e->getMessage()];
         }
     }
 
     protected function checkWhatsAppWeb(): bool
     {
         $config = WaGatewayConfig::where('provider', 'whatsapp_web')->where('is_active', true)->first();
+
         return $config !== null;
     }
 
     protected function healthWhatsAppWeb(): string
     {
-        if (!$this->checkWhatsAppWeb()) return 'disconnected';
+        if (! $this->checkWhatsAppWeb()) {
+            return 'disconnected';
+        }
         try {
             app(WhatsAppService::class)->isConnected();
+
             return 'ok';
         } catch (\Throwable) {
             return 'degraded';
@@ -190,45 +201,57 @@ class ProviderService
     protected function checkWhatsAppCloudApi(): bool
     {
         $settings = app(SettingsService::class);
-        return !empty($settings->get('wa_api_key')) && !empty($settings->get('wa_phone_number_id'));
+
+        return ! empty($settings->get('wa_api_key')) && ! empty($settings->get('wa_phone_number_id'));
     }
 
     protected function testWhatsAppCloudApi(): array
     {
-        if (!$this->checkWhatsAppCloudApi()) return ['success' => false, 'message' => 'API Key atau Phone Number ID belum diisi. Silakan isi di Pengaturan WhatsApp.'];
+        if (! $this->checkWhatsAppCloudApi()) {
+            return ['success' => false, 'message' => 'API Key atau Phone Number ID belum diisi. Silakan isi di Pengaturan WhatsApp.'];
+        }
+
         return ['success' => false, 'message' => 'Test koneksi WhatsApp Cloud API akan tersedia di update berikutnya.'];
     }
 
-    protected function checkBrevoConfigured(): bool
+    protected function checkResendConfigured(): bool
     {
-        return !empty(config('services.brevo.key'));
+        return config('mail.mailers.smtp.host') === 'smtp.resend.com'
+            && config('mail.mailers.smtp.username') === 'resend'
+            && ! empty(config('mail.mailers.smtp.password'));
     }
 
-    protected function healthBrevo(): string
+    protected function healthResend(): string
     {
-        return $this->checkBrevoConfigured() ? 'ok' : 'error';
+        return $this->checkResendConfigured() ? 'ok' : 'error';
     }
 
-    protected function testBrevo(): array
+    protected function testResend(): array
     {
-        if (!$this->checkBrevoConfigured()) return ['success' => false, 'message' => 'Brevo API key belum dikonfigurasi.'];
-        return ['success' => true, 'message' => 'Brevo API key terkonfigurasi. Email siap dikirim.'];
+        if (! $this->checkResendConfigured()) {
+            return ['success' => false, 'message' => 'Resend SMTP belum dikonfigurasi. Isi host smtp.resend.com, username resend, dan API key sebagai password.'];
+        }
+
+        return ['success' => true, 'message' => 'Resend SMTP terkonfigurasi. Email siap dikirim.'];
     }
 
     protected function checkSmtpConfigured(): bool
     {
-        return !empty(config('mail.mailers.smtp.host'));
+        return ! empty(config('mail.mailers.smtp.host'));
     }
 
     protected function testSmtp(): array
     {
-        if (!$this->checkSmtpConfigured()) return ['success' => false, 'message' => 'SMTP belum dikonfigurasi.'];
-        return ['success' => true, 'message' => 'SMTP terkonfigurasi: ' . config('mail.mailers.smtp.host')];
+        if (! $this->checkSmtpConfigured()) {
+            return ['success' => false, 'message' => 'SMTP belum dikonfigurasi.'];
+        }
+
+        return ['success' => true, 'message' => 'SMTP terkonfigurasi: '.config('mail.mailers.smtp.host')];
     }
 
     protected function checkMidtrans(): bool
     {
-        return !empty(config('services.midtrans.server_key'));
+        return ! empty(config('services.midtrans.server_key'));
     }
 
     protected function healthMidtrans(): string
@@ -238,7 +261,10 @@ class ProviderService
 
     protected function testMidtrans(): array
     {
-        if (!$this->checkMidtrans()) return ['success' => false, 'message' => 'Midtrans Server Key belum dikonfigurasi.'];
+        if (! $this->checkMidtrans()) {
+            return ['success' => false, 'message' => 'Midtrans Server Key belum dikonfigurasi.'];
+        }
+
         return ['success' => true, 'message' => 'Midtrans terkonfigurasi. Payment gateway siap digunakan.'];
     }
 

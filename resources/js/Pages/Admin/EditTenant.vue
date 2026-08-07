@@ -50,10 +50,6 @@
                     </div>
 
                     <div class="flex justify-end gap-3 mt-8 pt-6 border-t border-slate-700/50">
-                        <Link :href="route('admin.tenant.index')"
-                            class="px-5 py-2.5 rounded-xl text-sm font-bold transition-colors text-slate-300 bg-slate-700/50 hover:bg-slate-700">
-                            Batal
-                        </Link>
                         <KButton  type="submit" :disabled="form.processing"
                             class="px-6 py-2.5 rounded-xl text-sm font-bold text-white transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 disabled:hover:translate-y-0 flex items-center gap-2">
                             <svg v-if="form.processing" class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
@@ -75,10 +71,6 @@
                             class="block w-full text-center px-4 py-2.5 bg-indigo-500/10 text-indigo-400 font-bold rounded-xl text-sm hover:bg-indigo-500/20 transition-colors">
                             📋 Detail Tenant
                         </Link>
-                        <a v-if="domainUrl" :href="domainUrl" target="_blank"
-                            class="block w-full text-center px-4 py-2.5 bg-emerald-500/10 text-emerald-400 font-bold rounded-xl text-sm hover:bg-emerald-500/20 transition-colors">
-                            🔗 Buka Toko
-                        </a>
                     </div>
                 </div>
 
@@ -136,7 +128,7 @@
                 </div>
 
                 <!-- Extend Trial -->
-                <div class="rounded-2xl p-6 border bg-slate-800/50 border-slate-700/50 backdrop-blur-xl shadow-sm">
+                <div v-if="tenant.subscription_status === 'trial'" class="rounded-2xl p-6 border bg-slate-800/50 border-slate-700/50 backdrop-blur-xl shadow-sm">
                     <h3 class="font-bold text-lg text-slate-100 mb-4 flex items-center gap-2">⏰ Perpanjang Trial</h3>
                     <p class="text-xs text-slate-400 mb-3">Trial saat ini: <span class="text-slate-200">{{ tenant.trial_ends_at || 'Tidak ada' }}</span></p>
                     <form @submit.prevent="extendTrial">
@@ -151,6 +143,28 @@
                             </KSelect>
                             <KButton  type="submit" :disabled="trialForm.processing"
                                 class="px-5 py-2.5 bg-yellow-500 text-yellow-950 font-bold rounded-xl hover:bg-yellow-400 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 disabled:opacity-50 text-sm">
+                                Perpanjang
+                            </KButton>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Extend Subscription (for paid plans) -->
+                <div v-if="tenant.subscription_status === 'active'" class="rounded-2xl p-6 border bg-slate-800/50 border-slate-700/50 backdrop-blur-xl shadow-sm">
+                    <h3 class="font-bold text-lg text-slate-100 mb-4 flex items-center gap-2">📅 Perpanjang Paket Aktif</h3>
+                    <p class="text-xs text-slate-400 mb-3">Masa aktif saat ini: <span class="text-emerald-300">{{ tenant.subscription_ends_at || 'Seumur hidup' }}</span></p>
+                    <form @submit.prevent="extendSubscription">
+                        <div class="flex gap-2">
+                            <KSelect  v-model="subscriptionForm.months"
+                                class="flex-1 rounded-xl text-sm py-2.5 px-4 border transition-all duration-200 focus:ring-2 focus:ring-indigo-500/50 focus:outline-none bg-slate-900/50 border-slate-700 text-slate-200">
+                                <option value="1">1 bulan</option>
+                                <option value="3">3 bulan</option>
+                                <option value="6">6 bulan</option>
+                                <option value="12">12 bulan (1 tahun)</option>
+                                <option value="24">24 bulan (2 tahun)</option>
+                            </KSelect>
+                            <KButton  type="submit" :disabled="subscriptionForm.processing"
+                                class="px-5 py-2.5 bg-emerald-500 text-emerald-950 font-bold rounded-xl hover:bg-emerald-400 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5 disabled:opacity-50 text-sm">
                                 Perpanjang
                             </KButton>
                         </div>
@@ -215,7 +229,7 @@ import KInput from '@/Components/KInput.vue';
 import KSelect from '@/Components/KSelect.vue';
 
 import { useForm, Link, router } from '@inertiajs/vue3';
-import { ref, computed, reactive } from 'vue';
+import { ref, reactive } from 'vue';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 
 const props = defineProps({
@@ -238,13 +252,6 @@ const planForm = useForm({
 });
 
 const formatNumber = (num) => new Intl.NumberFormat('id-ID').format(num || 0);
-
-const domainUrl = computed(() => {
-    if (props.tenant.domains?.length > 0) {
-        return 'http://' + props.tenant.domains[0].domain + '/login';
-    }
-    return null;
-});
 
 // Hitung simulasi prorata saat pilih paket berbeda
 function onPlanChange() {
@@ -304,6 +311,10 @@ const trialForm = useForm({
     days: 14,
 });
 
+const subscriptionForm = useForm({
+    months: 1,
+});
+
 const deleteForm = useForm({});
 const suspendForm = useForm({});
 
@@ -317,6 +328,10 @@ const changePlan = () => {
 
 const extendTrial = () => {
     trialForm.post(route('admin.tenant.extend-trial', props.tenant.id));
+};
+
+const extendSubscription = () => {
+    subscriptionForm.post(route('admin.tenant.extend-subscription', props.tenant.id));
 };
 
 const suspendTenant = () => {

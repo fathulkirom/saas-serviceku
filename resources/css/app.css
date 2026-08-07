@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap');
 @import './themes.css';
+@import '../js/Enterprise/Theme/tokens.css';
+@import '../js/Enterprise/Theme/typography.css';
+@import '../js/Enterprise/Theme/animations.css';
 
 @tailwind base;
 @tailwind components;
@@ -11,6 +14,14 @@
         font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
         background: var(--bg-app);
         color: var(--text-primary);
+        letter-spacing: 0;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+        font: inherit;
     }
 
     /* Premium scrollbar */
@@ -30,8 +41,8 @@
     .card {
         background: var(--bg-card);
         border: 1px solid var(--border-color);
-        border-radius: 1rem;
-        box-shadow: var(--shadow-sm);
+        border-radius: 0.75rem;
+        box-shadow: var(--shadow-card);
         transition: all 0.3s ease;
     }
     .card:hover {
@@ -47,16 +58,17 @@
 
     /* ===== BUTTONS ===== */
     .btn {
-        @apply inline-flex items-center justify-center font-semibold text-sm
+        @apply inline-flex items-center justify-center gap-2 font-bold text-sm
                transition-all duration-200 ease-out
                focus:outline-none focus:ring-2 focus:ring-offset-2 
                disabled:opacity-50 disabled:cursor-not-allowed;
+        min-height: 2.5rem;
     }
     .btn-primary {
         @apply btn;
         background: var(--primary);
         color: white;
-        border-radius: 0.75rem;
+        border-radius: 0.625rem;
         padding: 0.5rem 1.25rem;
     }
     .btn-primary:hover:not(:disabled) {
@@ -68,7 +80,7 @@
         background: var(--bg-card);
         color: var(--text-secondary);
         border: 1px solid var(--border-color);
-        border-radius: 0.75rem;
+        border-radius: 0.625rem;
         padding: 0.5rem 1.25rem;
     }
     .btn-secondary:hover:not(:disabled) {
@@ -78,7 +90,7 @@
         @apply btn;
         background: var(--danger);
         color: white;
-        border-radius: 0.75rem;
+        border-radius: 0.625rem;
         padding: 0.5rem 1.25rem;
     }
     .btn-danger:hover:not(:disabled) {
@@ -88,7 +100,7 @@
         @apply btn;
         background: var(--success);
         color: white;
-        border-radius: 0.75rem;
+        border-radius: 0.625rem;
         padding: 0.5rem 1.25rem;
     }
     .btn-sm {
@@ -104,7 +116,7 @@
 
     /* ===== INPUTS ===== */
     .input {
-        @apply block w-full rounded-xl shadow-sm transition-all duration-200;
+        @apply block w-full rounded-lg shadow-sm transition-all duration-200;
         background-color: var(--bg-input);
         color: var(--text-primary);
         border: 1px solid var(--border-color);
@@ -125,7 +137,7 @@
 
     /* ===== BADGES ===== */
     .badge {
-        @apply inline-flex items-center rounded-full text-xs font-medium;
+        @apply inline-flex items-center rounded-md text-xs font-bold;
         padding: 0.125rem 0.75rem;
     }
     .badge-success {
@@ -182,7 +194,7 @@
     .stat-card {
         background: var(--bg-card);
         border: 1px solid var(--border-color);
-        border-radius: 1rem;
+        border-radius: 0.75rem;
         padding: 1.25rem;
         display: flex;
         align-items: center;
@@ -191,7 +203,7 @@
     .stat-icon {
         width: 3rem;
         height: 3rem;
-        border-radius: 0.75rem;
+        border-radius: 0.625rem;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -215,7 +227,7 @@
     .section {
         background: var(--bg-card);
         border: 1px solid var(--border-color);
-        border-radius: 1rem;
+        border-radius: 0.75rem;
         padding: 1.5rem;
     }
     .section-title {
@@ -425,5 +437,48 @@
     }
     .scrollbar-hide::-webkit-scrollbar {
         display: none;
+    }
+
+    /* ===== ADMIN POLISH LAYER ===== */
+    .admin-shell .bg-slate-900\/50,
+    .admin-shell .bg-slate-800\/50 {
+        background: #ffffff !important;
+    }
+
+    .admin-shell .bg-slate-700\/50 {
+        background: #f1f5f9 !important;
+    }
+
+    .admin-shell .border-slate-800,
+    .admin-shell .border-slate-700 {
+        border-color: #e2e8f0 !important;
+    }
+
+    .admin-shell .text-slate-100,
+    .admin-shell .text-slate-200,
+    .admin-shell .text-slate-300 {
+        color: #0f172a !important;
+    }
+
+    .admin-shell .text-slate-400 {
+        color: #64748b !important;
+    }
+
+    .admin-shell .text-slate-500 {
+        color: #94a3b8 !important;
+    }
+
+    .admin-shell .rounded-2xl {
+        border-radius: 0.75rem !important;
+    }
+
+    .admin-shell main .border,
+    .admin-shell main .rounded-2xl {
+        box-shadow: var(--shadow-card);
+    }
+
+    .admin-shell table {
+        border-collapse: separate;
+        border-spacing: 0;
     }
 }

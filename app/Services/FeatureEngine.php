@@ -66,9 +66,22 @@ class FeatureEngine
 
     public function getAllFeatureKeys(): array
     {
-        return Cache::remember('module:all_feature_keys', 3600, fn() =>
-            Module::active()->get()->flatMap->getFeatureKeys()->unique()->values()->toArray()
-        );
+        return Cache::remember('module:all_feature_keys', 3600, function () {
+            $keys = Module::active()->get()->flatMap->getFeatureKeys()->unique()->values()->toArray();
+
+            // PILOT-READY-01 (P1): a fresh tenant does NOT run ModuleRegistrySeeder,
+            // so `modules` is empty and the feature map would be empty — which made
+            // the Enterprise Workspace feature gate deny services.show. Fall back to
+            // the feature keys declared by active plans so plan access levels still
+            // populate the map (mirrors the permissions legacy fallback).
+            if (empty($keys)) {
+                $keys = \App\Models\Plan::query()->where('is_active', true)->get()
+                    ->flatMap(fn ($p) => array_keys((array) $p->features))
+                    ->unique()->values()->toArray();
+            }
+
+            return $keys;
+        });
     }
 
     protected function checkModuleActivation(Tenant $tenant, string $feature): ?string

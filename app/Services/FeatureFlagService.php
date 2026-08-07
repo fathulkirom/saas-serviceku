@@ -90,7 +90,7 @@ class FeatureFlagService
     }
 
     /**
-     * Ambil semua nilai feature flags.
+     * Ambil semua nilai feature flags (boolean only, untuk `isEnabled`).
      */
     public static function all(): array
     {
@@ -106,6 +106,27 @@ class FeatureFlagService
 
         self::$cache = $flags;
         return $flags;
+    }
+
+    /**
+     * Ambil semua feature flags dengan metadata lengkap (untuk UI admin).
+     * Return: [key => {label, description, enabled, default}]
+     */
+    public static function allWithMeta(): array
+    {
+        $flags = self::all(); // [key => bool]
+        $meta = [];
+
+        foreach (self::getAllFlags() as $key => $config) {
+            $meta[$key] = [
+                'label' => $config['label'],
+                'description' => $config['description'],
+                'enabled' => $flags[$key],
+                'default' => $config['default'],
+            ];
+        }
+
+        return $meta;
     }
 
     /**

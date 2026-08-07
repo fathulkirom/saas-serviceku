@@ -32,7 +32,7 @@
                                         Generate
                                     </KButton>
                                 </div>
-                                <p v-if="form.errors.code" class="mt-2 text-sm text-red-600 font-medium">{{ form.errors.code }}</p>
+                                <p v-if="form.errors.code" class="mt-2 text-sm text-red-400 font-medium">{{ form.errors.code }}</p>
                                 <p v-else class="mt-2 text-xs text-zinc-500">Kosongkan kolom ini jika ingin sistem mengacak kode (8 karakter acak).</p>
                             </div>
 
@@ -50,7 +50,7 @@
                                         {{ form.type === 'percent' ? 'Diskon (%)' : 'Potongan (Rp)' }} <span class="text-red-500">*</span>
                                     </label>
                                     <KInput  v-model="form.value" type="number" step="0.01" min="0" class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all shadow-sm" :placeholder="form.type === 'percent' ? 'Contoh: 10' : 'Contoh: 50000'" />
-                                    <p v-if="form.errors.value" class="mt-2 text-sm text-red-600 font-medium">{{ form.errors.value }}</p>
+                                    <p v-if="form.errors.value" class="mt-2 text-sm text-red-400 font-medium">{{ form.errors.value }}</p>
                                 </div>
                                 <div>
                                     <label class="block text-sm font-bold text-zinc-900 mb-2">

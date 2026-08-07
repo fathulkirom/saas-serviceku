@@ -88,18 +88,21 @@ const sizeClass = computed(() => {
     }
     if (props.size === 'xs') return 'btn btn-xs';
     if (props.size === 'lg') return 'btn btn-lg';
-    return '';
+    return 'min-h-10';
 });
 
 const classes = computed(() => {
     const v = variantMap[props.variant] || variantMap[''];
-    const list = [];
+    const list = ['transition-all', 'duration-200'];
     if (isAction.value) {
         list.push('inline-flex items-center gap-1.5 transition-all hover:shadow-sm disabled:opacity-50');
         list.push(sizeClass.value);
         if (v.cls) list.push(v.cls);
     } else if (v.cls) {
         list.push(v.cls);
+    } else {
+        list.push('inline-flex items-center justify-center gap-2 rounded-lg font-bold disabled:opacity-60 disabled:cursor-not-allowed');
+        list.push(sizeClass.value);
     }
     if (props.shadow) list.push('shadow-sm');
     if (props.extraClass) list.push(props.extraClass);

@@ -3,26 +3,76 @@
 namespace App\Listeners;
 
 use App\Events\WorkflowTransitioned;
+use App\Events\Entity\DiagnosisCompleted;
+use App\Events\Entity\QuotationCreated;
+use App\Events\Entity\CustomerApprovedRepair;
+use App\Events\Entity\QuotationRejected;
 use App\Services\AutomationEngine;
 
 /**
- * Listens to all workflow transitions and triggers automation rule evaluation.
- * This is the bridge between WorkflowEngine and AutomationEngine.
+ * Listens to workflow transitions AND entity events, triggers automation rule evaluation.
+ * Sprint v1.0: Extended to handle Diagnosis, Quotation, and Approval events.
  */
 class TriggerAutomationRules
 {
     public function handle(WorkflowTransitioned $event): void
     {
+        $this->evaluateWorkflowTransition($event);
+    }
+
+    /** Sprint v1.0: Handle DiagnosisCompleted event */
+    public function handleDiagnosisCompleted(DiagnosisCompleted $event): void
+    {
+        $engine = app(AutomationEngine::class);
+        $engine->evaluate('service.diagnosis_completed', $event->diagnosis, 'service', [
+            'diagnosis_id' => $event->diagnosis->id,
+            'service_id' => $event->diagnosis->service_id,
+        ]);
+    }
+
+    /** Sprint v1.0: Handle QuotationCreated event */
+    public function handleQuotationCreated(QuotationCreated $event): void
+    {
+        $engine = app(AutomationEngine::class);
+        $engine->evaluate('service.quotation_created', $event->quotation, 'service', [
+            'quotation_id' => $event->quotation->id,
+            'service_id' => $event->quotation->service_id,
+            'total_cost' => $event->quotation->total_cost,
+        ]);
+    }
+
+    /** Sprint v1.0: Handle CustomerApprovedRepair event */
+    public function handleCustomerApproved(CustomerApprovedRepair $event): void
+    {
+        $engine = app(AutomationEngine::class);
+        $engine->evaluate('service.approval_completed', $event->quotation, 'service', [
+            'quotation_id' => $event->quotation->id,
+            'service_id' => $event->quotation->service_id,
+            'status' => $event->quotation->status,
+        ]);
+    }
+
+    /** Sprint v2.0D: Handle QuotationRejected event */
+    public function handleQuotationRejected(QuotationRejected $event): void
+    {
+        $engine = app(AutomationEngine::class);
+        $engine->evaluate('service.quotation_rejected', $event->quotation, 'service', [
+            'quotation_id' => $event->quotation->id,
+            'service_id' => $event->quotation->service_id,
+            'reason' => $event->reason,
+        ]);
+    }
+
+    private function evaluateWorkflowTransition(WorkflowTransitioned $event): void
+    {
         $engine = app(AutomationEngine::class);
 
-        // Fire multiple event patterns to match rules
         $entityClass = class_basename($event->entity);
         $events = [
-            'workflow.transitioned',                                          // Generic
-            "{$event->workflowKey}.transitioned",                             // service.transitioned
-            "{$event->workflowKey}.status_changed",                           // service.status_changed
-            "{$event->workflowKey}.{$event->fromState}_to_{$event->toState}", // service.draft_to_checking
-            // Entity-specific events
+            'workflow.transitioned',
+            "{$event->workflowKey}.transitioned",
+            "{$event->workflowKey}.status_changed",
+            "{$event->workflowKey}.{$event->fromState}_to_{$event->toState}",
             strtolower($entityClass) . '.status_changed',
         ];
 

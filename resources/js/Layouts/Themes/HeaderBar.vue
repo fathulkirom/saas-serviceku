@@ -1,17 +1,15 @@
 <template>
     <header
-        class="sticky top-0 z-20 border-b backdrop-blur-xl transition-all duration-200"
-        :style="{ background: 'var(--bg-header)', borderColor: 'var(--border-light)' }">
-        <div class="flex items-center justify-between h-14 lg:h-16 px-3 sm:px-6 lg:px-8" :style="{ maxWidth: 'var(--layout-content-max-width)' }">
+        class="sticky top-0 z-20 border-b border-slate-200 bg-white/90 backdrop-blur-xl transition-all duration-200">
+        <div class="flex h-16 items-center justify-between px-3 sm:px-6 lg:px-8" :style="{ maxWidth: 'var(--layout-content-max-width)' }">
             <!-- LEFT -->
             <div class="flex items-center gap-2 lg:gap-4">
                 <KButton  v-if="showSidebar" @click="$emit('toggle-mobile')" 
-                    class="lg:hidden w-9 h-9 rounded-xl flex items-center justify-center transition-colors"
-                    style="color: var(--text-muted); background: var(--bg-hover);">
+                    class="flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 lg:hidden">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
                 </KButton>
                 <Logo v-if="activeLayout === 'classic'" :link="route('dashboard')" size="sm" theme="dark" />
-                <span class="hidden lg:block text-xs font-semibold uppercase tracking-wider px-2 py-1 rounded-lg" 
+                <span class="hidden rounded-md px-2 py-1 text-xs font-black uppercase lg:block" 
                     style="background: var(--primary-soft); color: var(--primary);">
                     {{ $page.props.auth.user.role }} Panel
                 </span>
@@ -20,7 +18,7 @@
             <!-- CENTER: Menu -->
             <nav v-if="activeLayout === 'classic'" class="hidden lg:flex items-center gap-0.5">
                 <Link v-for="item in topbarPrimaryItems" :key="item.label" :href="item.href"
-                    class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all whitespace-nowrap"
+                    class="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-xs font-bold transition-all whitespace-nowrap"
                     :style="{
                         color: isActive(item.href)
                           ? (groupColors[item.group]?.hex || 'var(--primary)')
@@ -56,14 +54,14 @@
             <div class="flex items-center gap-1.5 lg:gap-2.5 ml-auto">
                 <ThemeSwitcher />
                 <!-- Clock & Date -->
-                <div class="hidden sm:flex items-center gap-2 px-2.5 py-1.5 rounded-xl text-[10px] font-semibold border"
+                <div class="hidden items-center gap-2 rounded-lg border px-2.5 py-1.5 text-[10px] font-bold sm:flex"
                   :style="{ background: 'var(--bg-hover)', borderColor: 'var(--border-color)', color: 'var(--text-muted)' }">
                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     <span>{{ currentTime }}</span>
                 </div>
                 <Dropdown v-if="(activeLayout === 'classic' || activeLayout === 'modern') && branches.length > 1" align="left" width="56">
                     <template #trigger>
-                        <KButton  class="hidden sm:flex items-center gap-2 px-2.5 py-1.5 rounded-xl border text-xs font-medium transition-all"
+                        <KButton  class="hidden items-center gap-2 rounded-lg border px-2.5 py-1.5 text-xs font-bold transition-all sm:flex"
                             style="background: var(--bg-hover); border-color: var(--border-light); color: var(--text-secondary);">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
                             <span class="max-w-[80px] truncate">{{ currentBranch?.name || 'Cabang' }}</span>
@@ -80,7 +78,7 @@
                     </template>
                 </Dropdown>
 
-                <div v-if="planName && planName !== 'Enterprise' && $page.props.auth.user.role === 'owner'" class="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-[10px] font-semibold border" 
+                <div v-if="planName && planName !== 'Enterprise' && $page.props.auth.user.role === 'owner'" class="hidden items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-[10px] font-bold md:flex" 
                     style="background: var(--primary-soft); border-color: var(--border-focus); color: var(--primary);">
                     <span class="w-1.5 h-1.5 rounded-full" style="background: var(--primary);"></span>
                     {{ planName }}
@@ -89,9 +87,9 @@
                 <!-- User -->
                 <Dropdown align="right" width="52">
                     <template #trigger>
-                        <KButton  class="flex items-center gap-2 pl-2 pr-1 py-1 rounded-xl transition-all border border-transparent" style="background: var(--bg-hover);">
-                            <div class="w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold text-white" style="background: var(--primary);">{{ userInitials }}</div>
-                            <span class="hidden lg:block text-xs font-medium max-w-[80px] truncate" style="color: var(--text-primary);">{{ $page.props.auth.user.name }}</span>
+                        <KButton  class="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 py-1 pl-2 pr-1 transition-all hover:bg-white">
+                            <div class="flex h-7 w-7 items-center justify-center rounded-md text-xs font-black text-white" style="background: var(--primary);">{{ userInitials }}</div>
+                            <span class="hidden max-w-[96px] truncate text-xs font-bold text-slate-900 lg:block">{{ $page.props.auth.user.name }}</span>
                             <svg class="w-3 h-3" style="color: var(--text-muted);" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
                         </KButton>
                     </template>

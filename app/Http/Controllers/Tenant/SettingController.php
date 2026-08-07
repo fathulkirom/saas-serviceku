@@ -26,6 +26,12 @@ class SettingController extends Controller
     public function index(Request $request): Response
     {
         $tab = $request->get('tab', 'profil');
+
+        // PILOT-READY-01 (P0): Pengaturan exposes revenue/users/branches/settings.
+        // Only owner/admin (the roles that see the Pengaturan menu) may access it.
+        $user = auth()->user();
+        abort_unless($user->isOwner() || $user->isAdmin(), 403, 'Anda tidak memiliki akses ke pengaturan.');
+
         $driveService = new GoogleDrivePhotoService(tenancy()->tenant->id);
 
         return Inertia::render('Pengaturan/Index', [

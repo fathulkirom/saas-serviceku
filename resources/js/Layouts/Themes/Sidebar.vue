@@ -1,7 +1,7 @@
 <template>
     <aside v-if="showSidebar && !sidebarHidden"
         :class="[
-            'fixed lg:static inset-y-0 z-40 flex flex-col transition-all duration-300 ease-out',
+            'fixed lg:static inset-y-0 z-40 flex flex-col transition-all duration-300 ease-out shadow-2xl shadow-slate-950/10 lg:shadow-none',
             sidebarWidth,
             sidebarPosition === 'right' ? 'right-0 border-l' : 'left-0 border-r',
             isMobile && !mobileOpen ? '-translate-x-full lg:translate-x-0' : 'translate-x-0'
@@ -9,9 +9,9 @@
         :style="{ background: 'var(--bg-sidebar)', borderColor: 'var(--border-color)' }">
 
         <!-- Logo -->
-        <div class="h-14 lg:h-16 flex items-center gap-2.5 px-4 border-b flex-shrink-0" :style="{ borderColor: 'var(--border-color)' }">
+        <div class="flex h-16 flex-shrink-0 items-center gap-2.5 border-b px-4" :style="{ borderColor: 'rgba(255,255,255,.10)' }">
             <Logo :link="route('dashboard')" size="sm" theme="dark" />
-            <span v-if="sidebarExpanded || activeLayout !== 'slim'" class="text-sm font-bold truncate" style="color: var(--text-sidebar);">
+            <span v-if="sidebarExpanded || activeLayout !== 'slim'" class="truncate text-sm font-black text-white">
                 {{ $page.props.tenant?.name || 'ServiceKU' }}
             </span>
             <KButton  v-if="isMobile" @click="$emit('close-mobile')" class="ml-auto w-7 h-7 rounded-lg flex items-center justify-center" style="color: var(--text-muted);">
@@ -20,7 +20,7 @@
         </div>
 
         <!-- Branch Switcher (only if multi_branch is available) -->
-        <div v-if="branches.length > 1" class="px-3 py-2.5 border-b flex-shrink-0" :style="{ borderColor: 'var(--border-color)' }">
+        <div v-if="branches.length > 1" class="flex-shrink-0 border-b px-3 py-2.5" :style="{ borderColor: 'rgba(255,255,255,.10)' }">
             <Dropdown align="left" width="56">
                 <template #trigger>
                     <KButton  class="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-xl text-xs font-medium transition-all"
@@ -47,7 +47,7 @@
         </div>
 
         <!-- Navigation -->
-        <nav class="flex-1 overflow-y-auto px-2.5 py-4 space-y-1">
+        <nav class="flex-1 space-y-1 overflow-y-auto px-2.5 py-4">
             <template v-if="menuStyle === 'grouped'">
                 <div v-for="(items, groupName) in groupedMenuItems" :key="groupName" class="mb-5">
                     <p v-if="showGroupTitles" class="px-3 mb-1.5 text-[10px] font-bold uppercase tracking-widest flex items-center gap-2"
@@ -56,15 +56,15 @@
                       {{ groupName }}
                     </p>
                     <Link v-for="item in items" :key="item.label" :href="item.href"
-                        class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm transition-all duration-150"
+                        class="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-bold transition-all duration-150"
                         :style="isActive(item.href) 
                             ? { background: 'var(--bg-sidebar-active)', color: 'var(--text-sidebar-active)' } 
                             : { color: 'var(--text-sidebar)', opacity: 0.8 }"
                         :title="!sidebarExpanded && activeLayout === 'slim' ? item.label : ''">
                         <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-200"
                           :style="isActive(item.href)
-                            ? { background: `linear-gradient(135deg, ${getGroupAccent(item.group)}, ${getGroupAccent(item.group)}dd)` }
-                            : { background: 'var(--bg-hover)' }">
+                            ? { background: getGroupAccent(item.group) }
+                            : { background: 'rgba(255,255,255,.06)' }">
                           <span class="w-5 h-5 flex items-center justify-center transition-all duration-200"
                             :style="isActive(item.href)
                               ? { color: '#ffffff' }
@@ -77,15 +77,15 @@
             </template>
             <template v-else>
                 <Link v-for="item in allowedMenuItems" :key="item.label" :href="item.href"
-                    class="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm transition-all duration-150"
+                    class="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-bold transition-all duration-150"
                     :style="isActive(item.href) 
                         ? { background: 'var(--bg-sidebar-active)', color: 'var(--text-sidebar-active)' } 
                         : { color: 'var(--text-sidebar)', opacity: 0.8 }"
                     :title="!sidebarExpanded && activeLayout === 'slim' ? item.label : ''">
                     <div class="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 transition-all duration-200"
                       :style="isActive(item.href)
-                        ? { background: `linear-gradient(135deg, ${getGroupAccent(item.group)}, ${getGroupAccent(item.group)}dd)` }
-                        : { background: 'var(--bg-hover)' }">
+                        ? { background: getGroupAccent(item.group) }
+                        : { background: 'rgba(255,255,255,.06)' }">
                       <span class="w-5 h-5 flex items-center justify-center transition-all duration-200"
                         :style="isActive(item.href)
                           ? { color: '#ffffff' }
@@ -98,7 +98,7 @@
         </nav>
 
         <!-- Sidebar Footer -->
-        <div v-if="showSidebar" class="px-3 py-3 border-t flex-shrink-0" :style="{ borderColor: 'var(--border-color)' }"></div>
+        <div v-if="showSidebar" class="flex-shrink-0 border-t px-3 py-3" :style="{ borderColor: 'rgba(255,255,255,.10)' }"></div>
     </aside>
 </template>
 

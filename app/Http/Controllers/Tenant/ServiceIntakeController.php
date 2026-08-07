@@ -7,6 +7,15 @@ use App\Models\Tenant\Service;
 use App\Models\Tenant\ServiceChecklistResult;
 use App\Models\Tenant\ServiceIntakeSnapshot;
 use App\Models\Tenant\Device;
+use App\Http\Requests\Tenant\StoreServiceRequest;
+use App\Models\Tenant\Customer;
+use App\Models\Tenant\ActivityLog;
+use App\Models\Tenant\ServicePhoto;
+use App\Models\Tenant\User;
+use App\Services\GoogleDrivePhotoService;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
 
 /**
@@ -15,6 +24,135 @@ use Illuminate\Http\Request;
  */
 class ServiceIntakeController extends Controller
 {
+    public function store(StoreServiceRequest $request)
+    {
+        $this->authorize('create', Service::class);
+
+        $user = Auth::user();
+
+        // BR-FIX-03 (BR-001): intake is stamped to the user's primary branch,
+        // so a GRANULAR delegation must cover that branch (role-based holders
+        // of service.create must also have branch access — both are handled by
+        // canViaPermissionInBranch). This is what makes a delegation branch-scoped.
+        if (!$user->canViaPermissionInBranch('service.create', $user->branch_id)) {
+            abort(403, 'Delegasi layanan tidak mencakup cabang ini.');
+        }
+
+        $validated = $request->validated();
+
+        $customer = Customer::findOrFail($validated['customer_id']);
+        $this->authorize('view', $customer);
+
+        $service = DB::transaction(function () use ($validated, $user, $request) {
+
+            // BR-FIX-02 — Customer binding guard: the customer must belong to a
+            // branch the user may access (enforced above via CustomerPolicy →
+            // BranchAccessService). A device matched by IMEI/SN may belong to a
+            // DIFFERENT customer; reassigning it is a cross-branch side effect,
+            // so the device's original customer must also be accessible.
+            $device = null;
+            if (!empty($validated['imei_sn'])) {
+                $device = Device::where('imei', $validated['imei_sn'])
+                    ->orWhere('serial_number', $validated['imei_sn'])
+                    ->first();
+            }
+
+            if (!$device) {
+                $device = Device::create([
+                    'customer_id' => $validated['customer_id'],
+                    'type' => $this->getMasterDataName($validated['kategori_perangkat_id'] ?? null),
+                    'brand' => $this->getMasterDataName($validated['merek_id'] ?? null),
+                    'model' => $validated['tipe_unit'] ?? 'Unknown',
+                    'imei' => $validated['imei_sn'] ?? null,
+                    'serial_number' => $validated['imei_sn'] ?? null,
+                    'status' => 'active',
+                ]);
+            } else {
+                if ($device->customer_id != $validated['customer_id']) {
+                    $originalCustomer = $device->customer;
+                    if ($originalCustomer && $originalCustomer->id !== $customer->id) {
+                        // Authorize access to the device's current owner before
+                        // reassigning it (prevents cross-branch device takeover).
+                        $this->authorize('view', $originalCustomer);
+                    }
+                    $device->update(['customer_id' => $validated['customer_id']]);
+                }
+            }
+
+            $userCount = User::count();
+            $status = Service::STATUS_MENUNGGU_ALOKASI;
+            $technicianId = null;
+
+            if ($userCount <= 1 || $user->isOwner()) {
+                $technicianId = $user->id;
+                $status = Service::STATUS_DIKERJAKAN;
+            } elseif ($user->canWorkOnServices()) {
+                if (!User::where('role', 'technician')->exists()) {
+                    $technicianId = $user->id;
+                    $status = Service::STATUS_DIKERJAKAN;
+                }
+            }
+
+            $service = Service::create(array_merge($validated, [
+                'device_id' => $device->id,
+                'branch_id' => $user->branch_id,
+                'created_by' => $user->id,
+                'technician_id' => $technicianId,
+                'status' => $status,
+                'problem_description' => $validated['problem_description'] ?? '',
+                'condition_note' => $validated['condition_note'] ?? '',
+                'dikerjakan_at' => $status === Service::STATUS_DIKERJAKAN ? now() : null,
+            ]));
+
+            if ($request->filled('checklist_template_id')) {
+                $service->checklists()->create([
+                    'checklist_template_id' => $validated['checklist_template_id'],
+                    'type' => 'masuk',
+                    'checked_items' => $validated['checked_items'] ?? []
+                ]);
+            }
+
+            return $service;
+        });
+
+        if ($request->hasFile('photos')) {
+            $driveService = new GoogleDrivePhotoService(tenancy()->tenant->id);
+            if ($driveService->isConnected()) {
+                foreach ($request->file('photos') as $file) {
+                    $path = $file->store('services/' . $service->id, 'public');
+                    $driveUrl = $driveService->upload(storage_path('app/public/' . $path), 'service_' . $service->id . '_' . time() . '_' . uniqid() . '.jpg', 'services');
+                    ServicePhoto::create([
+                        'service_id' => $service->id,
+                        'photo_path' => $driveUrl ?: $path,
+                        'uploaded_by' => auth()->id()
+                    ]);
+                }
+            }
+        }
+
+        $service->saveCustomFieldValues($request->all());
+        ServiceIntakeSnapshot::capture($service, false, null);
+        event(new \App\Events\Entity\ServiceCreated($service));
+        
+        ActivityLog::log(
+            'created',
+            'Membuat servis baru (Intake) #' . $service->id,
+            $service,
+            ['customer_id' => $service->customer_id, 'device_id' => $service->device_id, 'status' => $service->status]
+        );
+
+        return redirect()->route('services.show', $service->id)->with('success', 'Servis berhasil dibuat.');
+    }
+
+    private function getMasterDataName($id): ?string
+    {
+        if (!$id) return null;
+        $md = \App\Models\Tenant\MasterData::find($id);
+        return $md ? $md->name : null;
+    }
+
+
+
     /** Store checklist results for a service */
     public function storeChecklistResults(Request $request, Service $service)
     {

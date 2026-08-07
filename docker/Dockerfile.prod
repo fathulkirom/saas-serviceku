@@ -1,0 +1,97 @@
+# ============================================
+# ServiceKU — Production Dockerfile
+# ============================================
+# Multi-stage build:
+#   Stage 1: Frontend (Node 22 + Vite)
+#   Stage 2: PHP 8.3 FPM + Nginx + Supervisor
+#
+# Usage:
+#   docker build -f docker/Dockerfile.prod -t serviceku:latest .
+#   docker run -p 80:80 --env-file .env serviceku:latest
+# ============================================
+
+# ============================================
+# Stage 1: Frontend Build
+# ============================================
+FROM node:22-alpine AS frontend
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+RUN npm ci --no-audit --no-fund --production=false
+
+COPY vite.config.js tailwind.config.js postcss.config.js ./
+COPY resources/ resources/
+COPY public/ public/
+RUN npm run build
+
+# ============================================
+# Stage 2: PHP 8.3 + Nginx + Supervisor
+# ============================================
+FROM php:8.3-fpm AS backend
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    nginx \
+    supervisor \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libzip-dev \
+    libicu-dev \
+    libonig-dev \
+    libxml2-dev \
+    unzip \
+    curl \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) \
+        bcmath \
+        gd \
+        intl \
+        pdo_mysql \
+        exif \
+        zip \
+        opcache \
+        mbstring \
+        xml \
+    && pecl install redis \
+    && docker-php-ext-enable redis opcache \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install Composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+WORKDIR /var/www/html
+
+# Copy application
+COPY --chown=www-data:www-data . .
+
+# Install PHP dependencies (optimized for production)
+RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts \
+    && composer dump-autoload --optimize
+
+# Copy frontend build from Stage 1
+COPY --chown=www-data:www-data --from=frontend /app/public/build ./public/build
+
+# Create required directories
+RUN mkdir -p storage/framework/{cache,sessions,testing,views} \
+    storage/logs \
+    bootstrap/cache \
+    && chown -R www-data:www-data storage bootstrap/cache
+
+# Nginx configuration
+COPY docker/nginx/default.conf /etc/nginx/sites-enabled/default
+RUN rm -f /etc/nginx/sites-enabled/default.dist && \
+    echo "daemon off;" >> /etc/nginx/nginx.conf
+
+# Supervisor configuration
+COPY docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# PHP production configuration
+COPY docker/php/php.ini /usr/local/etc/php/conf.d/99-serviceku.ini
+
+# Entrypoint
+COPY docker/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+EXPOSE 80
+ENTRYPOINT ["/entrypoint.sh"]

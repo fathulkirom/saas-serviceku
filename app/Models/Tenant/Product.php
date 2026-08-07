@@ -78,6 +78,32 @@ class Product extends Model
         return $this->stock_quantity * $this->cost_price;
     }
 
+    // ============================================================
+    // BR-FIX-01 (BR-009) — Reserved / Available stock.
+    //
+    // Reservation is DERIVED from authoritative ServiceRequiredPart
+    // records that are approved (or reserved) but not yet consumed.
+    // This avoids a mutable duplicated total on the Product row.
+    //
+    // available_stock = physical_stock - reserved_stock
+    // ============================================================
+
+    public function getReservedQuantityAttribute(): int
+    {
+        return (int) \App\Models\Tenant\ServiceRequiredPart::query()
+            ->where('product_id', $this->id)
+            ->whereIn('status', [
+                \App\Models\Tenant\ServiceRequiredPart::STATUS_APPROVED,
+                \App\Models\Tenant\ServiceRequiredPart::STATUS_RESERVED,
+            ])
+            ->sum('qty');
+    }
+
+    public function getAvailableQuantityAttribute(): int
+    {
+        return max(0, $this->stock_quantity - $this->reserved_quantity);
+    }
+
     // Sprint 7.4A — Auto-record price history
     protected static function booted(): void
     {

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ServiceDelivery extends Model
 {
     protected $fillable = [
-        'service_id', 'ready_at', 'picked_up_at',
+        'service_id', 'pickup_branch_id', 'ready_at', 'picked_up_at',
         'received_by', 'receiver_phone', 'receiver_relation',
         'identity_type', 'identity_number', 'identity_photo',
         'signature_image', 'handover_photo',
@@ -24,6 +24,9 @@ class ServiceDelivery extends Model
     public function service() { return $this->belongsTo(Service::class); }
     public function handler() { return $this->belongsTo(User::class, 'handled_by'); }
     public function paymentVerifier() { return $this->belongsTo(User::class, 'payment_verified_by'); }
+
+    /** BR-FIX-02: branch where the unit is handed over (custody/pickup branch). */
+    public function pickupBranch() { return $this->belongsTo(Branch::class, 'pickup_branch_id'); }
 
     public function complete(string $receivedBy, string $phone, array $extra = []): void
     {

@@ -2,7 +2,7 @@
 
 > Daftar **modul nyata** yang ada di source code (route + controller + halaman Vue nyata).
 > Modul yang belum ada di source diberi status **Future Module** dan TIDAK didokumentasikan sebagai kondisi saat ini.
-> Sumber: `routes/tenant.php` (366 route), controller `app/Http/Controllers/Tenant/`, halaman `resources/js/Pages/Tenant/`.
+> Sumber: `routes/tenant.php` (280 route — 96 GET, 146 POST, 21 resource), controller `app/Http/Controllers/Tenant/` (78 file), halaman `resources/js/Pages/` (123 file).
 
 ---
 

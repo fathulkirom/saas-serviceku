@@ -15,6 +15,8 @@ class Expense extends Model
         'user_id',
         'created_by',
         'photo',
+        // BR-FIX-04.1: traceable refund cash-out line.
+        'sale_refund_id',
     ];
 
     protected $casts = [
@@ -39,6 +41,12 @@ class Expense extends Model
         'marketing' => 'Marketing',
         'lainnya' => 'Lainnya',
     ];
+
+    /** BR-FIX-04.1 — the auditable refund event this cash-out belongs to. */
+    public function saleRefund()
+    {
+        return $this->belongsTo(SaleRefund::class, 'sale_refund_id');
+    }
 
     public function branch()
     {

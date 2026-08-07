@@ -91,7 +91,38 @@
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">IMEI / Serial Number</label>
-                                    <KInput  type="text" v-model="form.imei_sn" placeholder="Nomor IMEI / SN" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white" />
+                                    <div class="relative">
+                                      <KInput  type="text" v-model="form.imei_sn" placeholder="Nomor IMEI / SN" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white" />
+                                      <span v-if="isLookingUpIMEI" class="absolute right-3 top-1/2 -translate-y-1/2 animate-spin text-indigo-500 text-xs">⏳</span>
+                                      <span v-else-if="imeiLookupResult?.customer" class="absolute right-3 top-1/2 -translate-y-1/2 text-green-500 text-xs font-bold">✅ Ditemukan</span>
+                                    </div>
+                                </div>
+                                <!-- IMEI Lookup: Blacklist Warning -->
+                                <div v-if="intake.isBlacklisted()" class="md:col-span-2 rounded-xl bg-red-50 border border-red-200 p-4 text-sm">
+                                  <p class="font-bold text-red-800 flex items-center gap-2">🚫 Customer Blacklist</p>
+                                  <p class="text-red-700 mt-1">Customer ini terdaftar dalam blacklist. Intake tidak dapat dilanjutkan.</p>
+                                </div>
+                                <!-- IMEI Lookup: Device History -->
+                                <div v-if="showDeviceHistory && imeiLookupResult" class="md:col-span-2 rounded-xl bg-indigo-50 border border-indigo-200 p-4 text-sm space-y-3 animate-in slide-in-from-top-2">
+                                  <p class="font-bold text-indigo-900 flex items-center gap-2">📱 Device Ditemukan — Riwayat</p>
+                                  <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                                    <div class="bg-white rounded-lg p-2 text-center">
+                                      <p class="text-lg font-bold text-indigo-700">{{ intake.deviceHistory.services?.length || 0 }}</p>
+                                      <p class="text-[10px] text-zinc-500">Service</p>
+                                    </div>
+                                    <div class="bg-white rounded-lg p-2 text-center">
+                                      <p class="text-lg font-bold" :style="{ color: intake.isUnderWarranty() ? '#16a34a' : '#dc2626' }">{{ intake.isUnderWarranty() ? '✅ Aktif' : '❌ Habis' }}</p>
+                                      <p class="text-[10px] text-zinc-500">Garansi</p>
+                                    </div>
+                                    <div class="bg-white rounded-lg p-2 text-center">
+                                      <p class="text-lg font-bold text-indigo-700">{{ intake.deviceHistory.damages?.length || 0 }}</p>
+                                      <p class="text-[10px] text-zinc-500">Kerusakan</p>
+                                    </div>
+                                    <div class="bg-white rounded-lg p-2 text-center">
+                                      <p class="text-lg font-bold text-indigo-700">{{ intake.deviceHistory.parts?.length || 0 }}</p>
+                                      <p class="text-[10px] text-zinc-500">Sparepart</p>
+                                    </div>
+                                  </div>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Sandi / Pola / PIN Layar</label>
@@ -191,8 +222,9 @@
                                 <h3 class="font-bold tracking-tight text-base text-zinc-900">Foto Unit Masuk</h3>
                             </div>
                             <div class="p-6">
-                                <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-3">Upload Foto (Maks 10)</label>
+                                <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-3">Upload Foto (Maks 10) — Minimal Depan, Belakang, Kerusakan</label>
                                 <KInput  type="file" @change="onPhotosChange" accept="image/*" multiple class="block w-full text-sm text-zinc-500 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-bold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 cursor-pointer transition-colors" />
+                                <p v-if="photoFiles.length > 0 && photoFiles.length < 3" class="text-xs text-amber-600 mt-2 font-medium">⚠️ Disarankan upload minimal 3 foto: Depan, Belakang, dan Kerusakan.</p>
                                 <div v-if="photoPreviews.length" class="mt-4 grid grid-cols-4 gap-2">
                                     <div v-for="(preview, idx) in photoPreviews" :key="idx" class="relative group">
                                         <img :src="preview" class="w-full aspect-square object-cover rounded-lg border border-zinc-200 shadow-sm" />
@@ -275,6 +307,8 @@ import { useForm, Link } from '@inertiajs/vue3';
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import DynamicFormFields from '@/Components/DynamicFormFields.vue';
+import { useCSIntake } from '@/Composables/useCSIntake.js';
+import { useDebounce } from '@/Composables/usePerformance.js';
 
 const props = defineProps({
     customers: { type: Array, default: () => [] },
@@ -306,10 +340,46 @@ const showAddCustomerModal = ref(false);
 const savingCustomer = ref(false);
 const newCustomerForm = ref({ name: '', phone: '', email: '', address: '' });
 
+// ── Sprint v1.0: IMEI Auto-Detect via useCSIntake ──
+const intake = useCSIntake();
+const imeiLookupResult = ref(null);
+const isLookingUpIMEI = ref(false);
+const showDeviceHistory = ref(false);
+
+const debouncedIMEILookup = useDebounce(async (imei) => {
+  if (!imei || imei.length < 5) { imeiLookupResult.value = null; showDeviceHistory.value = false; return; }
+  isLookingUpIMEI.value = true;
+  const result = await intake.lookupIMEI(imei);
+  imeiLookupResult.value = result;
+  showDeviceHistory.value = !!result;
+  isLookingUpIMEI.value = false;
+
+  // Auto-select customer if found
+  if (result?.customer?.id && !form.customer_id) {
+    const existsInList = customerList.value.find(c => c.id == result.customer.id);
+    if (!existsInList) customerList.value.unshift(result.customer);
+    form.customer_id = result.customer.id;
+  }
+  // Auto-fill device fields
+  if (result?.device) {
+    if (result.device.type && !form.kategori_perangkat_id) {
+      const cat = props.deviceCategories.find(dc => dc.name?.toLowerCase() === result.device.type?.toLowerCase());
+      if (cat) form.kategori_perangkat_id = cat.id;
+    }
+    if (result.device.brand && !form.merek_id) {
+      const brand = props.brands.find(b => b.name?.toLowerCase() === result.device.brand?.toLowerCase());
+      if (brand) form.merek_id = brand.id;
+    }
+    if (result.device.model && !form.tipe_unit) form.tipe_unit = result.device.model;
+  }
+}, 500);
+
+watch(() => form.imei_sn, (val) => { debouncedIMEILookup(val); });
+
 const customerOptions = computed(() => customerList.value);
 const selectedCustomer = computed(() => customerList.value.find(c => c.id == form.customer_id));
 const selectedTemplate = computed(() => props.templates.find(t => t.id == form.checklist_template_id));
-const canSubmitCore = computed(() => !!form.customer_id && !!String(form.tipe_unit || '').trim() && !!String(form.problem_description || '').trim());
+const canSubmitCore = computed(() => !!form.customer_id && !!String(form.tipe_unit || '').trim() && !!String(form.problem_description || '').trim() && !intake.isBlacklisted());
 
 const openAddCustomerModal = () => { newCustomerForm.value = { name: '', phone: '', email: '', address: '' }; showAddCustomerModal.value = true; };
 

@@ -33,16 +33,43 @@ class PaymentGatewayService
      */
     public static function getConfig(): array
     {
+        // PLATFORM-SYNC-01 (STEP 13): pre-fill bank + instructions so saving an
+        // untouched form preserves existing config; secrets are masked so the
+        // raw key is never shipped to the browser.
         return [
             'gateway' => SystemSetting::getValue('payment_gateway', 'manual'),
             'midtrans_merchant_id' => SystemSetting::getValue('midtrans_merchant_id', ''),
             'midtrans_client_key' => SystemSetting::getValue('midtrans_client_key', ''),
-            'midtrans_server_key' => SystemSetting::getValue('midtrans_server_key', ''),
+            'midtrans_server_key' => self::maskSecret(SystemSetting::getValue('midtrans_server_key', '')),
             'midtrans_is_production' => SystemSetting::getValue('midtrans_is_production', 'false'),
-            'xendit_api_key' => SystemSetting::getValue('xendit_api_key', ''),
+            'xendit_api_key' => self::maskSecret(SystemSetting::getValue('xendit_api_key', '')),
             'payment_auto_confirm' => SystemSetting::getValue('payment_auto_confirm', 'false'),
             'payment_instructions' => SystemSetting::getValue('payment_instructions', ''),
+            'bank_name_1' => SystemSetting::getValue('bank_name_1', ''),
+            'bank_account_name_1' => SystemSetting::getValue('bank_account_name_1', ''),
+            'bank_account_number_1' => SystemSetting::getValue('bank_account_number_1', ''),
+            'bank_name_2' => SystemSetting::getValue('bank_name_2', ''),
+            'bank_account_name_2' => SystemSetting::getValue('bank_account_name_2', ''),
+            'bank_account_number_2' => SystemSetting::getValue('bank_account_number_2', ''),
         ];
+    }
+
+    /**
+     * Mask a secret for display: non-empty value → placeholder bullets so the
+     * UI can show "a secret is stored" without ever exposing it.
+     */
+    private static function maskSecret(?string $value): string
+    {
+        return filled($value) ? '••••••••' : '';
+    }
+
+    /**
+     * Whether a submitted value should be treated as "unchanged secret"
+     * (blank, or the display mask) — i.e. keep the stored value.
+     */
+    public static function isUnchangedSecret(?string $value): bool
+    {
+        return $value === null || $value === '' || $value === '••••••••';
     }
 
     /**

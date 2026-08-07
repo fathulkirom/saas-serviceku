@@ -215,8 +215,7 @@
                 </div>
             </div>
 
-            <div v-if="activeTab === 'overview'">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div v-if="activeTab === 'overview'" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 
                 <!-- KIRI: Informasi Profil -->
                 <div class="lg:col-span-1 space-y-6">

@@ -9,8 +9,24 @@ return new class extends Migration
     /** Sprint 7.3C — Customer Communication Center. ADDITIVE. */
     public function up(): void
     {
-        // 1. Customer Communications (history log)
-        if (!Schema::hasTable('customer_communications')) {
+        // 1. Message Templates
+        if (! Schema::hasTable('customer_message_templates')) {
+            Schema::create('customer_message_templates', function (Blueprint $table) {
+                $table->id();
+                $table->string('name');
+                $table->string('key')->unique();
+                $table->string('channel')->default('whatsapp');     // whatsapp, email
+                $table->string('subject')->nullable();
+                $table->text('body');
+                $table->json('variables')->nullable();              // ["customer_name", "device", "amount"]
+                $table->boolean('is_active')->default(true);
+                $table->boolean('is_system')->default(false);
+                $table->timestamps();
+            });
+        }
+
+        // 2. Customer Communications (history log)
+        if (! Schema::hasTable('customer_communications')) {
             Schema::create('customer_communications', function (Blueprint $table) {
                 $table->id();
                 $table->foreignId('customer_id')->constrained('customers')->cascadeOnDelete();
@@ -30,22 +46,6 @@ return new class extends Migration
                 $table->timestamps();
 
                 $table->index(['customer_id', 'type', 'status']);
-            });
-        }
-
-        // 2. Message Templates
-        if (!Schema::hasTable('customer_message_templates')) {
-            Schema::create('customer_message_templates', function (Blueprint $table) {
-                $table->id();
-                $table->string('name');
-                $table->string('key')->unique();
-                $table->string('channel')->default('whatsapp');     // whatsapp, email
-                $table->string('subject')->nullable();
-                $table->text('body');
-                $table->json('variables')->nullable();              // ["customer_name", "device", "amount"]
-                $table->boolean('is_active')->default(true);
-                $table->boolean('is_system')->default(false);
-                $table->timestamps();
             });
         }
     }

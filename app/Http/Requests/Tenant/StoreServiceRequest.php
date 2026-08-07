@@ -26,6 +26,10 @@ class StoreServiceRequest extends FormRequest
             'imei_sn'               => 'nullable|string|max:100',
             'sandi_pola'            => 'nullable|string|max:50',
             'kelengkapan'           => 'nullable|array',
+            'prioritas'             => 'nullable|in:normal,cepat,express',
+            'estimasi_selesai'      => 'nullable|date|after:today',
+            'photos'                => 'nullable|array|max:10',
+            'photos.*'              => 'image|mimes:jpg,jpeg,png,webp|max:10240',
         ];
     }
 
@@ -37,6 +41,12 @@ class StoreServiceRequest extends FormRequest
             'problem_description.required' => 'Keluhan/masalah wajib diisi.',
             'problem_description.min' => 'Keluhan/masalah minimal 5 karakter.',
             'tipe_unit.required' => 'Tipe unit wajib diisi.',
+            'prioritas.in' => 'Prioritas harus salah satu: Normal, Cepat, atau Express.',
+            'estimasi_selesai.after' => 'Estimasi selesai harus setelah hari ini.',
+            'photos.max' => 'Maksimal 10 foto.',
+            'photos.*.image' => 'File harus berupa gambar.',
+            'photos.*.mimes' => 'Foto harus dalam format JPG, PNG, atau WebP.',
+            'photos.*.max' => 'Ukuran foto maksimal 10MB per file.',
         ];
     }
 }

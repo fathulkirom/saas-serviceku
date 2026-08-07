@@ -10,14 +10,28 @@ use App\Models\Tenant\ServicePartReturn;
 use Illuminate\Http\Request;
 
 /**
- * Service Part Controller — Sprint 7.4 Revision.
- * Tech requests parts → CS uses them on invoice → stock decreases.
+ * Service Part Controller — Sprint 7.4 Revision + BR-FIX-01.
+ *
+ * Canonical part lifecycle:
+ *   TECHNICIAN REQUEST → ADMIN/WAREHOUSE APPROVE (reserve, no physical impact)
+ *   → CS CONFIRMS / ADDS TO INVOICE (reservation consumed, stock reduced once)
+ *   → usage + invoice + inventory mutation.
+ *
+ * Cancellation releases a reservation. Returns distinguish reserved-only
+ * (release) from consumed (restore + reversal).
+ *
+ * Authorization is enforced via ServiceRequiredPartPolicy (backend policy).
  */
 class ServicePartController extends Controller
 {
     /** Tech requests a part (no stock impact) */
     public function request(Request $request, Service $service)
     {
+        $user = auth()->user();
+        if (!$user->isOwner() && !$user->isAdmin() && !$user->isManager() && $service->technician_id !== $user->id) {
+            abort(403, 'Hanya teknisi yang ditugaskan atau admin/manager yang dapat meminta part.');
+        }
+
         $data = $request->validate([
             'product_id' => 'nullable|exists:products,id',
             'part_name' => 'required|string',
@@ -25,6 +39,22 @@ class ServicePartController extends Controller
             'notes' => 'nullable|string',
             'unit_price' => 'nullable|numeric|min:0',
         ]);
+
+        // Branch scoping: a part request may only reference a product available
+        // in the service's branch (or a global product).
+        if (!empty($data['product_id'])) {
+            $product = Product::query()
+                ->where('id', $data['product_id'])
+                ->where(function ($q) use ($service) {
+                    $q->where('branch_id', $service->branch_id)
+                      ->orWhereNull('branch_id');
+                })
+                ->first();
+
+            if (!$product) {
+                abort(422, 'Produk tidak tersedia di cabang ini.');
+            }
+        }
 
         $part = ServiceRequiredPart::create([
             'service_id' => $service->id,
@@ -39,24 +69,55 @@ class ServicePartController extends Controller
         return back()->with('success', 'Part requested.');
     }
 
-    /** Tech cancels request (no stock impact, requires reason) */
+    /** Tech/admin cancels request (releases reservation if any, no stock impact) */
     public function cancelRequest(Request $request, ServiceRequiredPart $part)
     {
+        $this->authorize('cancel', $part);
         $data = $request->validate(['reason' => 'required|string']);
-        $part->cancel($data['reason']);
-        return back()->with('success', 'Request dibatalkan.');
+        try {
+            $part->cancel($data['reason']);
+            return back()->with('success', 'Request dibatalkan. Reservasi dilepaskan.');
+        } catch (\RuntimeException $e) {
+            return back()->with('error', $e->getMessage());
+        }
     }
 
-    /** Admin approves request (just confirms need, no stock impact) */
+    /**
+     * Admin/authorized warehouse approves a request → creates reservation.
+     * Physical stock unchanged; reserved increases; available decreases.
+     */
     public function approveRequest(ServiceRequiredPart $part)
     {
-        $part->approve();
-        return back()->with('success', 'Request disetujui.');
+        $this->authorize('approve', $part);
+        try {
+            $part->approve();
+            return back()->with('success', 'Request disetujui. Stok di-reservasi.');
+        } catch (\RuntimeException $e) {
+            return back()->with('error', $e->getMessage());
+        }
     }
 
-    /** CS adds part to invoice → THIS reduces stock */
+    /** Admin/authorized warehouse rejects a request → never reserves stock. */
+    public function rejectRequest(Request $request, ServiceRequiredPart $part)
+    {
+        $this->authorize('reject', $part);
+        $data = $request->validate(['reason' => 'required|string']);
+        try {
+            $part->reject($data['reason']);
+            return back()->with('success', 'Request ditolak.');
+        } catch (\RuntimeException $e) {
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
+    /**
+     * CS / billing actor confirms an approved part → consumes reservation and
+     * reduces physical stock exactly once, creating usage + invoice + mutation.
+     */
     public function usePart(Request $request, ServiceRequiredPart $part)
     {
+        $this->authorize('consume', $part);
+
         $data = $request->validate([
             'selling_price' => 'required|numeric|min:0',
             'discount' => 'nullable|numeric|min:0',
@@ -64,24 +125,26 @@ class ServicePartController extends Controller
 
         try {
             $part->use(auth()->id(), $data['selling_price'], $data['discount'] ?? 0);
-            return back()->with('success', 'Part digunakan. Stok berkurang.');
+            return back()->with('success', 'Part dikonfirmasi. Stok berkurang dan masuk ke invoice.');
         } catch (\RuntimeException $e) {
             return back()->with('error', $e->getMessage());
         }
     }
 
-    /** Tech/CS requests return of used part */
+    /** CS/authorized actor requests return of a part (reserved-only or consumed). */
     public function requestReturn(Request $request, Service $service)
     {
         $data = $request->validate([
             'product_id' => 'required|exists:products,id',
             'quantity' => 'required|integer|min:1',
             'reason' => 'required|string',
+            'service_required_part_id' => 'nullable|exists:service_required_parts,id',
         ]);
 
         ServicePartReturn::create([
             'service_id' => $service->id,
             'product_id' => $data['product_id'],
+            'service_required_part_id' => $data['service_required_part_id'] ?? null,
             'quantity' => $data['quantity'],
             'reason' => $data['reason'],
             'requested_by' => auth()->id(),
@@ -90,28 +153,63 @@ class ServicePartController extends Controller
         return back()->with('success', 'Return requested.');
     }
 
-    /** CS processes return → stock restored */
+    /**
+     * Process a return.
+     *
+     *   Case A — reserved but never consumed → release reservation only.
+     *   Case B — consumed but returned unused    → restore stock + reversal.
+     *
+     * Idempotent: an already-processed return is a no-op.
+     * Blocked when the service has a finalized (PAID) invoice.
+     */
     public function processReturn(ServicePartReturn $return)
     {
-        $product = Product::findOrFail($return->product_id);
-        $before = $product->stock_quantity;
-        $product->increaseStock($return->quantity);
+        $part = $return->service_required_part_id
+            ? ServiceRequiredPart::find($return->service_required_part_id)
+            : null;
 
-        \App\Models\Tenant\InventoryMutation::create([
-            'product_id' => $product->id,
-            'type' => 'return',
-            'quantity' => $return->quantity,
-            'before_stock' => $before,
-            'after_stock' => $product->fresh()->stock_quantity,
-            'reference_type' => 'service_part_return',
-            'reference_id' => $return->id,
-            'note' => "Return Service #{$return->service_id}: {$return->reason}",
-            'created_by' => auth()->id(),
-        ]);
+        if ($part) {
+            $this->authorize('returnPart', $part);
+        } else {
+            $user = auth()->user();
+            if (!in_array($user->role, ['owner', 'admin', 'manager', 'cs', 'cashier'], true)) {
+                abort(403, 'Tidak berhak memproses retur part.');
+            }
+        }
 
-        $return->update(['status' => 'processed', 'processed_by' => auth()->id()]);
-        event(new \App\Events\Entity\PartReturned($return));
-        return back()->with('success', 'Return diproses. Stok dikembalikan.');
+        if ($return->status === 'processed') {
+            return back()->with('info', 'Return sudah diproses sebelumnya.');
+        }
+
+        try {
+            if ($part && in_array($part->status, ServiceRequiredPart::RESERVED_STATES, true)) {
+                // Case A: never consumed → release reservation, no stock change.
+                $part->releaseReservation(auth()->id(), $return->reason);
+                $return->update(['status' => 'processed', 'processed_by' => auth()->id()]);
+                event(new \App\Events\Entity\PartReturned($return));
+                return back()->with('success', 'Reservasi part dilepaskan. Stok fisik tidak berubah.');
+            }
+
+            if ($part && $part->status === ServiceRequiredPart::STATUS_USED) {
+                // Case B: consumed → restore stock once + reversal.
+                $part->returnToStock(auth()->id(), $return->reason);
+                $return->update(['status' => 'processed', 'processed_by' => auth()->id()]);
+                event(new \App\Events\Entity\PartReturned($return));
+                return back()->with('success', 'Part dikembalikan. Stok dipulihkan dan invoice disesuaikan.');
+            }
+
+            // Legacy fallback (no linked part): generic consumed-part restore.
+            if ($part && in_array($part->status, [ServiceRequiredPart::STATUS_REQUESTED, ServiceRequiredPart::STATUS_REJECTED, ServiceRequiredPart::STATUS_CANCELLED], true)) {
+                $part->cancel('Retur tanpa konsumsi');
+                $return->update(['status' => 'processed', 'processed_by' => auth()->id()]);
+                event(new \App\Events\Entity\PartReturned($return));
+                return back()->with('success', 'Request part dibatalkan. Tidak ada stok yang berubah.');
+            }
+
+            throw new \RuntimeException('Status part tidak dikenali untuk retur.');
+        } catch (\RuntimeException $e) {
+            return back()->with('error', $e->getMessage());
+        }
     }
 
     /** Service profit calculation */

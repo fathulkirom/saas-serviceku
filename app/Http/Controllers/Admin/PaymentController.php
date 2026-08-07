@@ -136,6 +136,14 @@ class PaymentController extends Controller
         ]);
 
         foreach ($validated as $key => $value) {
+            // PLATFORM-SYNC-01 (STEP 13): never overwrite a secret with a blank
+            // or masked placeholder — keep the stored value so saving an
+            // untouched form does not erase existing configuration.
+            if (in_array($key, ['midtrans_server_key', 'xendit_api_key'], true)) {
+                if (\App\Services\PaymentGatewayService::isUnchangedSecret($value)) {
+                    continue;
+                }
+            }
             \App\Models\SystemSetting::setValue($key, $value, 'payment');
         }
 

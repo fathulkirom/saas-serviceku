@@ -39,7 +39,32 @@ class ServiceDeliveryController extends Controller
     /** Complete pickup */
     public function pickup(Request $request, Service $service)
     {
-        $this->authorize('update', $service);
+        $user = auth()->user();
+
+        // BR-FIX-02 (BR-004): pickup follows CUSTODY, not origin.
+        // A service entered at Branch A that was transferred & received at
+        // Branch B is picked up at B. Origin (service.branch_id) is preserved.
+        $custodyBranchId = (int) ($service->currentCustodyBranchId() ?? $service->branch_id);
+
+        // BR-FIX-03 (BR-001): pickup is gated by the service.pickup capability,
+        // scoped to the CUSTODY branch (delegation must cover it). Role-based
+        // grants require branch access; a granular delegation is honored only
+        // when its branch scope matches the custody branch.
+        if (!$user->canViaPermissionInBranch('service.pickup', $custodyBranchId)) {
+            abort(403, 'Anda tidak memiliki izin untuk memproses pickup.');
+        }
+
+        // Precondition: service must be marked ready
+        $delivery = ServiceDelivery::where('service_id', $service->id)->first();
+        if (!$delivery || !$delivery->ready_at) {
+            return back()->with('error', 'Servis belum ditandai siap diambil.');
+        }
+
+        // Idempotency: if already picked up, reject
+        if ($delivery->picked_up_at) {
+            return back()->with('error', 'Servis sudah diserahkan pada ' . $delivery->picked_up_at->format('d/m/Y H:i') . '.');
+        }
+
         $data = $request->validate([
             'received_by' => 'required|string|max:255',
             'receiver_phone' => 'required|string|max:20',
@@ -50,16 +75,27 @@ class ServiceDeliveryController extends Controller
             'handover_photo' => 'nullable|string',
         ]);
 
-        $delivery = ServiceDelivery::firstOrCreate(['service_id' => $service->id]);
         $delivery->complete(
             $data['received_by'],
             $data['receiver_phone'],
             $data
         );
 
-        // Auto-create warranty
-        $durationDays = $service->warranty_days ?? 30;
-        $warranty = ServiceWarranty::createFromService($service, (int) $durationDays);
+        // BR-FIX-02: record the custody/pickup branch (may differ from origin).
+        $delivery->update(['pickup_branch_id' => $custodyBranchId]);
+
+        $service->update(['status' => \App\Models\Tenant\Service::STATUS_DIAMBIL]);
+
+        \App\Models\Tenant\ActivityLog::log('pickup', "Pickup oleh {$data['received_by']} untuk servis #{$service->tracking_code} di cabang #{$custodyBranchId}", $service, ['pickup_branch_id' => $custodyBranchId]);
+
+        // Auto-create warranty — PILOT-READY-01: warranty_days may be unset (0)
+        // on services taken in without an explicit warranty; default to 30 so a
+        // fresh service never gets a meaningless 0-day (instantly expired) warranty.
+        $durationDays = (int) ($service->warranty_days ?? 0);
+        if ($durationDays <= 0) {
+            $durationDays = 30;
+        }
+        $warranty = ServiceWarranty::createFromService($service, $durationDays);
 
         event(new \App\Events\Entity\PickupCompleted($delivery));
         event(new \App\Events\Entity\WarrantyCreated($warranty));

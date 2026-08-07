@@ -14,6 +14,7 @@ class TechnicianAccepted { use Dispatchable, SerializesModels; public function _
 class DiagnosisCompleted { use Dispatchable, SerializesModels; public function __construct(public readonly ServiceDiagnosis $diagnosis) {} }
 class QuotationCreated { use Dispatchable, SerializesModels; public function __construct(public readonly ServiceQuotation $quotation) {} }
 class CustomerApprovedRepair { use Dispatchable, SerializesModels; public function __construct(public readonly ServiceQuotation $quotation) {} }
+class QuotationRejected { use Dispatchable, SerializesModels; public function __construct(public readonly ServiceQuotation $quotation, public readonly string $reason = '') {} }
 class RepairStarted { use Dispatchable, SerializesModels; public function __construct(public readonly Service $service) {} }
 class RepairCompleted { use Dispatchable, SerializesModels; public function __construct(public readonly Service $service) {} }
 class QCCompleted { use Dispatchable, SerializesModels; public function __construct(public readonly Service $service) {} }

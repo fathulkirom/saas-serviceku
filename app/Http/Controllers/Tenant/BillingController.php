@@ -98,6 +98,13 @@ class BillingController extends Controller
 
         return back()
             ->with('success', $msg)
-            ->with('voucher_extra_months', $extraMonths);
+            ->with('voucher', [
+                'code' => $voucher->code,
+                'discount' => $discount,
+                'discount_label' => $discount > 0 ? 'Rp ' . number_format($discount, 0, ',', '.') : '0%',
+                'final_price' => $finalPrice,
+                'extra_months' => $extraMonths,
+                'plan_id' => $plan->id,
+            ]);
     }
 }

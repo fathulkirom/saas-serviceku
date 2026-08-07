@@ -311,45 +311,68 @@
               <form @submit.prevent="applyVoucher" class="flex items-end gap-3">
                 <div class="flex-1 space-y-1.5">
                   <KInput  v-model="voucherCode" placeholder="Masukkan kode voucher discount" class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all uppercase placeholder-normal" />
+                  <p v-if="!selectedPlanId" class="text-xs text-amber-600">Pilih paket di bawah terlebih dahulu sebelum pakai voucher.</p>
                 </div>
-                <KButton  type="submit" :disabled="!voucherCode" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                <KButton  type="submit" :disabled="!voucherCode || !selectedPlanId" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed">
                     Terapkan
                 </KButton>
               </form>
+              <div v-if="voucherDiscount" class="mt-4 p-4 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  <span class="text-sm font-semibold text-emerald-800">Voucher <strong>{{ voucherDiscount.code }}</strong> diterapkan — diskon {{ voucherDiscount.discount_label }}</span>
+                </div>
+                <KButton  @click="clearVoucher" class="text-xs font-bold text-red-600 hover:text-red-700">Hapus</KButton>
+              </div>
+            </div>
+
+            <!-- Selected Plan Payment Bar -->
+            <div v-if="selectedPlanId && selectedPlanId !== currentPlan?.id" class="bg-indigo-50 border border-indigo-200 p-5 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <p class="text-sm text-indigo-600 font-semibold">Paket Dipilih: <strong>{{ selectedPlanName }}</strong></p>
+                <p class="text-2xl font-black text-indigo-900">Rp {{ formatNumber(selectedPlanPrice) }}</p>
+                <p v-if="voucherDiscount" class="text-xs text-emerald-700 mt-1">Harga setelah voucher: <strong>Rp {{ formatNumber(voucherDiscount.final_price) }}</strong></p>
+                <p v-if="selectedPlanExtraMonths" class="text-xs text-indigo-700 mt-1">🎁 Bonus {{ selectedPlanExtraMonths }} bulan dari voucher</p>
+              </div>
+              <KButton  @click="initiatePayment" :disabled="paymentLoading" class="px-6 py-3 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md hover:shadow-lg transition-all disabled:opacity-50">
+                {{ paymentLoading ? 'Memproses...' : '💳 Bayar Sekarang' }}
+              </KButton>
             </div>
 
             <div v-if="plans?.length">
                 <h3 class="text-xl font-bold text-zinc-900 mb-6">Pilihan Paket Langganan</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  <div v-for="plan in plans" :key="plan.id" class="bg-white p-8 rounded-3xl border border-zinc-200 shadow-sm hover:shadow-xl transition-all relative flex flex-col justify-between" :class="{'border-indigo-500 shadow-indigo-100': currentPlan?.id === plan.id}">
-                    <div v-if="currentPlan?.id === plan.id" class="absolute top-0 right-0 bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-bl-xl rounded-tr-2xl">Paket Saat Ini</div>
+                  <div v-for="plan in plans" :key="plan.id" class="bg-white p-8 rounded-3xl border border-zinc-200 shadow-sm hover:shadow-xl transition-all relative flex flex-col justify-between" :class="{'border-indigo-500 shadow-indigo-100 ring-2 ring-indigo-200': selectedPlanId === plan.id, 'border-emerald-400 bg-emerald-50/30': currentPlan?.id === plan.id}">
+                    <div v-if="currentPlan?.id === plan.id" class="absolute top-0 right-0 bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-bl-xl rounded-tr-2xl">Paket Saat Ini</div>
+                    <div v-else-if="selectedPlanId === plan.id" class="absolute top-0 right-0 bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-bl-xl rounded-tr-2xl">Dipilih</div>
                     
                     <div>
                         <h4 class="text-xl font-bold text-zinc-900 mb-2">{{ plan.name }}</h4>
                         <p class="text-3xl font-black text-zinc-900 mb-2">
-                        Rp {{ formatNumber(plan.price ?? 0) }}
+                        Rp {{ formatNumber(plan.effective_price ?? plan.price ?? 0) }}
                         <span class="text-sm font-normal text-zinc-500">/bln</span>
                         </p>
+                        <p v-if="plan.is_promo_active && plan.discount_percent" class="text-sm text-rose-600 font-bold mb-1 line-through">Rp {{ formatNumber(plan.price) }}</p>
                         <p class="text-sm text-zinc-600 font-medium mb-6 min-h-[40px]">{{ plan.description ?? 'Fasilitas premium untuk bisnis Anda.' }}</p>
                         
                         <div class="space-y-3 mb-8">
-                            <div class="flex items-center gap-3">
+                            <div v-for="(feat, i) in (plan.features || plan.max_users ? ['max_users', 'max_branches'].filter(k => plan[k]) : [])" :key="i" class="flex items-center gap-3">
                                 <div class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
                                 </div>
-                                <span class="text-sm font-semibold text-zinc-700">{{ plan.max_users ?? 1 }} Pengguna</span>
+                                <span class="text-sm font-semibold text-zinc-700">{{ plan.max_users ?? '—' }} Pengguna</span>
                             </div>
                             <div class="flex items-center gap-3">
                                 <div class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
                                 </div>
-                                <span class="text-sm font-semibold text-zinc-700">{{ plan.max_branches ?? 1 }} Cabang</span>
+                                <span class="text-sm font-semibold text-zinc-700">{{ plan.max_branches ?? '—' }} Cabang</span>
                             </div>
                         </div>
                     </div>
 
-                    <KButton  class="w-full py-3 rounded-xl text-sm font-bold text-center transition-all" :class="currentPlan?.id === plan.id ? 'bg-zinc-100 text-zinc-400 cursor-default' : 'bg-zinc-900 hover:bg-zinc-800 text-white shadow-md'">
-                        {{ currentPlan?.id === plan.id ? 'Dipilih' : 'Pilih Paket Ini' }}
+                    <KButton  @click="selectPlan(plan)" :disabled="currentPlan?.id === plan.id" class="w-full py-3 rounded-xl text-sm font-bold text-center transition-all" :class="currentPlan?.id === plan.id ? 'bg-emerald-100 text-emerald-600 cursor-default' : selectedPlanId === plan.id ? 'bg-indigo-100 text-indigo-600' : 'bg-zinc-900 hover:bg-zinc-800 text-white shadow-md'">
+                        {{ currentPlan?.id === plan.id ? '✅ Paket Aktif' : selectedPlanId === plan.id ? '✓ Dipilih — Klik Bayar di Atas' : 'Pilih Paket Ini' }}
                     </KButton>
                   </div>
                 </div>
@@ -607,11 +630,57 @@ const deleteCustomField = (row) => {
 };
 
 const voucherCode = ref('');
+const selectedPlanId = ref(null);
+const selectedPlanName = ref('');
+const selectedPlanPrice = ref(0);
+const selectedPlanExtraMonths = ref(0);
+const voucherDiscount = ref(null);
+const paymentLoading = ref(false);
+
+function selectPlan(plan) {
+  if (props.currentPlan?.id === plan.id) return;
+  selectedPlanId.value = plan.id;
+  selectedPlanName.value = plan.name;
+  selectedPlanPrice.value = plan.effective_price ?? plan.price ?? 0;
+  // Reset voucher when changing plan
+  voucherDiscount.value = null;
+  voucherCode.value = '';
+}
+
 function applyVoucher() {
-  if (!voucherCode.value) return;
-  router.post(route('billing.apply-voucher'), { code: voucherCode.value }, {
-    preserveState: true, preserveScroll: true,
-    onSuccess: () => { voucherCode.value = ''; },
+  if (!voucherCode.value || !selectedPlanId.value) return;
+  router.post(route('billing.apply-voucher'), {
+    code: voucherCode.value,
+    plan_id: selectedPlanId.value,
+  }, {
+    preserveState: true,
+    preserveScroll: true,
+    onSuccess: (page) => {
+      voucherCode.value = '';
+      if (page.props.flash?.voucher) {
+        voucherDiscount.value = page.props.flash.voucher;
+        selectedPlanPrice.value = page.props.flash.voucher.final_price;
+        selectedPlanExtraMonths.value = page.props.flash.voucher.extra_months || 0;
+      }
+    },
+  });
+}
+
+function clearVoucher() {
+  voucherDiscount.value = null;
+  if (selectedPlanId.value) {
+    const plan = props.plans.find(p => p.id === selectedPlanId.value);
+    if (plan) selectedPlanPrice.value = plan.effective_price ?? plan.price ?? 0;
+  }
+}
+
+function initiatePayment() {
+  if (!selectedPlanId.value || paymentLoading.value) return;
+  paymentLoading.value = true;
+  router.post(route('payment.initiate'), {
+    plan_id: selectedPlanId.value,
+  }, {
+    onFinish: () => { paymentLoading.value = false; },
   });
 }
 

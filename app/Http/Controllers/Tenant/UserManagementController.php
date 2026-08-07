@@ -15,6 +15,19 @@ class UserManagementController extends Controller
     public function store(Request $request)
     {
         $this->authorize('create', User::class);
+
+        // PLATFORM-SYNC-01 (STEP 9): enforce the plan's max_users at creation.
+        // max_users counts ALL user accounts (owner + staff) — consistent with
+        // the Trial plan (max_users=1 = the single owner). Reject over-limit
+        // with an understandable plan-limit message instead of silently
+        // exceeding the advertised quota.
+        $maxUsers = tenancy()->tenant?->plan?->maxValue('max_users');
+        if ($maxUsers > 0 && User::count() >= $maxUsers) {
+            throw ValidationException::withMessages([
+                'name' => "Kuota user paket Anda sudah penuh (maks. {$maxUsers} user). Silakan upgrade paket untuk menambah user.",
+            ]);
+        }
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email',
@@ -22,6 +35,9 @@ class UserManagementController extends Controller
             'role' => 'required|in:owner,admin,manager,head_store,cs,technician,cashier,courier,custom',
             'custom_role' => 'required_if:role,custom|string|max:255',
             'branch_id' => 'nullable|exists:branches,id',
+            // BR-FIX-02: additional authorized branches (zero or more).
+            'additional_branches' => 'nullable|array',
+            'additional_branches.*' => 'integer|exists:branches,id',
         ]);
 
         $userBranchId = auth()->user()->branch_id;
@@ -36,23 +52,32 @@ class UserManagementController extends Controller
 
         $validated['password'] = Hash::make($validated['password']);
 
-        User::create($validated);
+        $user = User::create($validated);
+
+        // BR-FIX-02: sync additional branch access (owner-only assignment beyond
+        // the actor's own scope; non-owner actors may only assign within scope).
+        $this->syncBranchAssignments($user, $validated['additional_branches'] ?? []);
 
         return back()->with('success', 'User berhasil ditambahkan.');
     }
 
-    public function update(Request $request, User $userManagement)
+    public function update(Request $request, User $user)
     {
-        $this->authorize('update', $userManagement);
-        $this->ensureUserBranchAccess($userManagement);
+        // NOTE: parameter is `$user` to match the resource route segment {user}
+        // (route-model binding). Renamed from $userManagement (BR-FIX-02).
+        $this->authorize('update', $user);
+        $this->ensureUserBranchAccess($user);
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($userManagement->id)],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'role' => 'required|in:owner,admin,manager,head_store,cs,technician,cashier,courier,custom',
             'custom_role' => 'required_if:role,custom|string|max:255',
             'branch_id' => 'nullable|exists:branches,id',
             'active' => 'nullable|boolean',
             'password' => 'nullable|string|min:8',
+            // BR-FIX-02: additional authorized branches (zero or more).
+            'additional_branches' => 'nullable|array',
+            'additional_branches.*' => 'integer|exists:branches,id',
         ]);
 
         if ($request->filled('password')) {
@@ -61,20 +86,75 @@ class UserManagementController extends Controller
             unset($validated['password']);
         }
 
-        $userManagement->update($validated);
+        $user->update($validated);
+
+        // BR-FIX-02: sync additional branch access + audit + cache invalidation.
+        $this->syncBranchAssignments($user, $validated['additional_branches'] ?? []);
 
         return back()->with('success', 'User berhasil diperbarui.');
     }
 
-    public function destroy(User $userManagement)
+    /**
+     * BR-FIX-02 — Sync additional branch assignments on a user.
+     *
+     * The primary/home branch (users.branch_id) is never removed. Additional
+     * access is explicit via the user_branches pivot. Non-owner actors may only
+     * assign branches within their own access scope. Audits add/remove and
+     * invalidates the cached branch-access list.
+     */
+    protected function syncBranchAssignments(User $user, array $newIds): void
     {
-        if ($userManagement->isOwner()) {
+        $actor = auth()->user();
+
+        if (!$actor->isOwner()) {
+            $actorAccess = \App\Services\BranchAccessService::accessibleBranchIds($actor);
+            foreach (array_map('intval', $newIds) as $bid) {
+                if (!in_array($bid, $actorAccess, true)) {
+                    abort(403, 'Tidak berhak menetapkan akses cabang di luar jangkauan Anda.');
+                }
+            }
+        }
+
+        $primaryId = $user->branch_id ? (int) $user->branch_id : null;
+        $additional = array_values(array_filter(
+            array_unique(array_map('intval', $newIds)),
+            fn($id) => $id !== $primaryId
+        ));
+
+        $old = $user->branches()->pluck('branches.id')->map(fn($id) => (int) $id)->all();
+        $user->branches()->sync($additional);
+        $user->clearBranchAccessCache();
+
+        $added = array_diff($additional, $old);
+        $removed = array_diff($old, $additional);
+
+        foreach ($added as $bid) {
+            \App\Models\Tenant\ActivityLog::log(
+                'manager_branch_assigned',
+                "Cabang #{$bid} ditambahkan ke akses user #{$user->id} ({$user->name})",
+                $user,
+                ['branch_id' => $bid, 'by' => $actor?->id]
+            );
+        }
+        foreach ($removed as $bid) {
+            \App\Models\Tenant\ActivityLog::log(
+                'manager_branch_removed',
+                "Cabang #{$bid} dihapus dari akses user #{$user->id} ({$user->name})",
+                $user,
+                ['branch_id' => $bid, 'by' => $actor?->id]
+            );
+        }
+    }
+
+    public function destroy(User $user)
+    {
+        if ($user->isOwner()) {
             return back()->with('error', 'Tidak bisa menghapus user owner.');
         }
 
-        $this->authorize('delete', $userManagement);
-        $this->ensureUserBranchAccess($userManagement);
-        $userManagement->delete();
+        $this->authorize('delete', $user);
+        $this->ensureUserBranchAccess($user);
+        $user->delete();
         return back()->with('success', 'User berhasil dihapus.');
     }
 

@@ -8,7 +8,7 @@
         </template>
 
         <!-- Flash Message -->
-        <div v-if="$page.props.flash?.success" class="mb-4 p-4 rounded-xl border flex items-center gap-3" style="background: rgba(34,197,94,0.1); border-color: rgba(34,197,94,0.2);">
+        <div v-if="$page.props.flash?.success" class="mb-4 p-4 rounded-xl border flex items-center gap-3 bg-emerald-500/10 border-emerald-500/20">
             <p class="text-sm text-emerald-300">{{ $page.props.flash.success }}</p>
         </div>
 
@@ -16,7 +16,7 @@
             <!-- Payment Gateway Selection -->
             <div class="lg:col-span-2 space-y-6">
                 <div class="rounded-2xl p-6 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Pilih Payment Gateway</h3>
+                    <h3 class="text-lg font-semibold text-slate-100 mb-4">Pilih Payment Gateway</h3>
                     <form @submit.prevent="submitSettings">
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-slate-300 mb-2">Gateway</label>
@@ -25,7 +25,7 @@
                                     :class="form.payment_gateway === 'manual' ? 'border-indigo-500 bg-indigo-50' : 'border-slate-700'">
                                     <KRadio  v-model="form.payment_gateway" value="manual" name="payment_gateway" class="mr-3" />
                                     <div>
-                                        <p class="font-medium text-gray-900">💰 Manual Transfer</p>
+                                        <p class="font-medium text-slate-100">💰 Manual Transfer</p>
                                         <p class="text-sm text-slate-400">Pelanggan transfer ke rekening, admin konfirmasi manual</p>
                                     </div>
                                 </label>
@@ -33,7 +33,7 @@
                                     :class="form.payment_gateway === 'midtrans' ? 'border-indigo-500 bg-indigo-50' : 'border-slate-700'">
                                     <KRadio  v-model="form.payment_gateway" value="midtrans" name="payment_gateway" class="mr-3" />
                                     <div>
-                                        <p class="font-medium text-gray-900">🔵 Midtrans</p>
+                                        <p class="font-medium text-slate-100">🔵 Midtrans</p>
                                         <p class="text-sm text-slate-400">Support: Bank Transfer, GOPAY, QRIS, ShopeePay</p>
                                     </div>
                                 </label>
@@ -41,7 +41,7 @@
                                     :class="form.payment_gateway === 'xendit' ? 'border-indigo-500 bg-indigo-50' : 'border-slate-700'">
                                     <KRadio  v-model="form.payment_gateway" value="xendit" name="payment_gateway" class="mr-3" />
                                     <div>
-                                        <p class="font-medium text-gray-900">🟠 Xendit</p>
+                                        <p class="font-medium text-slate-100">🟠 Xendit</p>
                                         <p class="text-sm text-slate-400">Support: Bank Transfer, QRIS, E-Wallet</p>
                                     </div>
                                 </label>
@@ -50,7 +50,7 @@
 
                         <!-- Midtrans Settings -->
                         <div v-if="form.payment_gateway === 'midtrans'" class="border-t pt-4 mt-4 space-y-3">
-                            <h4 class="font-medium text-gray-900">Konfigurasi Midtrans</h4>
+                            <h4 class="font-medium text-slate-100">Konfigurasi Midtrans</h4>
                             <div class="grid grid-cols-2 gap-3">
                                 <div>
                                     <label class="block text-sm font-medium text-slate-300">Merchant ID</label>
@@ -83,7 +83,7 @@
 
                         <!-- Xendit Settings -->
                         <div v-if="form.payment_gateway === 'xendit'" class="border-t pt-4 mt-4 space-y-3">
-                            <h4 class="font-medium text-gray-900">Konfigurasi Xendit</h4>
+                            <h4 class="font-medium text-slate-100">Konfigurasi Xendit</h4>
                             <div>
                                 <label class="block text-sm font-medium text-slate-300">API Key</label>
                                 <KInput  v-model="form.xendit_api_key" type="password" name="xendit_api_key" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
@@ -108,7 +108,7 @@
 
                 <!-- Webhook URL Info -->
                 <div class="rounded-2xl p-6 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">🔗 Webhook URL</h3>
+                    <h3 class="text-lg font-semibold text-slate-100 mb-2">🔗 Webhook URL</h3>
                     <p class="text-sm text-slate-400 mb-3">Daftarkan URL berikut di dashboard payment gateway untuk menerima notifikasi otomatis:</p>
                     <div class="bg-slate-800/50 rounded-md p-3 font-mono text-sm text-slate-300 break-all">
                         {{ webhookUrl }}
@@ -119,7 +119,7 @@
             <!-- Rekening Manual -->
             <div class="space-y-6">
                 <div class="rounded-2xl p-6 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">🏦 Rekening Manual</h3>
+                    <h3 class="text-lg font-semibold text-slate-100 mb-4">🏦 Rekening Manual</h3>
                     <p class="text-sm text-slate-400 mb-4">Untuk pembayaran transfer manual</p>
                     <form @submit.prevent="submitSettings">
                         <div class="space-y-3 mb-4 pb-4 border-b">

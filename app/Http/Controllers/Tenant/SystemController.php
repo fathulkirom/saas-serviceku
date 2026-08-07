@@ -17,10 +17,37 @@ class SystemController extends Controller
     {
         $tab = $request->get('tab', 'pengguna');
 
+        // PILOT-READY-01 (P0): Sistem exposes all users + branch counts + role
+        // assignment. Restricted to owner/admin (user-management authority).
+        $user = auth()->user();
+        abort_unless($user->isOwner() || $user->isAdmin(), 403, 'Anda tidak memiliki akses ke manajemen pengguna.');
+
         return Inertia::render('Sistem/Index', [
             'activeTab' => $tab,
 
-            'users' => fn() => User::with('branch')->latest()->paginate(15),
+            'users' => fn() => User::with('branch', 'branches')->latest()->paginate(15),
+
+            // BR-FIX-03 — Controlled delegation management (grant/revoke).
+            'canManageDelegations' => fn() => auth()->user()->canViaPermission('delegation.grant')
+                || auth()->user()->canViaPermission('delegation.revoke'),
+
+            'delegations' => fn() => \App\Models\Tenant\Delegation::with(['user:id,name,role,branch_id', 'branch:id,name', 'granter:id,name'])
+                ->latest()
+                ->get()
+                ->map(fn($d) => [
+                    'id' => $d->id,
+                    'user_name' => $d->user?->name,
+                    'user_role' => $d->user?->role,
+                    'permission' => $d->permission,
+                    'branch_id' => $d->branch_id,
+                    'branch_name' => $d->branch?->name ?? 'Semua cabang',
+                    'granted_by' => $d->granter?->name,
+                    'starts_at' => $d->starts_at?->toDateTimeString(),
+                    'expires_at' => $d->expires_at?->toDateTimeString(),
+                    'revoked_at' => $d->revoked_at?->toDateTimeString(),
+                    'reason' => $d->reason,
+                    'active' => $d->isActive(),
+                ]),
 
             'systemBranches' => fn() => Branch::where('is_active', true)->get(),
 

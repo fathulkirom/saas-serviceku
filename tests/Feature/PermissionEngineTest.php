@@ -5,8 +5,11 @@ namespace Tests\Feature;
 use App\Models\Tenant\Permission;
 use App\Models\Tenant\Role;
 use App\Models\Tenant\User;
+use App\Services\RoleService;
+use Database\Seeders\Tenant\PermissionEngineSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class PermissionEngineTest extends TestCase
@@ -18,7 +21,14 @@ class PermissionEngineTest extends TestCase
         parent::setUp();
 
         // Create tables for testing — tenant migrations not auto-loaded by RefreshDatabase
-        if (!Schema::hasTable('permissions')) {
+        if (! Schema::hasTable('permissions')) {
+            if (! Schema::hasColumn('users', 'role')) {
+                Schema::table('users', function ($table) {
+                    $table->string('role')->default('cs');
+                    $table->boolean('active')->default(true);
+                });
+            }
+
             Schema::create('permissions', function ($table) {
                 $table->id();
                 $table->string('key')->unique();
@@ -49,10 +59,10 @@ class PermissionEngineTest extends TestCase
             });
         }
 
-        $this->seed(\Database\Seeders\Tenant\PermissionEngineSeeder::class);
+        $this->seed(PermissionEngineSeeder::class);
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function permissions_are_seeded_correctly(): void
     {
         $this->assertGreaterThan(70, Permission::count());
@@ -60,7 +70,7 @@ class PermissionEngineTest extends TestCase
         $this->assertNotNull(Permission::where('key', 'customer.create')->first());
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function roles_are_seeded_with_permissions(): void
     {
         $ownerRole = Role::where('key', 'owner')->first();
@@ -73,7 +83,7 @@ class PermissionEngineTest extends TestCase
         $this->assertFalse($techRole->hasPermission('finance.manage'));
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function cashier_has_sales_permissions_only(): void
     {
         $role = Role::where('key', 'cashier')->first();
@@ -82,7 +92,7 @@ class PermissionEngineTest extends TestCase
         $this->assertFalse($role->hasPermission('service.work'));
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function legacy_role_fallback_works(): void
     {
         $user = User::create([
@@ -92,14 +102,14 @@ class PermissionEngineTest extends TestCase
         $this->assertTrue($user->canViaPermission('user.delete'));
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function system_role_cannot_be_deleted(): void
     {
         $this->expectException(\RuntimeException::class);
-        (new \App\Services\RoleService)->deleteRole(Role::where('key', 'owner')->first());
+        (new RoleService)->deleteRole(Role::where('key', 'owner')->first());
     }
 
-    #[\PHPUnit\Framework\Attributes\Test]
+    #[Test]
     public function permission_check_by_role(): void
     {
         $owner = User::create([

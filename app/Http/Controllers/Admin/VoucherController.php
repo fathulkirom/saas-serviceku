@@ -38,6 +38,8 @@ class VoucherController extends Controller
             'expires_at' => 'nullable|date',
             'is_active' => 'boolean',
             'description' => 'nullable|string|max:1000',
+            // PLATFORM-SYNC-01 (STEP 16): UI accepts extra_months; persist it.
+            'extra_months' => 'nullable|integer|min:0|max:60',
         ]);
 
         // Auto-generate code jika tidak diisi
@@ -77,6 +79,8 @@ class VoucherController extends Controller
             'expires_at' => 'nullable|date',
             'is_active' => 'boolean',
             'description' => 'nullable|string|max:1000',
+            // PLATFORM-SYNC-01 (STEP 16): persist extra_months on update too.
+            'extra_months' => 'nullable|integer|min:0|max:60',
         ]);
 
         $validated['is_active'] = $request->boolean('is_active', true);

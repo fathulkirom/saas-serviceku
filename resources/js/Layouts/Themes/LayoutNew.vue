@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen flex" style="background: var(--bg-app);">
+    <div class="min-h-screen flex bg-[#f6f8fb]" style="background: var(--bg-app);">
         <Sidebar
             :active-layout="activeLayout"
             :menu-style="menuStyle"
@@ -19,7 +19,7 @@
 
         <!-- Floating toggle button (when sidebar is hidden) -->
         <KButton  v-if="sidebarHidden && !isMobile" @click="$emit('toggle-sidebar')"
-            class="fixed top-20 left-3 z-50 w-10 h-10 rounded-xl flex items-center justify-center shadow-lg hover:shadow-xl transition-all"
+            class="fixed top-20 left-3 z-50 flex h-10 w-10 items-center justify-center rounded-lg shadow-lg transition-all hover:shadow-xl"
             :style="{ background: 'var(--primary)' }" title="Tampilkan Sidebar">
             <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
@@ -27,7 +27,7 @@
         </KButton>
 
         <!-- Mobile sidebar backdrop -->
-        <div v-if="isMobile && mobileOpen" @click="$emit('close-mobile')" class="fixed inset-0 z-30 bg-black/50 backdrop-blur-sm lg:hidden"></div>
+        <div v-if="isMobile && mobileOpen" @click="$emit('close-mobile')" class="fixed inset-0 z-30 bg-slate-950/40 backdrop-blur-sm lg:hidden"></div>
 
         <!-- MAIN CONTENT -->
         <div class="flex-1 flex flex-col min-h-screen" :class="{ 'lg:ml-0': !showSidebar }" :style="mainContentStyle">
@@ -54,12 +54,12 @@
             <main class="flex-1">
                 <Transition name="page" mode="out-in">
                     <div :key="$page.url">
-                        <div v-if="$slots.header" class="border-b" style="background: var(--bg-card); border-color: var(--border-light);">
-                            <div class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+                        <div v-if="$slots.header" class="border-b border-slate-200 bg-white/86 backdrop-blur-xl">
+                            <div class="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
                                 <slot name="header" />
                             </div>
                         </div>
-                        <div class="max-w-7xl mx-auto py-5 sm:py-6 px-3 sm:px-6 lg:px-8">
+                        <div class="mx-auto max-w-7xl px-3 py-5 sm:px-6 sm:py-6 lg:px-8">
                             <slot />
                         </div>
                     </div>

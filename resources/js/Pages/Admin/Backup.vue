@@ -8,10 +8,10 @@
         </template>
 
         <!-- Flash Message -->
-        <div v-if="$page.props.flash?.success" class="mb-4 p-4 rounded-xl border flex items-center gap-3" style="background: rgba(34,197,94,0.1); border-color: rgba(34,197,94,0.2);">
+        <div v-if="$page.props.flash?.success" class="mb-4 p-4 rounded-xl border flex items-center gap-3 bg-emerald-500/10 border-emerald-500/20">
             <p class="text-sm text-emerald-300">{{ $page.props.flash.success }}</p>
         </div>
-        <div v-if="$page.props.flash?.error" class="mb-4 p-4 rounded-xl border flex items-center gap-3" style="background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.2);">
+        <div v-if="$page.props.flash?.error" class="mb-4 p-4 rounded-xl border flex items-center gap-3 bg-red-500/10 border-red-500/20">
             <p class="text-sm text-red-300">{{ $page.props.flash.error }}</p>
         </div>
 
@@ -20,7 +20,7 @@
             <div class="lg:col-span-2 space-y-6">
                 <!-- Setting Form -->
                 <div class="rounded-2xl p-6 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Pengaturan Backup</h3>
+                    <h3 class="text-lg font-semibold text-slate-100 mb-4">Pengaturan Backup</h3>
                     <div class="flex items-center gap-2 mb-4 p-3 bg-blue-50 rounded-lg">
                         <span class="text-lg">💡</span>
                         <p class="text-sm text-blue-700">Backup disimpan ke HDD lokal dulu, lalu bisa diupload ke Google Drive untuk keamanan ekstra (off-site).</p>
@@ -56,7 +56,7 @@
 
                         <!-- Google Drive Settings -->
                         <div class="mt-6 pt-4 border-t">
-                            <h4 class="text-base font-semibold text-gray-900 mb-3">☁️ Google Drive Backup</h4>
+                            <h4 class="text-base font-semibold text-slate-100 mb-3">☁️ Google Drive Backup</h4>
                             <p class="text-xs text-slate-400 mb-3">Backup otomatis diupload ke Google Drive sebagai cadangan off-site. <a href="https://rclone.org/drive/" target="_blank" class="text-indigo-600 hover:underline">Cara setup rclone</a></p>
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="col-span-2">
@@ -93,7 +93,7 @@
                 <!-- Daftar File Backup -->
                 <div class="rounded-2xl p-6 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-semibold text-gray-900">📂 File Backup</h3>
+                        <h3 class="text-lg font-semibold text-slate-100">📂 File Backup</h3>
                         <KButton  @click="runBackup" :disabled="form.processing"
                             class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 text-sm">
                             🔄 Backup Sekarang
@@ -114,12 +114,12 @@
                                     {{ file.type === 'database' ? '🗄️' : file.type === 'storage' ? '📦' : '🔐' }}
                                 </span>
                                 <div class="min-w-0">
-                                    <p class="text-sm font-medium text-gray-900 truncate">{{ file.name }}</p>
+                                    <p class="text-sm font-medium text-slate-100 truncate">{{ file.name }}</p>
                                     <p class="text-xs text-slate-400">{{ file.date }} • {{ file.size }}</p>
                                 </div>
                             </div>
                             <KButton  @click="deleteBackup(file.path)"
-                                class="flex-shrink-0 px-2 py-1 text-xs text-red-600 hover:text-red-800 hover:bg-red-50 rounded">
+                                class="flex-shrink-0 px-2 py-1 text-xs text-red-400 hover:text-red-800 hover:bg-red-50 rounded">
                                 Hapus
                             </KButton>
                         </div>
@@ -131,7 +131,7 @@
             <div class="space-y-6">
                 <!-- Status -->
                 <div class="rounded-2xl p-6 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">📊 Status</h3>
+                    <h3 class="text-lg font-semibold text-slate-100 mb-4">📊 Status</h3>
                     <div class="space-y-3">
                         <div class="flex justify-between text-sm">
                             <span class="text-slate-400">Backup Terakhir:</span>
@@ -139,7 +139,7 @@
                         </div>
                         <div class="flex justify-between text-sm">
                             <span class="text-slate-400">Status:</span>
-                            <span class="font-medium" :class="config.backup_last_status === 'success' ? 'text-green-600' : 'text-red-600'">
+                            <span class="font-medium" :class="config.backup_last_status === 'success' ? 'text-emerald-400' : 'text-red-400'">
                                 {{ config.backup_last_status === 'success' ? '✅ Sukses' : '❌ ' + config.backup_last_status }}
                             </span>
                         </div>
@@ -156,7 +156,7 @@
 
                 <!-- Disk Info -->
                 <div class="rounded-2xl p-6 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">💽 Info Disk (HDD)</h3>
+                    <h3 class="text-lg font-semibold text-slate-100 mb-4">💽 Info Disk (HDD)</h3>
                     <div class="space-y-3">
                         <div class="flex justify-between text-sm">
                             <span class="text-slate-400">Total:</span>
@@ -168,7 +168,7 @@
                         </div>
                         <div class="flex justify-between text-sm">
                             <span class="text-slate-400">Sisa:</span>
-                            <span class="font-medium text-green-600">{{ diskInfo.free }}</span>
+                            <span class="font-medium text-emerald-400">{{ diskInfo.free }}</span>
                         </div>
                         <div class="mt-2">
                             <div class="w-full bg-slate-700 rounded-full h-2">
@@ -181,17 +181,17 @@
 
                 <!-- Google Drive Status -->
                 <div class="rounded-2xl p-6 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-4">☁️ Google Drive</h3>
+                    <h3 class="text-lg font-semibold text-slate-100 mb-4">☁️ Google Drive</h3>
                     <div v-if="gdriveInfo" class="space-y-3">
                         <div class="flex justify-between text-sm">
                             <span class="text-slate-400">rclone:</span>
-                            <span class="font-medium" :class="gdriveInfo.rclone_installed ? 'text-green-600' : 'text-red-600'">
+                            <span class="font-medium" :class="gdriveInfo.rclone_installed ? 'text-emerald-400' : 'text-red-400'">
                                 {{ gdriveInfo.rclone_installed ? '✅ ' + (gdriveInfo.rclone_version || '') : '❌ Tidak terinstall' }}
                             </span>
                         </div>
                         <div class="flex justify-between text-sm">
                             <span class="text-slate-400">Remote:</span>
-                            <span class="font-medium" :class="gdriveInfo.remote_configured ? 'text-green-600' : 'text-yellow-600'">
+                            <span class="font-medium" :class="gdriveInfo.remote_configured ? 'text-emerald-400' : 'text-amber-400'">
                                 {{ gdriveInfo.remote_configured ? '✅ Terkonfigurasi' : '❌ Belum' }}
                             </span>
                         </div>
@@ -217,7 +217,7 @@
 
                 <!-- Setup Guide -->
                 <div class="rounded-2xl p-6 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">📋 Setup Google Drive</h3>
+                    <h3 class="text-lg font-semibold text-slate-100 mb-2">📋 Setup Google Drive</h3>
                     <ol class="text-sm text-slate-400 space-y-1.5 list-decimal list-inside">
                         <li>Install rclone: <code class="bg-slate-800 px-1 rounded text-xs">brew install rclone</code></li>
                         <li>Konfigurasi: <code class="bg-slate-800 px-1 rounded text-xs">rclone config</code></li>
@@ -231,7 +231,7 @@
 
                 <!-- Panduan Cron -->
                 <div class="rounded-2xl p-6 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
-                    <h3 class="text-lg font-semibold text-gray-900 mb-2">🤖 Cron Job</h3>
+                    <h3 class="text-lg font-semibold text-slate-100 mb-2">🤖 Cron Job</h3>
                     <p class="text-sm text-slate-400 mb-3">Untuk backup otomatis, tambahkan ke crontab:</p>
                     <div class="bg-slate-900 text-green-400 rounded-md p-3 text-xs font-mono">
                         # Setiap jam 03:00 pagi<br>

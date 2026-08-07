@@ -12,6 +12,7 @@ use App\Http\Middleware\AdminAuthenticate;
 use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\HandleCors;
 use App\Http\Middleware\EnsureJsonForApi;
+use App\Http\Middleware\RequirePermission;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
@@ -97,6 +98,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
             'cors' => HandleCors::class,
             'ensure.json' => EnsureJsonForApi::class,
+            'permission' => RequirePermission::class,
         ]);
 
         $middleware->api(
@@ -139,11 +141,44 @@ return Application::configure(basePath: dirname(__DIR__))
             }
         });
 
+        // Sprint v4.0C: Render HTTP exceptions (403/404/409/422) as plain/JSON responses.
+        // Prevents the Inertia error view from crashing (undefined $page) and masking
+        // the real HTTP status code — especially in tests.
+        $exceptions->render(function (\Symfony\Component\HttpKernel\Exception\HttpException $e, Request $request) {
+            $status = $e->getStatusCode();
+            $message = $e->getMessage() ?: (\Symfony\Component\HttpFoundation\Response::$statusTexts[$status] ?? 'Error');
+
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return response()->json(['message' => $message, 'status' => $status], $status);
+            }
+
+            if (app()->environment('testing')) {
+                return response($status . ' ' . $message, $status);
+            }
+
+            return response()->view('errors.' . $status, ['message' => $message], $status);
+        });
+
         $exceptions->respond(function (\Symfony\Component\HttpFoundation\Response $response, \Throwable $exception, Request $request) {
-            if (!app()->environment('local') && in_array($response->getStatusCode(), [500, 503, 404, 403, 419])) {
-                return inertia('Errors/' . $response->getStatusCode(), ['status' => $response->getStatusCode()])
+            $status = $response->getStatusCode();
+
+            // JSON/API requests → always return JSON error (no Inertia view)
+            if ($request->is('api/*') || $request->expectsJson()) {
+                return response()->json([
+                    'message' => $exception->getMessage() ?: 'Error ' . $status,
+                    'status' => $status,
+                ], $status);
+            }
+
+            // In testing, don't render Inertia error view (needs $page shared prop not present in tests).
+            if (app()->environment('testing')) {
+                return response($status . ' ' . \Symfony\Component\HttpFoundation\Response::$statusTexts[$status] ?? '', $status);
+            }
+
+            if (!app()->environment('local') && in_array($status, [500, 503, 404, 403, 419])) {
+                return inertia('Errors/' . $status, ['status' => $status])
                     ->toResponse($request)
-                    ->setStatusCode($response->getStatusCode());
+                    ->setStatusCode($status);
             }
             return $response;
         });

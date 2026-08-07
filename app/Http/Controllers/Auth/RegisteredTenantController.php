@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Plan;
 use App\Models\Tenant;
 use App\Models\RegistrationVerification;
-use App\Mail\OtpMail;
 use App\Mail\WelcomeMail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -99,12 +98,17 @@ class RegisteredTenantController extends Controller
             'voucher_code' => $validated['voucher_code'] ?? null,
         ]);
 
-        // Kirim OTP via email
-        try {
-            Mail::to($validated['email'])->send(new OtpMail($verification->otp, $validated['tenant_name']));
-        } catch (\Exception $e) {
-            Log::error('Gagal kirim OTP: ' . $e->getMessage());
-            return back()->withErrors(['email' => 'Gagal mengirim kode verifikasi. Periksa konfigurasi email.']);
+        // Kirim OTP via canonical transactional mail abstraction (PILOT-MAIL-04R).
+        // Resend when configured; safe env fallback otherwise. On failure the
+        // registration stays pending — NO tenant/DB/domain is provisioned.
+        $otpSent = \App\Services\TransactionalMailService::sendOtp(
+            $validated['email'],
+            $verification->otp,
+            $validated['tenant_name']
+        );
+        if (!$otpSent) {
+            Log::error('Gagal kirim OTP ke ' . $validated['email'] . ' — transactional mail tidak tersedia.');
+            return back()->withErrors(['email' => 'Gagal mengirim kode verifikasi. Periksa konfigurasi email platform.']);
         }
 
         return redirect()->route('register.verify', ['email' => $validated['email']])
@@ -186,74 +190,90 @@ class RegisteredTenantController extends Controller
         ]);
 
         // Inisialisasi tenant (database sudah dibuat otomatis oleh Tenant::create())
-        tenancy()->initialize($tenant);
-
-        app('migrator')->run(database_path('migrations/tenant'));
-
-        // Buat branch & user
-        $branchId = DB::table('branches')->insertGetId([
-            'name' => 'Cabang Utama',
-            'address' => '',
-            'phone' => $data['phone'] ?? '',
-            'is_active' => true,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        DB::table('users')->insert([
-            'branch_id' => $branchId,
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-            'role' => 'owner',
-            'active' => true,
-            'remember_token' => null,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        DB::table('tenant_settings')->insert([
-            ['key' => 'store_name', 'value' => $data['tenant_name']],
-            ['key' => 'primary_color', 'value' => '#4F46E5'],
-        ]);
-
-        // Set slug tenant
-        $slug = Str::slug($data['tenant_name']);
-
-        // Cegah slug yang di-reserved (admin, kirom, www, dll)
-        $reservedSlugs = ['admin', 'kirom', 'www', 'api', 'mail', 'ftp', 'dev', 'staging', 'test', 'demo', 'app', 'web', 'blog', 'shop', 'help', 'support'];
-        if (in_array($slug, $reservedSlugs)) {
-            $slug = $slug . '-' . Str::random(4);
-        }
-
-        // Cegah duplicate slug (misal nama toko sama persis)
-        while (\App\Models\Tenant::where('slug', $slug)->exists()) {
-            $slug = $slug . '-' . Str::lower(Str::random(4));
-        }
-
-        $tenant->update(['slug' => $slug]);
-
-        // Auto-login sebagai owner (dalam tenant context)
-        $user = \App\Models\Tenant\User::where('email', $data['email'])->first();
-        if ($user) {
-            Auth::guard('web')->login($user);
-            $request->session()->put('tenant_id', $tenant->id);
-        }
-
-        $configuredBaseDomain = env('CENTRAL_DOMAIN');
-        $requestHost = request()->getHost();
-        $requestHostNoPort = preg_replace('/:\\d+$/', '', $requestHost);
-        $baseDomain = $configuredBaseDomain ?: $requestHostNoPort;
-
-        // Buat domain untuk subdomain tenant: {slug}.basedomain
+        // PLATFORM-SYNC-01 (STEP 8): wrap provisioning so a mid-flight failure
+        // rolls back — no unusable partial tenant is ever left behind.
         try {
+            tenancy()->initialize($tenant);
+
+            app('migrator')->run(database_path('migrations/tenant'));
+
+            // Buat branch & user
+            $branchId = DB::table('branches')->insertGetId([
+                'name' => 'Cabang Utama',
+                'address' => '',
+                'phone' => $data['phone'] ?? '',
+                'is_active' => true,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            DB::table('users')->insert([
+                'branch_id' => $branchId,
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+                'role' => 'owner',
+                'active' => true,
+                'remember_token' => null,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            DB::table('tenant_settings')->insert([
+                ['key' => 'store_name', 'value' => $data['tenant_name']],
+                ['key' => 'primary_color', 'value' => '#4F46E5'],
+            ]);
+
+            // Set slug tenant
+            $slug = Str::slug($data['tenant_name']);
+
+            // Cegah slug yang di-reserved (admin, kirom, www, dll)
+            $reservedSlugs = \App\Models\Tenant::reservedSlugs();
+            if (in_array($slug, $reservedSlugs)) {
+                $slug = $slug . '-' . Str::random(4);
+            }
+
+            // Cegah duplicate slug (misal nama toko sama persis)
+            while (\App\Models\Tenant::where('slug', $slug)->exists()) {
+                $slug = $slug . '-' . Str::lower(Str::random(4));
+            }
+
+            $tenant->update(['slug' => $slug]);
+
+            // Auto-login sebagai owner (dalam tenant context)
+            $user = \App\Models\Tenant\User::where('email', $data['email'])->first();
+            if ($user) {
+                Auth::guard('web')->login($user);
+                $request->session()->put('tenant_id', $tenant->id);
+            }
+
+            $configuredBaseDomain = env('CENTRAL_DOMAIN');
+            $requestHost = request()->getHost();
+            $requestHostNoPort = preg_replace('/:\\d+$/', '', $requestHost);
+            $baseDomain = $configuredBaseDomain ?: $requestHostNoPort;
+
+            // Buat domain untuk subdomain tenant: {slug}.basedomain
             $domain = $slug . '.' . $baseDomain;
             \Stancl\Tenancy\Database\Models\Domain::create([
                 'tenant_id' => $tenant->id,
                 'domain' => $domain,
             ]);
         } catch (\Exception $e) {
-            Log::warning('Gagal buat domain: ' . $e->getMessage());
+            Log::error('Registrasi gagal, rollback tenant ' . $tenant->id . ': ' . $e->getMessage());
+
+            try { tenancy()->end(); } catch (\Exception $ignored) {}
+
+            try {
+                $tenant->domains()->delete();
+                $tenant->database()->manager()->deleteDatabase($tenant);
+            } catch (\Exception $cleanupErr) {
+                Log::warning('Gagal bersihkan tenant saat rollback: ' . $cleanupErr->getMessage());
+            }
+            $tenant->delete();
+
+            return back()->withErrors([
+                'email' => 'Registrasi gagal diinisialisasi. Silakan coba lagi atau hubungi dukungan.',
+            ])->onlyInput('email');
         }
 
         // Kembali ke central database

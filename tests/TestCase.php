@@ -58,7 +58,6 @@ abstract class TestCase extends BaseTestCase
             'plan_id' => 1,
             'data' => [],
         ]);
-
         $dbPath = database_path('testing_tenant_' . $tenant->id . '.sqlite');
         config(['database.connections.tenant' => [
             'driver' => 'sqlite',
@@ -89,6 +88,39 @@ abstract class TestCase extends BaseTestCase
         $this->testTenant = $tenant;
 
         return $tenant;
+    }
+
+    /**
+     * Grant full plan access to the test tenant.
+     * The seeded Trial plan has 'sales' => 'read_only', which blocks POST payment
+     * routes via CheckPlanFeature middleware. Payment flow tests need full access.
+     */
+    protected function grantFullPlanAccess(): void
+    {
+        if (!$this->testTenant) return;
+
+        $fullPlan = \App\Models\Plan::updateOrCreate(['slug' => 'full_test'], [
+            'name' => 'Full Test',
+            'description' => 'Full access for integration testing',
+            'price' => 0,
+            'trial_days' => 30,
+            'features' => array_merge(
+                array_fill_keys([
+                    'services', 'customers', 'products', 'sales', 'reports',
+                    'settings', 'monitoring', 'users', 'expenses', 'purchases',
+                    'deposits', 'checklist', 'indents',
+                    // BR-FIX-03: dashboard owner/KPI endpoints are reachable in
+                    // the test plan so the permission:finance.view gate is the
+                    // effective control (defense-in-depth for P&L exposure).
+                    'dashboard',
+                ], true),
+                ['multi_branch' => true, 'transfer_stock' => true, 'max_users' => 50, 'max_branches' => 10]
+            ),
+            'is_active' => true,
+        ]);
+
+        $this->testTenant->update(['plan_id' => $fullPlan->id]);
+        app(\App\Services\FeatureEngine::class)->clearCache($this->testTenant);
     }
 
     protected function tearDown(): void

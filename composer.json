@@ -35,7 +35,11 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "classmap": [
+            "app/Events/",
+            "app/Models/Tenant/"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
@@ -79,16 +83,6 @@
         "allow-plugins": {
             "pestphp/pest-plugin": true,
             "php-http/discovery": true
-        },
-        "policy": {
-            "advisories": {
-                "block": false
-            }
-        }
-    },
-    "policy": {
-        "advisories": {
-            "block": false
         }
     },
     "minimum-stability": "stable",

@@ -49,6 +49,9 @@ class SuperAdminController extends Controller
                 "php_version" => phpversion(),
                 "database_size" => $dbSize,
                 "laravel_version" => app()->version(),
+                // PLATFORM-SYNC-01 (STEP 12): Dashboard.vue renders this value —
+                // it was previously omitted (blank display).
+                "server_time" => now()->format("Y-m-d H:i:s"),
             ],
         ]);
     }

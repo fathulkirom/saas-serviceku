@@ -80,7 +80,7 @@
                                     <Link :href="route('admin.vouchers.edit', v.id)" class="px-3 py-1.5 text-xs font-bold text-indigo-600 hover:text-indigo-700 hover:bg-indigo-50 rounded-lg transition-colors">
                                         Edit
                                     </Link>
-                                    <KButton  @click="confirmDelete(v)" class="px-3 py-1.5 text-xs font-bold text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors">
+                                    <KButton  @click="confirmDelete(v)" class="px-3 py-1.5 text-xs font-bold text-red-400 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors">
                                         Hapus
                                     </KButton>
                                 </div>

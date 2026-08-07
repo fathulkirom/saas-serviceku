@@ -77,8 +77,10 @@ rsync -avzO --progress \
     --exclude '.hypothesis' \
     --exclude '.schemathesis' \
     --exclude '.ua' \
+    --exclude '.phpunit.result.cache' \
     --exclude 'storage' \
     --exclude 'bootstrap/cache/*' \
+    --exclude 'docker/cloudflare' \
     --exclude 'public/build' \
     --exclude 'public/hot' \
     --exclude 'database/tenant_*' \
@@ -91,7 +93,7 @@ rsync -avzO "$LOCAL_DIR/public/build/" "$SSH_USER@$SSH_HOST:$REMOTE_DIR/public/b
 
 info "Copying Docker configs..."
 rsync -avzO "$LOCAL_DIR/docker-compose.yml" "$SSH_USER@$SSH_HOST:$REMOTE_DIR/docker-compose.yml" || true
-rsync -avzO "$LOCAL_DIR/docker/" "$SSH_USER@$SSH_HOST:$REMOTE_DIR/docker/" --exclude 'mysql' || true
+rsync -avzO "$LOCAL_DIR/docker/" "$SSH_USER@$SSH_HOST:$REMOTE_DIR/docker/" --exclude 'mysql' --exclude 'cloudflare' || true
 
 ok "Files copied!"
 

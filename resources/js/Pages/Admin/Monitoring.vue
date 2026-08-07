@@ -53,7 +53,7 @@
 
         <!-- Storage Health -->
         <div class="rounded-2xl p-6 mb-6 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
-            <h3 class="font-semibold text-gray-900 mb-4">💾 Storage Health</h3>
+            <h3 class="font-semibold text-slate-100 mb-4">💾 Storage Health</h3>
 
             <div v-for="alert in health.system_alerts" :key="alert.message" class="p-3 rounded-lg text-sm flex items-start gap-3 mb-3" :class="alert.type === 'danger' ? 'bg-red-50 border border-red-200 text-red-700' : 'bg-yellow-50 border border-yellow-200 text-yellow-700'">
                 {{ alert.message }}
@@ -94,11 +94,11 @@
                     </p>
                 </div>
 
-                <!-- MySQL Data -->
-                <div class="p-4 bg-slate-800/50 rounded-lg">
-                    <p class="text-sm font-medium text-slate-300 mb-1">🗄️ MySQL Data (Docker)</p>
-                    <p class="text-lg font-bold text-gray-900">{{ storageHealth?.mysql_data_size || '?' }}</p>
-                    <p class="text-xs text-slate-400 mt-2">Data tersimpan di Docker volume</p>
+                <!-- MySQL Data (only when backend can measure it — no fake metrics) -->
+                <div v-if="storageHealth?.mysql_data_size !== null && storageHealth?.mysql_data_size !== undefined" class="p-4 bg-slate-800/50 rounded-lg">
+                    <p class="text-sm font-medium text-slate-300 mb-1">🗄️ MySQL Data</p>
+                    <p class="text-lg font-bold text-slate-100">{{ storageHealth?.mysql_data_size }}</p>
+                    <p class="text-xs text-slate-400 mt-2">Data tersimpan di database</p>
                 </div>
             </div>
         </div>
@@ -107,8 +107,8 @@
         <div v-if="backupHealth" class="rounded-2xl p-6 mb-6 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
             <div class="flex items-center justify-between">
                 <div>
-                    <h3 class="font-semibold text-gray-900">📦 Backup Status</h3>
-                    <p class="text-sm mt-1" :class="backupHealth.status === 'healthy' ? 'text-green-600' : backupHealth.status === 'critical' ? 'text-red-600' : 'text-yellow-600'">
+                    <h3 class="font-semibold text-slate-100">📦 Backup Status</h3>
+                    <p class="text-sm mt-1" :class="backupHealth.status === 'healthy' ? 'text-emerald-400' : backupHealth.status === 'critical' ? 'text-red-400' : 'text-amber-400'">
                         {{ backupHealth.message }}
                     </p>
                 </div>
@@ -130,18 +130,18 @@
             </div>
             <div class="rounded-2xl p-5 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
                 <p class="text-sm text-slate-400">Error Hari Ini</p>
-                <p class="text-2xl font-bold mt-1" :class="errorsToday > 0 ? 'text-red-600' : 'text-green-600'">{{ errorsToday }}</p>
+                <p class="text-2xl font-bold mt-1" :class="errorsToday > 0 ? 'text-red-400' : 'text-emerald-400'">{{ errorsToday }}</p>
             </div>
             <div class="rounded-2xl p-5 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
                 <p class="text-sm text-slate-400">Total Revenue Platform</p>
-                <p class="text-2xl font-bold mt-1 text-green-600">Rp {{ formatNumber(aggregate?.total_revenue || 0) }}</p>
+                <p class="text-2xl font-bold mt-1 text-emerald-400">Rp {{ formatNumber(aggregate?.total_revenue || 0) }}</p>
             </div>
         </div>
 
         <!-- Tenant Stats Table -->
         <div class="rounded-2xl overflow-hidden mb-6 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
             <div class="px-6 py-4 border-b flex justify-between">
-                <h3 class="font-semibold text-gray-900">Tenant Usage</h3>
+                <h3 class="font-semibold text-slate-100">Tenant Usage</h3>
                 <Link :href="route('admin.sync-all-stats')" method="post" as="button" class="text-xs text-indigo-600 border border-indigo-200 px-2 py-1 rounded hover:bg-indigo-50">
                     Sync All
                 </Link>

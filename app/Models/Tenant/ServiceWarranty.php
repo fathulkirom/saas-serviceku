@@ -11,9 +11,18 @@ class ServiceWarranty extends Model
 
     public function service() { return $this->belongsTo(Service::class); }
 
+    /** BR-FIX-04 — All claims raised against this store warranty. */
+    public function claims() { return $this->hasMany(ServiceWarrantyClaim::class, 'service_warranty_id'); }
+
     public function isActive(): bool
     {
-        return $this->status === 'active' && $this->end_date->isFuture();
+        if ($this->status !== 'active') {
+            return false;
+        }
+        if ($this->end_date === null) {
+            return false;
+        }
+        return $this->end_date->isFuture();
     }
 
     public function daysRemaining(): int

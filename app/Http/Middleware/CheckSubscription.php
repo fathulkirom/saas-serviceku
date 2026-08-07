@@ -29,12 +29,12 @@ class CheckSubscription
                 ], 403);
             }
 
-            // Bisa akses halaman settings untuk upgrade
-            if ($request->routeIs('settings.*')) {
+            // Bisa akses halaman pengaturan/tagihan untuk upgrade
+            if ($this->isUpgradeRoute($request)) {
                 return $next($request);
             }
 
-            return redirect()->route('settings.index')
+            return redirect()->route('pengaturan.index', ['tab' => 'tagihan'])
                 ->with('error', '⏰ Masa trial habis. Perbarui paket untuk melanjutkan.');
         }
 
@@ -46,12 +46,12 @@ class CheckSubscription
                 ], 403);
             }
 
-            // Bisa akses halaman settings untuk upgrade
-            if ($request->routeIs('settings.*')) {
+            // Bisa akses halaman pengaturan/tagihan untuk upgrade
+            if ($this->isUpgradeRoute($request)) {
                 return $next($request);
             }
 
-            return redirect()->route('settings.index')
+            return redirect()->route('pengaturan.index', ['tab' => 'tagihan'])
                 ->with('error', '⏰ Masa langganan habis. Perbarui paket untuk melanjutkan.');
         }
 
@@ -90,10 +90,29 @@ class CheckSubscription
                 ], 403);
             }
 
-            return redirect()->route('settings.index')
+            // Bisa akses halaman pengaturan/tagihan untuk upgrade
+            if ($this->isUpgradeRoute($request)) {
+                return $next($request);
+            }
+
+            return redirect()->route('pengaturan.index', ['tab' => 'tagihan'])
                 ->with('error', '⏰ Masa langganan habis. Perbarui paket untuk melanjutkan.');
         }
 
         return $next($request);
+    }
+
+    /**
+     * Route yang boleh diakses tenant non-aktif (untuk upgrade/renewal).
+     */
+    private function isUpgradeRoute(Request $request): bool
+    {
+        return $request->routeIs('settings.*')
+            || $request->routeIs('pengaturan.index')
+            || $request->routeIs('payment.initiate')
+            || $request->routeIs('billing.apply-voucher')
+            || $request->routeIs('payment.callback')
+            || $request->routeIs('payment.finish')
+            || $request->routeIs('logout');
     }
 }

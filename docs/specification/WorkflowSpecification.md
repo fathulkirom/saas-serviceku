@@ -46,16 +46,12 @@ stateDiagram-v2
     Keranjang --> Draft: Simpan draft
     Draft --> Selesai: Finalisasi
     Keranjang --> Selesai: Checkout langsung
-    Selesai --> Pending: Menunggu pembayaran
-    Pending --> Success: Bayar (cash/transfer/QR)
-    Pending --> Failed: Gagal
-    Pending --> Expired: Kedaluwarsa
-    Success --> Refunded: Retur/refund (owner/admin)
-    Failed --> Void
-    Expired --> Void
+    Selesai --> Paid: Bayar (cash/transfer/QR)
+    Selesai --> Cancel: Dibatalkan
+    Draft --> Cancel
 ```
 
-**Status payment** (source): `pending`, `success`, `failed`, `expired`, `refunded`.
+**Status payment** (source — tenant `Sale.php`): `draft`, `paid`, `cancel`. Retur/refund ditangani entitas terpisah `SaleReturn` (bukan status). *(Catatan: status `pending/success/failed/expired/refunded` adalah milik model central `Payment` untuk billing subscription Midtrans — bukan POS tenant.)*
 
 ---
 

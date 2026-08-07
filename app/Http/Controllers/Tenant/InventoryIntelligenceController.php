@@ -16,15 +16,21 @@ use Illuminate\Http\Request;
  */
 class InventoryIntelligenceController extends Controller
 {
-    /** Inventory dashboard */
+    /** Inventory dashboard — READ scoped to own + visible branches (BR-005). */
     public function dashboard()
     {
+        // BR-FIX-02 (BR-005): no longer global. The dashboard shows stock the
+        // user may READ (own branch + configured branch_visibility branches).
+        $visible = \App\Services\BranchAccessService::visibleBranchIds(auth()->user());
+
         $stats = [
-            'total_items' => Product::count(),
-            'stock_value' => Product::sum(\DB::raw('stock_quantity * cost_price')),
-            'low_stock' => Product::where('stock_status', 'low')->orWhereColumn('stock_quantity', '<=', 'min_stock')->count(),
-            'out_of_stock' => Product::where('stock_quantity', 0)->count(),
-            'recent_movements' => InventoryMutation::with('product', 'creator')->latest()->take(20)->get(),
+            'total_items' => Product::whereIn('branch_id', $visible)->count(),
+            'stock_value' => Product::whereIn('branch_id', $visible)->sum(\DB::raw('stock_quantity * cost_price')),
+            'low_stock' => Product::whereIn('branch_id', $visible)->where(fn($q) => $q->where('stock_status', 'low')->orWhereColumn('stock_quantity', '<=', 'min_stock'))->count(),
+            'out_of_stock' => Product::whereIn('branch_id', $visible)->where('stock_quantity', 0)->count(),
+            'recent_movements' => InventoryMutation::with('product', 'creator')
+                ->whereIn('branch_id', $visible)
+                ->latest()->take(20)->get(),
         ];
 
         return inertia('Inventaris/Dashboard', ['stats' => $stats]);
@@ -44,57 +50,37 @@ class InventoryIntelligenceController extends Controller
         ]);
     }
 
-    /** Approve part request from technician */
+    /**
+     * Approve part request from technician → RESERVES stock.
+     * BR-FIX-01 (BR-009): approval must NOT reduce physical stock.
+     */
     public function approvePart(ServiceRequiredPart $part)
     {
-        $product = Product::find($part->product_id);
-        if (!$product || $product->stock_quantity < $part->qty) {
-            return back()->with('error', 'Stok tidak mencukupi.');
+        try {
+            $part->approve();
+            return back()->with('success', 'Part disetujui. Stok di-reservasi (stok fisik tidak berubah).');
+        } catch (\RuntimeException $e) {
+            return back()->with('error', $e->getMessage());
         }
-
-        $before = $product->stock_quantity;
-        $part->reserve();
-        $product->reduceStock($part->qty);
-
-        InventoryMutation::create([
-            'product_id' => $product->id,
-            'type' => 'service_usage',
-            'quantity' => -$part->qty,
-            'before_stock' => $before,
-            'after_stock' => $product->fresh()->stock_quantity,
-            'unit_cost' => $product->cost_price,
-            'reference_type' => 'service_required_part',
-            'reference_id' => $part->id,
-            'note' => "Service #{$part->service_id}",
-            'created_by' => auth()->id(),
-        ]);
-
-        event(new \App\Events\Entity\StockUsed($product, $part->qty));
-        return back()->with('success', 'Part disetujui. Stok berkurang.');
     }
 
-    /** Return unused part to stock */
+    /**
+     * Return part to stock.
+     * BR-FIX-01 (BR-008): reserved-only parts are released (no stock change);
+     * consumed parts restore stock + reversal mutation.
+     */
     public function returnPart(ServiceRequiredPart $part)
     {
-        $product = Product::find($part->product_id);
-        $before = $product->stock_quantity;
-        $part->return();
-        $product->increaseStock($part->qty);
-
-        InventoryMutation::create([
-            'product_id' => $product->id,
-            'type' => 'return',
-            'quantity' => $part->qty,
-            'before_stock' => $before,
-            'after_stock' => $product->fresh()->stock_quantity,
-            'reference_type' => 'service_required_part',
-            'reference_id' => $part->id,
-            'note' => "Return from Service #{$part->service_id}",
-            'created_by' => auth()->id(),
-        ]);
-
-        event(new \App\Events\Entity\StockReturned($product, $part->qty));
-        return back()->with('success', 'Part dikembalikan ke stok.');
+        try {
+            if (in_array($part->status, ServiceRequiredPart::RESERVED_STATES, true)) {
+                $part->releaseReservation(auth()->id(), 'Dikembalikan dari inventaris');
+                return back()->with('success', 'Reservasi part dilepaskan. Stok fisik tidak berubah.');
+            }
+            $part->returnToStock(auth()->id(), 'Dikembalikan dari inventaris');
+            return back()->with('success', 'Part dikembalikan ke stok.');
+        } catch (\RuntimeException $e) {
+            return back()->with('error', $e->getMessage());
+        }
     }
 
     /** Service profit calculation */

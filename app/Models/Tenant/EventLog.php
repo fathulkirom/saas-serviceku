@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Model;
 class EventLog extends Model
 {
     protected $table = 'event_logs';
+
     public $timestamps = false;
 
     protected $fillable = [
@@ -30,8 +31,15 @@ class EventLog extends Model
         'version' => 'int',
     ];
 
-    public function actor()  { return $this->belongsTo(User::class, 'actor_id'); }
-    public function branch() { return $this->belongsTo(Branch::class, 'branch_id'); }
+    public function actor()
+    {
+        return $this->belongsTo(User::class, 'actor_id');
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class, 'branch_id');
+    }
 
     // ======== SCOPES — Projection Views ========
 
@@ -39,8 +47,8 @@ class EventLog extends Model
     public function scopeTimeline($query, string $entityType, int $entityId)
     {
         return $query->where('entity_type', $entityType)
-                     ->where('entity_id', $entityId)
-                     ->orderBy('occurred_at');
+            ->where('entity_id', $entityId)
+            ->orderBy('occurred_at');
     }
 
     /** Activity view: events by a specific actor */
@@ -50,12 +58,15 @@ class EventLog extends Model
     }
 
     /** Audit view: all status change events across entities */
-    public function scopeAuditTrail($query, string $entityType = null)
+    public function scopeAuditTrail($query, ?string $entityType = null)
     {
         $q = $query->whereIn('event_key', ['WorkflowStateChanged', 'RequestCreated', 'RequestCompleted',
             'RequestCancelled', 'ServiceCreated', 'ServiceCompleted', 'ServiceCancelled',
             'WorkOrderCreated', 'WorkOrderCompleted', 'PaymentReceived']);
-        if ($entityType) $q->where('entity_type', $entityType);
+        if ($entityType) {
+            $q->where('entity_type', $entityType);
+        }
+
         return $q->orderBy('occurred_at', 'desc');
     }
 
@@ -63,6 +74,6 @@ class EventLog extends Model
     public function scopeAnalytics($query, string $eventKey, $from, $to)
     {
         return $query->where('event_key', $eventKey)
-                     ->whereBetween('occurred_at', [$from, $to]);
+            ->whereBetween('occurred_at', [$from, $to]);
     }
 }

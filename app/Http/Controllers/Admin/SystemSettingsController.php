@@ -18,8 +18,11 @@ class SystemSettingsController extends Controller
                 "registration" => SystemSetting::getGroup("registration"),
                 "maintenance" => SystemSetting::getGroup("maintenance"),
                 "mail" => SystemSetting::getGroup("mail"),
+                // PILOT-MAIL-04R — transactional mail (Resend) status.
+                // Masked only — never the raw API key.
+                "mail_resend" => \App\Services\TransactionalMailService::status(),
             ],
-            "featureFlags" => FeatureFlagService::all(),
+            "featureFlags" => FeatureFlagService::allWithMeta(),
         ]);
     }
 
@@ -44,16 +47,37 @@ class SystemSettingsController extends Controller
             "mail_password" => "nullable|string|max:255",
             "mail_from_address" => "nullable|email",
             "mail_from_name" => "nullable|string|max:255",
+            // PILOT-MAIL-04R — transactional mail (Resend) settings.
+            "mail_resend_provider" => "nullable|in:off,resend",
+            "mail_resend_api_key" => "nullable|string|max:255",
+            "mail_resend_from_address" => "nullable|email",
+            "mail_resend_from_name" => "nullable|string|max:255",
+            "mail_resend_reply_to" => "nullable|email",
         ]);
 
         foreach ($validated as $key => $value) {
+            // API key is stored encrypted and handled separately (blank = retain).
+            if ($key === 'mail_resend_api_key') {
+                continue;
+            }
             $group = match (true) {
+                str_starts_with($key, 'mail_resend_') => 'mail_resend',
                 str_starts_with($key, 'mail_') => 'mail',
                 in_array($key, ['registration_open', 'require_approval', 'default_plan_slug', 'default_trial_days']) => 'registration',
                 in_array($key, ['maintenance_mode', 'maintenance_message']) => 'maintenance',
                 default => 'general',
             };
             SystemSetting::setValue($key, $value, $group);
+        }
+
+        // Resend API key: blank = retain existing secret; provided = replace
+        // (encrypted at rest — never stored/serialized as plaintext).
+        if ($request->filled('mail_resend_api_key')) {
+            SystemSetting::setValue(
+                'mail_resend_api_key',
+                encrypt($request->input('mail_resend_api_key')),
+                'mail_resend'
+            );
         }
 
         \App\Services\MailConfigService::apply();
@@ -85,13 +109,25 @@ class SystemSettingsController extends Controller
     public function testMail(Request $request)
     {
         $request->validate(['email' => 'required|email']);
-        $success = \App\Services\MailConfigService::test($request->email);
+
+        // PILOT-MAIL-04R: route through the canonical transactional mail
+        // service (Resend when provider is configured; env mailer otherwise).
+        $success = \App\Services\TransactionalMailService::sendTest($request->email);
+
+        // Record honest status for the mail settings UI.
+        SystemSetting::setValue(
+            'mail_resend_last_test_result',
+            $success ? 'success' : 'failed',
+            'mail_resend'
+        );
+        SystemSetting::setValue('mail_resend_last_test_at', now()->toDateTimeString(), 'mail_resend');
+
         if ($success) {
             SystemLog::info("Test email sent to {$request->email}");
             return back()->with("success", "✅ Email test berhasil dikirim ke {$request->email}. Cek inbox/spam Anda.");
         }
         SystemLog::error("Test email failed to {$request->email}");
-        return back()->with("error", "❌ Gagal mengirim email. Periksa konfigurasi SMTP Anda.");
+        return back()->with("error", "❌ Gagal mengirim email. Periksa konfigurasi Resend/SMTP Anda.");
     }
 
     public function logs(Request $request)

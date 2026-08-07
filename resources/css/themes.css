@@ -4,21 +4,21 @@
        Clean, premium, consistent SaaS colors
        ============================================ */
 
-    /* ── Primary (Blue) ── */
-    --primary: #2563EB;
-    --primary-hover: #1D4ED8;
-    --primary-soft: #DBEAFE;
-    --primary-soft-border: #BFDBFE;
+    /* ── Primary (Teal) ── */
+    --primary: #0F766E;
+    --primary-hover: #115E59;
+    --primary-soft: #CCFBF1;
+    --primary-soft-border: #99F6E4;
 
     /* ── Backgrounds ── */
-    --bg-app: #F8FAFC;
+    --bg-app: #F6F8FB;
     --bg-card: #FFFFFF;
-    --bg-hover: #F1F5F9;
+    --bg-hover: #EEF2F6;
     --bg-input: #FFFFFF;
-    --bg-sidebar: #0F172A;
-    --bg-sidebar-hover: rgba(255,255,255,0.06);
-    --bg-sidebar-active: rgba(37,99,235,0.15);
-    --bg-header: #FFFFFF;
+    --bg-sidebar: #102A2C;
+    --bg-sidebar-hover: rgba(255,255,255,0.08);
+    --bg-sidebar-active: rgba(20,184,166,0.18);
+    --bg-header: rgba(255,255,255,0.88);
     --bg-elevated: #FFFFFF;
     --bg-surface: #FFFFFF;
     --bg-surface-hover: #F8FAFC;
@@ -33,9 +33,9 @@
     --text-sidebar-active: #FFFFFF;
 
     /* ── Borders & Dividers ── */
-    --border-color: #E5E7EB;
-    --border-light: #F1F5F9;
-    --border-focus: rgba(37,99,235,0.4);
+    --border-color: #DDE5EE;
+    --border-light: #EAF0F6;
+    --border-focus: rgba(15,118,110,0.34);
 
     /* ── Semantic Colors ── */
     --success: #22C55E;
@@ -63,13 +63,13 @@
     --info-text: #0369A1;
 
     /* ── Shadows ── */
-    --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
-    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-    --shadow-md: 0 4px 6px rgba(0,0,0,0.05), 0 2px 4px rgba(0,0,0,0.05);
-    --shadow-lg: 0 10px 15px rgba(0,0,0,0.06), 0 4px 6px rgba(0,0,0,0.04);
-    --shadow-xl: 0 20px 25px rgba(0,0,0,0.08), 0 8px 10px rgba(0,0,0,0.04);
-    --shadow-card: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-    --shadow-glow: 0 0 20px rgba(37,99,235,0.12);
+    --shadow-xs: 0 1px 2px rgba(15,23,42,0.04);
+    --shadow-sm: 0 1px 2px rgba(15,23,42,0.05);
+    --shadow-md: 0 8px 24px rgba(15,23,42,0.07);
+    --shadow-lg: 0 18px 44px rgba(15,23,42,0.10);
+    --shadow-xl: 0 28px 70px rgba(15,23,42,0.14);
+    --shadow-card: 0 1px 2px rgba(15,23,42,0.05), 0 12px 28px rgba(15,23,42,0.06);
+    --shadow-glow: 0 0 0 4px rgba(15,118,110,0.10);
 
     /* ── Radii ── */
     --radius-sm: 0.5rem;

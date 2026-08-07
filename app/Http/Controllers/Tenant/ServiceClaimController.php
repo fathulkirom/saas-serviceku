@@ -5,50 +5,52 @@ namespace App\Http\Controllers\Tenant;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Service;
 use App\Models\Tenant\ActivityLog;
+use App\Services\BranchAccessService;
+use App\Services\WarrantyService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ServiceClaimController extends Controller
 {
+    /**
+     * BR-FIX-04.1 — Canonical warranty claim OPENING (complaint recording only).
+     * Creates a `submitted` claim; NO approval, NO rework Service yet. An
+     * authorized approval (decideClaim) creates the rework later.
+     */
     public function createWarrantyClaim(Request $request, Service $service)
     {
         $user = Auth::user();
 
         $this->authorize('create', Service::class);
-        $this->ensureServiceBranchAccess($service, $user?->branch_id);
 
-        if (!$service->isWarrantyValid()) {
-            return back()->with('error', 'Garansi servis ini sudah berakhir.');
+        // BR-FIX-02/04 — branch-safe: only a user with access to the service's
+        // custody branch may open a claim (legit cross-branch allowed).
+        $custodyBranchId = $service->currentCustodyBranchId() ?? $service->branch_id;
+        if (!BranchAccessService::canAccess($user, $custodyBranchId)) {
+            return back()->with('error', 'Servis tidak berada pada cabang yang berwenang.');
+        }
+
+        // Canonical eligibility — backend source of truth (no frontend text).
+        if (!WarrantyService::isEligibleForStoreWarranty($service)) {
+            return back()->with('error', 'Garansi servis ini sudah berakhir atau tidak berlaku.');
         }
 
         $validated = $request->validate(['problem_description' => 'nullable|string']);
 
-        $claimService = Service::create([
-            'branch_id' => $service->branch_id, 'customer_id' => $service->customer_id,
-            'created_by' => $user->id, 'technician_id' => $service->technician_id,
-            'status' => Service::STATUS_MENUNGGU_ALOKASI,
-            'problem_description' => $validated['problem_description'] ?? 'Klaim garansi dari servis #' . $service->id,
-            'is_warranty_claim' => true, 'parent_service_id' => $service->id,
-            'service_charge' => 0, 'total_cost' => 0,
-            'posisi_unit' => $service->posisi_unit, 'kategori_perangkat_id' => $service->kategori_perangkat_id,
-            'merek_id' => $service->merek_id, 'tipe_unit' => $service->tipe_unit,
-            'imei_sn' => $service->imei_sn,
-        ]);
+        $handlingBranchId = $request->input('branch_id') ? (int) $request->input('branch_id') : (int) ($user->branch_id ?? $custodyBranchId);
 
-        ActivityLog::log('warranty_claim', 'Klaim garansi servis #' . $service->id . ' → #' . $claimService->id, $claimService);
-        return redirect()->route('services.show', $claimService->id)->with('success', 'Klaim garansi berhasil dibuat. Biaya Rp 0.');
-    }
-
-    private function ensureServiceBranchAccess(Service $service, $userBranchId): void
-    {
-        if (!$userBranchId || !$service->branch_id) {
-            return;
+        try {
+            $claim = WarrantyService::openClaim(
+                $service,
+                $user,
+                $validated['problem_description'] ?? 'Klaim garansi dari servis #' . $service->id,
+                $handlingBranchId
+            );
+        } catch (\InvalidArgumentException $e) {
+            return back()->with('error', $e->getMessage());
         }
 
-        if ((string) $service->branch_id !== (string) $userBranchId) {
-            throw \Illuminate\Validation\ValidationException::withMessages([
-                'service' => 'Servis tidak berada pada cabang aktif Anda.',
-            ]);
-        }
+        return back()->with('success', 'Klaim garansi #' . $claim->claim_number . ' dibuka dan menunggu persetujuan.');
     }
 }
+

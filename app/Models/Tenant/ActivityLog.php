@@ -8,51 +8,86 @@ use Illuminate\Database\Eloquent\Model;
  * Universal Activity Log — polymorphic, append-only.
  * Foundation for ActivityEngine (full impl in later sprint).
  *
- * Schema (Sprint 7.2C):
- *   entity_type, entity_id, event, description, metadata, actor_id, branch_id, created_at
- *
- * Backward compatible: log() signature preserved.
+ * Schema (Sprint 1.0 — actual migration):
+ *   user_id, action, subject_type, subject_id, description, properties, ip_address, user_agent, created_at
  */
 class ActivityLog extends Model
 {
     protected $table = 'activity_logs';
-    public $timestamps = false;
 
     protected $fillable = [
-        'entity_type', 'entity_id', 'event', 'description', 'metadata',
-        'actor_id', 'branch_id',
+        'user_id', 'action', 'subject_type', 'subject_id',
+        'description', 'properties', 'ip_address', 'user_agent',
     ];
 
     protected $casts = [
-        'metadata' => 'json',
+        'properties' => 'json',
         'created_at' => 'datetime',
     ];
 
     public function actor()
     {
-        return $this->belongsTo(User::class, 'actor_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function entity()
     {
-        return $this->morphTo('entity', 'entity_type', 'entity_id');
+        return $this->morphTo('subject', 'subject_type', 'subject_id');
     }
 
     /**
      * Backward-compatible log method.
-     * Old signature: log(string $action, string $description=null, $subject=null, array $properties=[])
-     * New columns: event=$action, description=$description, entity=$subject, metadata=$properties
      */
-    public static function log(string $action, string $description = null, $subject = null, array $properties = []): self
+    public static function log(string $action, ?string $description = null, $subject = null, array $properties = []): self
     {
         return static::create([
-            'event'       => $action,
-            'description' => $description,
-            'entity_type' => $subject ? get_class($subject) : null,
-            'entity_id'   => $subject ? $subject->getKey() : null,
-            'metadata'    => $properties ? json_encode($properties) : null,
-            'actor_id'    => auth()->id(),
-            'branch_id'   => session('current_branch_id'),
+            'action'       => $action,
+            'description'  => $description,
+            'subject_type' => $subject ? get_class($subject) : null,
+            'subject_id'   => $subject ? $subject->getKey() : null,
+            'properties'   => $properties ? json_encode($properties) : null,
+            'user_id'      => auth()->id(),
+            'ip_address'   => request()->ip(),
         ]);
+    }
+
+    /**
+     * Alias for backward compatibility — some code references 'event' not 'action'.
+     */
+    public function getEventAttribute(): ?string
+    {
+        return $this->action;
+    }
+
+    /**
+     * Alias for backward compatibility — some code references 'entity_type'.
+     */
+    public function getEntityTypeAttribute(): ?string
+    {
+        return $this->subject_type;
+    }
+
+    /**
+     * Alias for backward compatibility — some code references 'entity_id'.
+     */
+    public function getEntityIdAttribute(): ?string
+    {
+        return $this->subject_id;
+    }
+
+    /**
+     * Alias for backward compatibility — some code references 'actor_id'.
+     */
+    public function getActorIdAttribute(): ?int
+    {
+        return $this->user_id;
+    }
+
+    /**
+     * Alias for backward compatibility — some code references 'metadata'.
+     */
+    public function getMetadataAttribute()
+    {
+        return $this->properties;
     }
 }

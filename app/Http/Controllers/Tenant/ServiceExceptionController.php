@@ -8,6 +8,8 @@ use App\Models\Tenant\ServiceDelivery;
 use App\Models\Tenant\ServiceDiagnosis;
 use App\Models\Tenant\ServiceDiagnosisHistory;
 use App\Models\Tenant\ServiceWarrantyClaim;
+use App\Services\BranchAccessService;
+use App\Services\WarrantyService;
 use Illuminate\Http\Request;
 
 /**
@@ -18,44 +20,78 @@ class ServiceExceptionController extends Controller
 {
     // ======== WARRANTY CLAIMS ========
 
-    /** Submit warranty claim */
+    /**
+     * Submit warranty claim — BR-FIX-04: canonical flow (eligibility →
+     * ServiceWarrantyClaim → NEW linked rework Service). The previous
+     * `$service->warranty` relation did not exist and always bailed; fixed.
+     */
     public function createClaim(Request $request, Service $service)
     {
-        $this->authorize('update', $service);
-        $warranty = $service->warranty;
-        if (!$warranty || !$warranty->isActive()) {
+        $this->authorize('create', Service::class);
+
+        $user = auth()->user();
+        $custodyBranchId = $service->currentCustodyBranchId() ?? $service->branch_id;
+        if (!BranchAccessService::canAccess($user, $custodyBranchId)) {
+            return back()->with('error', 'Servis tidak berada pada cabang yang berwenang.');
+        }
+
+        if (!WarrantyService::isEligibleForStoreWarranty($service)) {
             return back()->with('error', 'Garansi tidak aktif atau sudah expired.');
         }
 
         $data = $request->validate(['problem_description' => 'required|string']);
-        $claim = ServiceWarrantyClaim::create([
-            'service_warranty_id' => $warranty->id,
-            'customer_id' => $service->customer_id,
-            'service_id' => $service->id,
-            'problem_description' => $data['problem_description'],
-            'status' => 'submitted',
-        ]);
+        $handlingBranchId = $request->input('branch_id') ? (int) $request->input('branch_id') : (int) ($user->branch_id ?? $custodyBranchId);
 
-        event(new \App\Events\Entity\WarrantyClaimCreated($claim));
-        return back()->with('success', 'Klaim garansi #' . $claim->claim_number . ' dibuat.');
-    }
-
-    /** Approve/reject claim */
-    public function decideClaim(Request $request, ServiceWarrantyClaim $claim)
-    {
-        $this->authorize('update', $claim->service);
-        $data = $request->validate([
-            'decision' => 'required|in:approve,reject',
-            'note' => 'nullable|string',
-        ]);
-
-        if ($data['decision'] === 'approve') {
-            $claim->approve(auth()->id(), $data['note'] ?? null);
-        } else {
-            $claim->reject(auth()->id(), $data['note'] ?? 'Ditolak.');
+        try {
+            $claim = WarrantyService::openClaim($service, $user, $data['problem_description'], $handlingBranchId);
+        } catch (\InvalidArgumentException $e) {
+            return back()->with('error', $e->getMessage());
         }
 
-        return back()->with('success', 'Klaim ' . ($data['decision'] === 'approve' ? 'disetujui' : 'ditolak') . '.');
+        return back()->with('success', 'Klaim garansi #' . $claim->claim_number . ' dibuat (rework #' . $claim->rework_service_id . ').');
+    }
+
+    /**
+     * Approve/reject claim — BR-FIX-04.1.
+     * Stronger authority (finance-level operational approval) + branch access.
+     * Approve creates the NEW rework Service exactly once; reject never does.
+     * The original Service is never modified.
+     */
+    public function decideClaim(Request $request, ServiceWarrantyClaim $claim)
+    {
+        $user = auth()->user();
+        if (!$user->canManageFinance()) {
+            abort(403, 'Tidak berwenang menyetujui/menolak klaim garansi.');
+        }
+
+        $custody = $claim->service?->currentCustodyBranchId() ?? $claim->service?->branch_id;
+        if (!BranchAccessService::canAccess($user, $custody)) {
+            abort(403, 'Klaim di luar jangkauan cabang Anda.');
+        }
+
+        $data = $request->validate([
+            'decision' => 'required|in:approve,reject',
+            'note' => 'nullable|string|required_if:decision,reject',
+        ], [
+            'note.required_if' => 'Alasan penolakan wajib diisi.',
+        ]);
+
+        try {
+            if ($data['decision'] === 'approve') {
+                $claim = WarrantyService::approveClaim($claim, $user, $data['note'] ?? null);
+            } else {
+                $claim = WarrantyService::rejectClaim($claim, $user, $data['note']);
+            }
+        } catch (\InvalidArgumentException $e) {
+            return back()->with('error', $e->getMessage());
+        }
+
+        return back()->with(
+            'success',
+            $data['decision'] === 'approve'
+                ? 'Klaim disetujui' . ($claim->rework_service_id ? ' — rework #' . $claim->rework_service_id . ' dibuat.' : '.')
+                : 'Klaim ditolak.'
+        );
     }
 
     // ======== DIAGNOSIS REVISION ========

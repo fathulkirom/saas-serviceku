@@ -16,7 +16,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
             <!-- Info Tenant -->
             <div class="lg:col-span-2 rounded-2xl  p-6">
-                <h3 class="font-semibold text-gray-900 mb-4">Informasi Tenant</h3>
+                <h3 class="font-semibold text-slate-100 mb-4">Informasi Tenant</h3>
                 <div class="grid grid-cols-2 gap-4 text-sm">
                     <div>
                         <p class="text-slate-400">Nama Toko</p>
@@ -52,9 +52,6 @@
                     </div>
                 </div>
                 <div class="mt-4 flex flex-wrap gap-2">
-                    <a v-if="domainUrl" :href="domainUrl" target="_blank" class="px-4 py-2 bg-indigo-600 text-white rounded-md text-sm hover:bg-indigo-700 inline-block">
-                        🔗 Buka Toko
-                    </a>
                     <Link :href="route('admin.tenant.login-as', tenant.id)" method="post" as="button" class="px-4 py-2 bg-emerald-600 text-white rounded-md text-sm hover:bg-emerald-700">
                         🔑 Login as Tenant
                     </Link>
@@ -70,14 +67,14 @@
 
                 <!-- Domain Management -->
                 <div class="mt-6 pt-4 border-t">
-                    <h4 class="font-semibold text-gray-900 mb-3 text-sm">Domain / Subdomain</h4>
+                    <h4 class="font-semibold text-slate-100 mb-3 text-sm">Domain / Subdomain</h4>
                     <div v-if="tenant.domains?.length > 0" class="mb-2">
                         <p class="text-xs text-slate-400">Domain saat ini:</p>
                         <p v-for="d in tenant.domains" :key="d.id" class="text-sm font-mono text-indigo-600">{{ d.domain }}</p>
                     </div>
                     <p v-else class="text-xs text-slate-400 mb-2">Belum ada domain</p>
                     <form @submit.prevent="updateDomain" class="flex gap-2">
-                        <KInput  type="text" v-model="domainForm.domain" class="flex-1 rounded-md border-slate-600 shadow-sm text-sm" placeholder="contoh: tokoku.serviceku.app" required />
+                        <KInput  type="text" v-model="domainForm.domain" class="flex-1 rounded-md border-slate-600 shadow-sm text-sm" placeholder="contoh: tokoku.serviceku.my.id" required />
                         <KButton  type="submit" :disabled="domainForm.processing" class="px-3 py-2 bg-indigo-600 text-white rounded-md text-sm hover:bg-indigo-700 disabled:opacity-50">Simpan</KButton>
                     </form>
                     <p class="text-xs text-slate-400 mt-2">Gunakan Cloudflare Tunnel untuk mengarahkan domain ke server lokal.</p>
@@ -86,7 +83,7 @@
 
             <!-- Stats Card -->
             <div class="rounded-2xl  p-6">
-                <h3 class="font-semibold text-gray-900 mb-4">📊 Penggunaan</h3>
+                <h3 class="font-semibold text-slate-100 mb-4">📊 Penggunaan</h3>
                 <div v-if="stats" class="space-y-4">
                     <div>
                         <div class="flex justify-between text-sm"><span class="text-slate-400">Users</span><span class="font-medium">{{ stats.users_count }}</span></div>
@@ -97,7 +94,7 @@
                         <div class="w-full bg-slate-700 rounded-full h-2 mt-1"><div class="bg-blue-500 h-2 rounded-full" :style="{ width: Math.min(100, (stats.services_count / 50) * 100) + '%' }"></div></div>
                     </div>
                     <div class="flex justify-between text-sm"><span class="text-slate-400">Penjualan</span><span class="font-medium">{{ stats.sales_count }}</span></div>
-                    <div class="flex justify-between text-sm"><span class="text-slate-400">Total Revenue</span><span class="font-medium text-green-600">Rp {{ formatNumber(stats.total_revenue) }}</span></div>
+                    <div class="flex justify-between text-sm"><span class="text-slate-400">Total Revenue</span><span class="font-medium text-emerald-400">Rp {{ formatNumber(stats.total_revenue) }}</span></div>
                     <div class="flex justify-between text-sm"><span class="text-slate-400">Produk</span><span class="font-medium">{{ stats.products_count }}</span></div>
                     <div class="flex justify-between text-sm"><span class="text-slate-400">Storage</span><span class="font-medium">{{ stats.storage_used_mb }} MB</span></div>
                     <div class="flex justify-between text-sm"><span class="text-slate-400">Terakhir Aktif</span><span class="font-medium">{{ stats.last_active_at || '-' }}</span></div>
@@ -110,7 +107,7 @@
         <div v-if="tenantData" class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <!-- Recent Services -->
             <div class="rounded-2xl  p-6">
-                <h3 class="font-semibold text-gray-900 mb-3">🔧 Servis Terbaru</h3>
+                <h3 class="font-semibold text-slate-100 mb-3">🔧 Servis Terbaru</h3>
                 <div v-if="tenantData.recent_services?.length" class="space-y-2">
                     <div v-for="svc in tenantData.recent_services" :key="svc.id" class="flex justify-between items-center p-2 hover:bg-slate-800/50 rounded">
                         <div>
@@ -125,7 +122,7 @@
 
             <!-- Recent Sales -->
             <div class="rounded-2xl  p-6">
-                <h3 class="font-semibold text-gray-900 mb-3">💰 Penjualan Terbaru</h3>
+                <h3 class="font-semibold text-slate-100 mb-3">💰 Penjualan Terbaru</h3>
                 <div v-if="tenantData.recent_sales?.length" class="space-y-2">
                     <div v-for="s in tenantData.recent_sales" :key="s.id" class="flex justify-between items-center p-2 hover:bg-slate-800/50 rounded">
                         <div>
@@ -134,7 +131,7 @@
                         </div>
                         <div class="text-right">
                             <p class="text-sm font-medium">Rp {{ formatNumber(s.total) }}</p>
-                            <span class="text-xs" :class="s.payment_status === 'paid' ? 'text-green-600' : 'text-yellow-600'">{{ s.payment_status }}</span>
+                            <span class="text-xs" :class="s.payment_status === 'paid' ? 'text-emerald-400' : 'text-amber-400'">{{ s.payment_status }}</span>
                         </div>
                     </div>
                 </div>
@@ -147,21 +144,21 @@
             <div class="rounded-2xl  p-4 flex items-center gap-3">
                 <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-lg">🔧</div>
                 <div>
-                    <p class="text-lg font-bold text-gray-900">{{ tenantData.service_stats?.total || 0 }}</p>
+                    <p class="text-lg font-bold text-slate-100">{{ tenantData.service_stats?.total || 0 }}</p>
                     <p class="text-xs text-slate-400">Total Servis ({{ tenantData.service_stats?.completed || 0 }} selesai)</p>
                 </div>
             </div>
             <div class="rounded-2xl  p-4 flex items-center gap-3">
                 <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center text-lg">💰</div>
                 <div>
-                    <p class="text-lg font-bold text-green-600">Rp {{ formatNumber(tenantData.monthly_revenue) }}</p>
+                    <p class="text-lg font-bold text-emerald-400">Rp {{ formatNumber(tenantData.monthly_revenue) }}</p>
                     <p class="text-xs text-slate-400">Revenue Bulan Ini</p>
                 </div>
             </div>
             <div class="rounded-2xl  p-4 flex items-center gap-3">
                 <div class="w-10 h-10 rounded-lg bg-purple-100 flex items-center justify-center text-lg">📦</div>
                 <div>
-                    <p class="text-lg font-bold text-gray-900">{{ tenantData.recent_services?.length || 0 }}</p>
+                    <p class="text-lg font-bold text-slate-100">{{ tenantData.recent_services?.length || 0 }}</p>
                     <p class="text-xs text-slate-400">Servis Aktif</p>
                 </div>
             </div>
@@ -169,7 +166,7 @@
 
         <!-- Row 4: Aktivitas -->
         <div class="rounded-2xl  p-6">
-            <h3 class="font-semibold text-gray-900 mb-3">📋 Aktivitas Terakhir</h3>
+            <h3 class="font-semibold text-slate-100 mb-3">📋 Aktivitas Terakhir</h3>
             <div v-if="activityLogs?.length" class="space-y-2">
                 <div v-for="log in activityLogs" :key="log.id" class="flex items-start gap-3 p-2 hover:bg-slate-800/50 rounded">
                     <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs mt-0.5" :class="log.level === 'error' ? 'bg-red-100' : log.level === 'warning' ? 'bg-yellow-100' : 'bg-slate-800'">
@@ -202,13 +199,6 @@ const props = defineProps({
 });
 
 const formatNumber = (num) => new Intl.NumberFormat('id-ID').format(num || 0);
-
-const domainUrl = computed(() => {
-    if (props.tenant.domains?.length > 0) {
-        return 'http://' + props.tenant.domains[0].domain + '/login';
-    }
-    return null;
-});
 
 const businessTypeLabel = computed(() => ({
     full_service: 'Servis & Sparepart',

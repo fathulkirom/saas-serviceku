@@ -42,13 +42,13 @@
 | Create | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
 | Read | ✅ | ✅ | ✅ | ❌ | ✅ | 👁 |
 | Update | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
-| Delete | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
+| Delete | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ |
 | Transfer stok | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
 | Adjust stok | ✅ | 👁 | ✅ | ❌ | ❌ | ❌ |
 | Reorder | ✅ | ✅ | ✅ | ❌ | ❌ | ❌ |
 | Quick Stock | ✅ | 👁 | 👁 | ❌ | ❌ | ❌ |
 
-*Dari `manage_products`; transfer/adjust butuh feature `transfer_stock`; `quick_stock` hanya di `owner` (source).*
+*Dari `manage_products`; Delete mengikuti capability `delete_models` (owner/admin — sinkron dengan `ProductPolicy`); transfer/adjust butuh feature `transfer_stock`; `quick_stock` hanya di `owner` (source).*
 
 ### 1.4 Penjualan (POS)
 | Operasi | Owner | Manager | Admin | CS | Kasir | Teknisi |

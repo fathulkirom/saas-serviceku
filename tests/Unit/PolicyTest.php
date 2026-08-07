@@ -27,11 +27,13 @@ class PolicyTest extends TestCase
         $this->assertTrue($policy->viewAny($user));
     }
 
-    public function test_service_policy_view_any_for_cashier_should_fail()
+    // PILOT-READY-01: cashier is granted service.view (counter invoice/pay/
+    // pickup journey) — the Service menu is shown to cashier, so viewAny must pass.
+    public function test_service_policy_view_any_for_cashier()
     {
         $user = new User(['role' => 'cashier']);
         $policy = new ServicePolicy();
-        $this->assertFalse($policy->viewAny($user));
+        $this->assertTrue($policy->viewAny($user));
     }
 
     public function test_service_policy_delete_for_owner()

@@ -14,14 +14,14 @@
         </template>
 
         <!-- Flash Message -->
-        <div v-if="$page.props.flash?.success" class="mb-4 p-4 rounded-xl border flex items-center gap-3" style="background: rgba(34,197,94,0.1); border-color: rgba(34,197,94,0.2);">
+        <div v-if="$page.props.flash?.success" class="mb-4 p-4 rounded-xl border flex items-center gap-3 bg-emerald-500/10 border-emerald-500/20">
             <p class="text-sm text-emerald-300">{{ $page.props.flash.success }}</p>
         </div>
 
         <!-- Plan Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div v-for="plan in plans" :key="plan.id" class="rounded-2xl p-6 border transition-all duration-300 hover:-translate-y-0.5 bg-slate-900/50 border-slate-800 backdrop-blur-xl"
-                :style="plan.is_active ? { borderTop: '3px solid var(--primary)' } : { borderTop: '3px solid var(--border-color)' }">
+                :class="plan.is_active ? 'border-t-[3px] border-t-indigo-500' : 'border-t-[3px] border-t-slate-700'">
                 <div class="flex justify-between items-start">
                     <h3 class="text-lg font-bold text-slate-200">{{ plan.name }}</h3>
                     <span class="px-2 py-1 text-xs font-medium rounded-full whitespace-nowrap" :class="plan.is_active ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'">
@@ -31,24 +31,24 @@
                 <div class="mt-2 flex items-baseline gap-2">
                     <template v-if="plan.is_promo_active">
                         <p class="text-xl text-slate-400 line-through">Rp {{ formatNumber(plan.price) }}</p>
-                        <p class="text-3xl font-bold text-red-600">Rp {{ formatNumber(plan.promo_price) }}</p>
+                        <p class="text-3xl font-bold text-red-400">Rp {{ formatNumber(plan.promo_price) }}</p>
                         <span class="px-1.5 py-0.5 text-[10px] font-bold bg-red-100 text-red-700 rounded">DISKON {{ plan.discount_percent }}%</span>
                     </template>
                     <template v-else>
-                        <p class="text-3xl font-bold text-indigo-600">Rp {{ formatNumber(plan.price) }}</p>
+                        <p class="text-3xl font-bold text-indigo-400">Rp {{ formatNumber(plan.price) }}</p>
                     </template>
                 </div>
                 <p class="text-sm text-slate-400">/bulan</p>
-                <p v-if="plan.is_promo_active && plan.promo_end" class="text-xs text-red-500 mt-1">Berakhir: {{ plan.promo_end }}</p>
+                <p v-if="plan.is_promo_active && plan.promo_end" class="text-xs text-red-400 mt-1">Berakhir: {{ plan.promo_end }}</p>
                 <p class="text-sm text-slate-400 mt-2">{{ plan.description || '-' }}</p>
 
                 <div class="mt-4 space-y-1.5 text-sm text-slate-400">
-                    <p v-if="plan.trial_days > 0" class="text-green-600">✓ Trial {{ plan.trial_days }} hari</p>
+                    <p v-if="plan.trial_days > 0" class="text-emerald-400">✓ Trial {{ plan.trial_days }} hari</p>
                     <template v-for="(val, key) in getCardFeatures(plan)" :key="key">
                         <p v-if="KNOWN_FEATURES[key]">
                             {{ featureLabel(key) }}:
                             <span class="font-medium"
-                                :class="val === 'full' || val === true ? 'text-green-600' : val === 'read_only' ? 'text-yellow-600' : 'text-red-400'">
+                                :class="val === 'full' || val === true ? 'text-emerald-400' : val === 'read_only' ? 'text-amber-400' : 'text-red-400'">
                                 {{ accessLevelLabel(val) }}
                             </span>
                         </p>
@@ -74,7 +74,7 @@
         <div v-if="showModal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50" @click.self="closeModal">
             <div class="rounded-2xl border" style="background: var(--bg-card); border-color: var(--border-color); box-shadow: var(--shadow-lg); w-full max-w-lg mx-4 max-h-[90vh] overflow-y-auto">
                 <div class="p-6">
-                    <h3 class="text-lg font-bold text-gray-900 mb-4">{{ isEditing ? 'Edit Paket' : 'Tambah Paket Baru' }}</h3>
+                    <h3 class="text-lg font-bold text-slate-100 mb-4">{{ isEditing ? 'Edit Paket' : 'Tambah Paket Baru' }}</h3>
 
                     <form @submit.prevent="submitForm">
                         <div class="grid grid-cols-2 gap-4">
@@ -82,14 +82,14 @@
                                 <label class="block text-sm font-medium text-slate-300">Nama Paket</label>
                                 <KInput  v-model="form.name" type="text" required
                                     class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
-                                <p v-if="form.errors?.name" class="mt-1 text-xs text-red-600">{{ form.errors.name }}</p>
+                                <p v-if="form.errors?.name" class="mt-1 text-xs text-red-400">{{ form.errors.name }}</p>
                             </div>
                             <div class="col-span-2 sm:col-span-1">
                                 <label class="block text-sm font-medium text-slate-300">Slug</label>
                                 <KInput  v-model="form.slug" type="text" required
                                     class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"
                                     :readonly="isEditing" />
-                                <p v-if="form.errors?.slug" class="mt-1 text-xs text-red-600">{{ form.errors.slug }}</p>
+                                <p v-if="form.errors?.slug" class="mt-1 text-xs text-red-400">{{ form.errors.slug }}</p>
                             </div>
                             <div class="col-span-2">
                                 <label class="block text-sm font-medium text-slate-300">Deskripsi</label>
@@ -100,7 +100,7 @@
                                 <label class="block text-sm font-medium text-slate-300">Harga Normal (Rp)</label>
                                 <KInput  v-model.number="form.price" name="price" type="number" min="0" required
                                     class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm" />
-                                <p v-if="form.errors?.price" class="mt-1 text-xs text-red-600">{{ form.errors.price }}</p>
+                                <p v-if="form.errors?.price" class="mt-1 text-xs text-red-400">{{ form.errors.price }}</p>
                             </div>
                             <div class="col-span-2 sm:col-span-1">
                                 <label class="block text-sm font-medium text-slate-300">Trial (hari)</label>
@@ -196,7 +196,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <p v-if="form.errors?.features" class="mt-1 text-xs text-red-600">{{ form.errors.features }}</p>
+                            <p v-if="form.errors?.features" class="mt-1 text-xs text-red-400">{{ form.errors.features }}</p>
                         </div>
 
                         <!-- Business Types -->
@@ -208,7 +208,7 @@
                                     class="flex items-start gap-2 p-2 rounded border cursor-pointer hover:bg-slate-800/50"
                                     :class="selectedBusinessTypes.includes(key) ? 'border-indigo-300 bg-indigo-50' : 'border-slate-700'">
                                     <KCheckbox  :value="key" v-model="selectedBusinessTypes"
-                                        class="mt-0.5 rounded border-slate-600 text-indigo-600 shadow-sm focus:ring-indigo-500" />
+                                        class="mt-0.5 rounded border-slate-600 text-indigo-400 shadow-sm focus:ring-indigo-500" />
                                     <span class="text-sm text-slate-300">{{ label }}</span>
                                 </label>
                             </div>
@@ -251,7 +251,10 @@ const showModal = ref(false);
 const isEditing = ref(false);
 const editingPlan = ref(null);
 
-// Daftar fitur yang dikenal dengan labelnya
+// Daftar fitur yang dikenal dengan labelnya.
+// PLATFORM-SYNC-01 (STEP 5): must cover every feature the seeder writes —
+// cash_register & master_data were missing, so saving a plan silently DROPPED
+// them (data loss on the Paket page).
 const KNOWN_FEATURES = {
     services: 'Manajemen Servis',
     customers: 'Data Pelanggan',
@@ -268,6 +271,8 @@ const KNOWN_FEATURES = {
     deposits: 'Setor Harian',
     checklist: 'Template Ceklis',
     indents: 'Indent / Pre-order',
+    cash_register: 'Manajemen Shift Kasir',
+    master_data: 'Master Data',
 };
 
 const ACCESS_LEVELS = [

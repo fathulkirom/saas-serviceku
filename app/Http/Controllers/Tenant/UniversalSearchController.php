@@ -40,9 +40,12 @@ class UniversalSearchController extends Controller
         Product::where('name', 'like', "%{$q}%")->orWhere('sku', 'like', "%{$q}%")->orWhere('barcode', 'like', "%{$q}%")->limit(5)->get()
             ->each(fn($p) => $results->push(['type' => 'product', 'icon' => '📦', 'label' => $p->name, 'description' => "SKU: {$p->sku} · Stock: {$p->stock_quantity}", 'url' => route('products.index')]));
 
-        // Sales
-        Sale::where('id', 'like', "%{$q}%")->orWhere('invoice_number', 'like', "%{$q}%")->with('customer')->limit(5)->get()
-            ->each(fn($s) => $results->push(['type' => 'sale', 'icon' => '🛒', 'label' => "Invoice #{$s->invoice_number}", 'description' => $s->customer?->name . ' · Rp ' . number_format($s->total), 'url' => '#']));
+        // Sales — note: tenant sales table has no invoice_number column, so
+        // search by id / customer name only (avoids an unknown-column error).
+        Sale::where('id', 'like', "%{$q}%")
+            ->orWhereHas('customer', fn($c) => $c->where('name', 'like', "%{$q}%"))
+            ->with('customer')->limit(5)->get()
+            ->each(fn($s) => $results->push(['type' => 'sale', 'icon' => '🛒', 'label' => "Invoice #{$s->id}", 'description' => $s->customer?->name . ' · Rp ' . number_format($s->total), 'url' => '#']));
 
         // WorkOrders
         WorkOrder::where('title', 'like', "%{$q}%")->with('service.customer')->limit(5)->get()

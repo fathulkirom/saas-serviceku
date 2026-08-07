@@ -37,9 +37,11 @@ class SystemSettingSeeder extends Seeder
 
         // Mail settings default (menggunakan log untuk development)
         SystemSetting::setValue('mail_driver', 'log', 'mail');
-        SystemSetting::setValue('mail_host', 'smtp.gmail.com', 'mail');
+        SystemSetting::setValue('mail_provider', 'resend', 'mail');
+        SystemSetting::setValue('mail_host', 'smtp.resend.com', 'mail');
         SystemSetting::setValue('mail_port', '587', 'mail');
         SystemSetting::setValue('mail_encryption', 'tls', 'mail');
+        SystemSetting::setValue('mail_username', 'resend', 'mail');
         SystemSetting::setValue('mail_from_address', 'notifications@serviceku.my.id', 'mail');
         SystemSetting::setValue('mail_from_name', 'ServiceKU', 'mail');
     }

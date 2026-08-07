@@ -146,9 +146,18 @@ class ReportController extends Controller
         $expenses = $this->scopeBranch(Expense::class, $branchId)->with('creator')->whereBetween('expense_date', [$dates['start'], $dates['end']])->get();
         $deposits = DailyDeposit::with('creator')->whereBetween('deposit_date', [$dates['start'], $dates['end']])->get();
 
+        // BR-FIX-04.1: refunds are a real cash-out (Expense line + SaleRefund
+        // event). Gross revenue stays historical; net profit reflects refunds
+        // via the expenses line. `refunds` is shown for clarity.
+        $refunds = \App\Models\Tenant\SaleRefund::query()
+            ->when($branchId, fn($q) => $q->where('branch_id', $branchId))
+            ->whereBetween('refunded_at', [$dates['start'], $dates['end']])
+            ->get();
+
         $summary = [
             'revenue' => $sales->sum('total'),
             'expenses' => $expenses->sum('amount'),
+            'refunds' => $refunds->sum('amount'),
             'profit' => $sales->sum('total') - $expenses->sum('amount'),
             'total_deposits' => $deposits->sum('amount'),
             'sales_count' => $sales->count(),

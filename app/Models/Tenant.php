@@ -36,9 +36,44 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         'data' => 'json',
     ];
 
+    /**
+     * Override VirtualColumn: kolom-kolom ini adalah real database columns,
+     * BUKAN disimpan di JSON 'data'. Mencegah konflik data ganda.
+     */
+    public static function getCustomColumns(): array
+    {
+        return [
+            'id',
+            'tenant_name',
+            'slug',
+            'email',
+            'phone',
+            'subdomain',
+            'plan_id',
+            'subscription_status',
+            'trial_ends_at',
+            'subscribed_at',
+            'subscription_ends_at',
+            'is_active',
+            'data',
+            'created_at',
+            'updated_at',
+        ];
+    }
+
     public function plan()
     {
         return $this->belongsTo(Plan::class);
+    }
+
+    /**
+     * PLATFORM-SYNC-01 (STEP 21): slugs reserved for platform/central use.
+     * Single source of truth — shared by registration (slug collision guard)
+     * and tenant lookup (exclude reserved slugs from store search).
+     */
+    public static function reservedSlugs(): array
+    {
+        return ['admin', 'kirom', 'www', 'api', 'mail', 'ftp', 'dev', 'staging', 'test', 'demo', 'app', 'web', 'blog', 'shop', 'help', 'support'];
     }
 
     public function stats()
