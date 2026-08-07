@@ -130,6 +130,49 @@ class SettingController extends Controller
             'canManageCustomFields' => auth()->user()->canManageCustomFields(),
 
             'waGateway' => fn() => \App\Models\Tenant\WaGatewayConfig::where('tenant_id', tenancy()->tenant->id)->first(),
+
+            // Tenant email config — per-tenant SMTP override (tenant owns their email).
+            'tenantMail' => fn() => [
+                'enabled' => TenantSetting::getValue('mail_enabled', 'false') === 'true',
+                'host' => TenantSetting::getValue('mail_host', ''),
+                'port' => TenantSetting::getValue('mail_port', '587'),
+                'encryption' => TenantSetting::getValue('mail_encryption', 'tls'),
+                'username' => TenantSetting::getValue('mail_username', ''),
+                'has_password' => TenantSetting::getValue('mail_password', '') !== '',
+                'from_address' => TenantSetting::getValue('mail_from_address', ''),
+                'from_name' => TenantSetting::getValue('mail_from_name', ''),
+            ],
         ]);
+    }
+
+    /**
+     * Save tenant-level email (SMTP) configuration.
+     * Tenant operational emails use this config; platform emails (OTP, welcome,
+     * reset password) remain on the central Resend.
+     */
+    public function updateEmail(Request $request)
+    {
+        $validated = $request->validate([
+            'mail_enabled' => 'required|in:true,false',
+            'mail_host' => 'nullable|string|max:255',
+            'mail_port' => 'nullable|integer|min:1|max:65535',
+            'mail_encryption' => 'nullable|in:tls,ssl,',
+            'mail_username' => 'nullable|string|max:255',
+            'mail_password' => 'nullable|string|max:255',
+            'mail_from_address' => 'nullable|email',
+            'mail_from_name' => 'nullable|string|max:255',
+        ]);
+
+        foreach ($validated as $key => $value) {
+            if ($key === 'mail_password' && ($value === '' || $value === '••••••••')) {
+                continue; // preserve existing password
+            }
+            TenantSetting::setValue($key, $value);
+        }
+
+        // Re-apply mail config so the tenant's next email uses these settings.
+        \App\Services\MailConfigService::apply();
+
+        return back()->with('success', 'Konfigurasi email toko berhasil disimpan.');
     }
 }

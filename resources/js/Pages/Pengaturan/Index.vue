@@ -287,6 +287,66 @@
         </div>
       </template>
 
+      <!-- EMAIL TOKO — per-tenant SMTP (tenant owns their email config) -->
+      <template #email>
+        <div class="space-y-6 mt-6">
+          <form @submit.prevent="submitEmail" class="bg-white rounded-2xl border border-zinc-200 shadow-sm p-6 space-y-5">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="text-lg font-bold text-zinc-900">Konfigurasi Email Toko</h3>
+                <p class="text-sm text-zinc-500 mt-0.5">Email operasional toko (notifikasi customer, invoice) menggunakan SMTP sendiri. Email platform (OTP, reset password) tetap via ServiceKU.</p>
+              </div>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" v-model="emailForm.mail_enabled" true-value="true" false-value="false" class="sr-only peer">
+                <div class="w-11 h-6 bg-zinc-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                <span class="ml-3 text-sm font-medium text-zinc-700">{{ emailForm.mail_enabled === 'true' ? 'Aktif' : 'Nonaktif' }}</span>
+              </label>
+            </div>
+
+            <div v-if="emailForm.mail_enabled === 'true'" class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-zinc-100">
+              <div class="col-span-2">
+                <label class="block text-sm font-medium text-zinc-700 mb-1">SMTP Host</label>
+                <KInput  v-model="emailForm.mail_host" placeholder="smtp.gmail.com" class="w-full rounded-xl border-zinc-300 text-sm" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-zinc-700 mb-1">Port</label>
+                <KInput  type="number" v-model="emailForm.mail_port" placeholder="587" class="w-full rounded-xl border-zinc-300 text-sm" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-zinc-700 mb-1">Enkripsi</label>
+                <KSelect  v-model="emailForm.mail_encryption" class="w-full rounded-xl border-zinc-300 text-sm">
+                  <option value="tls">TLS</option>
+                  <option value="ssl">SSL</option>
+                  <option value="">Tidak Ada</option>
+                </KSelect>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-zinc-700 mb-1">Username</label>
+                <KInput  v-model="emailForm.mail_username" placeholder="user@domain.com" class="w-full rounded-xl border-zinc-300 text-sm" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-zinc-700 mb-1">Password</label>
+                <KInput  type="password" v-model="emailForm.mail_password" :placeholder="tenantMail?.has_password ? 'Tersimpan — kosongkan untuk mempertahankan' : ''" autocomplete="new-password" class="w-full rounded-xl border-zinc-300 text-sm" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-zinc-700 mb-1">From Email</label>
+                <KInput  type="email" v-model="emailForm.mail_from_address" placeholder="toko@domain.com" class="w-full rounded-xl border-zinc-300 text-sm" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-zinc-700 mb-1">From Name</label>
+                <KInput  v-model="emailForm.mail_from_name" placeholder="Nama Toko" class="w-full rounded-xl border-zinc-300 text-sm" />
+              </div>
+            </div>
+
+            <div class="flex justify-end pt-3 border-t border-zinc-100">
+              <KButton  type="submit" :disabled="emailForm.processing" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md hover:shadow-lg transition-all">
+                {{ emailForm.processing ? 'Menyimpan...' : 'Simpan Pengaturan Email' }}
+              </KButton>
+            </div>
+          </form>
+        </div>
+      </template>
+
       <!-- TAGIHAN / VOUCHER -->
       <template #tagihan>
         <div class="space-y-8 mt-6">
@@ -559,6 +619,7 @@ const props = defineProps({
   demoStats: { type: Object, default: null },
   customFields: { type: [Object, Array], default: null },
   waGateway: { type: Object, default: null },
+  tenantMail: { type: Object, default: () => ({}) },
   canManageCustomFields: { type: Boolean, default: false },
 });
 
@@ -608,6 +669,22 @@ const waForm = useForm({
 
 function submitWaGateway() {
   waForm.post(route('settings.whatsapp-gateway.update'), { preserveScroll: true });
+}
+
+// Email Form — tenant SMTP config
+const emailForm = useForm({
+  mail_enabled: props.tenantMail?.enabled ? 'true' : 'false',
+  mail_host: props.tenantMail?.host || '',
+  mail_port: props.tenantMail?.port || '587',
+  mail_encryption: props.tenantMail?.encryption || 'tls',
+  mail_username: props.tenantMail?.username || '',
+  mail_password: '', // never pre-fill password
+  mail_from_address: props.tenantMail?.from_address || '',
+  mail_from_name: props.tenantMail?.from_name || '',
+});
+
+function submitEmail() {
+  emailForm.post(route('pengaturan.email'), { preserveScroll: true });
 }
 
 // Custom Field Drawer
@@ -689,6 +766,7 @@ const tabs = computed(() => {
     { key: 'profil', label: 'Profil' },
     { key: 'settings', label: 'Referensi' },
     { key: 'wa', label: 'WA Notifikasi' },
+    { key: 'email', label: 'Email Toko' },
     { key: 'tagihan', label: 'Tagihan' },
     { key: 'demo', label: 'Demo' },
   ];
@@ -698,7 +776,7 @@ const tabs = computed(() => {
   return base;
 });
 
-const tabLabels = { profil: 'Profil', settings: 'Referensi', wa: 'WA Notifikasi', tagihan: 'Tagihan', demo: 'Demo', 'custom-fields': 'Kolom Kustom' };
+const tabLabels = { profil: 'Profil', settings: 'Referensi', wa: 'WA Notifikasi', email: 'Email Toko', tagihan: 'Tagihan', demo: 'Demo', 'custom-fields': 'Kolom Kustom' };
 const pageTitle = computed(() => 'Pengaturan — ' + (tabLabels[activeTab.value] || 'Profil'));
 const subtitle = computed(() => currentDate.value);
 
