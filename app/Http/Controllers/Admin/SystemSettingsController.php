@@ -126,8 +126,15 @@ class SystemSettingsController extends Controller
             SystemLog::info("Test email sent to {$request->email}");
             return back()->with("success", "✅ Email test berhasil dikirim ke {$request->email}. Cek inbox/spam Anda.");
         }
-        SystemLog::error("Test email failed to {$request->email}");
-        return back()->with("error", "❌ Gagal mengirim email. Periksa konfigurasi Resend/SMTP Anda.");
+
+        // MAIL-CONSOLIDATE-01: honest failure — never pretend success or
+        // silently test a different provider (legacy SMTP).
+        $provider = \App\Services\TransactionalMailService::provider();
+        $message = $provider !== 'resend'
+            ? '❌ Provider transaksional nonaktif (Off). Aktifkan Resend di pengaturan Email Transaksional.'
+            : '❌ Resend belum dikonfigurasi. Lengkapi Resend API Key dan From Email di pengaturan Email Transaksional.';
+        SystemLog::error("Test email failed to {$request->email} (provider: {$provider})");
+        return back()->with("error", $message);
     }
 
     public function logs(Request $request)

@@ -194,6 +194,8 @@ class PilotMailSettingsTest extends TestCase
     public function test_otp_sent_to_correct_recipient_via_register_route(): void
     {
         Mail::fake();
+        // MAIL-CONSOLIDATE-01: OTP must go through the canonical Resend path.
+        $this->configureResend();
         $email = 'owner_'.uniqid().'@example.com';
 
         $resp = $this->post(route('register.otp.send'), [
@@ -332,5 +334,65 @@ class PilotMailSettingsTest extends TestCase
 
         $this->assertSame('', SystemSetting::getValue('mail_resend_reply_to') ?? '');
         Mail::assertSent(\App\Mail\SystemTestMail::class, fn ($m) => $m->hasTo('user@example.com'));
+    }
+
+    // ── MAIL-CONSOLIDATE-01 ────────────────────────────────────────────────
+    // Canonical path is Resend HTTP API only; NO silent legacy SMTP fallback.
+
+    // ── 17. Provider=off test mail fails honestly (no SMTP fallback) ──
+    public function test_provider_off_test_mail_fails_honestly(): void
+    {
+        Mail::fake();
+        $admin = $this->makeAdmin();
+        $this->actingAs($admin);
+        // Provider is 'off' by default (no mail_resend_provider set).
+
+        $this->assertFalse(
+            TransactionalMailService::sendTest('user@example.com'),
+            'Provider off must NOT fall back to legacy SMTP.'
+        );
+
+        $this->post(route('admin.settings.test-mail'), ['email' => 'user@example.com'])
+            ->assertSessionHas('error');
+
+        $this->assertSame('failed', SystemSetting::getValue('mail_resend_last_test_result'));
+    }
+
+    // ── 18. Provider=resend but unconfigured fails honestly ──
+    public function test_resend_unconfigured_test_mail_fails_honestly(): void
+    {
+        Mail::fake();
+        $admin = $this->makeAdmin();
+        $this->actingAs($admin);
+        // Provider = resend, but NO API key / from configured.
+        SystemSetting::setValue('mail_resend_provider', 'resend', 'mail_resend');
+
+        $this->assertFalse(
+            TransactionalMailService::sendTest('user@example.com'),
+            'Resend without a key must fail honestly (no SMTP fallback).'
+        );
+
+        $this->post(route('admin.settings.test-mail'), ['email' => 'user@example.com'])
+            ->assertSessionHas('error');
+    }
+
+    // ── 19. OTP with provider off fails honestly (no SMTP fallback) ──
+    public function test_otp_with_provider_off_fails_honestly(): void
+    {
+        Mail::fake();
+        // Provider 'off' (default). OTP must NOT silently fall back to SMTP.
+        $this->assertFalse(
+            TransactionalMailService::sendOtp('user@example.com', '654321', 'Toko'),
+            'OTP with provider off must fail honestly.'
+        );
+    }
+
+    // ── 20. Legacy SMTP backend retained (backward compatibility) ──
+    public function test_legacy_mail_config_service_still_functional(): void
+    {
+        Mail::fake();
+        // Legacy backend kept (not deleted) for legacy Mail:: paths; it is NOT
+        // used for OTP / platform transactional mail anymore.
+        $this->assertTrue(\App\Services\MailConfigService::test('legacy@example.com'));
     }
 }

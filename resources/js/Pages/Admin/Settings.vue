@@ -94,10 +94,17 @@
                 </form>
             </div>
 
-            <!-- EMAIL / SMTP SETTINGS -->
-            <div class="rounded-2xl p-6 mb-6 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
+            <!-- LEGACY SMTP / ADVANCED (MAIL-CONSOLIDATE-01): collapsed so the
+                 normal view shows ONE canonical transactional mail setup.
+                 Kept for backward compatibility with legacy Mail:: paths only;
+                 NOT used for OTP / platform transactional mail. -->
+            <details class="rounded-2xl p-6 mb-6 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
+                <summary class="cursor-pointer select-none text-sm font-bold text-slate-400 hover:text-slate-300">
+                    🔧 Legacy SMTP / Advanced — tidak digunakan untuk OTP Resend
+                </summary>
+                <div class="mt-4">
                 <h3 class="text-lg font-semibold text-slate-100 mb-4">Email (SMTP)</h3>
-                <p class="text-sm text-slate-400 mb-4">Konfigurasi email untuk notifikasi pendaftaran tenant. Bisa pakai Gmail, SendGrid, atau email domain sendiri.</p>
+                <p class="text-sm text-slate-400 mb-4">Hanya untuk kompatibilitas email lama (bukan OTP). Platform transactional mail memakai Resend HTTP API.</p>
 
                 <div class="mb-4">
                     <label class="block text-sm font-medium text-slate-300 mb-1">Mail Driver</label>
@@ -155,13 +162,14 @@
                         </KButton>
                     </div>
                 </div>
-            </div>
+                </div>
+            </details>
 
-            <!-- TRANSACTIONAL MAIL (RESEND) — PILOT-MAIL-04R -->
+            <!-- EMAIL TRANSAKSIONAL (RESEND) — PILOT-MAIL-04R -->
             <div class="rounded-2xl p-6 mb-6 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
                 <div class="flex items-center justify-between mb-4">
                     <div>
-                        <h3 class="text-lg font-semibold text-slate-100">Transactional Mail (Resend)</h3>
+                        <h3 class="text-lg font-semibold text-slate-100">Email Transaksional (Resend)</h3>
                         <p class="text-sm text-slate-400">Email transaksional platform (registrasi OTP). API key dienkripsi; tidak pernah ditampilkan penuh.</p>
                     </div>
                     <span v-if="resendStatus.configured" class="text-xs font-bold px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300">✅ Terkonfigurasi</span>
@@ -172,7 +180,7 @@
                     <div>
                         <label class="block text-sm font-medium text-slate-300 mb-1">Provider</label>
                         <KSelect  v-model="form.mail_resend_provider" name="mail_resend_provider" class="w-full rounded-md border-slate-600 shadow-sm">
-                            <option value="off">Nonaktif (fallback env mailer)</option>
+                            <option value="off">Nonaktif (Off)</option>
                             <option value="resend">Resend API</option>
                         </KSelect>
                     </div>

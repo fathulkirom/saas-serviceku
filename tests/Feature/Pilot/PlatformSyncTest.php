@@ -9,6 +9,7 @@ use App\Models\Tenant;
 use App\Models\User;
 use App\Models\Voucher;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 /**
@@ -45,6 +46,18 @@ class PlatformSyncTest extends TestCase
             'email' => 'admin_'.uniqid().'@serviceku.my.id',
             'password' => bcrypt('secret123'),
         ]);
+    }
+
+    /**
+     * MAIL-CONSOLIDATE-01: the canonical OTP/test-mail path is Resend HTTP
+     * API (provider=resend + key + from). No SMTP fallback exists anymore.
+     */
+    protected function configureResend(string $key = 're_fake_test_key_1234567890'): void
+    {
+        SystemSetting::setValue('mail_resend_provider', 'resend', 'mail_resend');
+        SystemSetting::setValue('mail_resend_api_key', encrypt($key), 'mail_resend');
+        SystemSetting::setValue('mail_resend_from_address', 'noreply@serviceku.my.id', 'mail_resend');
+        SystemSetting::setValue('mail_resend_from_name', 'ServiceKU', 'mail_resend');
     }
 
     // ── 1. Basic plan: users = full, max_users = 3 ──
@@ -114,6 +127,10 @@ class PlatformSyncTest extends TestCase
     // ── 4. Selected register plan persists into the provisioning record ──
     public function test_selected_register_plan_persists_to_provisioning(): void
     {
+        // MAIL-CONSOLIDATE-01: OTP goes through the canonical Resend path.
+        Mail::fake();
+        $this->configureResend();
+
         $basic = Plan::where('slug', 'basic')->first();
         $email = 'owner_persist_'.uniqid().'@example.com';
 

@@ -110,32 +110,36 @@ class TransactionalMailService
     }
 
     /**
-     * Deliver a mailable via the canonical provider (Resend when configured) or
-     * the default env mailer as a safe fallback. Never throws; returns bool.
+     * Deliver a mailable via the canonical provider.
+     *
+     * MAIL-CONSOLIDATE-01: the canonical platform transactional path is
+     * Resend HTTP API only. Provider=off or unconfigured → honest failure
+     * (false). There is NO silent fallback to the legacy SMTP/default mailer —
+     * a registration OTP must never silently go through arbitrary SMTP.
      */
     public static function deliver(string $to, Mailable $mail): bool
     {
-        if (self::isResendConfigured()) {
-            return ResendTransactionalMail::deliver($to, $mail, self::fromSettings());
-        }
-
-        try {
-            Mail::to($to)->send($mail);
-            return true;
-        } catch (\Throwable $e) {
-            Log::warning('TransactionalMailService: default mailer send failed: '.$e->getMessage());
+        if (self::provider() !== self::PROVIDER_RESEND) {
             return false;
         }
+
+        return ResendTransactionalMail::deliver($to, $mail, self::fromSettings());
     }
 
-    /** Test email for the Central Admin "Kirim Email Tes" button. */
+    /**
+     * Test email for the Central Admin "Kirim Email Tes" button.
+     *
+     * MAIL-CONSOLIDATE-01: the test MUST exercise the SAME canonical path as
+     * OTP (Resend HTTP API). It must NOT silently test legacy SMTP when the
+     * provider is Resend. Unconfigured/off → honest failure (false).
+     */
     public static function sendTest(string $to): bool
     {
-        if (self::isResendConfigured()) {
-            return ResendTransactionalMail::sendRawTest($to, self::fromSettings());
+        if (self::provider() !== self::PROVIDER_RESEND) {
+            return false;
         }
 
-        return \App\Services\MailConfigService::test($to);
+        return ResendTransactionalMail::sendRawTest($to, self::fromSettings());
     }
 
     protected static function fromSettings(): array
