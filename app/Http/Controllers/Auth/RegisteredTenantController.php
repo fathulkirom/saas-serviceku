@@ -305,9 +305,11 @@ class RegisteredTenantController extends Controller
         $portSuffix = ($isLocalDomain && !in_array($requestPort, [80, 443], true)) ? ':' . $requestPort : '';
         $tenantLoginUrl = $scheme . '://' . $tenantHost . $portSuffix . '/login';
 
-        // Kirim email selamat datang
+        // Kirim email selamat datang — canonical provider first, legacy SMTP fallback.
         try {
-            Mail::to($data['email'])->send(new WelcomeMail($tenant, $data['password'], $tenantLoginUrl));
+            \App\Services\TransactionalMailService::sendWelcome(
+                $data['email'], $tenant, $data['password'], $tenantLoginUrl
+            );
         } catch (\Exception $e) {
             Log::warning('Gagal kirim email welcome: ' . $e->getMessage());
         }

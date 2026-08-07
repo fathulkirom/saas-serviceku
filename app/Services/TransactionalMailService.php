@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Mail\OtpMail;
 use App\Models\SystemSetting;
+use App\Models\Tenant;
 use App\Services\Mail\ResendTransactionalMail;
 use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\Log;
@@ -188,6 +189,32 @@ class TransactionalMailService
             'from_name' => self::fromName(),
             'reply_to' => self::replyTo(),
         ];
+    }
+
+    /**
+     * Try the canonical provider first; fall back to legacy SMTP on failure.
+     *
+     * Use this for non-critical notifications (welcome, reset password, invoice)
+     * that should ALWAYS be delivered — the legacy SMTP is a safety net when the
+     * transactional provider is unavailable or unconfigured.
+     */
+    public static function tryDeliver(string $to, Mailable $mail): bool
+    {
+        $sent = self::deliver($to, $mail);
+        if (!$sent) {
+            Log::info('TransactionalMailService: canonical delivery failed; falling back to legacy SMTP.');
+            return self::deliverViaSmtp($to, $mail);
+        }
+        return $sent;
+    }
+
+    /**
+     * Send welcome email with transactional-service-first, SMTP-fallback pattern.
+     * Kept as a dedicated method so the controller stays clean.
+     */
+    public static function sendWelcome(string $to, Tenant $tenant, string $password, string $loginUrl): bool
+    {
+        return self::tryDeliver($to, new \App\Mail\WelcomeMail($tenant, $password, $loginUrl));
     }
 
     public static function mask(?string $value): string
