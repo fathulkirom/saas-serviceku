@@ -47,6 +47,25 @@ class MonitoringController extends Controller
         $storageHealth = $this->checkStorageHealth();
         $backupHealth = $this->checkBackupHealth();
 
+        // Queue monitoring — warn if jobs are piling up.
+        $queueStats = [
+            'pending' => 0,
+            'failed' => 0,
+        ];
+        try {
+            $queueStats['pending'] = DB::table('jobs')->count();
+            $queueStats['failed'] = DB::table('failed_jobs')->count();
+        } catch (\Exception $e) {
+            $queueStats['error'] = $e->getMessage();
+        }
+        // High-priority alert if failed jobs are accumulating.
+        if ($queueStats['failed'] > 5) {
+            $health['system_alerts'][] = [
+                'type' => 'danger',
+                'message' => "{$queueStats['failed']} failed jobs — check queue health.",
+            ];
+        }
+
         // PLATFORM-SYNC-01 (STEP 17): Monitoring.vue rendered 3 undefined props
         // (health.system_alerts, storageHealth.mysql_data_size,
         // backupHealth.file_count). Wire real values — no fake metrics.
@@ -66,6 +85,7 @@ class MonitoringController extends Controller
             "health" => $health,
             "storageHealth" => $storageHealth,
             "backupHealth" => $backupHealth,
+            "queueStats" => $queueStats,
         ]);
     }
 

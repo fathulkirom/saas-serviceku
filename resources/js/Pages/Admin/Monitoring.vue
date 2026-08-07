@@ -51,6 +51,29 @@
             </div>
         </div>
 
+        <!-- Queue Status -->
+        <div v-if="queueStats" class="rounded-2xl p-6 mb-6 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
+            <h3 class="font-semibold text-slate-100 mb-4">📬 Queue Status</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                <div class="p-3 bg-slate-800/50 rounded">
+                    <p class="text-xs text-slate-400">Pending Jobs</p>
+                    <p class="text-lg font-bold" :class="queueStats.pending > 10 ? 'text-amber-400' : 'text-emerald-400'">{{ queueStats.pending }}</p>
+                </div>
+                <div class="p-3 bg-slate-800/50 rounded">
+                    <p class="text-xs text-slate-400">Failed Jobs</p>
+                    <p class="text-lg font-bold" :class="queueStats.failed > 0 ? 'text-red-400' : 'text-emerald-400'">{{ queueStats.failed }}</p>
+                </div>
+                <div class="p-3 bg-slate-800/50 rounded">
+                    <p class="text-xs text-slate-400">Backup Files</p>
+                    <p class="text-lg font-bold text-indigo-400">{{ backupHealth?.file_count ?? 0 }}</p>
+                </div>
+                <div class="p-3 bg-slate-800/50 rounded">
+                    <p class="text-xs text-slate-400">DB Status</p>
+                    <p class="text-lg font-bold" :class="health.db_status === 'Connected' ? 'text-emerald-400' : 'text-red-400'">{{ health.db_status }}</p>
+                </div>
+            </div>
+        </div>
+
         <!-- Storage Health -->
         <div class="rounded-2xl p-6 mb-6 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
             <h3 class="font-semibold text-slate-100 mb-4">💾 Storage Health</h3>
@@ -195,6 +218,7 @@ const props = defineProps({
     health: { type: Object, default: () => ({}) },
     storageHealth: { type: Object, default: null },
     backupHealth: { type: Object, default: null },
+    queueStats: { type: Object, default: null },
 });
 
 const ssdBadgeClass = computed(() => ({
