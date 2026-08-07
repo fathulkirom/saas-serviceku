@@ -526,4 +526,35 @@ class PilotMailSettingsTest extends TestCase
         $this->assertStringNotContainsString('v-model="testEmail"', $src);
         $this->assertStringNotContainsString('sendResendTestEmail', $src);
     }
+
+    // ── 28. Provider=resend does NOT disable the legacy SMTP driver ──
+    public function test_provider_resend_preserves_legacy_smtp_driver(): void
+    {
+        $admin = $this->makeAdmin();
+        $this->actingAs($admin);
+        // Simulate an existing legacy SMTP setup (smtp driver + host).
+        SystemSetting::setValue('mail_driver', 'smtp', 'mail');
+        SystemSetting::setValue('mail_host', 'smtp.resend.com', 'mail');
+        $this->configureResend();
+
+        $this->post(route('admin.settings.update'), [
+            'app_name' => 'ServiceKU', 'app_description' => '',
+            'registration_open' => 'true', 'require_approval' => 'false',
+            'default_plan_slug' => 'pro', 'default_trial_days' => '14',
+            'maintenance_mode' => 'false', 'maintenance_message' => '',
+            'max_tenants' => '100', 'notify_email' => '',
+            'mail_driver' => 'smtp',
+            'mail_resend_provider' => 'resend',
+            'mail_resend_api_key' => '',
+            'mail_from_address' => 'noreply@serviceku.my.id', 'mail_from_name' => 'ServiceKU',
+            'mail_resend_from_address' => 'noreply@serviceku.my.id',
+            'mail_resend_from_name' => 'ServiceKU',
+            'mail_resend_reply_to' => '',
+        ])->assertSessionHas('success');
+
+        // Provider=resend must NOT force mail_driver to 'log' — the legacy SMTP
+        // driver stays intact so non-transactional Mail:: paths keep working.
+        $this->assertSame('smtp', SystemSetting::getValue('mail_driver'));
+        $this->assertSame('smtp.resend.com', SystemSetting::getValue('mail_host'));
+    }
 }

@@ -93,14 +93,17 @@ class SystemSettingsController extends Controller
             );
         }
 
-        // MAIL-UNIFY-01: keep the legacy default-mailer driver in sync with the
-        // canonical transactional provider so MailConfigService::apply() works.
+        // MAIL-UNIFY-01: when the canonical transactional provider is SMTP, keep
+        // the legacy default-mailer driver = smtp so MailConfigService::apply()
+        // configures the SMTP mailer for that path.
+        // IMPORTANT (fix): for resend/off we must NOT force mail_driver='log' —
+        // that would silently disable the legacy SMTP used by non-transactional
+        // Mail:: paths (welcome email, invoice email, tenant notifications).
+        // Leave mail_driver untouched unless the provider is explicitly SMTP.
         $provider = $request->input('mail_resend_provider', \App\Services\TransactionalMailService::PROVIDER_OFF);
-        SystemSetting::setValue(
-            'mail_driver',
-            $provider === \App\Services\TransactionalMailService::PROVIDER_SMTP ? 'smtp' : 'log',
-            'mail'
-        );
+        if ($provider === \App\Services\TransactionalMailService::PROVIDER_SMTP) {
+            SystemSetting::setValue('mail_driver', 'smtp', 'mail');
+        }
 
         \App\Services\MailConfigService::apply();
         SystemLog::info("System settings updated");
