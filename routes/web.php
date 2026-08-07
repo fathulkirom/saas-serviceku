@@ -17,31 +17,17 @@ use App\Http\Controllers\Admin\MonitoringController;
 Route::get('/', function () {
     $host = request()->getHost();
 
-    // Akses dari subdomain admin -> redirect ke panel admin
-    if (str_starts_with($host, 'kirom.')) {
-        $tenantDomain = \Stancl\Tenancy\Database\Models\Domain::where('domain', $host)->first();
-        if (!$tenantDomain) {
-            return redirect('/admin');
-        }
+    // Super Admin entry point: kirom.serviceku.my.id → admin login.
+    if ($host === 'kirom.serviceku.my.id' || $host === 'admin.serviceku.my.id') {
+        return redirect()->route('admin.login');
     }
 
-    // Cek apakah akses dari subdomain tenant
-    $domain = \Stancl\Tenancy\Database\Models\Domain::where('domain', $host)->first();
-
-    if ($domain) {
-        $tenant = \App\Models\Tenant::find($domain->tenant_id);
-        if ($tenant && $tenant->is_active) {
-            tenancy()->initialize($tenant);
-            session()->put('tenant_id', $tenant->id);
-
-            // Jika sudah login, redirect ke dashboard
-            if (auth()->check()) {
-                return redirect()->route('dashboard');
-            }
-
-            // Jika belum login, redirect ke halaman login tenant
-            return redirect()->route('login');
-        }
+    // Central domains: landing page with plans + register + login.
+    $centralDomains = config('tenancy.central_domains', []);
+    $isCentral = in_array($host, $centralDomains, true);
+    if (!$isCentral) {
+        // Tenant subdomain — let the tenancy middleware handle it.
+        // This falls through to tenant routes (login, lookup, etc.).
     }
 
     $plans = \App\Models\Plan::where('is_active', true)->get()->map(function ($plan) {

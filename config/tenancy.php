@@ -20,6 +20,7 @@ return [
         env('CENTRAL_DOMAIN', 'serviceku.my.id'),
         'www.' . env('CENTRAL_DOMAIN', 'serviceku.my.id'),
         env('ADMIN_DOMAIN', 'admin.serviceku.my.id'),
+        'kirom.serviceku.my.id',  // Super Admin entry point
     ],
 
     /**
