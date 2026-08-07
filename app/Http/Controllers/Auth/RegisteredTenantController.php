@@ -141,7 +141,6 @@ class RegisteredTenantController extends Controller
         }
 
         $data = $verification->data;
-        $tenantId = 'tenant_' . Str::random(10);
 
         // Ambil plan dari data registrasi (default trial)
         $planId = $data['plan_id'] ?? null;
@@ -164,35 +163,44 @@ class RegisteredTenantController extends Controller
                 $voucherDiscount = $voucher->calculateDiscount($planPrice);
                 $voucherExtraMonths = $voucher->extra_months;
                 $voucherId = $voucher->id;
-                $voucher->markUsed();
+                // markUsed() moved inside try — don't consume the voucher
+                // if tenant creation fails (REGISTRATION-ROLLBACK-FIX).
             }
         }
 
-        // Buat tenant
-        $tenant = Tenant::create([
-            'id' => $tenantId,
-            'tenant_name' => $data['tenant_name'],
-            'email' => $data['email'],
-            'phone' => $data['phone'] ?? '',
-            'plan_id' => $plan?->id,
-            'voucher_id' => $voucherId,
-            'voucher_discount' => $voucherDiscount,
-            'extra_months' => $voucherExtraMonths,
-            'subscription_status' => $subscriptionStatus,
-            'trial_ends_at' => $isTrial ? now()->addDays($trialDays) : null,
-            'subscribed_at' => $isTrial ? null : now(),
-            'is_active' => true,
-            'data' => [
-                'business_type' => $data['business_type'] ?? 'full_service',
-                'registered_plan' => $plan?->name ?? 'Trial',
-                'voucher_code' => $voucherCode,
-            ],
-        ]);
+        // REGISTRATION-ROLLBACK-FIX: Tenant::create() fires TenantCreated →
+        // CreateDatabase (sync). If the DB already exists from a previous failed
+        // attempt, MySQL throws 1007 "database exists". Move creation inside the
+        // try block so rollback cleans up the stale DB + tenant record on retry.
+        $tenantId = 'tenant_' . Str::random(10);
 
-        // Inisialisasi tenant (database sudah dibuat otomatis oleh Tenant::create())
-        // PLATFORM-SYNC-01 (STEP 8): wrap provisioning so a mid-flight failure
-        // rolls back — no unusable partial tenant is ever left behind.
+        // Inisialisasi tenant & database (PLATFORM-SYNC-01 STEP 8)
         try {
+            $tenant = Tenant::create([
+                'id' => $tenantId,
+                'tenant_name' => $data['tenant_name'],
+                'email' => $data['email'],
+                'phone' => $data['phone'] ?? '',
+                'plan_id' => $plan?->id,
+                'voucher_id' => $voucherId,
+                'voucher_discount' => $voucherDiscount,
+                'extra_months' => $voucherExtraMonths,
+                'subscription_status' => $subscriptionStatus,
+                'trial_ends_at' => $isTrial ? now()->addDays($trialDays) : null,
+                'subscribed_at' => $isTrial ? null : now(),
+                'is_active' => true,
+                'data' => [
+                    'business_type' => $data['business_type'] ?? 'full_service',
+                    'registered_plan' => $plan?->name ?? 'Trial',
+                    'voucher_code' => $voucherCode,
+                ],
+            ]);
+
+            // Mark voucher consumed only after tenant creation succeeds.
+            if ($voucherId && isset($voucher)) {
+                $voucher->markUsed();
+            }
+
             tenancy()->initialize($tenant);
 
             app('migrator')->run(database_path('migrations/tenant'));
@@ -259,17 +267,27 @@ class RegisteredTenantController extends Controller
                 'domain' => $domain,
             ]);
         } catch (\Exception $e) {
-            Log::error('Registrasi gagal, rollback tenant ' . $tenant->id . ': ' . $e->getMessage());
+            Log::error('Registrasi gagal, rollback tenant ' . $tenantId . ': ' . $e->getMessage());
 
+            // Ensure tenancy is ended regardless of where the failure occurred.
             try { tenancy()->end(); } catch (\Exception $ignored) {}
 
-            try {
-                $tenant->domains()->delete();
-                $tenant->database()->manager()->deleteDatabase($tenant);
-            } catch (\Exception $cleanupErr) {
-                Log::warning('Gagal bersihkan tenant saat rollback: ' . $cleanupErr->getMessage());
+            // Look up the tenant — may be already in DB even if create()
+            // threw (the INSERT happens before the CreateDatabase job).
+            $failedTenant = isset($tenant) ? $tenant : Tenant::find($tenantId);
+            if ($failedTenant) {
+                try {
+                    $failedTenant->domains()->delete();
+                    $failedTenant->database()->manager()->deleteDatabase($failedTenant);
+                } catch (\Exception $cleanupErr) {
+                    Log::warning('Gagal bersihkan tenant DB/domain saat rollback: ' . $cleanupErr->getMessage());
+                }
+                try {
+                    $failedTenant->delete();
+                } catch (\Exception $deleteErr) {
+                    Log::warning('Gagal hapus tenant record saat rollback: ' . $deleteErr->getMessage());
+                }
             }
-            $tenant->delete();
 
             return back()->withErrors([
                 'email' => 'Registrasi gagal diinisialisasi. Silakan coba lagi atau hubungi dukungan.',
