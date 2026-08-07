@@ -153,7 +153,7 @@ import {
   resetPreferences,
 } from '@/Enterprise/Dashboard/DashboardPreferences.js';
 
-// ── Legacy ──
+// ── Setup Progress (Owner/Manager) ──
 import SetupProgressCard from '@/Components/SetupProgressCard.vue';
 
 // ═══════════════════════════════════════════════════════════

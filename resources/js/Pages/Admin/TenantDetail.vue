@@ -52,12 +52,12 @@
                     </div>
                 </div>
                 <div class="mt-4 flex flex-wrap gap-2">
-                    <Link :href="route('admin.tenant.login-as', tenant.id)" method="post" as="button" class="px-4 py-2 bg-emerald-600 text-white rounded-md text-sm hover:bg-emerald-700">
+                    <Link v-if="isSuperAdmin" :href="route('admin.tenant.login-as', tenant.id)" method="post" as="button" class="px-4 py-2 bg-emerald-600 text-white rounded-md text-sm hover:bg-emerald-700">
                         🔑 Login as Tenant
                     </Link>
-                    <KButton  v-if="tenant.is_active" @click="suspend" class="px-4 py-2 bg-red-600 text-white rounded-md text-sm hover:bg-red-700">Suspend</KButton>
-                    <KButton  v-else @click="activate" class="px-4 py-2 bg-green-600 text-white rounded-md text-sm hover:bg-green-700">Aktifkan</KButton>
-                    <KButton  @click="resetPassword" class="px-4 py-2 bg-yellow-600 text-white rounded-md text-sm hover:bg-yellow-700">
+                    <KButton  v-if="isSuperAdmin && tenant.is_active" @click="suspend" class="px-4 py-2 bg-red-600 text-white rounded-md text-sm hover:bg-red-700">Suspend</KButton>
+                    <KButton  v-else-if="isSuperAdmin" @click="activate" class="px-4 py-2 bg-green-600 text-white rounded-md text-sm hover:bg-green-700">Aktifkan</KButton>
+                    <KButton  v-if="isSuperAdmin" @click="resetPassword" class="px-4 py-2 bg-yellow-600 text-white rounded-md text-sm hover:bg-yellow-700">
                         Reset Password
                     </KButton>
                     <Link :href="route('admin.sync-tenant-stats', tenant.id)" method="post" as="button" class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-md text-sm hover:bg-indigo-200">
@@ -187,9 +187,12 @@
 import KButton from '@/Components/KButton.vue';
 import KInput from '@/Components/KInput.vue';
 
-import { useForm, Link, router } from '@inertiajs/vue3';
+import { useForm, Link, router, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
+
+const page = usePage();
+const isSuperAdmin = computed(() => page.props.auth?.user?.is_super_admin ?? false);
 
 const props = defineProps({
     tenant: { type: Object, required: true },

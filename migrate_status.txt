@@ -1,0 +1,22 @@
+
+  Migration name .............................................. Batch / Status  
+  0001_01_01_000000_create_users_table ............................... [1] Ran  
+  0001_01_01_000001_create_cache_table ............................... [1] Ran  
+  0001_01_01_000002_create_jobs_table ................................ [1] Ran  
+  2019_09_15_000010_create_tenants_table ............................. [1] Ran  
+  2019_09_15_000020_create_domains_table ............................. [1] Ran  
+  2020_05_15_000010_create_tenant_user_impersonation_tokens_table .... [1] Ran  
+  2024_01_01_000001_create_plans_table ............................... [1] Ran  
+  2024_01_01_000002_create_system_tables ............................. [1] Ran  
+  2024_01_01_000003_create_tenant_otps_table ......................... [1] Ran  
+  2024_01_01_000003_create_verification_tables ....................... [1] Ran  
+  2024_07_18_000001_create_payment_transactions_table ................ [1] Ran  
+  2026_07_18_174616_add_promo_fields_to_plans_table .................. [1] Ran  
+  2026_07_18_175306_add_business_types_to_plans_table ................ [1] Ran  
+  2026_07_18_230325_add_slug_to_tenants_table ........................ [1] Ran  
+  2026_07_19_040631_create_vouchers_table ............................ [1] Ran  
+  2026_07_19_041309_add_extra_months_to_vouchers_and_tenants ......... [1] Ran  
+  2026_07_20_000001_add_tenant_id_to_vouchers_table .................. [1] Ran  
+  2026_07_27_044406_create_google_drive_tokens_table ................. [2] Ran  
+  2026_07_31_000001_create_personal_access_tokens_table .............. Pending  
+

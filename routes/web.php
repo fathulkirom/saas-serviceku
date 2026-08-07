@@ -127,55 +127,70 @@ Route::prefix('admin')->name('admin.')->middleware('admin.auth')->group(function
     Route::get('/tenants/{tenant}', [TenantManagementController::class, 'show'])->name('tenant.show');
     Route::get('/tenants/{tenant}/edit', [TenantManagementController::class, 'edit'])->name('tenant.edit');
     Route::post('/tenants/{tenant}/update', [TenantManagementController::class, 'update'])->name('tenant.update');
-    Route::post('/tenants/{tenantId}/delete', [TenantManagementController::class, 'destroy'])->name('tenant.delete');
-    Route::post('/tenants/{tenant}/suspend', [TenantManagementController::class, 'suspend'])->name('tenant.suspend');
-    Route::post('/tenants/{tenant}/activate', [TenantManagementController::class, 'activate'])->name('tenant.activate');
     Route::post('/tenants/{tenant}/domain', [TenantManagementController::class, 'updateDomain'])->name('tenant.domain');
     Route::post('/tenants/{tenant}/sync-stats', [TenantManagementController::class, 'syncStats'])->name('sync-tenant-stats');
     Route::post('/tenants/sync-all-stats', [TenantManagementController::class, 'syncAllStats'])->name('sync-all-stats');
-    Route::post('/tenants/{tenant}/extend-trial', [TenantManagementController::class, 'extendTrial'])->name('tenant.extend-trial');
-    Route::post('/tenants/{tenant}/extend-subscription', [TenantManagementController::class, 'extendSubscription'])->name('tenant.extend-subscription');
-    Route::post('/tenants/{tenant}/change-plan', [TenantManagementController::class, 'changePlan'])->name('tenant.change-plan');
-    Route::post('/tenants/{tenant}/login-as', [TenantManagementController::class, 'loginAs'])->name('tenant.login-as');
-    Route::post('/tenants/{tenant}/reset-password', [TenantManagementController::class, 'resetPassword'])->name('tenant.reset-password');
 
-    // Plans
+    // ═══════ SUPER ADMIN ONLY — sensitive platform actions ═══════
+    Route::middleware('super_admin')->group(function () {
+        Route::post('/tenants/{tenantId}/delete', [TenantManagementController::class, 'destroy'])->name('tenant.delete');
+        Route::post('/tenants/{tenant}/suspend', [TenantManagementController::class, 'suspend'])->name('tenant.suspend');
+        Route::post('/tenants/{tenant}/activate', [TenantManagementController::class, 'activate'])->name('tenant.activate');
+        Route::post('/tenants/{tenant}/extend-trial', [TenantManagementController::class, 'extendTrial'])->name('tenant.extend-trial');
+        Route::post('/tenants/{tenant}/extend-subscription', [TenantManagementController::class, 'extendSubscription'])->name('tenant.extend-subscription');
+        Route::post('/tenants/{tenant}/change-plan', [TenantManagementController::class, 'changePlan'])->name('tenant.change-plan');
+        Route::post('/tenants/{tenant}/login-as', [TenantManagementController::class, 'loginAs'])->name('tenant.login-as');
+        Route::post('/tenants/{tenant}/reset-password', [TenantManagementController::class, 'resetPassword'])->name('tenant.reset-password');
+
+        // Plans (create / update / delete)
+        Route::post('/plans', [PlanController::class, 'store'])->name('plans.store');
+        Route::post('/plans/{plan}', [PlanController::class, 'update'])->name('plans.update');
+        Route::post('/plans/{plan}/default-menus', [PlanController::class, 'updateDefaultMenus'])->name('plans.default-menus');
+
+        // Vouchers delete
+        Route::post('/vouchers/{voucher}/delete', [App\Http\Controllers\Admin\VoucherController::class, 'destroy'])->name('vouchers.destroy');
+
+        // Payment confirm / cancel
+        Route::post('/payments/{payment}/confirm', [App\Http\Controllers\Admin\PaymentController::class, 'confirmPayment'])->name('payments.confirm');
+        Route::post('/payments/{payment}/cancel', [App\Http\Controllers\Admin\PaymentController::class, 'cancelPayment'])->name('payments.cancel');
+        Route::post('/payment-settings', [App\Http\Controllers\Admin\PaymentController::class, 'updateSettings'])->name('payment-settings.update');
+
+        // Backup actions
+        Route::post('/backup/run', [BackupController::class, 'runBackup'])->name('backup.run');
+        Route::post('/backup/delete', [BackupController::class, 'deleteBackup'])->name('backup.delete');
+        Route::post('/backup/settings', [BackupController::class, 'updateSettings'])->name('backup.settings');
+        Route::post('/backup/upload-drive', [BackupController::class, 'uploadToDrive'])->name('backup.upload-drive');
+
+        // System settings
+        Route::post('/settings', [SystemSettingsController::class, 'update'])->name('settings.update');
+        Route::post('/settings/feature-flags', [SystemSettingsController::class, 'updateFeatureFlags'])->name('settings.feature-flags');
+
+        // Clear logs
+        Route::post('/logs/clear', [SystemSettingsController::class, 'clearLogs'])->name('logs.clear');
+    });
+
+    // Plans (view — all admins)
     Route::get('/plans', [PlanController::class, 'index'])->name('plans');
-    Route::post('/plans', [PlanController::class, 'store'])->name('plans.store');
-    Route::post('/plans/{plan}', [PlanController::class, 'update'])->name('plans.update');
-    Route::post('/plans/{plan}/default-menus', [PlanController::class, 'updateDefaultMenus'])->name('plans.default-menus');
 
-    // Vouchers / Kode Promo
+    // Vouchers (view — all admins)
     Route::get('/vouchers', [App\Http\Controllers\Admin\VoucherController::class, 'index'])->name('vouchers.index');
     Route::get('/vouchers/create', [App\Http\Controllers\Admin\VoucherController::class, 'create'])->name('vouchers.create');
     Route::post('/vouchers', [App\Http\Controllers\Admin\VoucherController::class, 'store'])->name('vouchers.store');
     Route::get('/vouchers/{voucher}/edit', [App\Http\Controllers\Admin\VoucherController::class, 'edit'])->name('vouchers.edit');
     Route::post('/vouchers/{voucher}', [App\Http\Controllers\Admin\VoucherController::class, 'update'])->name('vouchers.update');
-    Route::post('/vouchers/{voucher}/delete', [App\Http\Controllers\Admin\VoucherController::class, 'destroy'])->name('vouchers.destroy');
     Route::get('/vouchers/generate-code', [App\Http\Controllers\Admin\VoucherController::class, 'generateCode'])->name('vouchers.generate-code');
 
-    // Settings
-    // Payments
+    // Payments (view — all admins)
     Route::get('/payments', [App\Http\Controllers\Admin\PaymentController::class, 'index'])->name('payments');
     Route::post('/payments/invoice', [App\Http\Controllers\Admin\PaymentController::class, 'createInvoice'])->name('payments.invoice');
-    Route::post('/payments/{payment}/confirm', [App\Http\Controllers\Admin\PaymentController::class, 'confirmPayment'])->name('payments.confirm');
-    Route::post('/payments/{payment}/cancel', [App\Http\Controllers\Admin\PaymentController::class, 'cancelPayment'])->name('payments.cancel');
     Route::get('/payment-settings', [App\Http\Controllers\Admin\PaymentController::class, 'settings'])->name('payment-settings');
-    Route::post('/payment-settings', [App\Http\Controllers\Admin\PaymentController::class, 'updateSettings'])->name('payment-settings.update');
 
-    // Backup
+    // Backup (view — all admins)
     Route::get('/backup', [BackupController::class, 'index'])->name('backup');
-    Route::post('/backup/run', [BackupController::class, 'runBackup'])->name('backup.run');
-    Route::post('/backup/delete', [BackupController::class, 'deleteBackup'])->name('backup.delete');
-    Route::post('/backup/settings', [BackupController::class, 'updateSettings'])->name('backup.settings');
-    Route::post('/backup/upload-drive', [BackupController::class, 'uploadToDrive'])->name('backup.upload-drive');
-    Route::get('/settings', [SystemSettingsController::class, 'index'])->name('settings');
-    Route::post('/settings', [SystemSettingsController::class, 'update'])->name('settings.update');
-    Route::post('/settings/feature-flags', [SystemSettingsController::class, 'updateFeatureFlags'])->name('settings.feature-flags');
-    Route::post('/settings/test-mail', [SystemSettingsController::class, 'testMail'])->name('settings.test-mail');
 
-    // Monitoring
+    // Settings & monitoring (view — all admins)
+    Route::get('/settings', [SystemSettingsController::class, 'index'])->name('settings');
+    Route::post('/settings/test-mail', [SystemSettingsController::class, 'testMail'])->name('settings.test-mail');
     Route::get('/monitoring', [MonitoringController::class, 'index'])->name('monitoring');
     Route::get('/logs', [SystemSettingsController::class, 'logs'])->name('logs');
-    Route::post('/logs/clear', [SystemSettingsController::class, 'clearLogs'])->name('logs.clear');
 });

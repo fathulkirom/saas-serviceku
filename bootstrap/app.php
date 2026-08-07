@@ -13,6 +13,7 @@ use App\Http\Middleware\SecurityHeaders;
 use App\Http\Middleware\HandleCors;
 use App\Http\Middleware\EnsureJsonForApi;
 use App\Http\Middleware\RequirePermission;
+use App\Http\Middleware\RequireSuperAdmin;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
@@ -99,6 +100,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'cors' => HandleCors::class,
             'ensure.json' => EnsureJsonForApi::class,
             'permission' => RequirePermission::class,
+            'super_admin' => RequireSuperAdmin::class,
         ]);
 
         $middleware->api(

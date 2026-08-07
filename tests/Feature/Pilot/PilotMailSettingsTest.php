@@ -49,6 +49,7 @@ class PilotMailSettingsTest extends TestCase
             'name' => 'Platform Admin',
             'email' => 'admin_'.uniqid().'@serviceku.my.id',
             'password' => bcrypt('secret123'),
+            'is_super_admin' => true,
         ]);
     }
 

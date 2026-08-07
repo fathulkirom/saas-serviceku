@@ -105,8 +105,8 @@
                                     <Link :href="route('admin.tenant.show', t.id)" class="text-xs font-bold px-3 py-1.5 rounded-lg transition-all hover:-translate-y-0.5 hover:shadow-sm text-indigo-300 bg-indigo-500/10 hover:bg-indigo-500/20">Detail</Link>
                                     <Link :href="route('admin.tenant.edit', t.id)" class="text-xs font-bold px-3 py-1.5 rounded-lg transition-all hover:-translate-y-0.5 hover:shadow-sm text-blue-300 bg-blue-500/10 hover:bg-blue-500/20">Edit</Link>
                                     <a v-if="t.domains?.[0]?.domain" :href="'http://' + t.domains[0].domain + '/login'" target="_blank" class="text-xs font-bold px-3 py-1.5 rounded-lg transition-all hover:-translate-y-0.5 hover:shadow-sm text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20">Buka</a>
-                                    <KButton  v-if="t.is_active" @click="suspend(t.id)" class="text-xs font-bold px-3 py-1.5 rounded-lg transition-all hover:-translate-y-0.5 hover:shadow-sm text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 cursor-pointer">Suspend</KButton>
-                                    <KButton  v-else @click="activate(t.id)" class="text-xs font-bold px-3 py-1.5 rounded-lg transition-all hover:-translate-y-0.5 hover:shadow-sm text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 cursor-pointer">Aktifkan</KButton>
+                                    <KButton  v-if="isSuperAdmin && t.is_active" @click="suspend(t.id)" class="text-xs font-bold px-3 py-1.5 rounded-lg transition-all hover:-translate-y-0.5 hover:shadow-sm text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 cursor-pointer">Suspend</KButton>
+                                    <KButton  v-else-if="isSuperAdmin" @click="activate(t.id)" class="text-xs font-bold px-3 py-1.5 rounded-lg transition-all hover:-translate-y-0.5 hover:shadow-sm text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 cursor-pointer">Aktifkan</KButton>
                                 </div>
                             </td>
                         </tr>
@@ -145,8 +145,8 @@ import KButton from '@/Components/KButton.vue';
 import KInput from '@/Components/KInput.vue';
 import KSelect from '@/Components/KSelect.vue';
 
-import { Link, router } from '@inertiajs/vue3';
-import { reactive } from 'vue';
+import { Link, router, usePage } from '@inertiajs/vue3';
+import { reactive, computed } from 'vue';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import Badge from '@/Components/Badge.vue';
 
@@ -155,6 +155,9 @@ const props = defineProps({
     plans: { type: Array, default: () => [] },
     filters: { type: Object, default: () => ({}) },
 });
+
+const page = usePage();
+const isSuperAdmin = computed(() => page.props.auth?.user?.is_super_admin ?? false);
 
 const filters = reactive({
     search: props.filters.search || '',

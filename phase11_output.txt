@@ -1,0 +1,250 @@
+./composer.json is valid
+
+  Environment ................................................................  
+  Application Name ................................................. ServiceKU  
+  Laravel Version .................................................... 12.64.0  
+  PHP Version .......................................................... 8.5.8  
+  Composer Version .................................................... 2.10.2  
+  Environment .......................................................... local  
+  Debug Mode ......................................................... ENABLED  
+  URL ........................................................ serviceku.my.id  
+  Maintenance Mode ....................................................... OFF  
+  Timezone ...................................................... Asia/Jakarta  
+  Locale .................................................................. id  
+
+  Cache ......................................................................  
+  Config .......................................................... NOT CACHED  
+  Events .......................................................... NOT CACHED  
+  Routes .......................................................... NOT CACHED  
+  Views ............................................................... CACHED  
+
+  Drivers ....................................................................  
+  Broadcasting .......................................................... null  
+  Cache ................................................................. file  
+  Database ............................................................. mysql  
+  Logs ........................................................ stack / single  
+  Mail .................................................................. smtp  
+  Queue ............................................................. database  
+  Session ............................................................... file  
+
+  Storage ....................................................................  
+  public/storage ...................................................... LINKED  
+
+  Sentry .....................................................................  
+  Enabled ........................................................ MISSING DSN  
+  Environment .......................................................... local  
+  Laravel SDK Version ................................................. 4.27.0  
+  PHP SDK Version ..................................................... 4.29.0  
+  Release ............................................................ NOT SET  
+  Sample Rate Errors .................................................... 100%  
+  Sample Rate Performance Monitoring ................................. NOT SET  
+  Sample Rate Profiling .............................................. NOT SET  
+  Send Default PII .................................................. DISABLED  
+
+
+up to date, audited 532 packages in 5s
+
+139 packages are looking for funding
+  run `npm fund` for details
+
+3 vulnerabilities (1 moderate, 2 high)
+
+To address all issues, run:
+  npm audit fix
+
+Run `npm audit` for details.
+
+> build
+> vite build
+
+vite v6.4.3 building for production...
+transforming...
+
+A PostCSS plugin did not pass the `from` option to `postcss.parse`. This may cause imported assets to be incorrectly transformed. If you've recently added a PostCSS plugin that raised this warning, please contact the package author to fix the issue.
+✓ 2601 modules transformed.
+rendering chunks...
+computing gzip size...
+public/build/registerSW.js                                   0.15 kB
+public/build/manifest.webmanifest                            0.80 kB
+public/build/manifest.json                                  75.36 kB │ gzip:  6.56 kB
+public/build/assets/Create-FU2D9b2Q.css                      0.14 kB │ gzip:  0.11 kB
+public/build/assets/AuthenticatedLayout-CLfM8Vru.css         0.19 kB │ gzip:  0.13 kB
+public/build/assets/Dashboard-f3LEK6jC.css                   0.21 kB │ gzip:  0.17 kB
+public/build/assets/DataTable-BtPHF-jW.css                   0.22 kB │ gzip:  0.18 kB
+public/build/assets/Drawer-DBQ2Ev4J.css                      0.69 kB │ gzip:  0.27 kB
+public/build/assets/app-DNBgvY8_.css                       164.18 kB │ gzip: 24.82 kB
+public/build/assets/_plugin-vue_export-helper-DlAUqK2U.js    0.09 kB │ gzip:  0.10 kB
+public/build/assets/KBadge-BXo-uJld.js                       0.46 kB │ gzip:  0.30 kB
+public/build/assets/statusMaps-D-8gpCHS.js                   0.54 kB │ gzip:  0.32 kB
+public/build/assets/503-ooN_iW-u.js                          0.64 kB │ gzip:  0.42 kB
+public/build/assets/Index-Dpt_5BFu.js                        0.72 kB │ gzip:  0.48 kB
+public/build/assets/Create-BBGRj9FS.js                       0.72 kB │ gzip:  0.48 kB
+public/build/assets/Show-D5Lr9_C9.js                         0.72 kB │ gzip:  0.48 kB
+public/build/assets/KRadio-9jXSj5Pk.js                       0.74 kB │ gzip:  0.41 kB
+public/build/assets/419-YUrXUnOJ.js                          0.80 kB │ gzip:  0.50 kB
+public/build/assets/KDialog-Cf1Yw9FD.js                      0.83 kB │ gzip:  0.54 kB
+public/build/assets/KCard-G1jq9m9u.js                        0.94 kB │ gzip:  0.56 kB
+public/build/assets/403-FT0jhkyc.js                          0.95 kB │ gzip:  0.58 kB
+public/build/assets/404-C1hRdWaX.js                          0.97 kB │ gzip:  0.58 kB
+public/build/assets/useFormatter-B98jkVyT.js                 0.97 kB │ gzip:  0.49 kB
+public/build/assets/500-DUn704hb.js                          0.97 kB │ gzip:  0.59 kB
+public/build/assets/WorkspaceRegistry-DrVmf-9L.js            0.98 kB │ gzip:  0.37 kB
+public/build/assets/WorkspaceSidebar-BSXu2VlD.js             1.02 kB │ gzip:  0.59 kB
+public/build/assets/WorkspaceFooter-2H_Fy-w_.js              1.04 kB │ gzip:  0.64 kB
+public/build/assets/WorkspaceTabs-BiMqHg4w.js                1.20 kB │ gzip:  0.66 kB
+public/build/assets/WorkspaceTimeline-C1b0IghJ.js            1.22 kB │ gzip:  0.65 kB
+public/build/assets/KSelect-CaT4XnC-.js                      1.27 kB │ gzip:  0.67 kB
+public/build/assets/Pagination-D1o87nEl.js                   1.30 kB │ gzip:  0.77 kB
+public/build/assets/KCheckbox-Bm-wvR1c.js                    1.32 kB │ gzip:  0.58 kB
+public/build/assets/KTextarea-LVJrbx8R.js                    1.50 kB │ gzip:  0.77 kB
+public/build/assets/Skeleton-BEXJWa5Q.js                     1.59 kB │ gzip:  0.66 kB
+public/build/assets/Breadcrumb-3AD3V0nL.js                   1.62 kB │ gzip:  0.85 kB
+public/build/assets/EmptyState-BlODGHWc.js                   1.70 kB │ gzip:  0.78 kB
+public/build/assets/PageHeader-C0GQICrw.js                   1.78 kB │ gzip:  0.90 kB
+public/build/assets/Badge-Cx2KLJxP.js                        1.79 kB │ gzip:  0.93 kB
+public/build/assets/KInput-C8b2oLbI.js                       1.99 kB │ gzip:  0.94 kB
+public/build/assets/Logo-Bwb7h6c7.js                         2.33 kB │ gzip:  0.93 kB
+public/build/assets/Card-DbMQLYIX.js                         2.39 kB │ gzip:  1.06 kB
+public/build/assets/Dashboard-RMNUcdlc.js                    2.50 kB │ gzip:  0.94 kB
+public/build/assets/Kanban-B8m5W7XA.js                       2.53 kB │ gzip:  1.30 kB
+public/build/assets/DynamicFormFields-BoUfVojG.js            2.70 kB │ gzip:  0.99 kB
+public/build/assets/ServiceStatusStepper-CTHqMBsV.js         2.74 kB │ gzip:  1.18 kB
+public/build/assets/Profile-D6MiA_0X.js                      2.78 kB │ gzip:  1.24 kB
+public/build/assets/Timeline-BeS7XD24.js                     2.91 kB │ gzip:  1.49 kB
+public/build/assets/WorkspaceToolbar-DLZ74bmS.js             2.97 kB │ gzip:  1.35 kB
+public/build/assets/WorkspaceInspector-fSqbuZnO.js           3.02 kB │ gzip:  1.38 kB
+public/build/assets/Invoice-D8ylrpZB.js                      3.05 kB │ gzip:  1.22 kB
+public/build/assets/KTable-Durhtvvz.js                       3.13 kB │ gzip:  1.33 kB
+public/build/assets/KButton-Bh85gIST.js                      3.26 kB │ gzip:  1.05 kB
+public/build/assets/ForgotPassword-CXgorqF_.js               3.29 kB │ gzip:  1.46 kB
+public/build/assets/VerifyEmail-DKc-Zwz1.js                  3.42 kB │ gzip:  1.63 kB
+public/build/assets/Overview-CbEis-Dk.js                     3.58 kB │ gzip:  1.25 kB
+public/build/assets/PickupQueue-Cg0_Te1h.js                  3.67 kB │ gzip:  1.45 kB
+public/build/assets/Drawer-BW9Q7sgI.js                       3.69 kB │ gzip:  1.73 kB
+public/build/assets/RegistrationSuccess-BmlNDmB4.js          3.72 kB │ gzip:  1.50 kB
+public/build/assets/StatCard-DM8NEDym.js                     3.83 kB │ gzip:  1.54 kB
+public/build/assets/EmptyState-BU0KiyUN.js                   3.84 kB │ gzip:  1.54 kB
+public/build/assets/VerifyOtp-4GiwDnRj.js                    3.90 kB │ gzip:  1.76 kB
+public/build/assets/MetricCard-CCbdrPmK.js                   3.94 kB │ gzip:  1.63 kB
+public/build/assets/QRScanner-i67gqjgM.js                    3.96 kB │ gzip:  1.85 kB
+public/build/assets/Index-E4Q6bmEE.js                        4.07 kB │ gzip:  1.72 kB
+public/build/assets/Overview-C5ule22m.js                     4.16 kB │ gzip:  1.42 kB
+public/build/assets/ResetPassword-DNUHK1tc.js                4.21 kB │ gzip:  1.62 kB
+public/build/assets/MessageTemplates-Dypo8sm6.js             4.22 kB │ gzip:  1.88 kB
+public/build/assets/Providers-CnAD4St7.js                    4.26 kB │ gzip:  1.94 kB
+public/build/assets/AdminLayout-DUc-mkjn.js                  4.29 kB │ gzip:  1.54 kB
+public/build/assets/Overview-Dx_nxyuv.js                     4.31 kB │ gzip:  1.45 kB
+public/build/assets/AdminLogin-CSpwTFVg.js                   4.36 kB │ gzip:  1.79 kB
+public/build/assets/Payment-BOPQsLvX.js                      4.63 kB │ gzip:  1.69 kB
+public/build/assets/Warranty-D32-naIC.js                     4.67 kB │ gzip:  1.58 kB
+public/build/assets/Spareparts-mLyTJ50p.js                   4.70 kB │ gzip:  1.91 kB
+public/build/assets/ApprovalCenter-UuvNyWDt.js               4.80 kB │ gzip:  1.32 kB
+public/build/assets/Unclaimed-BQ-KKNnV.js                    4.82 kB │ gzip:  1.74 kB
+public/build/assets/useServiceStatus-BW8i4Z0v.js             4.84 kB │ gzip:  1.56 kB
+public/build/assets/Logins-BD7pi3EL.js                       4.88 kB │ gzip:  2.01 kB
+public/build/assets/Health-D2eYyswH.js                       4.96 kB │ gzip:  1.78 kB
+public/build/assets/Overview-Qlu-GMwU.js                     5.00 kB │ gzip:  1.56 kB
+public/build/assets/RevenueComparison-CpHHeIcX.js            5.04 kB │ gzip:  2.01 kB
+public/build/assets/ImportCenter-_gOJLw_f.js                 5.09 kB │ gzip:  2.06 kB
+public/build/assets/EventLog-lzCzST7c.js                     5.10 kB │ gzip:  2.08 kB
+public/build/assets/Overview-DcoYSXC2.js                     5.25 kB │ gzip:  1.62 kB
+public/build/assets/Logs-COOHhUtu.js                         5.25 kB │ gzip:  1.75 kB
+public/build/assets/Overview-Bpwmnw1p.js                     5.27 kB │ gzip:  1.72 kB
+public/build/assets/Payments-BUlDghRC.js                     5.29 kB │ gzip:  1.80 kB
+public/build/assets/GuestLayout-XANY21TF.js                  5.34 kB │ gzip:  2.06 kB
+public/build/assets/Sidebar-CPkA3kPP.js                      5.37 kB │ gzip:  2.02 kB
+public/build/assets/Overview-6Y3dmbCf.js                     5.50 kB │ gzip:  1.74 kB
+public/build/assets/TwoFactor-CMOeMrHm.js                    5.55 kB │ gzip:  2.15 kB
+public/build/assets/Overview-BIw7K0pr.js                     5.59 kB │ gzip:  1.74 kB
+public/build/assets/Overview-C9Tx4HhC.js                     5.64 kB │ gzip:  1.72 kB
+public/build/assets/Overview-V4aoqoum.js                     5.68 kB │ gzip:  1.66 kB
+public/build/assets/WorkspaceHeader-xpyFzmfo.js              5.69 kB │ gzip:  2.11 kB
+public/build/assets/Overview-5cmE48AM.js                     5.72 kB │ gzip:  2.06 kB
+public/build/assets/CustomerAnalytics-DHMQAzwn.js            5.81 kB │ gzip:  2.02 kB
+public/build/assets/Productivity-D_NH-hrx.js                 5.85 kB │ gzip:  2.33 kB
+public/build/assets/Movements-jVKPC04S.js                    5.85 kB │ gzip:  2.03 kB
+public/build/assets/Operational-uwjjIMiq.js                  5.93 kB │ gzip:  1.94 kB
+public/build/assets/Overview-D5qwX8o7.js                     6.15 kB │ gzip:  1.88 kB
+public/build/assets/Overview-Cn7GZBJS.js                     6.22 kB │ gzip:  2.07 kB
+public/build/assets/CourierDashboard-Cov-KQhS.js             6.26 kB │ gzip:  2.07 kB
+public/build/assets/Index-C12frUgS.js                        6.28 kB │ gzip:  2.37 kB
+public/build/assets/TechnicianDashboard-BpzfBWMM.js          6.30 kB │ gzip:  2.60 kB
+public/build/assets/Activities-BIQMYoGH.js                   6.33 kB │ gzip:  2.16 kB
+public/build/assets/Overview-DuNLZVtF.js                     6.48 kB │ gzip:  1.86 kB
+public/build/assets/Workflows-D6YgWlO3.js                    6.58 kB │ gzip:  2.44 kB
+public/build/assets/Inventory-tcb6hSB1.js                    6.63 kB │ gzip:  2.08 kB
+public/build/assets/ActionBar-64sL2TCW.js                    6.65 kB │ gzip:  2.16 kB
+public/build/assets/Dashboard-DUG5XqKK.js                    6.67 kB │ gzip:  2.25 kB
+public/build/assets/Login-DnSyi0BD.js                        6.82 kB │ gzip:  2.71 kB
+public/build/assets/CsDashboard-DPpckp_J.js                  6.91 kB │ gzip:  2.20 kB
+public/build/assets/Overview-BQL8moPZ.js                     6.93 kB │ gzip:  2.03 kB
+public/build/assets/SubdomainLogin-C3jZpyUf.js               7.01 kB │ gzip:  2.73 kB
+public/build/assets/CashierDashboard-C82jHz00.js             7.05 kB │ gzip:  2.24 kB
+public/build/assets/Setup-C4kIRUq7.js                        7.27 kB │ gzip:  2.69 kB
+public/build/assets/Overview-B2S69htm.js                     7.46 kB │ gzip:  2.13 kB
+public/build/assets/Overview-C9aYTumO.js                     7.50 kB │ gzip:  2.21 kB
+public/build/assets/Photos-DU4edUxX.js                       7.53 kB │ gzip:  3.07 kB
+public/build/assets/Overview-CxVDLYCW.js                     7.73 kB │ gzip:  2.44 kB
+public/build/assets/CreateTenant-BJfaTyFW.js                 7.74 kB │ gzip:  2.52 kB
+public/build/assets/Payment-kEYCSAFM.js                      7.75 kB │ gzip:  3.16 kB
+public/build/assets/QC-BnTT0o1R.js                           7.79 kB │ gzip:  2.73 kB
+public/build/assets/Overview-DBDGvOf8.js                     7.89 kB │ gzip:  2.27 kB
+public/build/assets/Sales-Cxk4N4MJ.js                        7.97 kB │ gzip:  2.62 kB
+public/build/assets/Create-xcnNuU1i.js                       8.03 kB │ gzip:  2.61 kB
+public/build/assets/Overview-KkBTlFih.js                     8.34 kB │ gzip:  2.16 kB
+public/build/assets/Services-BNitv4SL.js                     8.57 kB │ gzip:  2.98 kB
+public/build/assets/Automations-BsBP7SM5.js                  8.93 kB │ gzip:  3.01 kB
+public/build/assets/TwoFactorChallenge-DCZV9IGY.js           8.99 kB │ gzip:  2.44 kB
+public/build/assets/Index-D0dcU_dp.js                        9.24 kB │ gzip:  3.22 kB
+public/build/assets/Overview-CD25TnSL.js                     9.29 kB │ gzip:  2.53 kB
+public/build/assets/Diagnosis-D_GLvJoc.js                    9.44 kB │ gzip:  2.75 kB
+public/build/assets/Finance-E63nfveR.js                      9.84 kB │ gzip:  2.66 kB
+public/build/assets/Quotation-Bm2Agra8.js                    9.91 kB │ gzip:  3.12 kB
+public/build/assets/Commissions-OTOXSpwe.js                  9.93 kB │ gzip:  2.94 kB
+public/build/assets/Index-Delbp1oe.js                       10.60 kB │ gzip:  3.78 kB
+public/build/assets/Index-n9hM6iwb.js                       10.66 kB │ gzip:  3.02 kB
+public/build/assets/Overview-SqNglmFI.js                    11.11 kB │ gzip:  2.50 kB
+public/build/assets/Track-VP6EB8lx.js                       11.13 kB │ gzip:  3.57 kB
+public/build/assets/Repair-C23-dwFR.js                      11.13 kB │ gzip:  3.30 kB
+public/build/assets/Index-D5GqCFgC.js                       11.28 kB │ gzip:  4.15 kB
+public/build/assets/TenantManagement-B_Txf7mJ.js            11.56 kB │ gzip:  3.39 kB
+public/build/assets/PaymentSettings-BBFUeCjc.js             11.88 kB │ gzip:  2.64 kB
+public/build/assets/Index-D7AP0pxC.js                       11.95 kB │ gzip:  4.24 kB
+public/build/assets/Monitoring-CxX16DYn.js                  11.99 kB │ gzip:  3.28 kB
+public/build/assets/TenantDetail-BFpcmgDO.js                12.11 kB │ gzip:  3.69 kB
+public/build/assets/Edit-BjOanVKu.js                        12.22 kB │ gzip:  2.85 kB
+public/build/assets/DataTable-Cw0IH4RK.js                   13.13 kB │ gzip:  4.45 kB
+public/build/assets/Create-wemKAOwS.js                      13.29 kB │ gzip:  3.89 kB
+public/build/assets/Settings-BbCa53ki.js                    13.59 kB │ gzip:  3.47 kB
+public/build/assets/Index-D_MQIe4X.js                       13.69 kB │ gzip:  3.08 kB
+public/build/assets/Register-GOjrhXM0.js                    14.56 kB │ gzip:  4.47 kB
+public/build/assets/Dashboard-DbxgKdFc.js                   15.10 kB │ gzip:  3.48 kB
+public/build/assets/Workspace-U7bAM7fT.js                   15.41 kB │ gzip:  4.47 kB
+public/build/assets/Backup-C6NHyO6P.js                      15.99 kB │ gzip:  4.42 kB
+public/build/assets/Plans-C1NNryKz.js                       16.59 kB │ gzip:  5.08 kB
+public/build/assets/EditTenant-DVuCNe5C.js                  16.77 kB │ gzip:  4.60 kB
+public/build/assets/Index-BISV9feX.js                       17.35 kB │ gzip:  4.56 kB
+public/build/assets/Index-DnVvSGUR.js                       17.38 kB │ gzip:  4.75 kB
+public/build/assets/Create-Cf84Vun0.js                      20.22 kB │ gzip:  5.73 kB
+public/build/assets/Index-DLrrtm2T.js                       21.39 kB │ gzip:  6.07 kB
+public/build/assets/Index-Ds80to8D.js                       21.89 kB │ gzip:  5.83 kB
+public/build/assets/Index-K0wjenvA.js                       22.81 kB │ gzip:  5.82 kB
+public/build/assets/Show-O98K8QmL.js                        27.14 kB │ gzip:  7.67 kB
+public/build/assets/Create-DuvOrWv_.js                      29.83 kB │ gzip:  7.97 kB
+public/build/assets/Index-DzNN51qX.js                       32.91 kB │ gzip:  7.50 kB
+public/build/assets/Index-CVyrlBHo.js                       34.43 kB │ gzip:  7.28 kB
+public/build/assets/Show-EpOnVr5b.js                        37.44 kB │ gzip:  8.90 kB
+public/build/assets/Index-DHfgQWmc.js                       41.02 kB │ gzip: 10.25 kB
+public/build/assets/index-e3g42MbC.js                       46.37 kB │ gzip: 17.80 kB
+public/build/assets/AuthenticatedLayout-C5OhaKng.js         53.66 kB │ gzip: 13.32 kB
+public/build/assets/Dashboard-BdMNAcMW.js                   82.53 kB │ gzip: 18.74 kB
+public/build/assets/jsQR-BnGm8Ll0.js                       130.78 kB │ gzip: 47.27 kB
+public/build/assets/app-BckOr9QJ.js                        232.14 kB │ gzip: 78.84 kB
+✓ built in 15.74s
+
+PWA v1.3.0
+mode      generateSW
+precache  175 entries (1855.17 KiB)
+files generated
+  public/build/sw.js
+  public/build/workbox-bdb082da.js
