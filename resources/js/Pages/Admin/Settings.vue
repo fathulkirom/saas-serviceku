@@ -285,23 +285,28 @@ const sendTestEmail = () => {
 };
 
 const updateSettings = () => {
-    form.post(route('admin.settings.update'), {
-        data: {
-            ...form.data(),
-            registration_open: form.registration_open_bool ? 'true' : 'false',
-            require_approval: form.require_approval_bool ? 'true' : 'false',
-            maintenance_mode: form.maintenance_mode_bool ? 'true' : 'false',
-        },
-    });
+    // MAIL-SAVE-FIX-01: Inertia ignores a `data` option on useForm().post() —
+    // only the positional form data is sent. Use transform() so the checkbox
+    // booleans map to the backend string keys the controller validates
+    // (registration_open / require_approval / maintenance_mode ∈ 'true'/'false').
+    form.transform((data) => ({
+        ...data,
+        registration_open: data.registration_open_bool ? 'true' : 'false',
+        require_approval: data.require_approval_bool ? 'true' : 'false',
+        maintenance_mode: data.maintenance_mode_bool ? 'true' : 'false',
+    }));
+    form.post(route('admin.settings.update'));
 };
 
 const updateFeatureFlags = () => {
-    featureFlagsForm.post(route('admin.settings.feature-flags'), {
-        data: {
-            feature_two_factor_auth: featureFlagsForm.two_factor_auth ? 'true' : 'false',
-            feature_email_verification: featureFlagsForm.email_verification ? 'true' : 'false',
-            feature_custom_fields: featureFlagsForm.custom_fields ? 'true' : 'false',
-        },
-    });
+    // Same transform() fix for the feature flags form: map the checkbox
+    // booleans to the backend keys (feature_two_factor_auth / …).
+    featureFlagsForm.transform((data) => ({
+        ...data,
+        feature_two_factor_auth: data.two_factor_auth ? 'true' : 'false',
+        feature_email_verification: data.email_verification ? 'true' : 'false',
+        feature_custom_fields: data.custom_fields ? 'true' : 'false',
+    }));
+    featureFlagsForm.post(route('admin.settings.feature-flags'));
 };
 </script>

@@ -557,4 +557,76 @@ class PilotMailSettingsTest extends TestCase
         $this->assertSame('smtp', SystemSetting::getValue('mail_driver'));
         $this->assertSame('smtp.resend.com', SystemSetting::getValue('mail_host'));
     }
+
+    // ── MAIL-SAVE-FIX-01 ──────────────────────────────────────────────────
+    // Root cause: Inertia IGNORES a `data` option on useForm().post() — only
+    // the positional form data is sent. Settings.vue relied on that dead option
+    // to map checkbox booleans to registration_open / require_approval /
+    // maintenance_mode, so every save failed `required` validation and NOTHING
+    // was persisted (badge stayed "Belum dikonfigurasi"). Fixed with
+    // form.transform(). These tests mirror the real frontend payload.
+
+    // ── 29. Full frontend payload (with transform keys) persists provider ──
+    public function test_settings_save_frontend_payload_persists_mail_provider(): void
+    {
+        $admin = $this->makeAdmin();
+        $this->actingAs($admin);
+
+        $key = 're_frontend_payload_test_key';
+        $this->post(route('admin.settings.update'), [
+            'app_name' => 'ServiceKU', 'app_description' => '',
+            'max_tenants' => '100', 'notify_email' => 'admin@serviceku.app',
+            'registration_open_bool' => true, 'require_approval_bool' => false,
+            'default_plan_slug' => 'pro', 'default_trial_days' => '14',
+            'maintenance_mode_bool' => false, 'maintenance_message' => '',
+            'mail_driver' => 'smtp',
+            'mail_host' => 'smtp.resend.com', 'mail_port' => '587',
+            'mail_encryption' => 'tls', 'mail_username' => 'resend',
+            'mail_password' => '', // masked → preserved, never erased
+            'mail_from_address' => 'notifications@serviceku.my.id', 'mail_from_name' => 'ServiceKU',
+            'mail_resend_provider' => 'resend',
+            'mail_resend_api_key' => $key,
+            'mail_resend_from_address' => 'noreply@serviceku.my.id',
+            'mail_resend_from_name' => 'ServiceKU',
+            'mail_resend_reply_to' => '',
+            // Computed by form.transform() in Settings.vue (was dead code before).
+            'registration_open' => 'true', 'require_approval' => 'false',
+            'maintenance_mode' => 'false',
+        ])->assertSessionHas('success');
+
+        // The whole save now succeeds → provider + key + from persist.
+        $this->assertSame('resend', SystemSetting::getValue('mail_resend_provider'));
+        $this->assertSame($key, decrypt(SystemSetting::getValue('mail_resend_api_key')));
+        $this->assertSame('noreply@serviceku.my.id', SystemSetting::getValue('mail_resend_from_address'));
+        $this->assertTrue(\App\Services\TransactionalMailService::isConfigured());
+
+        // Success is logged — this was MISSING while saves failed validation.
+        $this->assertTrue(
+            \App\Models\SystemLog::where('message', 'System settings updated')->exists(),
+            'A successful save must write the SystemLog entry.'
+        );
+    }
+
+    // ── 30. Without the computed keys, save fails (documents the old bug) ──
+    public function test_settings_save_without_registration_key_fails(): void
+    {
+        $admin = $this->makeAdmin();
+        $this->actingAs($admin);
+
+        $this->post(route('admin.settings.update'), [
+            'app_name' => 'ServiceKU', 'app_description' => '',
+            'max_tenants' => '100', 'notify_email' => 'admin@serviceku.app',
+            'registration_open_bool' => true, 'require_approval_bool' => false,
+            'default_plan_slug' => 'pro', 'default_trial_days' => '14',
+            'maintenance_mode_bool' => false, 'maintenance_message' => '',
+            'mail_resend_provider' => 'resend',
+            'mail_resend_api_key' => 're_xxx',
+            'mail_resend_from_address' => 'noreply@serviceku.my.id',
+            // NOTE: registration_open / require_approval / maintenance_mode are
+            // ABSENT — exactly what the old broken `data:` option failed to send.
+        ])->assertSessionHasErrors(['registration_open']);
+
+        // Nothing persisted when validation fails.
+        $this->assertNull(SystemSetting::getValue('mail_resend_provider'));
+    }
 }
