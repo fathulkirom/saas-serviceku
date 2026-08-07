@@ -29,6 +29,7 @@ class TransactionalMailService
 {
     public const PROVIDER_OFF = 'off';
     public const PROVIDER_RESEND = 'resend';
+    public const PROVIDER_SMTP = 'smtp';
 
     /** Decrypted Resend API key: platform setting first, then env fallback. */
     public static function resendApiKey(): ?string
@@ -64,6 +65,31 @@ class TransactionalMailService
         return (bool) self::fromAddress();
     }
 
+    public static function isSmtpConfigured(): bool
+    {
+        if (self::provider() !== self::PROVIDER_SMTP) {
+            return false;
+        }
+        return (bool) SystemSetting::getValue('mail_host');
+    }
+
+    /** Whether an SMTP password is stored (for the masked UI placeholder). */
+    public static function smtpHasPassword(): bool
+    {
+        $v = SystemSetting::getValue('mail_password');
+        return $v !== null && $v !== '';
+    }
+
+    /** Configured status for the CURRENTLY selected provider. */
+    public static function isConfigured(): bool
+    {
+        return match (self::provider()) {
+            self::PROVIDER_RESEND => self::isResendConfigured(),
+            self::PROVIDER_SMTP => self::isSmtpConfigured(),
+            default => false,
+        };
+    }
+
     public static function fromAddress(): ?string
     {
         return SystemSetting::getValue('mail_resend_from_address', 'noreply@serviceku.my.id');
@@ -92,9 +118,10 @@ class TransactionalMailService
 
         return [
             'provider' => self::provider(),
-            'configured' => self::isResendConfigured(),
+            'configured' => self::isConfigured(),
             'has_api_key' => $hasKey,
             'masked_api_key' => self::mask(self::resendApiKey()),
+            'smtp_has_password' => self::smtpHasPassword(),
             'from_address' => self::fromAddress(),
             'from_name' => self::fromName(),
             'reply_to' => self::replyTo(),
@@ -110,36 +137,48 @@ class TransactionalMailService
     }
 
     /**
-     * Deliver a mailable via the canonical provider.
+     * Deliver a mailable via the CANONICAL selected provider.
      *
-     * MAIL-CONSOLIDATE-01: the canonical platform transactional path is
-     * Resend HTTP API only. Provider=off or unconfigured → honest failure
-     * (false). There is NO silent fallback to the legacy SMTP/default mailer —
-     * a registration OTP must never silently go through arbitrary SMTP.
+     * MAIL-UNIFY-01: single entry point. Routes to the exact selected
+     * provider (resend → Resend HTTP API, smtp → SMTP, off → honest failure).
+     * NO silent cross-provider fallback.
      */
     public static function deliver(string $to, Mailable $mail): bool
     {
-        if (self::provider() !== self::PROVIDER_RESEND) {
-            return false;
-        }
-
-        return ResendTransactionalMail::deliver($to, $mail, self::fromSettings());
+        return match (self::provider()) {
+            self::PROVIDER_RESEND => ResendTransactionalMail::deliver($to, $mail, self::fromSettings()),
+            self::PROVIDER_SMTP => self::deliverViaSmtp($to, $mail),
+            default => false, // off → honest failure
+        };
     }
 
     /**
      * Test email for the Central Admin "Kirim Email Tes" button.
      *
-     * MAIL-CONSOLIDATE-01: the test MUST exercise the SAME canonical path as
-     * OTP (Resend HTTP API). It must NOT silently test legacy SMTP when the
-     * provider is Resend. Unconfigured/off → honest failure (false).
+     * MAIL-UNIFY-01: exercises the SAME canonical path as OTP, per the
+     * selected provider. No silent cross-provider fallback.
      */
     public static function sendTest(string $to): bool
     {
-        if (self::provider() !== self::PROVIDER_RESEND) {
+        return match (self::provider()) {
+            self::PROVIDER_RESEND => ResendTransactionalMail::sendRawTest($to, self::fromSettings()),
+            self::PROVIDER_SMTP => \App\Services\MailConfigService::test($to),
+            default => false, // off → honest failure
+        };
+    }
+
+    /** SMTP delivery via the reused MailConfigService (legacy SMTP backend). */
+    protected static function deliverViaSmtp(string $to, Mailable $mail): bool
+    {
+        try {
+            \App\Services\MailConfigService::apply();
+            config(['mail.default' => 'smtp']); // SMTP is the active mailer for this path
+            Mail::to($to)->send($mail);
+            return true;
+        } catch (\Throwable $e) {
+            Log::warning('TransactionalMailService: SMTP deliver failed: '.$e->getMessage());
             return false;
         }
-
-        return ResendTransactionalMail::sendRawTest($to, self::fromSettings());
     }
 
     protected static function fromSettings(): array

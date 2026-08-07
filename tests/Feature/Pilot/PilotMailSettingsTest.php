@@ -395,4 +395,135 @@ class PilotMailSettingsTest extends TestCase
         // used for OTP / platform transactional mail anymore.
         $this->assertTrue(\App\Services\MailConfigService::test('legacy@example.com'));
     }
+
+    // ── MAIL-UNIFY-01 ─────────────────────────────────────────────────────
+    // Single provider-driven mail config: resend / smtp / off.
+
+    // ── 21. Provider=smtp test mail routes to SMTP (never Resend) ──
+    public function test_provider_smtp_test_mail_uses_smtp(): void
+    {
+        Mail::fake();
+        $admin = $this->makeAdmin();
+        $this->actingAs($admin);
+        SystemSetting::setValue('mail_resend_provider', 'smtp', 'mail_resend');
+        SystemSetting::setValue('mail_driver', 'smtp', 'mail');
+        SystemSetting::setValue('mail_host', 'smtp.resend.com', 'mail');
+
+        $this->assertTrue(
+            TransactionalMailService::sendTest('user@example.com'),
+            'Provider SMTP must route test mail through the SMTP path.'
+        );
+        // SMTP test uses a raw message — the Resend SystemTestMail must NOT be sent.
+        Mail::assertNotSent(\App\Mail\SystemTestMail::class);
+    }
+
+    // ── 22. Provider=smtp OTP routes to SMTP ──
+    public function test_provider_smtp_otp_uses_smtp(): void
+    {
+        Mail::fake();
+        SystemSetting::setValue('mail_resend_provider', 'smtp', 'mail_resend');
+        SystemSetting::setValue('mail_driver', 'smtp', 'mail');
+        SystemSetting::setValue('mail_host', 'smtp.resend.com', 'mail');
+
+        $this->assertTrue(TransactionalMailService::sendOtp('user@example.com', '654321', 'Toko'));
+        Mail::assertSent(OtpMail::class, fn ($m) => $m->hasTo('user@example.com') && $m->otp === '654321');
+    }
+
+    // ── 23. Provider=off sends nothing (neither provider) ──
+    public function test_provider_off_sends_nothing(): void
+    {
+        Mail::fake();
+        SystemSetting::setValue('mail_resend_provider', 'off', 'mail_resend');
+
+        $this->assertFalse(TransactionalMailService::sendOtp('user@example.com', '654321', 'Toko'));
+        $this->assertFalse(TransactionalMailService::sendTest('user@example.com'));
+        Mail::assertNothingSent();
+    }
+
+    // ── 24. Switching provider does not erase the Resend key ──
+    public function test_switching_provider_does_not_erase_resend_key(): void
+    {
+        $admin = $this->makeAdmin();
+        $this->actingAs($admin);
+        $this->configureResend('re_keep_resend_key');
+
+        $this->post(route('admin.settings.update'), [
+            'app_name' => 'ServiceKU', 'app_description' => '',
+            'registration_open' => 'true', 'require_approval' => 'false',
+            'default_plan_slug' => 'pro', 'default_trial_days' => '14',
+            'maintenance_mode' => 'false', 'maintenance_message' => '',
+            'max_tenants' => '100', 'notify_email' => '',
+            'mail_driver' => 'smtp',
+            'mail_resend_provider' => 'smtp',
+            'mail_resend_api_key' => '',
+            'mail_host' => 'smtp.resend.com', 'mail_port' => '587',
+            'mail_encryption' => 'tls', 'mail_username' => '', 'mail_password' => '',
+            'mail_from_address' => 'noreply@serviceku.my.id', 'mail_from_name' => 'ServiceKU',
+            'mail_resend_from_address' => 'noreply@serviceku.my.id',
+            'mail_resend_from_name' => 'ServiceKU',
+            'mail_resend_reply_to' => '',
+        ])->assertSessionHas('success');
+
+        $this->assertSame('re_keep_resend_key', decrypt(SystemSetting::getValue('mail_resend_api_key')));
+    }
+
+    // ── 25. Switching provider does not erase the SMTP password ──
+    public function test_switching_provider_does_not_erase_smtp_password(): void
+    {
+        $admin = $this->makeAdmin();
+        $this->actingAs($admin);
+        SystemSetting::setValue('mail_password', 'smtp-secret-pass', 'mail');
+
+        $this->post(route('admin.settings.update'), [
+            'app_name' => 'ServiceKU', 'app_description' => '',
+            'registration_open' => 'true', 'require_approval' => 'false',
+            'default_plan_slug' => 'pro', 'default_trial_days' => '14',
+            'maintenance_mode' => 'false', 'maintenance_message' => '',
+            'max_tenants' => '100', 'notify_email' => '',
+            'mail_driver' => 'log',
+            'mail_resend_provider' => 'resend',
+            'mail_resend_api_key' => '',
+            'mail_password' => '',
+            'mail_from_address' => 'noreply@serviceku.my.id', 'mail_from_name' => 'ServiceKU',
+            'mail_resend_from_address' => 'noreply@serviceku.my.id',
+            'mail_resend_from_name' => 'ServiceKU',
+            'mail_resend_reply_to' => '',
+        ])->assertSessionHas('success');
+
+        $this->assertSame('smtp-secret-pass', SystemSetting::getValue('mail_password'));
+    }
+
+    // ── 26. SMTP password is masked on the frontend ──
+    public function test_smtp_password_is_masked_on_frontend(): void
+    {
+        $admin = $this->makeAdmin();
+        $this->actingAs($admin);
+        SystemSetting::setValue('mail_password', 'smtp-raw-secret', 'mail');
+
+        $resp = $this->get(route('admin.settings'));
+        $resp->assertOk();
+
+        $this->assertStringNotContainsString('smtp-raw-secret', json_encode($resp->viewData('page')));
+    }
+
+    // ── 27. UI has a single provider-driven mail section (source contract) ──
+    public function test_settings_ui_has_single_provider_driven_mail_section(): void
+    {
+        $src = file_get_contents(resource_path('js/Pages/Admin/Settings.vue'));
+
+        // One canonical section; no separate legacy SMTP block remains.
+        $this->assertStringContainsString('Email Transaksional', $src);
+        $this->assertStringNotContainsString('Legacy SMTP / Advanced', $src);
+        $this->assertStringNotContainsString('Email (SMTP)', $src);
+
+        // Provider switch exposes resend / smtp / off.
+        $this->assertStringContainsString('value="resend"', $src);
+        $this->assertStringContainsString('value="smtp"', $src);
+        $this->assertStringContainsString('value="off"', $src);
+
+        // ONE test recipient + ONE handler; no shared SMTP test ref.
+        $this->assertStringContainsString('testEmailRecipient', $src);
+        $this->assertStringNotContainsString('v-model="testEmail"', $src);
+        $this->assertStringNotContainsString('sendResendTestEmail', $src);
+    }
 }

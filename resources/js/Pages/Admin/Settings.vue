@@ -94,30 +94,55 @@
                 </form>
             </div>
 
-            <!-- LEGACY SMTP / ADVANCED (MAIL-CONSOLIDATE-01): collapsed so the
-                 normal view shows ONE canonical transactional mail setup.
-                 Kept for backward compatibility with legacy Mail:: paths only;
-                 NOT used for OTP / platform transactional mail. -->
-            <details class="rounded-2xl p-6 mb-6 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
-                <summary class="cursor-pointer select-none text-sm font-bold text-slate-400 hover:text-slate-300">
-                    🔧 Legacy SMTP / Advanced — tidak digunakan untuk OTP Resend
-                </summary>
-                <div class="mt-4">
-                <h3 class="text-lg font-semibold text-slate-100 mb-4">Email (SMTP)</h3>
-                <p class="text-sm text-slate-400 mb-4">Hanya untuk kompatibilitas email lama (bukan OTP). Platform transactional mail memakai Resend HTTP API.</p>
-
-                <div class="mb-4">
-                    <label class="block text-sm font-medium text-slate-300 mb-1">Mail Driver</label>
-                    <KSelect  v-model="form.mail_driver" name="mail_driver" class="w-full rounded-md border-slate-600 shadow-sm">
-                        <option value="log">Log (hanya untuk testing)</option>
-                        <option value="smtp">SMTP (kirim email sungguhan)</option>
-                    </KSelect>
+            <!-- EMAIL TRANSAKSIONAL — single provider-driven mail config (MAIL-UNIFY-01) -->
+            <div class="rounded-2xl p-6 mb-6 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h3 class="text-lg font-semibold text-slate-100">Email Transaksional</h3>
+                        <p class="text-sm text-slate-400">Satu konfigurasi email transaksional (registrasi OTP). Provider menentukan jalur pengiriman.</p>
+                    </div>
+                    <span v-if="mailStatus.configured" class="text-xs font-bold px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300">✅ Terkonfigurasi</span>
+                    <span v-else class="text-xs font-bold px-3 py-1 rounded-full bg-amber-500/20 text-amber-300">⚠️ Belum dikonfigurasi</span>
                 </div>
 
-                <div v-if="form.mail_driver === 'smtp'" class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Provider</label>
+                        <KSelect  v-model="form.mail_resend_provider" name="mail_resend_provider" class="w-full rounded-md border-slate-600 shadow-sm">
+                            <option value="resend">Resend API</option>
+                            <option value="smtp">SMTP</option>
+                            <option value="off">Off</option>
+                        </KSelect>
+                    </div>
+                </div>
+
+                <!-- PROVIDER = RESEND -->
+                <div v-if="form.mail_resend_provider === 'resend'" class="mt-5 grid grid-cols-2 gap-4">
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Resend API Key</label>
+                        <KInput  type="password" v-model="form.mail_resend_api_key"
+                            :placeholder="mailStatus.has_api_key ? ('Tersimpan: ' + (mailStatus.masked_api_key || '••••') + ' — kosongkan untuk mempertahankan') : 're_... (Resend API key)'"
+                            name="mail_resend_api_key" autocomplete="new-password" class="w-full rounded-md border-slate-600 shadow-sm" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">From Email</label>
+                        <KInput  type="email" v-model="form.mail_resend_from_address" placeholder="noreply@serviceku.my.id" name="mail_resend_from_address" class="w-full rounded-md border-slate-600 shadow-sm" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-300 mb-1">From Name</label>
+                        <KInput  type="text" v-model="form.mail_resend_from_name" placeholder="ServiceKU" name="mail_resend_from_name" class="w-full rounded-md border-slate-600 shadow-sm" />
+                    </div>
+                    <div class="col-span-2">
+                        <label class="block text-sm font-medium text-slate-300 mb-1">Reply-To (opsional)</label>
+                        <KInput  type="email" v-model="form.mail_resend_reply_to" placeholder="support@serviceku.my.id" name="mail_resend_reply_to" class="w-full rounded-md border-slate-600 shadow-sm" />
+                    </div>
+                </div>
+
+                <!-- PROVIDER = SMTP -->
+                <div v-else-if="form.mail_resend_provider === 'smtp'" class="mt-5 grid grid-cols-2 gap-4">
                     <div class="col-span-2">
                         <label class="block text-sm font-medium text-slate-300 mb-1">SMTP Host</label>
-                        <KInput  type="text" v-model="form.mail_host" placeholder="smtp.gmail.com" name="mail_host" class="w-full rounded-md border-slate-600 shadow-sm" />
+                        <KInput  type="text" v-model="form.mail_host" placeholder="smtp.resend.com" name="mail_host" class="w-full rounded-md border-slate-600 shadow-sm" />
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-300 mb-1">Port</label>
@@ -137,7 +162,9 @@
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-300 mb-1">Password</label>
-                        <KInput  type="password" v-model="form.mail_password" name="mail_password" class="w-full rounded-md border-slate-600 shadow-sm" />
+                        <KInput  type="password" v-model="form.mail_password" name="mail_password" autocomplete="new-password"
+                            :placeholder="mailStatus.smtp_has_password ? 'Tersimpan — kosongkan untuk mempertahankan' : ''"
+                            class="w-full rounded-md border-slate-600 shadow-sm" />
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-slate-300 mb-1">From Address</label>
@@ -149,75 +176,25 @@
                     </div>
                 </div>
 
-                <!-- Test Email -->
-                <div v-if="form.mail_driver === 'smtp'" class="mt-4 pt-4 border-t">
-                    <h4 class="text-sm font-medium text-slate-300 mb-2">🔍 Test Email</h4>
-                    <p class="text-xs text-slate-400 mb-2">Kirim email test untuk memastikan konfigurasi SMTP berfungsi.</p>
-                    <div class="flex gap-2">
-                        <KInput  type="email" v-model="testEmail" placeholder="email@example.com"
-                            class="flex-1 rounded-md border-slate-600 shadow-sm text-sm" />
-                        <KButton  @click="sendTestEmail"
-                            class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm whitespace-nowrap">
-                            Kirim Test
-                        </KButton>
-                    </div>
-                </div>
-                </div>
-            </details>
-
-            <!-- EMAIL TRANSAKSIONAL (RESEND) — PILOT-MAIL-04R -->
-            <div class="rounded-2xl p-6 mb-6 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
-                <div class="flex items-center justify-between mb-4">
-                    <div>
-                        <h3 class="text-lg font-semibold text-slate-100">Email Transaksional (Resend)</h3>
-                        <p class="text-sm text-slate-400">Email transaksional platform (registrasi OTP). API key dienkripsi; tidak pernah ditampilkan penuh.</p>
-                    </div>
-                    <span v-if="resendStatus.configured" class="text-xs font-bold px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300">✅ Terkonfigurasi</span>
-                    <span v-else class="text-xs font-bold px-3 py-1 rounded-full bg-amber-500/20 text-amber-300">⚠️ Belum dikonfigurasi</span>
+                <!-- PROVIDER = OFF -->
+                <div v-else class="mt-5 p-4 rounded-xl border border-slate-700 bg-slate-800/40">
+                    <p class="text-sm font-medium text-slate-400">Email transaksional dinonaktifkan. Pilih Resend API atau SMTP untuk mengaktifkan.</p>
                 </div>
 
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-1">Provider</label>
-                        <KSelect  v-model="form.mail_resend_provider" name="mail_resend_provider" class="w-full rounded-md border-slate-600 shadow-sm">
-                            <option value="off">Nonaktif (Off)</option>
-                            <option value="resend">Resend API</option>
-                        </KSelect>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-1">Resend API Key</label>
-                        <KInput  type="password" v-model="form.mail_resend_api_key"
-                            :placeholder="resendStatus.has_api_key ? ('Tersimpan: ' + (resendStatus.masked_api_key || '••••') + ' — kosongkan untuk mempertahankan') : 're_... (Resend API key)'"
-                            name="mail_resend_api_key" autocomplete="new-password" class="w-full rounded-md border-slate-600 shadow-sm" />
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-1">From Email</label>
-                        <KInput  type="email" v-model="form.mail_resend_from_address" placeholder="noreply@serviceku.my.id" name="mail_resend_from_address" class="w-full rounded-md border-slate-600 shadow-sm" />
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-slate-300 mb-1">From Name</label>
-                        <KInput  type="text" v-model="form.mail_resend_from_name" placeholder="ServiceKU" name="mail_resend_from_name" class="w-full rounded-md border-slate-600 shadow-sm" />
-                    </div>
-                    <div class="col-span-2">
-                        <label class="block text-sm font-medium text-slate-300 mb-1">Reply-To (opsional)</label>
-                        <KInput  type="email" v-model="form.mail_resend_reply_to" placeholder="support@serviceku.my.id" name="mail_resend_reply_to" class="w-full rounded-md border-slate-600 shadow-sm" />
-                    </div>
-                </div>
-
-                <p v-if="resendStatus.last_test_result" class="text-xs mt-3">
-                    <span :class="resendStatus.last_test_result === 'success' ? 'text-emerald-400' : 'text-red-400'">
-                        {{ resendStatus.last_test_result === 'success' ? '✅ Test terakhir: berhasil' : '❌ Test terakhir: gagal' }}
+                <p v-if="mailStatus.last_test_result" class="text-xs mt-3">
+                    <span :class="mailStatus.last_test_result === 'success' ? 'text-emerald-400' : 'text-red-400'">
+                        {{ mailStatus.last_test_result === 'success' ? '✅ Test terakhir: berhasil' : '❌ Test terakhir: gagal' }}
                     </span>
-                    <span class="text-slate-500"> · {{ resendStatus.last_test_at || '' }}</span>
+                    <span class="text-slate-500"> · {{ mailStatus.last_test_at || '' }}</span>
                 </p>
 
-                <div class="mt-4 pt-4 border-t border-slate-700">
+                <div v-if="form.mail_resend_provider !== 'off'" class="mt-4 pt-4 border-t border-slate-700">
                     <h4 class="text-sm font-medium text-slate-300 mb-2">🔍 Kirim Email Tes</h4>
                     <p class="text-xs text-slate-400 mb-2">Email Tujuan Tes hanya menentukan penerima email tes — tidak mengubah Reply-To atau pengaturan tersimpan.</p>
                     <div class="flex gap-2">
                         <KInput  type="email" v-model="testEmailRecipient" placeholder="email@example.com"
                             class="flex-1 rounded-md border-slate-600 shadow-sm text-sm" />
-                        <KButton  @click="sendResendTestEmail"
+                        <KButton  @click="sendTestEmail"
                             class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 text-sm whitespace-nowrap">
                             Kirim Test
                         </KButton>
@@ -250,14 +227,13 @@ const props = defineProps({
     featureFlags: { type: Object, default: () => ({}) },
 });
 
-// PILOT-MAIL-04R — transactional mail (Resend) status (masked, never raw key).
-const resendStatus = computed(() => props.settings.mail_resend || {});
+// PILOT-MAIL-04R / MAIL-UNIFY-01 — transactional mail status (masked, never raw).
+// Reflects the CURRENTLY selected provider (resend/smtp/off).
+const mailStatus = computed(() => props.settings.mail_resend || {});
 
-const testEmail = ref('');
-// MAIL-UI-FIX-01 — dedicated TEMPORARY recipient for the Resend test email.
-// Completely separate from the persistent Reply-To setting
-// (mail_resend_reply_to) and from the SMTP test email input. It is never
-// persisted into system_settings and never becomes from/reply-to.
+// MAIL-UI-FIX-01 — dedicated TEMPORARY recipient for the test email (any
+// provider). Separate from the persistent Reply-To setting and never persisted
+// into system_settings and never becomes from/reply-to.
 const testEmailRecipient = ref('');
 
 const form = useForm({
@@ -276,7 +252,9 @@ const form = useForm({
     mail_port: props.settings.mail?.mail_port || '587',
     mail_encryption: props.settings.mail?.mail_encryption || 'tls',
     mail_username: props.settings.mail?.mail_username || '',
-    mail_password: props.settings.mail?.mail_password || '',
+    // MAIL-UNIFY-01: SMTP password is masked server-side; the form stays empty
+    // and a placeholder indicates a stored password (blank update preserves).
+    mail_password: '',
     mail_from_address: props.settings.mail?.mail_from_address || 'notifications@serviceku.my.id',
     mail_from_name: props.settings.mail?.mail_from_name || 'ServiceKU',
     // PILOT-MAIL-04R — transactional mail (Resend)
@@ -293,19 +271,10 @@ const featureFlagsForm = useForm({
     custom_fields: props.featureFlags?.custom_fields?.enabled ?? true,
 });
 
+// MAIL-UNIFY-01 — ONE test-mail handler for the selected provider. Backend
+// routes by provider (resend/smtp/off). Sends only the temporary recipient;
+// never touches any stored setting (Reply-To / From / credentials).
 const sendTestEmail = () => {
-    if (!testEmail.value) return;
-    router.post(route('admin.settings.test-mail'), {
-        email: testEmail.value,
-    }, {
-        preserveScroll: true,
-        onSuccess: () => { testEmail.value = ''; },
-    });
-};
-
-// MAIL-UI-FIX-01 — Resend test recipient handler. Sends only the temporary
-// recipient value; never touches form.mail_resend_reply_to.
-const sendResendTestEmail = () => {
     if (!testEmailRecipient.value) return;
     router.post(route('admin.settings.test-mail'), {
         email: testEmailRecipient.value,

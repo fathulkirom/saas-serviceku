@@ -12,12 +12,18 @@ class SystemSettingsController extends Controller
 {
     public function index()
     {
+        $mail = SystemSetting::getGroup("mail");
+        // MAIL-UNIFY-01: never ship the raw SMTP password to the frontend.
+        if (!empty($mail['mail_password'])) {
+            $mail['mail_password'] = '••••••••';
+        }
+
         return inertia("Admin/Settings", [
             "settings" => [
                 "general" => SystemSetting::getGroup("general"),
                 "registration" => SystemSetting::getGroup("registration"),
                 "maintenance" => SystemSetting::getGroup("maintenance"),
-                "mail" => SystemSetting::getGroup("mail"),
+                "mail" => $mail,
                 // PILOT-MAIL-04R — transactional mail (Resend) status.
                 // Masked only — never the raw API key.
                 "mail_resend" => \App\Services\TransactionalMailService::status(),
@@ -48,7 +54,8 @@ class SystemSettingsController extends Controller
             "mail_from_address" => "nullable|email",
             "mail_from_name" => "nullable|string|max:255",
             // PILOT-MAIL-04R — transactional mail (Resend) settings.
-            "mail_resend_provider" => "nullable|in:off,resend",
+            // MAIL-UNIFY-01: canonical provider switch now supports smtp too.
+            "mail_resend_provider" => "nullable|in:off,resend,smtp",
             "mail_resend_api_key" => "nullable|string|max:255",
             "mail_resend_from_address" => "nullable|email",
             "mail_resend_from_name" => "nullable|string|max:255",
@@ -58,6 +65,12 @@ class SystemSettingsController extends Controller
         foreach ($validated as $key => $value) {
             // API key is stored encrypted and handled separately (blank = retain).
             if ($key === 'mail_resend_api_key') {
+                continue;
+            }
+            // MAIL-UNIFY-01: SMTP password is masked on the frontend — blank or
+            // the display mask must PRESERVE the stored password (like the
+            // Resend API key), never erase it.
+            if ($key === 'mail_password' && ($value === null || $value === '' || $value === '••••••••')) {
                 continue;
             }
             $group = match (true) {
@@ -79,6 +92,15 @@ class SystemSettingsController extends Controller
                 'mail_resend'
             );
         }
+
+        // MAIL-UNIFY-01: keep the legacy default-mailer driver in sync with the
+        // canonical transactional provider so MailConfigService::apply() works.
+        $provider = $request->input('mail_resend_provider', \App\Services\TransactionalMailService::PROVIDER_OFF);
+        SystemSetting::setValue(
+            'mail_driver',
+            $provider === \App\Services\TransactionalMailService::PROVIDER_SMTP ? 'smtp' : 'log',
+            'mail'
+        );
 
         \App\Services\MailConfigService::apply();
         SystemLog::info("System settings updated");
