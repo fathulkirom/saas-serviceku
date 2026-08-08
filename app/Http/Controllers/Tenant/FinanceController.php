@@ -93,6 +93,14 @@ class FinanceController extends Controller
 
             'expenseCategories' => fn() => Expense::CATEGORIES,
 
+            // Daily close summary — income vs expense for today.
+            'dailySummary' => fn() => [
+                'income'  => Sale::where('branch_id', $userBranchId)
+                    ->where('status', Sale::STATUS_PAID)->whereDate('created_at', today())->sum('total'),
+                'expense' => Expense::where('branch_id', $userBranchId)
+                    ->whereDate('date', today())->sum('amount'),
+            ],
+
             'purchases' => fn() => Purchase::with(['supplier', 'creator', 'items.product'])
                 ->when($userBranchId, fn($q) => $q->where('branch_id', $userBranchId))
                 ->latest()

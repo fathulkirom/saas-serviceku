@@ -38,6 +38,24 @@
       </div>
 
       <div class="flex-1 p-6 sm:p-8 max-w-[1400px] mx-auto w-full">
+
+        <!-- Daily Close Summary -->
+        <div v-if="dailySummary" class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
+          <div class="p-3 bg-white rounded-xl border border-zinc-200 shadow-sm">
+            <p class="text-xs text-zinc-500">Pemasukan Hari Ini</p>
+            <p class="text-lg font-bold text-emerald-600">Rp {{ formatNumber(dailySummary.income) }}</p>
+          </div>
+          <div class="p-3 bg-white rounded-xl border border-zinc-200 shadow-sm">
+            <p class="text-xs text-zinc-500">Pengeluaran Hari Ini</p>
+            <p class="text-lg font-bold text-red-500">Rp {{ formatNumber(dailySummary.expense) }}</p>
+          </div>
+          <div class="p-3 bg-white rounded-xl border border-zinc-200 shadow-sm">
+            <p class="text-xs text-zinc-500">Saldo Hari Ini</p>
+            <p class="text-lg font-bold" :class="dailySummary.income - dailySummary.expense >= 0 ? 'text-blue-600' : 'text-red-600'">
+              Rp {{ formatNumber(dailySummary.income - dailySummary.expense) }}
+            </p>
+          </div>
+        </div>
         <TabPage :tabs="tabs" v-model="activeTab" @update:model-value="switchTab">
       <!-- PENJUALAN -->
       <template #penjualan>
@@ -512,6 +530,7 @@ const props = defineProps({
   returns: { type: Object, default: null },
   suppliers: { type: Array, default: () => [] },
   products: { type: Array, default: () => [] },
+  dailySummary: { type: Object, default: null },
 });
 
 const activeTab = ref(props.activeTab);
