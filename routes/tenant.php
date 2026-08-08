@@ -290,6 +290,9 @@ Route::middleware([
     Route::post('/inventaris/suppliers', [\App\Http\Controllers\Tenant\SupplierController::class, 'store'])->name('suppliers.store')->middleware('check.plan.feature:inventaris');
     Route::put('/inventaris/suppliers/{supplier}', [\App\Http\Controllers\Tenant\SupplierController::class, 'update'])->name('suppliers.update')->middleware('check.plan.feature:inventaris');
 
+    // v1.2: Multi-Branch Analytics
+    Route::get('/laporan/analytics', [\App\Http\Controllers\Tenant\AnalyticsController::class, 'index'])->name('analytics.index')->middleware('check.plan.feature:reports');
+
     // v1.4: API Tokens (gated by 'api' feature)
     Route::get('/pengaturan/api-tokens', [\App\Http\Controllers\Tenant\ApiTokenController::class, 'index'])->name('api-tokens.index')->middleware('check.plan.feature:settings');
     Route::post('/pengaturan/api-tokens', [\App\Http\Controllers\Tenant\ApiTokenController::class, 'store'])->name('api-tokens.store')->middleware('check.plan.feature:settings');
