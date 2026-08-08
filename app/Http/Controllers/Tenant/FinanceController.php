@@ -98,7 +98,7 @@ class FinanceController extends Controller
                 'income'  => Sale::where('branch_id', $userBranchId)
                     ->where('status', Sale::STATUS_PAID)->whereDate('created_at', today())->sum('total'),
                 'expense' => Expense::where('branch_id', $userBranchId)
-                    ->whereDate('date', today())->sum('amount'),
+                    ->whereDate('expense_date', today())->sum('amount'),
             ],
 
             'purchases' => fn() => Purchase::with(['supplier', 'creator', 'items.product'])
@@ -130,7 +130,7 @@ class FinanceController extends Controller
             for ($d = 1; $d <= 31; $d++) {
                 $date = sprintf('%s-%02d', $month, $d);
                 $income = Sale::where('branch_id', $branchId)->where('status', Sale::STATUS_PAID)->whereDate('created_at', $date)->sum('total');
-                $expense = Expense::where('branch_id', $branchId)->whereDate('date', $date)->sum('amount');
+                $expense = Expense::where('branch_id', $branchId)->whereDate('expense_date', $date)->sum('amount');
                 $txCount = Sale::where('branch_id', $branchId)->whereDate('created_at', $date)->count();
                 $svcDone = Service::where('branch_id', $branchId)->where('status', 'selesai')->whereDate('created_at', $date)->count();
                 if ($income > 0 || $expense > 0) {

@@ -48,7 +48,7 @@ class AnalyticsController extends Controller
                     ->where('status', Sale::STATUS_PAID)
                     ->whereBetween('created_at', [$m.'-01', $m.'-31'])->sum('total'),
                 'expenses' => Expense::where('branch_id', $branchId)
-                    ->whereBetween('date', [$m.'-01', $m.'-31'])->sum('amount'),
+                    ->whereBetween('expense_date', [$m.'-01', $m.'-31'])->sum('amount'),
                 'services' => Service::where('branch_id', $branchId)
                     ->whereBetween('created_at', [$m.'-01', $m.'-31'])->count(),
             ];

@@ -349,7 +349,11 @@ class RegisteredTenantController extends Controller
         ]);
 
         try {
-            Mail::to($request->email)->send(new OtpMail($newOtp, $existing->data['tenant_name'] ?? ''));
+            \App\Services\TransactionalMailService::sendOtp(
+                $request->email,
+                $newOtp,
+                $existing->data['tenant_name'] ?? 'ServiceKU'
+            );
         } catch (\Exception $e) {
             return back()->withErrors(['email' => 'Gagal mengirim ulang kode.']);
         }
