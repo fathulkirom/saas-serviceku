@@ -1,6 +1,6 @@
 <template>
   <AuthenticatedLayout>
-    <div class="flex flex-col min-h-[calc(100vh-64px)] bg-zinc-50">
+    <div class="flex flex-col min-h animate-fade-in-[calc(100vh-64px)] bg-zinc-50">
       <!-- Header CRM Style -->
       <div class="px-6 sm:px-8 py-6 bg-white border-b border-zinc-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 sticky top-0 z-20">
         <div class="flex items-center gap-4">
