@@ -1,8 +1,8 @@
 <template>
     <GuestLayout>
         <div class="text-center mb-8">
-            <h2 class="text-xl font-bold sk-text-primary mb-2">Masuk ke Toko Anda</h2>
-            <p class="text-sm sk-text-muted">Cari toko Anda untuk melanjutkan ke dasbor</p>
+            <h2 class="text-2xl font-extrabold tracking-tight sk-text-primary mb-2">Masuk ke Toko Anda</h2>
+            <p class="text-sm font-medium sk-text-muted">Cari toko Anda untuk melanjutkan ke dasbor</p>
         </div>
 
         <!-- Login Cepat (Hanya Dev Mode) -->
@@ -83,7 +83,8 @@
             <div class="pt-2">
                 <KButton 
                     type="submit"
-                    class="w-full flex items-center justify-center px-6 py-3 rounded-xl sk-bg-inverse text-white text-sm font-bold shadow-md hover:sk-bg-inverse focus:ring-2 focus:ring-offset-2 focus:ring-zinc-900 transition-all disabled:opacity-70"
+                    class="w-full flex items-center justify-center px-6 py-3.5 rounded-xl text-white text-sm font-extrabold shadow-md hover:shadow-lg transition-all disabled:opacity-70 hover:-translate-y-0.5"
+                    style="background: var(--color-primary)"
                     :disabled="form.processing">
                     <svg v-if="form.processing" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
@@ -93,9 +94,9 @@
                 </KButton>
             </div>
             
-            <div class="text-center mt-6">
+            <div class="text-center mt-8 pt-6 border-t" :style="{ borderColor: 'var(--border-light)' }">
                 <p class="text-sm font-medium sk-text-muted">Belum memiliki toko? 
-                    <Link :href="route('register')" class="sk-text-primary-brand hover:sk-text-primary-brand font-bold ml-1">Daftar sekarang</Link>
+                    <Link :href="route('register')" class="font-extrabold hover:underline transition-all" :style="{ color: 'var(--color-primary-text)' }">Daftar gratis sekarang</Link>
                 </p>
             </div>
         </form>
