@@ -366,6 +366,32 @@
                 </div>
             </div>
 
+            <!-- UPGRADE-06: Subscription Usage + Add-ons -->
+            <div v-if="tenantEntitlement" class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm">
+              <h3 class="text-lg font-bold text-zinc-900 mb-4">📊 Penggunaan & Add-ons</h3>
+              <div class="grid grid-cols-2 gap-3 mb-4">
+                <div class="p-3 bg-zinc-50 rounded-xl">
+                  <p class="text-xs text-zinc-500">User</p>
+                  <p class="text-lg font-bold" :class="tenantEntitlement.limits.users.over_limit ? 'text-red-600' : 'text-zinc-900'">
+                    {{ tenantEntitlement.limits.users.used }}<span class="text-sm font-normal text-zinc-400"> / {{ tenantEntitlement.limits.users.limit }}</span>
+                  </p>
+                </div>
+                <div class="p-3 bg-zinc-50 rounded-xl">
+                  <p class="text-xs text-zinc-500">Cabang</p>
+                  <p class="text-lg font-bold" :class="tenantEntitlement.limits.branches.over_limit ? 'text-red-600' : 'text-zinc-900'">
+                    {{ tenantEntitlement.limits.branches.used }}<span class="text-sm font-normal text-zinc-400"> / {{ tenantEntitlement.limits.branches.limit }}</span>
+                  </p>
+                </div>
+              </div>
+              <div v-if="tenantAddons?.length" class="space-y-1">
+                <p class="text-xs font-medium text-zinc-500 mb-2">Add-on Aktif:</p>
+                <span v-for="a in tenantAddons.filter(x => x.status === 'active')" :key="a.id" class="inline-block mr-1.5 mb-1.5 px-2.5 py-1 text-xs rounded-full bg-indigo-50 text-indigo-700 font-medium">
+                  +{{ a.key }}{{ a.quantity > 1 ? ' x'+a.quantity : '' }}
+                </span>
+              </div>
+              <p v-else class="text-xs text-zinc-400">Belum ada add-on tambahan.</p>
+            </div>
+
             <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm max-w-xl">
               <h3 class="text-lg font-bold text-zinc-900 mb-4">Gunakan Kode Voucher / Promo</h3>
               <form @submit.prevent="applyVoucher" class="flex items-end gap-3">
@@ -616,6 +642,9 @@ const props = defineProps({
   currentPlan: { type: Object, default: null },
   plans: { type: Array, default: () => [] },
   voucherDiscount: { type: [Object, Array], default: null },
+  tenantEntitlement: { type: Object, default: null },
+  tenantAddons: { type: Array, default: () => [] },
+  tenantSubscriptionEvents: { type: Array, default: () => [] },
   demoStats: { type: Object, default: null },
   customFields: { type: [Object, Array], default: null },
   waGateway: { type: Object, default: null },

@@ -65,6 +65,48 @@
                     </Link>
                 </div>
 
+                <!-- UPGRADE-05: Subscription + Entitlement -->
+                <div class="mt-6 pt-4 border-t">
+                    <h4 class="font-semibold text-slate-100 mb-3 text-sm">📦 Subscription</h4>
+                    <div v-if="entitlement" class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+                        <div class="p-3 bg-slate-800/50 rounded-lg">
+                            <p class="text-xs text-slate-400">Plan</p>
+                            <p class="font-bold text-sm text-indigo-400">{{ entitlement.plan_name }}</p>
+                        </div>
+                        <div class="p-3 bg-slate-800/50 rounded-lg">
+                            <p class="text-xs text-slate-400">User</p>
+                            <p class="font-bold text-sm" :class="entitlement.limits.users.over_limit ? 'text-red-400' : 'text-emerald-400'">
+                                {{ entitlement.limits.users.used }} / {{ entitlement.limits.users.limit }}
+                            </p>
+                        </div>
+                        <div class="p-3 bg-slate-800/50 rounded-lg">
+                            <p class="text-xs text-slate-400">Cabang</p>
+                            <p class="font-bold text-sm" :class="entitlement.limits.branches.over_limit ? 'text-red-400' : 'text-emerald-400'">
+                                {{ entitlement.limits.branches.used }} / {{ entitlement.limits.branches.limit }}
+                            </p>
+                        </div>
+                    </div>
+                    <div v-if="addons?.length" class="flex flex-wrap gap-1.5 mb-3">
+                        <span v-for="a in addons" :key="a.id" class="px-2 py-0.5 text-xs rounded-full"
+                            :class="a.status === 'active' ? 'bg-emerald-500/20 text-emerald-300' : a.status === 'expired' ? 'bg-red-500/20 text-red-300' : 'bg-amber-500/20 text-amber-300'">
+                            +{{ a.key }} ({{ a.status }})
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Subscription Events -->
+                <div v-if="subscriptionEvents?.length" class="mt-4 pt-4 border-t">
+                    <h4 class="font-semibold text-slate-100 mb-3 text-sm">📋 Riwayat Subscription</h4>
+                    <div class="max-h-40 overflow-y-auto space-y-1.5">
+                        <div v-for="ev in subscriptionEvents.slice(0, 8)" :key="ev.id" class="flex items-start gap-2 text-xs">
+                            <span class="text-slate-500 shrink-0 w-32">{{ ev.created_at?.slice(0, 16) }}</span>
+                            <span class="px-1.5 py-0.5 rounded font-mono text-[10px] shrink-0"
+                                :class="ev.event === 'plan_changed' ? 'bg-indigo-500/20 text-indigo-300' : 'bg-slate-700 text-slate-300'">{{ ev.event }}</span>
+                            <span class="text-slate-400 truncate">{{ ev.new_value || ev.reason }}</span>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Domain Management -->
                 <div class="mt-6 pt-4 border-t">
                     <h4 class="font-semibold text-slate-100 mb-3 text-sm">Domain / Subdomain</h4>
@@ -199,6 +241,9 @@ const props = defineProps({
     stats: { type: Object, default: null },
     activityLogs: { type: Array, default: () => [] },
     tenantData: { type: Object, default: null },
+    entitlement: { type: Object, default: null },
+    subscriptionEvents: { type: Array, default: () => [] },
+    addons: { type: Array, default: () => [] },
 });
 
 const formatNumber = (num) => new Intl.NumberFormat('id-ID').format(num || 0);

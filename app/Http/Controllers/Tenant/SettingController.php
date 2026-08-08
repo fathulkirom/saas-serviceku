@@ -97,6 +97,12 @@ class SettingController extends Controller
                 'slug' => tenancy()->tenant->plan->slug,
                 'price' => (float) tenancy()->tenant->plan->price,
             ] : null,
+            // UPGRADE-06: Hybrid Subscription — effective entitlement snapshot.
+            'tenantEntitlement' => fn() => (new \App\Services\EntitlementService(tenancy()->tenant))->snapshot(),
+            'tenantAddons' => fn() => \App\Models\TenantAddon::where('tenant_id', tenancy()->tenant->id)
+                ->orderBy('created_at', 'desc')->get(),
+            'tenantSubscriptionEvents' => fn() => \App\Models\SubscriptionEvent::where('tenant_id', tenancy()->tenant->id)
+                ->latest('created_at')->take(10)->get(),
             'plans' => fn() => Plan::where('is_active', true)->get()->map(function ($plan) {
                 return [
                     'id' => $plan->id,

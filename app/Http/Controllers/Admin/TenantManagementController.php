@@ -90,6 +90,12 @@ class TenantManagementController extends Controller
             'stats' => $stats,
             'activityLogs' => $activityLogs,
             'tenantData' => $tenantData,
+            // UPGRADE-05: Hybrid Subscription data.
+            'entitlement' => (new \App\Services\EntitlementService($tenant))->snapshot(),
+            'subscriptionEvents' => \App\Models\SubscriptionEvent::where('tenant_id', $tenant->id)
+                ->latest('created_at')->take(20)->get(),
+            'addons' => \App\Models\TenantAddon::where('tenant_id', $tenant->id)
+                ->with('tenant')->orderBy('created_at', 'desc')->get(),
         ]);
     }
 
