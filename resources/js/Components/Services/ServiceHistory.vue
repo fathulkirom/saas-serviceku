@@ -2,11 +2,11 @@
     <div class="space-y-5">
         <!-- WARRANTY CLAIMS -->
         <div v-if="service.warranty_claims?.length" class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-card);">
-            <h3 class="text-sm font-bold mb-4 text-zinc-900">🛡️ Klaim Garansi</h3>
+            <h3 class="text-sm font-bold mb-4 sk-text-primary">🛡️ Klaim Garansi</h3>
             <div class="space-y-2">
                 <Link v-for="claim in service.warranty_claims" :key="claim.id" :href="route('services.show', claim.id)"
-                    class="flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all bg-zinc-50">
-                    <span class="text-zinc-900">#{{ claim.id }}</span>
+                    class="flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all sk-bg-hover">
+                    <span class="sk-text-primary">#{{ claim.id }}</span>
                     <span class="text-xs" :style="statusStyle(claim.status)">{{ statusLabel(claim.status) }}</span>
                 </Link>
             </div>
@@ -14,7 +14,7 @@
 
         <!-- TIMELINE -->
         <div class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-card);">
-            <h3 class="text-sm font-bold mb-4 text-zinc-900">📊 Timeline Servis</h3>
+            <h3 class="text-sm font-bold mb-4 sk-text-primary">📊 Timeline Servis</h3>
             <div class="space-y-4">
                 <div v-for="(evt, idx) in timeline" :key="idx" class="flex gap-3">
                     <div class="flex flex-col items-center">
@@ -22,8 +22,8 @@
                         <div v-if="idx < timeline.length - 1" class="w-0.5 flex-1" style="background: #d1d5db; min-height: 24px;"></div>
                     </div>
                     <div class="pb-1">
-                        <p class="text-sm font-semibold text-zinc-900">{{ evt.label }}</p>
-                        <p class="text-xs text-zinc-500">{{ evt.date }}</p>
+                        <p class="text-sm font-semibold sk-text-primary">{{ evt.label }}</p>
+                        <p class="text-xs sk-text-muted">{{ evt.date }}</p>
                     </div>
                 </div>
             </div>

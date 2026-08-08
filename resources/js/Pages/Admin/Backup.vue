@@ -21,9 +21,9 @@
                 <!-- Setting Form -->
                 <div class="rounded-2xl p-6 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
                     <h3 class="text-lg font-semibold text-slate-100 mb-4">Pengaturan Backup</h3>
-                    <div class="flex items-center gap-2 mb-4 p-3 bg-blue-50 rounded-lg">
+                    <div class="flex items-center gap-2 mb-4 p-3 sk-bg-info-soft rounded-lg">
                         <span class="text-lg">💡</span>
-                        <p class="text-sm text-blue-700">Backup disimpan ke HDD lokal dulu, lalu bisa diupload ke Google Drive untuk keamanan ekstra (off-site).</p>
+                        <p class="text-sm sk-text-info">Backup disimpan ke HDD lokal dulu, lalu bisa diupload ke Google Drive untuk keamanan ekstra (off-site).</p>
                     </div>
                     <form @submit.prevent="updateSettings">
                         <div class="grid grid-cols-2 gap-4">
@@ -47,7 +47,7 @@
                             <div class="col-span-2">
                                 <label class="relative inline-flex items-center cursor-pointer">
                                     <KCheckbox  v-model="autoEnabled" class="sr-only peer" />
-                                    <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                    <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:sk-bg-card after:border-slate-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:sk-bg-primary"></div>
                                     <span class="ml-3 text-sm font-medium text-slate-300">Aktifkan Backup Otomatis (via cron)</span>
                                 </label>
                                 <p class="mt-1 text-xs text-slate-400">Pastikan cron job sudah diset: <code class="bg-slate-800 px-1 rounded">* * * * * cd {{ basePath }} && php artisan schedule:run &gt;&gt; /dev/null 2&gt;&amp;1</code></p>
@@ -57,12 +57,12 @@
                         <!-- Google Drive Settings -->
                         <div class="mt-6 pt-4 border-t">
                             <h4 class="text-base font-semibold text-slate-100 mb-3">☁️ Google Drive Backup</h4>
-                            <p class="text-xs text-slate-400 mb-3">Backup otomatis diupload ke Google Drive sebagai cadangan off-site. <a href="https://rclone.org/drive/" target="_blank" class="text-indigo-600 hover:underline">Cara setup rclone</a></p>
+                            <p class="text-xs text-slate-400 mb-3">Backup otomatis diupload ke Google Drive sebagai cadangan off-site. <a href="https://rclone.org/drive/" target="_blank" class="sk-text-primary-brand hover:underline">Cara setup rclone</a></p>
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="col-span-2">
                                     <label class="relative inline-flex items-center cursor-pointer">
                                         <KCheckbox  v-model="gdriveEnabled" class="sr-only peer" />
-                                        <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                        <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:sk-bg-card after:border-slate-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:sk-bg-primary"></div>
                                         <span class="ml-3 text-sm font-medium text-slate-300">Upload ke Google Drive</span>
                                     </label>
                                 </div>
@@ -75,7 +75,7 @@
                                 <div class="col-span-2">
                                     <label class="relative inline-flex items-center cursor-pointer">
                                         <KCheckbox  v-model="gdriveDeleteLocal" class="sr-only peer" />
-                                        <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                                        <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:sk-bg-card after:border-slate-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:sk-bg-primary"></div>
                                         <span class="ml-3 text-sm font-medium text-slate-300">Hapus file lokal setelah upload (hemat SSD)</span>
                                     </label>
                                 </div>
@@ -83,7 +83,7 @@
                         </div>
                         <div class="flex justify-end mt-6 pt-4 border-t">
                             <KButton  type="submit" :disabled="form.processing"
-                                class="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 text-sm">
+                                class="px-6 py-2 sk-bg-primary text-white rounded-md hover:sk-bg-primary disabled:opacity-50 text-sm">
                                 Simpan Pengaturan
                             </KButton>
                         </div>
@@ -119,7 +119,7 @@
                                 </div>
                             </div>
                             <KButton  @click="deleteBackup(file.path)"
-                                class="flex-shrink-0 px-2 py-1 text-xs text-red-400 hover:text-red-800 hover:bg-red-50 rounded">
+                                class="flex-shrink-0 px-2 py-1 text-xs text-red-400 hover:sk-text-danger hover:sk-bg-danger-soft rounded">
                                 Hapus
                             </KButton>
                         </div>
@@ -172,7 +172,7 @@
                         </div>
                         <div class="mt-2">
                             <div class="w-full bg-slate-700 rounded-full h-2">
-                                <div class="bg-indigo-600 h-2 rounded-full" :style="{ width: diskInfo.percent + '%' }"></div>
+                                <div class="sk-bg-primary h-2 rounded-full" :style="{ width: diskInfo.percent + '%' }"></div>
                             </div>
                             <p class="text-xs text-slate-400 mt-1">{{ diskInfo.percent }}% terpakai</p>
                         </div>

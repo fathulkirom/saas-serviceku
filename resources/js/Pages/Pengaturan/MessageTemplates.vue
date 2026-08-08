@@ -46,13 +46,13 @@ const varLabel = (v) => '{' + '{' + v + '}' + '}'
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <KCard v-for="t in templates" :key="t.id" class="!p-4">
         <div class="flex items-center justify-between mb-2">
-          <h3 class="font-semibold text-gray-900 dark:text-white">{{ t.name }}</h3>
+          <h3 class="font-semibold sk-text-primary dark:text-white">{{ t.name }}</h3>
           <div class="flex items-center gap-2">
-            <span class="text-xs px-2 py-0.5 rounded-full" :class="t.channel === 'whatsapp' ? 'bg-green-100 text-green-700' : 'bg-blue-100 text-blue-700'">{{ t.channel }}</span>
-            <span v-if="t.is_system" class="text-xs text-zinc-400">sistem</span>
+            <span class="text-xs px-2 py-0.5 rounded-full" :class="t.channel === 'whatsapp' ? 'sk-bg-success-soft sk-text-success' : 'sk-bg-info-soft sk-text-info'">{{ t.channel }}</span>
+            <span v-if="t.is_system" class="text-xs sk-text-muted">sistem</span>
           </div>
         </div>
-        <pre class="text-xs text-gray-500 dark:text-gray-400 whitespace-pre-wrap line-clamp-4 mb-3">{{ t.body }}</pre>
+        <pre class="text-xs sk-text-muted dark:sk-text-muted whitespace-pre-wrap line-clamp-4 mb-3">{{ t.body }}</pre>
         <div class="flex gap-2">
           <KButton size="xs" variant="outline" @click="openEdit(t)">Edit</KButton>
         </div>
@@ -69,9 +69,9 @@ const varLabel = (v) => '{' + '{' + v + '}' + '}'
         <KInput v-if="form.channel === 'email'" v-model="form.subject" label="Subject" />
         <div>
           <label class="block text-sm font-medium mb-1">Body</label>
-          <textarea v-model="form.body" rows="6" class="w-full px-3 py-2 border border-zinc-200 rounded-lg text-sm dark:bg-gray-800 dark:border-gray-700" required></textarea>
+          <textarea v-model="form.body" rows="6" class="w-full px-3 py-2 border sk-border rounded-lg text-sm dark:bg-gray-800 dark:border-gray-700" required></textarea>
           <div class="flex flex-wrap gap-1 mt-1">
-            <button v-for="v in variables" :key="v" type="button" @click="insertVar(v)" class="text-xs px-2 py-0.5 bg-zinc-100 hover:bg-zinc-200 rounded-full dark:bg-gray-700 dark:hover:bg-gray-600">{{ varLabel(v) }}</button>
+            <button v-for="v in variables" :key="v" type="button" @click="insertVar(v)" class="text-xs px-2 py-0.5 sk-bg-hover hover:bg-zinc-200 rounded-full dark:bg-gray-700 dark:hover:bg-gray-600">{{ varLabel(v) }}</button>
           </div>
         </div>
         <div class="flex justify-end gap-2 pt-4 border-t dark:border-gray-700">

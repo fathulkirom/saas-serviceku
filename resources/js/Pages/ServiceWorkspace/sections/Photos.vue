@@ -82,7 +82,7 @@
         <button
           v-if="canDelete"
           @click.stop="deletePhoto(photo.id)"
-          class="absolute top-2 right-2 w-6 h-6 rounded-full bg-red-500/80 hover:bg-red-600 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+          class="absolute top-2 right-2 w-6 h-6 rounded-full bg-red-500/80 hover:sk-bg-danger text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
         >
           <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
@@ -105,7 +105,7 @@
       >
         <button
           @click="selectedPhoto = null"
-          class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
+          class="absolute top-4 right-4 w-10 h-10 rounded-full sk-bg-card/10 flex items-center justify-center text-white hover:sk-bg-card/20 transition-colors"
         >
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>

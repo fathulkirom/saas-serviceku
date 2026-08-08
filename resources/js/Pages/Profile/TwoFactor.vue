@@ -1,12 +1,12 @@
 <template>
     <div class="space-y-6">
-        <div class="bg-white rounded-xl shadow-sm p-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-2">🔐 Autentikasi Dua Langkah (2FA)</h3>
-            <p class="text-gray-500 text-sm mb-6">
+        <div class="sk-bg-card rounded-xl shadow-sm p-6">
+            <h3 class="text-lg font-semibold sk-text-primary mb-2">🔐 Autentikasi Dua Langkah (2FA)</h3>
+            <p class="sk-text-muted text-sm mb-6">
                 Tambahkan lapisan keamanan ekstra ke akun Anda menggunakan aplikasi authenticator seperti Google Authenticator atau Authy.
             </p>
 
-            <div v-if="loading" class="text-center py-8 text-gray-500">Memuat...</div>
+            <div v-if="loading" class="text-center py-8 sk-text-muted">Memuat...</div>
 
             <!-- 2FA is OFF -->
             <div v-if="!loading && !enabled">
@@ -23,20 +23,20 @@
 
                 <!-- QR Code Step -->
                 <div v-if="showQr" class="mt-6 space-y-4">
-                    <div class="border rounded-lg p-6 bg-gray-50">
-                        <p class="text-sm font-medium text-gray-700 mb-3">Scan QR Code dengan aplikasi authenticator:</p>
+                    <div class="border rounded-lg p-6 sk-bg-hover">
+                        <p class="text-sm font-medium sk-text-primary mb-3">Scan QR Code dengan aplikasi authenticator:</p>
                         <div class="flex justify-center mb-4" v-html="qrSvg"></div>
-                        <p class="text-xs text-gray-500 text-center">Atau masukkan kode manual: <code class="bg-gray-200 px-2 py-1 rounded">{{ secret }}</code></p>
+                        <p class="text-xs sk-text-muted text-center">Atau masukkan kode manual: <code class="sk-bg-hover px-2 py-1 rounded">{{ secret }}</code></p>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Masukkan kode 6 digit dari aplikasi</label>
+                        <label class="block text-sm font-medium sk-text-primary mb-1">Masukkan kode 6 digit dari aplikasi</label>
                         <KInput  v-model="confirmCode" type="text" inputmode="numeric" maxlength="6"
                             class="w-full text-center text-2xl tracking-[0.5em] px-4 py-3 border rounded-lg"
                             placeholder="000000" />
                     </div>
 
-                    <div v-if="confirmError" class="text-red-600 text-sm">{{ confirmError }}</div>
+                    <div v-if="confirmError" class="sk-text-danger text-sm">{{ confirmError }}</div>
 
                     <KButton  @click="confirm2FA"
                         :disabled="confirmProcessing"
@@ -48,26 +48,26 @@
 
             <!-- 2FA is ON -->
             <div v-if="!loading && enabled">
-                <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
-                    <p class="text-green-800 text-sm font-medium">✅ 2FA Aktif</p>
-                    <p class="text-green-600 text-sm mt-1">Akun Anda dilindungi dengan autentikasi dua langkah.</p>
+                <div class="sk-bg-success-soft border sk-border-primary rounded-lg p-4 mb-6">
+                    <p class="sk-text-success text-sm font-medium">✅ 2FA Aktif</p>
+                    <p class="sk-text-success text-sm mt-1">Akun Anda dilindungi dengan autentikasi dua langkah.</p>
                 </div>
 
                 <!-- Recovery Codes -->
                 <div v-if="recoveryCodes.length > 0" class="mb-6">
-                    <p class="text-sm font-medium text-gray-700 mb-2">Kode Cadangan</p>
-                    <p class="text-xs text-gray-500 mb-3">Simpan kode-kode ini di tempat aman. Setiap kode hanya bisa digunakan sekali.</p>
-                    <div class="bg-gray-900 text-green-400 p-4 rounded-lg font-mono text-sm">
+                    <p class="text-sm font-medium sk-text-primary mb-2">Kode Cadangan</p>
+                    <p class="text-xs sk-text-muted mb-3">Simpan kode-kode ini di tempat aman. Setiap kode hanya bisa digunakan sekali.</p>
+                    <div class="sk-bg-inverse text-green-400 p-4 rounded-lg font-mono text-sm">
                         <div v-for="(code, i) in recoveryCodes" :key="i" class="py-1">{{ code }}</div>
                     </div>
-                    <KButton  @click="regenerateCodes" class="mt-2 text-sm text-blue-600 hover:text-blue-800">
+                    <KButton  @click="regenerateCodes" class="mt-2 text-sm sk-text-info hover:text-blue-800">
                         🔄 Generate ulang kode cadangan
                     </KButton>
                 </div>
 
                 <KButton  @click="disable2FA"
                     :disabled="processing"
-                    class="px-6 py-3 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 disabled:opacity-50 transition">
+                    class="px-6 py-3 sk-bg-danger-soft sk-text-danger rounded-lg hover:bg-red-200 disabled:opacity-50 transition">
                     Nonaktifkan 2FA
                 </KButton>
             </div>

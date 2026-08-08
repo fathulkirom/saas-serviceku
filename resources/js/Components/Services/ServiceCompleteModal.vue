@@ -1,16 +1,16 @@
 <template>
     <KDialog :model-value="show" @update:model-value="show = $event" max-width="lg" scrollable>
-        <h3 class="text-base font-bold mb-4 text-zinc-900">✅ Complete Servis</h3>
+        <h3 class="text-base font-bold mb-4 sk-text-primary">✅ Complete Servis</h3>
         <div class="space-y-4">
             <div>
-                <label class="block text-xs font-semibold mb-1 text-zinc-500">Checklist Keluar (opsional)</label>
+                <label class="block text-xs font-semibold mb-1 sk-text-muted">Checklist Keluar (opsional)</label>
                 <KSelect v-model="form.checklist_template_id">
                     <option value="">-- Tanpa Checklist --</option>
                     <option v-for="tpl in templatesKeluar" :key="tpl.id" :value="tpl.id">{{ tpl.name }}</option>
                 </KSelect>
                 <div v-if="selectedChecklistItems.length" class="mt-2 space-y-1">
                     <label v-for="item in selectedChecklistItems" :key="item.id"
-                        class="flex items-center gap-2 text-sm cursor-pointer py-0.5 text-zinc-600">
+                        class="flex items-center gap-2 text-sm cursor-pointer py-0.5 sk-text-secondary">
                         <KCheckbox :value="item.id" v-model="form.checked_items"
                             class="rounded" style="accent-color: var(--primary);" />
                         {{ item.item_name }}
@@ -18,11 +18,11 @@
                 </div>
             </div>
             <div>
-                <label class="block text-xs font-semibold mb-1 text-zinc-500">Biaya Jasa</label>
+                <label class="block text-xs font-semibold mb-1 sk-text-muted">Biaya Jasa</label>
                 <KInput v-model.number="form.service_charge" type="number" min="0" />
             </div>
             <div>
-                <label class="block text-xs font-semibold mb-1 text-zinc-500">Tambah Sparepart</label>
+                <label class="block text-xs font-semibold mb-1 sk-text-muted">Tambah Sparepart</label>
                 <div class="space-y-2">
                     <div v-for="(sp, idx) in form.spareparts" :key="idx" class="flex gap-2 items-center">
                         <KSelect v-model="sp.product_id" size="sm" width-class="flex-1">
@@ -36,7 +36,7 @@
                 </div>
             </div>
             <div>
-                <label class="block text-xs font-semibold mb-1 text-zinc-500">Catatan (opsional)</label>
+                <label class="block text-xs font-semibold mb-1 sk-text-muted">Catatan (opsional)</label>
                 <KTextarea v-model="form.condition_note" rows="2" />
             </div>
         </div>

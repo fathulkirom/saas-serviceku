@@ -2,30 +2,30 @@
     <Head title="Verifikasi Email" />
     <GuestLayout>
         <div class="text-center mb-6">
-            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-indigo-100 mb-6 shadow-sm ring-8 ring-indigo-50">
-                <svg class="h-8 w-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full sk-bg-primary-soft mb-6 shadow-sm ring-8 ring-indigo-50">
+                <svg class="h-8 w-8 sk-text-primary-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
             </div>
             
-            <h1 class="text-2xl font-black text-zinc-900 tracking-tight">Verifikasi Email</h1>
-            <p class="text-zinc-500 font-medium text-sm mt-3 leading-relaxed">
-                Link verifikasi telah dikirim ke <strong class="text-zinc-900 font-bold">{{ user.email }}</strong>.
+            <h1 class="text-2xl font-black sk-text-primary tracking-tight">Verifikasi Email</h1>
+            <p class="sk-text-muted font-medium text-sm mt-3 leading-relaxed">
+                Link verifikasi telah dikirim ke <strong class="sk-text-primary font-bold">{{ user.email }}</strong>.
                 Silakan cek kotak masuk atau folder spam Anda.
             </p>
         </div>
 
-        <div v-if="$page.props.flash?.success" class="mb-6 p-4 bg-emerald-50 border border-emerald-100 rounded-xl flex items-start gap-3">
-            <svg class="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div v-if="$page.props.flash?.success" class="mb-6 p-4 sk-bg-success-soft border border-emerald-100 rounded-xl flex items-start gap-3">
+            <svg class="w-5 h-5 sk-text-success shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <p class="text-sm font-semibold text-emerald-800">{{ $page.props.flash.success }}</p>
+            <p class="text-sm font-semibold sk-text-success">{{ $page.props.flash.success }}</p>
         </div>
 
-        <div class="bg-zinc-50 border border-zinc-200 p-5 rounded-2xl mb-8">
-            <p class="font-bold text-sm text-zinc-900 mb-2">Tidak menerima email?</p>
-            <ul class="list-disc list-inside text-sm font-medium text-zinc-600 space-y-1">
-                <li>Cek folder <strong class="text-zinc-900">Spam</strong> atau <strong class="text-zinc-900">Promosi</strong></li>
+        <div class="sk-bg-hover border sk-border p-5 rounded-2xl mb-8">
+            <p class="font-bold text-sm sk-text-primary mb-2">Tidak menerima email?</p>
+            <ul class="list-disc list-inside text-sm font-medium sk-text-secondary space-y-1">
+                <li>Cek folder <strong class="sk-text-primary">Spam</strong> atau <strong class="sk-text-primary">Promosi</strong></li>
                 <li>Pastikan alamat email sudah benar</li>
             </ul>
         </div>
@@ -44,7 +44,7 @@
 
         <div class="mt-6 text-center">
             <Link :href="route('logout')" method="post" as="button"
-                class="text-sm font-bold text-zinc-400 hover:text-red-600 transition-colors">
+                class="text-sm font-bold sk-text-muted hover:sk-text-danger transition-colors">
                 Keluar (Logout)
             </Link>
         </div>

@@ -25,14 +25,14 @@
                 </div>
                 <div class="p-3 bg-slate-800/50 rounded">
                     <p class="text-xs text-slate-400">Debug Mode</p>
-                    <span class="px-2 py-1 text-xs font-medium rounded" :class="health.debug_mode ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'">
+                    <span class="px-2 py-1 text-xs font-medium rounded" :class="health.debug_mode ? 'sk-bg-danger-soft sk-text-danger' : 'sk-bg-success-soft sk-text-success'">
                         {{ health.debug_mode ? 'ON' : 'OFF' }}
                     </span>
                 </div>
                 <div class="p-3 bg-slate-800/50 rounded">
                     <p class="text-xs text-slate-400">Database</p>
                     <p class="font-medium text-sm">{{ health.db_connection }}</p>
-                    <span class="px-2 py-0.5 text-xs rounded" :class="health.db_status === 'Connected' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+                    <span class="px-2 py-0.5 text-xs rounded" :class="health.db_status === 'Connected' ? 'sk-bg-success-soft sk-text-success' : 'sk-bg-danger-soft sk-text-danger'">
                         {{ health.db_status }}
                     </span>
                 </div>
@@ -78,7 +78,7 @@
         <div class="rounded-2xl p-6 mb-6 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
             <h3 class="font-semibold text-slate-100 mb-4">💾 Storage Health</h3>
 
-            <div v-for="alert in health.system_alerts" :key="alert.message" class="p-3 rounded-lg text-sm flex items-start gap-3 mb-3" :class="alert.type === 'danger' ? 'bg-red-50 border border-red-200 text-red-700' : 'bg-yellow-50 border border-yellow-200 text-yellow-700'">
+            <div v-for="alert in health.system_alerts" :key="alert.message" class="p-3 rounded-lg text-sm flex items-start gap-3 mb-3" :class="alert.type === 'danger' ? 'sk-bg-danger-soft border sk-border-primary sk-text-danger' : 'bg-yellow-50 border border-yellow-200 text-yellow-700'">
                 {{ alert.message }}
             </div>
 
@@ -112,7 +112,7 @@
                         <span>{{ storageHealth?.hdd?.info?.used }} / {{ storageHealth?.hdd?.info?.total }}</span>
                         <span>{{ storageHealth?.hdd?.info?.percent }}%</span>
                     </div>
-                    <p class="text-xs mt-1" :class="storageHealth?.hdd?.status === 'unavailable' ? 'text-red-500' : 'text-slate-400'">
+                    <p class="text-xs mt-1" :class="storageHealth?.hdd?.status === 'unavailable' ? 'sk-text-danger' : 'text-slate-400'">
                         {{ storageHealth?.hdd?.message || 'HDD tidak terdeteksi' }}
                     </p>
                 </div>
@@ -140,7 +140,7 @@
                     <p>Terakhir: <strong>{{ backupHealth.last_run }}</strong></p>
                 </div>
             </div>
-            <div v-for="alert in storageHealth.alerts" :key="alert.message" class="p-3 rounded-lg text-sm mb-2" :class="alert.type === 'danger' ? 'bg-red-50 text-red-700' : 'bg-yellow-50 text-yellow-700'">
+            <div v-for="alert in storageHealth.alerts" :key="alert.message" class="p-3 rounded-lg text-sm mb-2" :class="alert.type === 'danger' ? 'sk-bg-danger-soft sk-text-danger' : 'bg-yellow-50 text-yellow-700'">
                 {{ alert.message }}
             </div>
         </div>
@@ -165,7 +165,7 @@
         <div class="rounded-2xl overflow-hidden mb-6 border bg-slate-900/50 border-slate-800 backdrop-blur-xl">
             <div class="px-6 py-4 border-b flex justify-between">
                 <h3 class="font-semibold text-slate-100">Tenant Usage</h3>
-                <Link :href="route('admin.sync-all-stats')" method="post" as="button" class="text-xs text-indigo-600 border border-indigo-200 px-2 py-1 rounded hover:bg-indigo-50">
+                <Link :href="route('admin.sync-all-stats')" method="post" as="button" class="text-xs sk-text-primary-brand border sk-border-primary px-2 py-1 rounded hover:sk-bg-primary-soft">
                     Sync All
                 </Link>
             </div>
@@ -185,7 +185,7 @@
                 <tbody>
                     <tr v-for="t in tenants" :key="t.id" class="hover:bg-slate-800/50 text-sm">
                         <td class="px-4 py-2">
-                            <Link :href="route('admin.tenant.show', t.id)" class="text-indigo-600 hover:text-indigo-500 font-medium">{{ t.tenant_name }}</Link>
+                            <Link :href="route('admin.tenant.show', t.id)" class="sk-text-primary-brand hover:text-indigo-500 font-medium">{{ t.tenant_name }}</Link>
                             <p class="text-xs text-slate-400">{{ t.email }}</p>
                         </td>
                         <td class="px-4 py-2 text-right">{{ t.stats?.users_count || 0 }}</td>
@@ -222,9 +222,9 @@ const props = defineProps({
 });
 
 const ssdBadgeClass = computed(() => ({
-    healthy: 'bg-green-100 text-green-800',
+    healthy: 'sk-bg-success-soft sk-text-success',
     warning: 'bg-yellow-100 text-yellow-800',
-    critical: 'bg-red-100 text-red-800',
+    critical: 'sk-bg-danger-soft sk-text-danger',
 }[props.storageHealth?.ssd?.status] || 'bg-slate-800 text-slate-200'));
 
 const ssdBarClass = computed(() => ({
@@ -234,17 +234,17 @@ const ssdBarClass = computed(() => ({
 }[props.storageHealth?.ssd?.status] || 'bg-green-500'));
 
 const hddBadgeClass = computed(() => ({
-    healthy: 'bg-green-100 text-green-800',
+    healthy: 'sk-bg-success-soft sk-text-success',
     warning: 'bg-yellow-100 text-yellow-800',
-    critical: 'bg-red-100 text-red-800',
+    critical: 'sk-bg-danger-soft sk-text-danger',
     unavailable: 'bg-slate-800 text-slate-400',
 }[props.storageHealth?.hdd?.status] || 'bg-slate-800 text-slate-200'));
 
 const formatNumber = (num) => new Intl.NumberFormat('id-ID').format(num || 0);
 const statusClass = (s) => ({
     trial: 'bg-yellow-100 text-yellow-800',
-    active: 'bg-green-100 text-green-800',
-    expired: 'bg-red-100 text-red-800',
+    active: 'sk-bg-success-soft sk-text-success',
+    expired: 'sk-bg-danger-soft sk-text-danger',
     suspended: 'bg-slate-800 text-slate-200',
 }[s] || 'bg-slate-800 text-slate-200');
 </script>

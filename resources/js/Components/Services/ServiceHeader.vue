@@ -6,8 +6,8 @@
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
             </Link>
             <div>
-                <h2 class="text-xl font-bold text-zinc-900">Servis #{{ service.id }}</h2>
-                <p class="text-xs mt-0.5 text-zinc-500">{{ service.customer?.name || '-' }}</p>
+                <h2 class="text-xl font-bold sk-text-primary">Servis #{{ service.id }}</h2>
+                <p class="text-xs mt-0.5 sk-text-muted">{{ service.customer?.name || '-' }}</p>
             </div>
         </div>
         <div class="flex items-center gap-2">

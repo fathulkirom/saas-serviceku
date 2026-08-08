@@ -35,13 +35,13 @@
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="flex items-center">
-                            <KCheckbox  v-model="form.registration_open_bool" name="registration_open_bool" class="rounded border-slate-600 text-indigo-600 shadow-sm" />
+                            <KCheckbox  v-model="form.registration_open_bool" name="registration_open_bool" class="rounded border-slate-600 sk-text-primary-brand shadow-sm" />
                             <span class="ml-2 text-sm text-slate-300">Buka Registrasi</span>
                         </label>
                     </div>
                     <div>
                         <label class="flex items-center">
-                            <KCheckbox  v-model="form.require_approval_bool" name="require_approval_bool" class="rounded border-slate-600 text-indigo-600 shadow-sm" />
+                            <KCheckbox  v-model="form.require_approval_bool" name="require_approval_bool" class="rounded border-slate-600 sk-text-primary-brand shadow-sm" />
                             <span class="ml-2 text-sm text-slate-300">Perlu Persetujuan Admin</span>
                         </label>
                     </div>
@@ -60,7 +60,7 @@
                 <h3 class="text-lg font-semibold text-slate-100 mb-4">Maintenance</h3>
                 <div class="mb-4">
                     <label class="flex items-center">
-                        <KCheckbox  v-model="form.maintenance_mode_bool" name="maintenance_mode_bool" class="rounded border-slate-600 text-indigo-600 shadow-sm" />
+                        <KCheckbox  v-model="form.maintenance_mode_bool" name="maintenance_mode_bool" class="rounded border-slate-600 sk-text-primary-brand shadow-sm" />
                         <span class="ml-2 text-sm text-slate-300">Mode Maintenance</span>
                     </label>
                 </div>
@@ -83,11 +83,11 @@
                         </div>
                         <label class="relative inline-flex items-center cursor-pointer">
                             <KCheckbox  v-model="featureFlagsForm[key]" class="sr-only peer" />
-                            <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                            <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:sk-bg-card after:border-slate-600 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:sk-bg-primary"></div>
                         </label>
                     </div>
                     <div class="flex justify-end pt-2">
-                        <KButton  type="submit" :disabled="featureFlagsForm.processing" class="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 text-sm">
+                        <KButton  type="submit" :disabled="featureFlagsForm.processing" class="px-6 py-2 sk-bg-primary text-white rounded-md hover:sk-bg-primary disabled:opacity-50 text-sm">
                             {{ featureFlagsForm.processing ? 'Menyimpan...' : 'Simpan Feature Flags' }}
                         </KButton>
                     </div>
@@ -203,7 +203,7 @@
             </div>
 
             <div class="flex justify-end gap-3">
-                <KButton  type="submit" :disabled="form.processing" class="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50">
+                <KButton  type="submit" :disabled="form.processing" class="px-6 py-2 sk-bg-primary text-white rounded-md hover:sk-bg-primary disabled:opacity-50">
                     Simpan Pengaturan
                 </KButton>
             </div>

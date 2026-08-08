@@ -1,7 +1,7 @@
 <template>
     <KDialog :model-value="show" @update:model-value="show = $event">
-        <h3 class="text-base font-bold mb-2 text-zinc-900">Kirim ke Partner</h3>
-        <p class="text-xs mb-3 text-zinc-500">Servis #{{ service.id }} akan dikerjakan oleh partner eksternal.</p>
+        <h3 class="text-base font-bold mb-2 sk-text-primary">Kirim ke Partner</h3>
+        <p class="text-xs mb-3 sk-text-muted">Servis #{{ service.id }} akan dikerjakan oleh partner eksternal.</p>
         <KTextarea v-model="partnerNote" rows="3" placeholder="Catatan untuk partner (opsional)..." extra-class="mb-4" />
         <div class="flex gap-2">
             <KButton variant="modal-secondary" @click="show = false">Batal</KButton>

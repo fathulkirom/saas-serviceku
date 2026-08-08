@@ -11,7 +11,7 @@
                 color: isStepDone(service.status, step.key) ? 'var(--text-primary)' : 'var(--text-muted)',
                 fontWeight: step.key === service.status ? '700' : '500',
             }">{{ step.label }}</span>
-            <svg v-if="i < statusTimeline.length - 1" class="w-4 h-4 shrink-0 text-zinc-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            <svg v-if="i < statusTimeline.length - 1" class="w-4 h-4 shrink-0 sk-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
         </div>
     </div>
 </template>

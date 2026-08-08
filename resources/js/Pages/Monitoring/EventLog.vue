@@ -44,9 +44,9 @@ function viewMetadata(e) {
 }
 
 const severityColors = {
-  info: 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200',
-  warning: 'bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-200',
-  error: 'bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-200',
+  info: 'sk-bg-info-soft sk-text-info dark:bg-blue-900 dark:text-blue-200',
+  warning: 'sk-bg-warning-soft sk-text-warning dark:bg-amber-900 dark:text-amber-200',
+  error: 'sk-bg-danger-soft sk-text-danger dark:bg-red-900 dark:text-red-200',
   critical: 'bg-red-200 text-red-900 dark:bg-red-800 dark:text-red-100',
 }
 </script>
@@ -56,8 +56,8 @@ const severityColors = {
     <PageHeader title="Event Log" description="Canonical event store — single source of truth. Append-only, immutable. Semua timeline, history, audit, dan dashboard berasal dari sini.">
       <template #stats>
         <div class="flex gap-4 text-sm">
-          <span class="text-gray-500">Total: <strong class="text-gray-900 dark:text-white">{{ stats.total }}</strong></span>
-          <span class="text-gray-500">Today: <strong class="text-gray-900 dark:text-white">{{ stats.today }}</strong></span>
+          <span class="sk-text-muted">Total: <strong class="sk-text-primary dark:text-white">{{ stats.total }}</strong></span>
+          <span class="sk-text-muted">Today: <strong class="sk-text-primary dark:text-white">{{ stats.today }}</strong></span>
         </div>
       </template>
     </PageHeader>
@@ -75,7 +75,7 @@ const severityColors = {
       <div class="overflow-x-auto">
         <table class="w-full text-sm">
           <thead>
-            <tr class="text-left text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-800/50">
+            <tr class="text-left sk-text-muted dark:sk-text-muted sk-bg-hover dark:bg-gray-800/50">
               <th class="px-4 py-3 font-medium">Event</th>
               <th class="px-4 py-3 font-medium">Entity</th>
               <th class="px-4 py-3 font-medium">Severity</th>
@@ -86,19 +86,19 @@ const severityColors = {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="e in events" :key="e.id" class="border-b border-gray-50 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800/50">
+            <tr v-for="e in events" :key="e.id" class="border-b border-gray-50 dark:border-gray-800 hover:sk-bg-hover dark:hover:bg-gray-800/50">
               <td class="px-4 py-3">
                 <KBadge size="xs" variant="outline">{{ e.event_key }}</KBadge>
               </td>
-              <td class="px-4 py-3 text-gray-600 dark:text-gray-300">
-                {{ e.entity_type?.split('\\').pop() || '-' }}<span v-if="e.entity_id" class="text-gray-400"> #{{ e.entity_id }}</span>
+              <td class="px-4 py-3 sk-text-secondary dark:text-gray-300">
+                {{ e.entity_type?.split('\\').pop() || '-' }}<span v-if="e.entity_id" class="sk-text-muted"> #{{ e.entity_id }}</span>
               </td>
               <td class="px-4 py-3">
                 <KBadge size="xs" :class="severityColors[e.severity] || severityColors.info">{{ e.severity || 'info' }}</KBadge>
               </td>
-              <td class="px-4 py-3 text-gray-500">{{ e.actor?.name || 'System' }}</td>
-              <td class="px-4 py-3 text-xs text-gray-400 font-mono">{{ e.correlation_id?.substring(0, 8) || '-' }}</td>
-              <td class="px-4 py-3 text-xs text-gray-400 whitespace-nowrap">{{ new Date(e.occurred_at).toLocaleString('id-ID') }}</td>
+              <td class="px-4 py-3 sk-text-muted">{{ e.actor?.name || 'System' }}</td>
+              <td class="px-4 py-3 text-xs sk-text-muted font-mono">{{ e.correlation_id?.substring(0, 8) || '-' }}</td>
+              <td class="px-4 py-3 text-xs sk-text-muted whitespace-nowrap">{{ new Date(e.occurred_at).toLocaleString('id-ID') }}</td>
               <td class="px-4 py-3 text-right">
                 <KButton size="xs" variant="ghost" @click="viewMetadata(e)">Meta</KButton>
               </td>
@@ -106,7 +106,7 @@ const severityColors = {
           </tbody>
         </table>
       </div>
-      <div v-if="events.length === 0" class="text-center py-12 text-gray-400">Tidak ada event yang cocok dengan filter.</div>
+      <div v-if="events.length === 0" class="text-center py-12 sk-text-muted">Tidak ada event yang cocok dengan filter.</div>
     </KCard>
   </div>
 </template>

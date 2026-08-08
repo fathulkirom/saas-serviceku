@@ -40,13 +40,13 @@ const tabs = [
 ]
 
 const statusColor = (s) => ({
-  'menunggu_alokasi': 'var(--color-warning-soft) text-amber-800',
-  'diterima': 'bg-blue-100 text-blue-800',
+  'menunggu_alokasi': 'var(--color-warning-soft) sk-text-warning',
+  'diterima': 'sk-bg-info-soft text-blue-800',
   'dikerjakan': 'bg-orange-100 text-orange-800',
-  'selesai': 'var(--color-success-soft) text-green-800',
-  'siap_diambil': 'bg-indigo-100 text-indigo-800',
-  'cancel': 'var(--color-danger-soft) text-red-800',
-}[s] || 'var(--bg-hover) text-gray-600')
+  'selesai': 'var(--color-success-soft) sk-text-success',
+  'siap_diambil': 'sk-bg-primary-soft sk-text-primary-brand',
+  'cancel': 'var(--color-danger-soft) sk-text-danger',
+}[s] || 'var(--bg-hover) sk-text-secondary')
 </script>
 
 <template>

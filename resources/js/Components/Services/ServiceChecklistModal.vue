@@ -1,9 +1,9 @@
 <template>
     <KDialog :model-value="show" @update:model-value="show = $event" max-width="lg" scrollable>
-        <h3 class="text-base font-bold mb-4 text-zinc-900">{{ isMasuk ? (existing ? 'Edit Checklist Masuk' : 'Isi Checklist Masuk') : (existing ? 'Edit Checklist Keluar' : 'Isi Checklist Keluar') }}</h3>
+        <h3 class="text-base font-bold mb-4 sk-text-primary">{{ isMasuk ? (existing ? 'Edit Checklist Masuk' : 'Isi Checklist Masuk') : (existing ? 'Edit Checklist Keluar' : 'Isi Checklist Keluar') }}</h3>
         <div class="space-y-4">
             <div>
-                <label class="block text-xs font-semibold mb-1 text-zinc-500">{{ isMasuk ? 'Template Checklist' : 'Template Checklist Keluar' }}</label>
+                <label class="block text-xs font-semibold mb-1 sk-text-muted">{{ isMasuk ? 'Template Checklist' : 'Template Checklist Keluar' }}</label>
                 <KSelect v-model="form.template_id">
                     <option value="">-- Pilih Template --</option>
                     <option v-for="tpl in templates" :key="tpl.id" :value="tpl.id">{{ tpl.name }}</option>
@@ -11,14 +11,14 @@
             </div>
             <div v-if="checkItems.length" :class="isMasuk ? 'space-y-1' : 'space-y-1 max-h-60 overflow-y-auto pr-1'">
                 <label v-for="item in checkItems" :key="item.id"
-                    :class="isMasuk ? 'flex items-center gap-2 text-sm cursor-pointer py-0.5 text-zinc-600' : 'flex items-center gap-2 text-sm cursor-pointer py-1 border-b border-dark-100/30 text-zinc-600'">
+                    :class="isMasuk ? 'flex items-center gap-2 text-sm cursor-pointer py-0.5 sk-text-secondary' : 'flex items-center gap-2 text-sm cursor-pointer py-1 border-b border-dark-100/30 sk-text-secondary'">
                     <KCheckbox :value="item.id" v-model="form.checked_items"
                         class="rounded" :style="{ 'accent-color': isMasuk ? 'var(--primary)' : '#2563eb' }" />
                     {{ item.item_name }}
                 </label>
             </div>
             <div>
-                <label class="block text-xs font-semibold mb-1 text-zinc-500">{{ isMasuk ? 'Catatan' : 'Catatan Keluar' }}</label>
+                <label class="block text-xs font-semibold mb-1 sk-text-muted">{{ isMasuk ? 'Catatan' : 'Catatan Keluar' }}</label>
                 <KTextarea v-model="form.notes" rows="2" />
             </div>
         </div>

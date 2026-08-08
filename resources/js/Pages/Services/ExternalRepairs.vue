@@ -15,7 +15,7 @@
           </div>
           <div class="p-4 rounded-xl border" :style="{ background: 'var(--bg-card)', borderColor: 'var(--border-color)' }">
             <p class="text-xs" :style="{ color: 'var(--text-muted)' }">Terlambat</p>
-            <p class="text-xl font-bold" :class="overdueCount > 0 ? 'text-red-500' : ''" :style="{ color: overdueCount > 0 ? 'var(--danger-text)' : 'var(--text-muted)' }">{{ overdueCount }}</p>
+            <p class="text-xl font-bold" :class="overdueCount > 0 ? 'sk-text-danger' : ''" :style="{ color: overdueCount > 0 ? 'var(--danger-text)' : 'var(--text-muted)' }">{{ overdueCount }}</p>
           </div>
         </div>
 
@@ -58,7 +58,7 @@
                   <div class="flex items-center gap-3 mt-1 text-xs" :style="{ color: 'var(--text-muted)' }">
                     <span>Biaya Partner: Rp {{ formatNumber(r.partner_cost) }}</span>
                     <span>Charge Customer: Rp {{ formatNumber(r.customer_charge) }}</span>
-                    <span class="font-semibold" :class="r.store_margin >= 0 ? 'text-emerald-600' : 'text-red-600'">Margin: {{ r.store_margin >= 0 ? '+' : '' }}Rp {{ formatNumber(r.store_margin) }}</span>
+                    <span class="font-semibold" :class="r.store_margin >= 0 ? 'sk-text-success' : 'sk-text-danger'">Margin: {{ r.store_margin >= 0 ? '+' : '' }}Rp {{ formatNumber(r.store_margin) }}</span>
                   </div>
                   <div v-if="r.estimated_return" class="text-xs mt-1" :style="{ color: 'var(--text-muted)' }">
                     Estimasi kembali: {{ formatDate(r.estimated_return) }}

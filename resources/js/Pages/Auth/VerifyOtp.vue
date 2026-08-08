@@ -1,23 +1,23 @@
 <template>
     <GuestLayout>
         <div class="text-center mb-8">
-            <h2 class="text-xl font-bold text-zinc-900 mb-2">Verifikasi OTP</h2>
-            <p class="text-sm text-zinc-500 mb-1">Masukkan kode OTP yang telah dikirim ke email:</p>
-            <p class="text-sm font-bold text-zinc-900">{{ email }}</p>
+            <h2 class="text-xl font-bold sk-text-primary mb-2">Verifikasi OTP</h2>
+            <p class="text-sm sk-text-muted mb-1">Masukkan kode OTP yang telah dikirim ke email:</p>
+            <p class="text-sm font-bold sk-text-primary">{{ email }}</p>
         </div>
 
-        <div v-if="message" class="mb-6 p-4 bg-emerald-50 border border-emerald-100 rounded-xl flex items-start gap-3">
-            <svg class="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div v-if="message" class="mb-6 p-4 sk-bg-success-soft border border-emerald-100 rounded-xl flex items-start gap-3">
+            <svg class="w-5 h-5 sk-text-success shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <p class="text-sm font-semibold text-emerald-800">{{ message }}</p>
+            <p class="text-sm font-semibold sk-text-success">{{ message }}</p>
         </div>
         
-        <div v-if="form.errors.otp" class="mb-6 p-4 bg-red-50 border border-red-100 rounded-xl flex items-start gap-3">
-            <svg class="w-5 h-5 text-red-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div v-if="form.errors.otp" class="mb-6 p-4 sk-bg-danger-soft border border-red-100 rounded-xl flex items-start gap-3">
+            <svg class="w-5 h-5 sk-text-danger shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <p class="text-sm font-semibold text-red-800">{{ form.errors.otp }}</p>
+            <p class="text-sm font-semibold sk-text-danger">{{ form.errors.otp }}</p>
         </div>
 
         <form @submit.prevent="submit" class="space-y-6">
@@ -31,7 +31,7 @@
                         type="text"
                         inputmode="numeric"
                         maxlength="1"
-                        class="w-10 h-12 sm:w-14 sm:h-16 text-center text-xl sm:text-2xl font-black rounded-xl border border-zinc-300 bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none shadow-sm transition-all"
+                        class="w-10 h-12 sm:w-14 sm:h-16 text-center text-xl sm:text-2xl font-black rounded-xl border sk-border sk-bg-card sk-text-primary focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none shadow-sm transition-all"
                         @input="onInput($event, i-1)"
                         @keydown.backspace="onBackspace($event, i-1)"
                         :autofocus="i === 1" />
@@ -49,7 +49,7 @@
                     </svg>
                     Verifikasi OTP
                 </KButton>
-                <KButton  type="button" @click="resend" class="text-center text-sm font-bold text-indigo-600 hover:text-indigo-700 transition-colors">
+                <KButton  type="button" @click="resend" class="text-center text-sm font-bold sk-text-primary-brand hover:sk-text-primary-brand transition-colors">
                     Belum menerima kode? Kirim ulang
                 </KButton>
             </div>

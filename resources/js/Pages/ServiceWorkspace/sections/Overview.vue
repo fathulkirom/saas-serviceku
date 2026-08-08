@@ -104,7 +104,7 @@
               class="flex items-center gap-2 px-3 py-1.5 rounded-lg"
               :style="{ background: 'var(--bg-hover)' }"
             >
-              <span :class="item.checked ? 'text-emerald-500' : 'text-zinc-300'" class="text-sm">●</span>
+              <span :class="item.checked ? 'sk-text-success' : 'sk-text-muted'" class="text-sm">●</span>
               <span class="text-xs" :style="{ color: 'var(--text-secondary)' }">{{ item.label }}</span>
             </div>
           </div>

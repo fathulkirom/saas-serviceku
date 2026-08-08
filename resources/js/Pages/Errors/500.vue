@@ -1,15 +1,15 @@
 <template>
-    <div class="min-h-screen flex flex-col items-center justify-center p-4 text-center bg-zinc-50">
+    <div class="min-h-screen flex flex-col items-center justify-center p-4 text-center sk-bg-hover">
         <div class="max-w-md w-full space-y-6">
             <div class="text-9xl font-black tracking-widest text-amber-500">500</div>
             <div class="space-y-2">
-                <h1 class="text-2xl font-bold text-zinc-900">Terjadi Kesalahan Server</h1>
-                <p class="text-sm text-zinc-500">
+                <h1 class="text-2xl font-bold sk-text-primary">Terjadi Kesalahan Server</h1>
+                <p class="text-sm sk-text-muted">
                     Maaf, sistem mengalami kendala teknis. Silakan coba beberapa saat lagi.
                 </p>
             </div>
             <div>
-                <Link :href="route('dashboard')" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white transition-all shadow-md hover:shadow-lg bg-indigo-600 text-white">
+                <Link :href="route('dashboard')" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white transition-all shadow-md hover:shadow-lg sk-bg-primary text-white">
                     ← Kembali ke Dashboard
                 </Link>
             </div>

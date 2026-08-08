@@ -32,7 +32,7 @@
                     <template v-if="plan.is_promo_active">
                         <p class="text-xl text-slate-400 line-through">Rp {{ formatNumber(plan.price) }}</p>
                         <p class="text-3xl font-bold text-red-400">Rp {{ formatNumber(plan.promo_price) }}</p>
-                        <span class="px-1.5 py-0.5 text-[10px] font-bold bg-red-100 text-red-700 rounded">DISKON {{ plan.discount_percent }}%</span>
+                        <span class="px-1.5 py-0.5 text-[10px] font-bold sk-bg-danger-soft sk-text-danger rounded">DISKON {{ plan.discount_percent }}%</span>
                     </template>
                     <template v-else>
                         <p class="text-3xl font-bold text-indigo-400">Rp {{ formatNumber(plan.price) }}</p>
@@ -58,12 +58,12 @@
                 <hr class="my-4">
                 <div class="flex gap-2">
                     <KButton  @click="openEditModal(plan)"
-                        class="flex-1 px-3 py-1.5 text-sm bg-indigo-50 text-indigo-700 rounded-md hover:bg-indigo-100">
+                        class="flex-1 px-3 py-1.5 text-sm sk-bg-primary-soft sk-text-primary-brand rounded-md hover:sk-bg-primary-soft">
                         Edit
                     </KButton>
                     <KButton  @click="toggleActive(plan)"
                         class="flex-1 px-3 py-1.5 text-sm rounded-md"
-                        :class="plan.is_active ? 'bg-yellow-50 text-yellow-700 hover:bg-yellow-100' : 'bg-green-50 text-green-700 hover:bg-green-100'">
+                        :class="plan.is_active ? 'bg-yellow-50 text-yellow-700 hover:bg-yellow-100' : 'sk-bg-success-soft sk-text-success hover:sk-bg-success-soft'">
                         {{ plan.is_active ? 'Nonaktifkan' : 'Aktifkan' }}
                     </KButton>
                 </div>
@@ -150,7 +150,7 @@
                                 <label class="block text-sm font-semibold text-slate-200 mb-1">Akses Fitur per Tipe Bisnis</label>
                                 <p class="text-xs text-slate-400 mb-2">Pilih tipe bisnis di bawah ini untuk mengatur hak akses fiturnya secara khusus.</p>
                                 
-                                <KSelect  v-model="activeTabBusinessType" class="block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm bg-indigo-50/50">
+                                <KSelect  v-model="activeTabBusinessType" class="block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm sk-bg-primary-soft/50">
                                     <option v-for="(label, key) in BUSINESS_TYPES" :key="key" :value="key">
                                         💼 Tipe: {{ label }}
                                     </option>
@@ -159,7 +159,7 @@
 
                             <div class="bg-slate-800/50 p-4 rounded-xl border border-slate-700 mb-4">
                                 <div class="flex justify-between items-center mb-3">
-                                    <span class="text-xs font-bold text-indigo-700 uppercase tracking-wider">Fitur: {{ BUSINESS_TYPES[activeTabBusinessType] }}</span>
+                                    <span class="text-xs font-bold sk-text-primary-brand uppercase tracking-wider">Fitur: {{ BUSINESS_TYPES[activeTabBusinessType] }}</span>
                                     <div class="flex gap-2 text-[10px] text-slate-400">
                                         <span>✅ Full</span>
                                         <span>👁️ Read Only</span>
@@ -206,7 +206,7 @@
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                 <label v-for="(label, key) in BUSINESS_TYPES" :key="key"
                                     class="flex items-start gap-2 p-2 rounded border cursor-pointer hover:bg-slate-800/50"
-                                    :class="selectedBusinessTypes.includes(key) ? 'border-indigo-300 bg-indigo-50' : 'border-slate-700'">
+                                    :class="selectedBusinessTypes.includes(key) ? 'border-indigo-300 sk-bg-primary-soft' : 'border-slate-700'">
                                     <KCheckbox  :value="key" v-model="selectedBusinessTypes"
                                         class="mt-0.5 rounded border-slate-600 text-indigo-400 shadow-sm focus:ring-indigo-500" />
                                     <span class="text-sm text-slate-300">{{ label }}</span>
@@ -220,7 +220,7 @@
                                 Batal
                             </KButton>
                             <KButton  type="submit"
-                                class="px-4 py-2 text-sm text-white bg-indigo-600 rounded-md hover:bg-indigo-700"
+                                class="px-4 py-2 text-sm text-white sk-bg-primary rounded-md hover:sk-bg-primary"
                                 :disabled="form.processing">
                                 {{ isEditing ? 'Simpan' : 'Tambah' }}
                             </KButton>

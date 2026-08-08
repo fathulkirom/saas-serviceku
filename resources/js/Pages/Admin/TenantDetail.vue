@@ -3,13 +3,13 @@
         <template #header>
             <div class="flex justify-between items-center">
                 <h2 class="font-semibold text-xl text-slate-200 leading-tight">Detail Tenant: {{ tenant.tenant_name }}</h2>
-                <Link :href="route('admin.dashboard')" class="text-sm text-indigo-600 hover:text-indigo-500">← Kembali</Link>
+                <Link :href="route('admin.dashboard')" class="text-sm sk-text-primary-brand hover:text-indigo-500">← Kembali</Link>
             </div>
         </template>
 
         <!-- Flash Message -->
-        <div v-if="$page.props.flash?.success" class="mb-4 p-4 bg-green-50 border border-green-200 rounded-md">
-            <p class="text-sm text-green-700">{{ $page.props.flash.success }}</p>
+        <div v-if="$page.props.flash?.success" class="mb-4 p-4 sk-bg-success-soft border sk-border-primary rounded-md">
+            <p class="text-sm sk-text-success">{{ $page.props.flash.success }}</p>
         </div>
 
         <!-- Row 1: Info & Stats -->
@@ -36,7 +36,7 @@
                     </div>
                     <div>
                         <p class="text-slate-400">Tipe Bisnis</p>
-                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-indigo-50 text-indigo-700">{{ businessTypeLabel }}</span>
+                        <span class="px-2 py-1 text-xs font-medium rounded-full sk-bg-primary-soft sk-text-primary-brand">{{ businessTypeLabel }}</span>
                     </div>
                     <div>
                         <p class="text-slate-400">Status</p>
@@ -55,12 +55,12 @@
                     <Link v-if="isSuperAdmin" :href="route('admin.tenant.login-as', tenant.id)" method="post" as="button" class="px-4 py-2 bg-emerald-600 text-white rounded-md text-sm hover:bg-emerald-700">
                         🔑 Login as Tenant
                     </Link>
-                    <KButton  v-if="isSuperAdmin && tenant.is_active" @click="suspend" class="px-4 py-2 bg-red-600 text-white rounded-md text-sm hover:bg-red-700">Suspend</KButton>
+                    <KButton  v-if="isSuperAdmin && tenant.is_active" @click="suspend" class="px-4 py-2 sk-bg-danger text-white rounded-md text-sm hover:sk-bg-danger">Suspend</KButton>
                     <KButton  v-else-if="isSuperAdmin" @click="activate" class="px-4 py-2 bg-green-600 text-white rounded-md text-sm hover:bg-green-700">Aktifkan</KButton>
                     <KButton  v-if="isSuperAdmin" @click="resetPassword" class="px-4 py-2 bg-yellow-600 text-white rounded-md text-sm hover:bg-yellow-700">
                         Reset Password
                     </KButton>
-                    <Link :href="route('admin.sync-tenant-stats', tenant.id)" method="post" as="button" class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-md text-sm hover:bg-indigo-200">
+                    <Link :href="route('admin.sync-tenant-stats', tenant.id)" method="post" as="button" class="px-4 py-2 sk-bg-primary-soft sk-text-primary-brand rounded-md text-sm hover:bg-indigo-200">
                         Sync Stats
                     </Link>
                     <!-- BR-019: Ganti Plan (Super Admin only) -->
@@ -122,12 +122,12 @@
                     <h4 class="font-semibold text-slate-100 mb-3 text-sm">Domain / Subdomain</h4>
                     <div v-if="tenant.domains?.length > 0" class="mb-2">
                         <p class="text-xs text-slate-400">Domain saat ini:</p>
-                        <p v-for="d in tenant.domains" :key="d.id" class="text-sm font-mono text-indigo-600">{{ d.domain }}</p>
+                        <p v-for="d in tenant.domains" :key="d.id" class="text-sm font-mono sk-text-primary-brand">{{ d.domain }}</p>
                     </div>
                     <p v-else class="text-xs text-slate-400 mb-2">Belum ada domain</p>
                     <form @submit.prevent="updateDomain" class="flex gap-2">
                         <KInput  type="text" v-model="domainForm.domain" class="flex-1 rounded-md border-slate-600 shadow-sm text-sm" placeholder="contoh: tokoku.serviceku.my.id" required />
-                        <KButton  type="submit" :disabled="domainForm.processing" class="px-3 py-2 bg-indigo-600 text-white rounded-md text-sm hover:bg-indigo-700 disabled:opacity-50">Simpan</KButton>
+                        <KButton  type="submit" :disabled="domainForm.processing" class="px-3 py-2 sk-bg-primary text-white rounded-md text-sm hover:sk-bg-primary disabled:opacity-50">Simpan</KButton>
                     </form>
                     <p class="text-xs text-slate-400 mt-2">Gunakan Cloudflare Tunnel untuk mengarahkan domain ke server lokal.</p>
                 </div>
@@ -194,14 +194,14 @@
         <!-- Row 3: Ringkasan -->
         <div v-if="tenantData" class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div class="rounded-2xl  p-4 flex items-center gap-3">
-                <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center text-lg">🔧</div>
+                <div class="w-10 h-10 rounded-lg sk-bg-info-soft flex items-center justify-center text-lg">🔧</div>
                 <div>
                     <p class="text-lg font-bold text-slate-100">{{ tenantData.service_stats?.total || 0 }}</p>
                     <p class="text-xs text-slate-400">Total Servis ({{ tenantData.service_stats?.completed || 0 }} selesai)</p>
                 </div>
             </div>
             <div class="rounded-2xl  p-4 flex items-center gap-3">
-                <div class="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center text-lg">💰</div>
+                <div class="w-10 h-10 rounded-lg sk-bg-success-soft flex items-center justify-center text-lg">💰</div>
                 <div>
                     <p class="text-lg font-bold text-emerald-400">Rp {{ formatNumber(tenantData.monthly_revenue) }}</p>
                     <p class="text-xs text-slate-400">Revenue Bulan Ini</p>
@@ -221,7 +221,7 @@
             <h3 class="font-semibold text-slate-100 mb-3">📋 Aktivitas Terakhir</h3>
             <div v-if="activityLogs?.length" class="space-y-2">
                 <div v-for="log in activityLogs" :key="log.id" class="flex items-start gap-3 p-2 hover:bg-slate-800/50 rounded">
-                    <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs mt-0.5" :class="log.level === 'error' ? 'bg-red-100' : log.level === 'warning' ? 'bg-yellow-100' : 'bg-slate-800'">
+                    <span class="w-6 h-6 rounded-full flex items-center justify-center text-xs mt-0.5" :class="log.level === 'error' ? 'sk-bg-danger-soft' : log.level === 'warning' ? 'bg-yellow-100' : 'bg-slate-800'">
                         {{ log.level === 'error' ? '❌' : log.level === 'warning' ? '⚠️' : 'ℹ️' }}
                     </span>
                     <div class="flex-1 min-w-0">
@@ -269,17 +269,17 @@ const businessTypeLabel = computed(() => ({
 
 const statusBadge = (s) => ({
     trial: 'bg-yellow-100 text-yellow-800',
-    active: 'bg-green-100 text-green-800',
-    expired: 'bg-red-100 text-red-800',
+    active: 'sk-bg-success-soft sk-text-success',
+    expired: 'sk-bg-danger-soft sk-text-danger',
     suspended: 'bg-slate-800 text-slate-200',
 }[s] || 'bg-slate-800 text-slate-200');
 
 const serviceStatusBadge = (s) => ({
     menunggu_alokasi: 'bg-yellow-100 text-yellow-800',
-    dikerjakan: 'bg-blue-100 text-blue-800',
-    selesai: 'bg-green-100 text-green-800',
+    dikerjakan: 'sk-bg-info-soft text-blue-800',
+    selesai: 'sk-bg-success-soft sk-text-success',
     dilempar: 'bg-purple-100 text-purple-800',
-    cancel: 'bg-red-100 text-red-800',
+    cancel: 'sk-bg-danger-soft sk-text-danger',
 }[s] || 'bg-slate-800 text-slate-200');
 
 const domainForm = useForm({ domain: '' });

@@ -204,7 +204,7 @@ const formatNumber = (num) => new Intl.NumberFormat('id-ID').format(num || 0);
 
 const levelClass = (level) => {
     const map = {
-        emergency: 'bg-red-600/20 text-red-400',
+        emergency: 'sk-bg-danger/20 text-red-400',
         alert: 'bg-red-500/20 text-red-400',
         critical: 'bg-red-500/20 text-red-400',
         error: 'bg-red-500/10 text-red-400',

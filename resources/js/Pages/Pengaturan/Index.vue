@@ -1,21 +1,21 @@
 <template>
   <AuthenticatedLayout>
-    <div class="flex flex-col min-h animate-fade-in-[calc(100vh-64px)] bg-zinc-50">
+    <div class="flex flex-col min-h animate-fade-in-[calc(100vh-64px)] sk-bg-hover">
       <!-- Header CRM Style -->
-      <div class="px-6 sm:px-8 py-6 bg-white border-b border-zinc-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 sticky top-0 z-20">
+      <div class="px-6 sm:px-8 py-6 sk-bg-card border-b sk-border flex flex-col sm:flex-row sm:items-center justify-between gap-4 sticky top-0 z-20">
         <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-zinc-100 rounded-xl flex items-center justify-center border border-zinc-200">
-                <svg class="w-6 h-6 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <div class="w-12 h-12 sk-bg-hover rounded-xl flex items-center justify-center border sk-border">
+                <svg class="w-6 h-6 sk-text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             </div>
             <div>
-                <h1 class="text-2xl font-bold text-zinc-900 tracking-tight">{{ pageTitle }}</h1>
-                <p class="text-sm text-zinc-500 font-medium mt-0.5">{{ subtitle }}</p>
+                <h1 class="text-2xl font-bold sk-text-primary tracking-tight">{{ pageTitle }}</h1>
+                <p class="text-sm sk-text-muted font-medium mt-0.5">{{ subtitle }}</p>
             </div>
         </div>
         
         <!-- Action Buttons -->
         <div class="flex flex-wrap items-center gap-2">
-          <KButton  v-if="activeTab === 'custom-fields'" @click="openCustomFieldModal()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
+          <KButton  v-if="activeTab === 'custom-fields'" @click="openCustomFieldModal()" class="inline-flex items-center gap-1.5 px-4 py-2 sk-bg-primary hover:sk-bg-primary text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
             Tambah Kolom Kustom
           </KButton>
@@ -32,106 +32,106 @@
           </template>
           <template v-else>
             <form @submit.prevent="submitProfil" class="space-y-6">
-              <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm">
-                <h3 class="text-lg font-bold text-zinc-900 mb-6">Identitas Toko</h3>
+              <div class="sk-bg-card p-6 rounded-2xl border sk-border shadow-sm">
+                <h3 class="text-lg font-bold sk-text-primary mb-6">Identitas Toko</h3>
                 <div class="flex flex-col sm:flex-row sm:items-start gap-6">
                   <div class="flex-shrink-0">
-                    <div class="w-24 h-24 rounded-2xl flex items-center justify-center text-4xl font-black text-indigo-700 bg-indigo-50 border border-indigo-100 shadow-inner">
+                    <div class="w-24 h-24 rounded-2xl flex items-center justify-center text-4xl font-black sk-text-primary-brand sk-bg-primary-soft border sk-border-primary shadow-inner">
                       {{ profileSettings?.store_name?.charAt(0) || 'T' }}
                     </div>
                   </div>
                   <div class="flex-1 space-y-4">
                     <div>
-                      <label class="text-sm font-semibold text-zinc-700">Nama Toko</label>
-                      <KInput  v-model="profilForm.store_name" class="w-full rounded-xl border border-zinc-300 px-4 py-2 mt-1.5 text-sm bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all" />
+                      <label class="text-sm font-semibold sk-text-primary">Nama Toko</label>
+                      <KInput  v-model="profilForm.store_name" class="w-full rounded-xl border sk-border px-4 py-2 mt-1.5 text-sm sk-bg-card sk-text-primary focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all" />
                     </div>
                     <div class="flex flex-wrap items-center gap-3">
                       <Badge :variant="planVariant(profile?.plan?.name)">{{ profile?.plan?.name || 'Trial' }} Plan</Badge>
-                      <Link :href="route('pengaturan.index', { tab: 'tagihan' })" class="text-sm font-semibold text-indigo-600 hover:text-indigo-700 hover:underline">Kelola Paket & Tagihan →</Link>
+                      <Link :href="route('pengaturan.index', { tab: 'tagihan' })" class="text-sm font-semibold sk-text-primary-brand hover:sk-text-primary-brand hover:underline">Kelola Paket & Tagihan →</Link>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm">
-                <h3 class="text-lg font-bold text-zinc-900 mb-6">Kontak & Alamat</h3>
+              <div class="sk-bg-card p-6 rounded-2xl border sk-border shadow-sm">
+                <h3 class="text-lg font-bold sk-text-primary mb-6">Kontak & Alamat</h3>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div class="space-y-1.5">
-                    <label class="text-sm font-semibold text-zinc-700">Telepon Utama</label>
-                    <KInput  v-model="profilForm.phone" class="w-full rounded-xl border border-zinc-300 px-4 py-2 text-sm bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all" />
+                    <label class="text-sm font-semibold sk-text-primary">Telepon Utama</label>
+                    <KInput  v-model="profilForm.phone" class="w-full rounded-xl border sk-border px-4 py-2 text-sm sk-bg-card sk-text-primary focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all" />
                   </div>
                   <div class="space-y-1.5">
-                    <label class="text-sm font-semibold text-zinc-700">Nomor WhatsApp Admin</label>
-                    <KInput  v-model="profilForm.whatsapp_number" class="w-full rounded-xl border border-zinc-300 px-4 py-2 text-sm bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all" placeholder="08xxxxxxxxxx" />
+                    <label class="text-sm font-semibold sk-text-primary">Nomor WhatsApp Admin</label>
+                    <KInput  v-model="profilForm.whatsapp_number" class="w-full rounded-xl border sk-border px-4 py-2 text-sm sk-bg-card sk-text-primary focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all" placeholder="08xxxxxxxxxx" />
                   </div>
                   <div class="space-y-1.5 sm:col-span-2">
-                    <label class="text-sm font-semibold text-zinc-700">Alamat Toko</label>
-                    <KTextarea  v-model="profilForm.address" rows="3" class="w-full rounded-xl border border-zinc-300 px-4 py-3 text-sm bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all"></KTextarea>
+                    <label class="text-sm font-semibold sk-text-primary">Alamat Toko</label>
+                    <KTextarea  v-model="profilForm.address" rows="3" class="w-full rounded-xl border sk-border px-4 py-3 text-sm sk-bg-card sk-text-primary focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all"></KTextarea>
                   </div>
                 </div>
               </div>
 
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm">
-                  <h3 class="text-lg font-bold text-zinc-900 mb-6">Branding & Tampilan</h3>
+                <div class="sk-bg-card p-6 rounded-2xl border sk-border shadow-sm">
+                  <h3 class="text-lg font-bold sk-text-primary mb-6">Branding & Tampilan</h3>
                   <div class="space-y-5">
                     <div class="space-y-2">
-                      <label class="text-sm font-semibold text-zinc-700">Warna Aksen Utama</label>
+                      <label class="text-sm font-semibold sk-text-primary">Warna Aksen Utama</label>
                       <div class="flex items-center gap-3">
                         <KInput  type="color" v-model="profilForm.primary_color" class="w-12 h-12 rounded-xl border-none cursor-pointer p-0 bg-transparent" />
-                        <span class="text-sm font-mono font-bold text-zinc-600 bg-zinc-100 px-3 py-1.5 rounded-lg border border-zinc-200">{{ profilForm.primary_color }}</span>
+                        <span class="text-sm font-mono font-bold sk-text-secondary sk-bg-hover px-3 py-1.5 rounded-lg border sk-border">{{ profilForm.primary_color }}</span>
                       </div>
                     </div>
                     <div class="space-y-2">
-                      <label class="text-sm font-semibold text-zinc-700">Logo Toko (Nota/Struk)</label>
+                      <label class="text-sm font-semibold sk-text-primary">Logo Toko (Nota/Struk)</label>
                       <div class="flex items-center gap-3">
-                        <span class="text-xs font-semibold px-2 py-1 rounded-md bg-zinc-100 text-zinc-600 border border-zinc-200">{{ profileSettings?.logo ? 'Logo Terunggah' : 'Belum ada logo' }}</span>
-                        <KInput  type="file" accept="image/png,image/jpeg" class="text-sm text-zinc-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition-all cursor-pointer" @change="onLogoChange" />
+                        <span class="text-xs font-semibold px-2 py-1 rounded-md sk-bg-hover sk-text-secondary border sk-border">{{ profileSettings?.logo ? 'Logo Terunggah' : 'Belum ada logo' }}</span>
+                        <KInput  type="file" accept="image/png,image/jpeg" class="text-sm sk-text-muted file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:sk-bg-primary-soft file:sk-text-primary-brand hover:file:sk-bg-primary-soft transition-all cursor-pointer" @change="onLogoChange" />
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm">
-                  <h3 class="text-lg font-bold text-zinc-900 mb-6">Pengaturan Cetak Nota</h3>
+                <div class="sk-bg-card p-6 rounded-2xl border sk-border shadow-sm">
+                  <h3 class="text-lg font-bold sk-text-primary mb-6">Pengaturan Cetak Nota</h3>
                   <div class="space-y-5">
                     <div class="space-y-2">
-                      <label class="text-sm font-semibold text-zinc-700">Ukuran Kertas Default</label>
-                      <KSelect  v-model="profilForm.paper_size" class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm font-medium bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all">
+                      <label class="text-sm font-semibold sk-text-primary">Ukuran Kertas Default</label>
+                      <KSelect  v-model="profilForm.paper_size" class="w-full rounded-xl border sk-border px-4 py-2.5 text-sm font-medium sk-bg-card sk-text-primary focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all">
                         <option value="a4">A4 Standard</option>
                         <option value="a5">A5 Half Sheet</option>
                         <option value="thermal_80">Thermal 80mm</option>
                         <option value="thermal_58">Thermal 58mm</option>
                       </KSelect>
-                      <p class="text-xs text-zinc-500 mt-1">Ukuran ini akan digunakan saat mencetak nota servis / penjualan.</p>
+                      <p class="text-xs sk-text-muted mt-1">Ukuran ini akan digunakan saat mencetak nota servis / penjualan.</p>
                     </div>
                   </div>
                 </div>
               </div>
 
               <div class="flex justify-end gap-2 pt-2">
-                <KButton  type="submit" :disabled="profilForm.processing" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md hover:shadow-lg transition-all">
+                <KButton  type="submit" :disabled="profilForm.processing" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white sk-bg-primary hover:sk-bg-primary shadow-md hover:shadow-lg transition-all">
                   {{ profilForm.processing ? 'Menyimpan...' : 'Simpan Perubahan Profil' }}
                 </KButton>
               </div>
             </form>
 
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-8">
-              <div class="bg-white p-5 rounded-2xl border border-zinc-200 shadow-sm">
-                <p class="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1">Cabang Aktif</p>
-                <h3 class="text-3xl font-black text-zinc-900">{{ profileStats?.branches ?? 0 }}</h3>
+              <div class="sk-bg-card p-5 rounded-2xl border sk-border shadow-sm">
+                <p class="text-xs font-bold sk-text-muted uppercase tracking-wider mb-1">Cabang Aktif</p>
+                <h3 class="text-3xl font-black sk-text-primary">{{ profileStats?.branches ?? 0 }}</h3>
               </div>
-              <div class="bg-white p-5 rounded-2xl border border-zinc-200 shadow-sm">
-                <p class="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1">Pengguna / Staf</p>
-                <h3 class="text-3xl font-black text-zinc-900">{{ profileStats?.users ?? 0 }}</h3>
+              <div class="sk-bg-card p-5 rounded-2xl border sk-border shadow-sm">
+                <p class="text-xs font-bold sk-text-muted uppercase tracking-wider mb-1">Pengguna / Staf</p>
+                <h3 class="text-3xl font-black sk-text-primary">{{ profileStats?.users ?? 0 }}</h3>
               </div>
-              <div class="bg-white p-5 rounded-2xl border border-zinc-200 shadow-sm">
-                <p class="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1">Servis Aktif</p>
-                <h3 class="text-3xl font-black text-zinc-900">{{ profileStats?.active_services ?? 0 }}</h3>
+              <div class="sk-bg-card p-5 rounded-2xl border sk-border shadow-sm">
+                <p class="text-xs font-bold sk-text-muted uppercase tracking-wider mb-1">Servis Aktif</p>
+                <h3 class="text-3xl font-black sk-text-primary">{{ profileStats?.active_services ?? 0 }}</h3>
               </div>
-              <div class="bg-white p-5 rounded-2xl border border-zinc-200 shadow-sm">
-                <p class="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1">Total Produk</p>
-                <h3 class="text-3xl font-black text-zinc-900">{{ profileStats?.products ?? 0 }}</h3>
+              <div class="sk-bg-card p-5 rounded-2xl border sk-border shadow-sm">
+                <p class="text-xs font-bold sk-text-muted uppercase tracking-wider mb-1">Total Produk</p>
+                <h3 class="text-3xl font-black sk-text-primary">{{ profileStats?.products ?? 0 }}</h3>
               </div>
             </div>
           </template>
@@ -145,89 +145,89 @@
           <template v-else>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               
-              <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+              <div class="sk-bg-card p-6 rounded-2xl border sk-border shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
                 <div>
                   <div class="flex items-center justify-between mb-4">
-                    <h3 class="font-bold text-zinc-900">Kategori Perangkat</h3>
-                    <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-sm">{{ deviceCategories.length }}</div>
+                    <h3 class="font-bold sk-text-primary">Kategori Perangkat</h3>
+                    <div class="w-8 h-8 rounded-lg sk-bg-primary-soft sk-text-primary-brand flex items-center justify-center font-bold text-sm">{{ deviceCategories.length }}</div>
                   </div>
                   <div v-if="deviceCategories.length" class="space-y-2 mb-4">
-                    <p v-for="item in deviceCategories.slice(0, 4)" :key="item.id" class="text-sm text-zinc-600 font-medium truncate flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-zinc-300"></span>{{ item.name }}</p>
+                    <p v-for="item in deviceCategories.slice(0, 4)" :key="item.id" class="text-sm sk-text-secondary font-medium truncate flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-zinc-300"></span>{{ item.name }}</p>
                   </div>
-                  <p v-else class="text-sm text-zinc-400 italic mb-4">Belum ada data</p>
+                  <p v-else class="text-sm sk-text-muted italic mb-4">Belum ada data</p>
                 </div>
-                <KButton  @click="openMasterDrawer('device_category', 'Kategori Perangkat', deviceCategories)" class="w-full py-2 rounded-xl text-sm font-semibold bg-zinc-50 hover:bg-zinc-100 text-zinc-700 transition-all border border-zinc-200">Kelola Data</KButton>
+                <KButton  @click="openMasterDrawer('device_category', 'Kategori Perangkat', deviceCategories)" class="w-full py-2 rounded-xl text-sm font-semibold sk-bg-hover hover:sk-bg-hover sk-text-primary transition-all border sk-border">Kelola Data</KButton>
               </div>
 
-              <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+              <div class="sk-bg-card p-6 rounded-2xl border sk-border shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
                 <div>
                   <div class="flex items-center justify-between mb-4">
-                    <h3 class="font-bold text-zinc-900">Merek & Brand</h3>
-                    <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-sm">{{ brands.length }}</div>
+                    <h3 class="font-bold sk-text-primary">Merek & Brand</h3>
+                    <div class="w-8 h-8 rounded-lg sk-bg-primary-soft sk-text-primary-brand flex items-center justify-center font-bold text-sm">{{ brands.length }}</div>
                   </div>
                   <div v-if="brands.length" class="space-y-2 mb-4">
-                    <p v-for="item in brands.slice(0, 4)" :key="item.id" class="text-sm text-zinc-600 font-medium truncate flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-zinc-300"></span>{{ item.name }}</p>
+                    <p v-for="item in brands.slice(0, 4)" :key="item.id" class="text-sm sk-text-secondary font-medium truncate flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-zinc-300"></span>{{ item.name }}</p>
                   </div>
-                  <p v-else class="text-sm text-zinc-400 italic mb-4">Belum ada data</p>
+                  <p v-else class="text-sm sk-text-muted italic mb-4">Belum ada data</p>
                 </div>
-                <KButton  @click="openMasterDrawer('brand', 'Merek & Brand', brands)" class="w-full py-2 rounded-xl text-sm font-semibold bg-zinc-50 hover:bg-zinc-100 text-zinc-700 transition-all border border-zinc-200">Kelola Data</KButton>
+                <KButton  @click="openMasterDrawer('brand', 'Merek & Brand', brands)" class="w-full py-2 rounded-xl text-sm font-semibold sk-bg-hover hover:sk-bg-hover sk-text-primary transition-all border sk-border">Kelola Data</KButton>
               </div>
 
-              <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+              <div class="sk-bg-card p-6 rounded-2xl border sk-border shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
                 <div>
                   <div class="flex items-center justify-between mb-4">
-                    <h3 class="font-bold text-zinc-900">Satuan Barang</h3>
-                    <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-sm">{{ units.length }}</div>
+                    <h3 class="font-bold sk-text-primary">Satuan Barang</h3>
+                    <div class="w-8 h-8 rounded-lg sk-bg-primary-soft sk-text-primary-brand flex items-center justify-center font-bold text-sm">{{ units.length }}</div>
                   </div>
                   <div v-if="units.length" class="space-y-2 mb-4">
-                    <p v-for="item in units.slice(0, 4)" :key="item.id" class="text-sm text-zinc-600 font-medium truncate flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-zinc-300"></span>{{ item.name }}</p>
+                    <p v-for="item in units.slice(0, 4)" :key="item.id" class="text-sm sk-text-secondary font-medium truncate flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-zinc-300"></span>{{ item.name }}</p>
                   </div>
-                  <p v-else class="text-sm text-zinc-400 italic mb-4">Belum ada data</p>
+                  <p v-else class="text-sm sk-text-muted italic mb-4">Belum ada data</p>
                 </div>
-                <KButton  @click="openMasterDrawer('unit', 'Satuan Barang', units)" class="w-full py-2 rounded-xl text-sm font-semibold bg-zinc-50 hover:bg-zinc-100 text-zinc-700 transition-all border border-zinc-200">Kelola Data</KButton>
+                <KButton  @click="openMasterDrawer('unit', 'Satuan Barang', units)" class="w-full py-2 rounded-xl text-sm font-semibold sk-bg-hover hover:sk-bg-hover sk-text-primary transition-all border sk-border">Kelola Data</KButton>
               </div>
 
-              <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+              <div class="sk-bg-card p-6 rounded-2xl border sk-border shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
                 <div>
                   <div class="flex items-center justify-between mb-4">
-                    <h3 class="font-bold text-zinc-900">Peralatan Unit</h3>
-                    <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-sm">{{ equipment.length }}</div>
+                    <h3 class="font-bold sk-text-primary">Peralatan Unit</h3>
+                    <div class="w-8 h-8 rounded-lg sk-bg-primary-soft sk-text-primary-brand flex items-center justify-center font-bold text-sm">{{ equipment.length }}</div>
                   </div>
                   <div v-if="equipment.length" class="space-y-2 mb-4">
-                    <p v-for="item in equipment.slice(0, 4)" :key="item.id" class="text-sm text-zinc-600 font-medium truncate flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-zinc-300"></span>{{ item.name }}</p>
+                    <p v-for="item in equipment.slice(0, 4)" :key="item.id" class="text-sm sk-text-secondary font-medium truncate flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-zinc-300"></span>{{ item.name }}</p>
                   </div>
-                  <p v-else class="text-sm text-zinc-400 italic mb-4">Belum ada data</p>
+                  <p v-else class="text-sm sk-text-muted italic mb-4">Belum ada data</p>
                 </div>
-                <KButton  @click="openMasterDrawer('equipment', 'Peralatan Unit', equipment)" class="w-full py-2 rounded-xl text-sm font-semibold bg-zinc-50 hover:bg-zinc-100 text-zinc-700 transition-all border border-zinc-200">Kelola Data</KButton>
+                <KButton  @click="openMasterDrawer('equipment', 'Peralatan Unit', equipment)" class="w-full py-2 rounded-xl text-sm font-semibold sk-bg-hover hover:sk-bg-hover sk-text-primary transition-all border sk-border">Kelola Data</KButton>
               </div>
 
-              <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+              <div class="sk-bg-card p-6 rounded-2xl border sk-border shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
                 <div>
                   <div class="flex items-center justify-between mb-4">
-                    <h3 class="font-bold text-zinc-900">Master Jasa Servis</h3>
-                    <div class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-sm">{{ laborServices.length }}</div>
+                    <h3 class="font-bold sk-text-primary">Master Jasa Servis</h3>
+                    <div class="w-8 h-8 rounded-lg sk-bg-primary-soft sk-text-primary-brand flex items-center justify-center font-bold text-sm">{{ laborServices.length }}</div>
                   </div>
                   <div v-if="laborServices.length" class="space-y-2 mb-4">
-                    <p v-for="item in laborServices.slice(0, 4)" :key="item.id" class="text-sm text-zinc-600 font-medium truncate flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-zinc-300"></span>{{ item.name }}</p>
+                    <p v-for="item in laborServices.slice(0, 4)" :key="item.id" class="text-sm sk-text-secondary font-medium truncate flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-zinc-300"></span>{{ item.name }}</p>
                   </div>
-                  <p v-else class="text-sm text-zinc-400 italic mb-4">Belum ada data</p>
+                  <p v-else class="text-sm sk-text-muted italic mb-4">Belum ada data</p>
                 </div>
-                <Link :href="route('master-services.index')" class="w-full py-2 rounded-xl text-sm font-semibold bg-zinc-50 hover:bg-zinc-100 text-zinc-700 transition-all border border-zinc-200 text-center block">Kelola Master Jasa</Link>
+                <Link :href="route('master-services.index')" class="w-full py-2 rounded-xl text-sm font-semibold sk-bg-hover hover:sk-bg-hover sk-text-primary transition-all border sk-border text-center block">Kelola Master Jasa</Link>
               </div>
 
-              <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm hover:shadow-md transition-all flex flex-col justify-between border-t-4 border-t-blue-500">
+              <div class="sk-bg-card p-6 rounded-2xl border sk-border shadow-sm hover:shadow-md transition-all flex flex-col justify-between border-t-4 border-t-blue-500">
                 <div>
                   <div class="flex items-center justify-between mb-4">
-                    <h3 class="font-bold text-zinc-900">Integrasi Google Drive</h3>
+                    <h3 class="font-bold sk-text-primary">Integrasi Google Drive</h3>
                   </div>
                   <div class="flex flex-col gap-2 mb-6">
                     <div class="flex items-center gap-2">
                         <span v-if="driveConnected" class="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
                         <span v-else class="w-3 h-3 rounded-full bg-zinc-300"></span>
-                        <span class="text-sm font-bold" :class="driveConnected ? 'text-emerald-600' : 'text-zinc-500'">{{ driveConnected ? 'Terhubung' : 'Belum Terhubung' }}</span>
+                        <span class="text-sm font-bold" :class="driveConnected ? 'sk-text-success' : 'sk-text-muted'">{{ driveConnected ? 'Terhubung' : 'Belum Terhubung' }}</span>
                     </div>
-                    <p v-if="driveInfo?.email" class="text-sm text-zinc-600 font-medium break-all">{{ driveInfo.email }}</p>
-                    <p v-else class="text-xs text-zinc-500">Hubungkan untuk menyimpan lampiran ke Google Drive secara otomatis.</p>
+                    <p v-if="driveInfo?.email" class="text-sm sk-text-secondary font-medium break-all">{{ driveInfo.email }}</p>
+                    <p v-else class="text-xs sk-text-muted">Hubungkan untuk menyimpan lampiran ke Google Drive secara otomatis.</p>
                   </div>
                 </div>
                 <a v-if="!driveConnected && driveAuthUrl" :href="driveAuthUrl" class="w-full py-2 rounded-xl text-sm font-semibold bg-blue-600 hover:bg-blue-700 text-white transition-all text-center block shadow-sm">Hubungkan Drive Sekarang</a>
@@ -242,42 +242,42 @@
       <template #wa>
         <div class="space-y-6 mt-6 max-w-3xl">
           <form @submit.prevent="submitWaGateway">
-            <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm">
-              <h3 class="text-lg font-bold text-zinc-900 mb-6">Pengaturan Gateway WhatsApp</h3>
+            <div class="sk-bg-card p-6 rounded-2xl border sk-border shadow-sm">
+              <h3 class="text-lg font-bold sk-text-primary mb-6">Pengaturan Gateway WhatsApp</h3>
               <div class="space-y-5">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div class="space-y-2">
-                    <label class="text-sm font-semibold text-zinc-700">Penyedia Gateway *</label>
-                    <KSelect  v-model="waForm.provider" required class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all">
+                    <label class="text-sm font-semibold sk-text-primary">Penyedia Gateway *</label>
+                    <KSelect  v-model="waForm.provider" required class="w-full rounded-xl border sk-border px-4 py-2.5 text-sm sk-bg-card sk-text-primary focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all">
                       <option value="fonnte">Fonnte (fonnte.com)</option>
                       <option value="wablas">Wablas (wablas.com)</option>
                     </KSelect>
                   </div>
                   <div class="space-y-2">
-                    <label class="text-sm font-semibold text-zinc-700">Kunci API (API Token) *</label>
-                    <KInput  v-model="waForm.api_key" type="password" required placeholder="Masukkan Token API Fonnte/Wablas" class="w-full rounded-xl border border-zinc-300 px-4 py-2 text-sm bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all" />
+                    <label class="text-sm font-semibold sk-text-primary">Kunci API (API Token) *</label>
+                    <KInput  v-model="waForm.api_key" type="password" required placeholder="Masukkan Token API Fonnte/Wablas" class="w-full rounded-xl border sk-border px-4 py-2 text-sm sk-bg-card sk-text-primary focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all" />
                   </div>
                 </div>
 
-                <div class="space-y-2 pt-4 border-t border-zinc-100">
-                  <label class="text-sm font-semibold text-zinc-700">Template Pesan: Servis Diterima</label>
-                  <KTextarea  v-model="waForm.template_service_received" rows="3" class="w-full rounded-xl border border-zinc-300 px-4 py-3 text-sm bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all" placeholder="Halo {customer_name}, unit {unit_type} Anda telah kami terima dengan No. Servis {service_code}. Cek status di {tracking_url}"></KTextarea>
-                  <p class="text-xs text-zinc-500">Variabel: {customer_name}, {unit_type}, {service_code}, {tracking_url}</p>
+                <div class="space-y-2 pt-4 border-t sk-border-light">
+                  <label class="text-sm font-semibold sk-text-primary">Template Pesan: Servis Diterima</label>
+                  <KTextarea  v-model="waForm.template_service_received" rows="3" class="w-full rounded-xl border sk-border px-4 py-3 text-sm sk-bg-card sk-text-primary focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all" placeholder="Halo {customer_name}, unit {unit_type} Anda telah kami terima dengan No. Servis {service_code}. Cek status di {tracking_url}"></KTextarea>
+                  <p class="text-xs sk-text-muted">Variabel: {customer_name}, {unit_type}, {service_code}, {tracking_url}</p>
                 </div>
 
-                <div class="space-y-2 pt-4 border-t border-zinc-100">
-                  <label class="text-sm font-semibold text-zinc-700">Template Pesan: Servis Selesai</label>
-                  <KTextarea  v-model="waForm.template_service_finished" rows="3" class="w-full rounded-xl border border-zinc-300 px-4 py-3 text-sm bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all" placeholder="Halo {customer_name}, servis unit {unit_type} Anda telah SELESAI. Silakan ambil di toko kami."></KTextarea>
-                  <p class="text-xs text-zinc-500">Variabel: {customer_name}, {unit_type}, {service_code}</p>
+                <div class="space-y-2 pt-4 border-t sk-border-light">
+                  <label class="text-sm font-semibold sk-text-primary">Template Pesan: Servis Selesai</label>
+                  <KTextarea  v-model="waForm.template_service_finished" rows="3" class="w-full rounded-xl border sk-border px-4 py-3 text-sm sk-bg-card sk-text-primary focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all" placeholder="Halo {customer_name}, servis unit {unit_type} Anda telah SELESAI. Silakan ambil di toko kami."></KTextarea>
+                  <p class="text-xs sk-text-muted">Variabel: {customer_name}, {unit_type}, {service_code}</p>
                 </div>
 
                 <div class="flex items-center gap-3 pt-6">
-                  <KCheckbox  v-model="waForm.is_active" id="wa_active" class="w-5 h-5 rounded border-zinc-300 text-indigo-600 focus:ring-indigo-500" />
+                  <KCheckbox  v-model="waForm.is_active" id="wa_active" class="w-5 h-5 rounded sk-border sk-text-primary-brand focus:ring-indigo-500" />
                   <label for="wa_active" class="text-sm font-bold text-zinc-800 cursor-pointer">Aktifkan Kirim Notifikasi WhatsApp Otomatis</label>
                 </div>
 
                 <div class="flex justify-end pt-4">
-                  <KButton  type="submit" :disabled="waForm.processing" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md hover:shadow-lg transition-all">
+                  <KButton  type="submit" :disabled="waForm.processing" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white sk-bg-primary hover:sk-bg-primary shadow-md hover:shadow-lg transition-all">
                     {{ waForm.processing ? 'Menyimpan...' : 'Simpan Pengaturan WA' }}
                   </KButton>
                 </div>
@@ -290,56 +290,56 @@
       <!-- EMAIL TOKO — per-tenant SMTP (tenant owns their email config) -->
       <template #email>
         <div class="space-y-6 mt-6">
-          <form @submit.prevent="submitEmail" class="bg-white rounded-2xl border border-zinc-200 shadow-sm p-6 space-y-5">
+          <form @submit.prevent="submitEmail" class="sk-bg-card rounded-2xl border sk-border shadow-sm p-6 space-y-5">
             <div class="flex items-center justify-between">
               <div>
-                <h3 class="text-lg font-bold text-zinc-900">Konfigurasi Email Toko</h3>
-                <p class="text-sm text-zinc-500 mt-0.5">Email operasional toko (notifikasi customer, invoice) menggunakan SMTP sendiri. Email platform (OTP, reset password) tetap via ServiceKU.</p>
+                <h3 class="text-lg font-bold sk-text-primary">Konfigurasi Email Toko</h3>
+                <p class="text-sm sk-text-muted mt-0.5">Email operasional toko (notifikasi customer, invoice) menggunakan SMTP sendiri. Email platform (OTP, reset password) tetap via ServiceKU.</p>
               </div>
               <label class="relative inline-flex items-center cursor-pointer">
                 <input type="checkbox" v-model="emailForm.mail_enabled" true-value="true" false-value="false" class="sr-only peer">
-                <div class="w-11 h-6 bg-zinc-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-zinc-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
-                <span class="ml-3 text-sm font-medium text-zinc-700">{{ emailForm.mail_enabled === 'true' ? 'Aktif' : 'Nonaktif' }}</span>
+                <div class="w-11 h-6 bg-zinc-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:sk-bg-card after:sk-border after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:sk-bg-primary"></div>
+                <span class="ml-3 text-sm font-medium sk-text-primary">{{ emailForm.mail_enabled === 'true' ? 'Aktif' : 'Nonaktif' }}</span>
               </label>
             </div>
 
-            <div v-if="emailForm.mail_enabled === 'true'" class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-zinc-100">
+            <div v-if="emailForm.mail_enabled === 'true'" class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t sk-border-light">
               <div class="col-span-2">
-                <label class="block text-sm font-medium text-zinc-700 mb-1">SMTP Host</label>
-                <KInput  v-model="emailForm.mail_host" placeholder="smtp.gmail.com" class="w-full rounded-xl border-zinc-300 text-sm" />
+                <label class="block text-sm font-medium sk-text-primary mb-1">SMTP Host</label>
+                <KInput  v-model="emailForm.mail_host" placeholder="smtp.gmail.com" class="w-full rounded-xl sk-border text-sm" />
               </div>
               <div>
-                <label class="block text-sm font-medium text-zinc-700 mb-1">Port</label>
-                <KInput  type="number" v-model="emailForm.mail_port" placeholder="587" class="w-full rounded-xl border-zinc-300 text-sm" />
+                <label class="block text-sm font-medium sk-text-primary mb-1">Port</label>
+                <KInput  type="number" v-model="emailForm.mail_port" placeholder="587" class="w-full rounded-xl sk-border text-sm" />
               </div>
               <div>
-                <label class="block text-sm font-medium text-zinc-700 mb-1">Enkripsi</label>
-                <KSelect  v-model="emailForm.mail_encryption" class="w-full rounded-xl border-zinc-300 text-sm">
+                <label class="block text-sm font-medium sk-text-primary mb-1">Enkripsi</label>
+                <KSelect  v-model="emailForm.mail_encryption" class="w-full rounded-xl sk-border text-sm">
                   <option value="tls">TLS</option>
                   <option value="ssl">SSL</option>
                   <option value="">Tidak Ada</option>
                 </KSelect>
               </div>
               <div>
-                <label class="block text-sm font-medium text-zinc-700 mb-1">Username</label>
-                <KInput  v-model="emailForm.mail_username" placeholder="user@domain.com" class="w-full rounded-xl border-zinc-300 text-sm" />
+                <label class="block text-sm font-medium sk-text-primary mb-1">Username</label>
+                <KInput  v-model="emailForm.mail_username" placeholder="user@domain.com" class="w-full rounded-xl sk-border text-sm" />
               </div>
               <div>
-                <label class="block text-sm font-medium text-zinc-700 mb-1">Password</label>
-                <KInput  type="password" v-model="emailForm.mail_password" :placeholder="tenantMail?.has_password ? 'Tersimpan — kosongkan untuk mempertahankan' : ''" autocomplete="new-password" class="w-full rounded-xl border-zinc-300 text-sm" />
+                <label class="block text-sm font-medium sk-text-primary mb-1">Password</label>
+                <KInput  type="password" v-model="emailForm.mail_password" :placeholder="tenantMail?.has_password ? 'Tersimpan — kosongkan untuk mempertahankan' : ''" autocomplete="new-password" class="w-full rounded-xl sk-border text-sm" />
               </div>
               <div>
-                <label class="block text-sm font-medium text-zinc-700 mb-1">From Email</label>
-                <KInput  type="email" v-model="emailForm.mail_from_address" placeholder="toko@domain.com" class="w-full rounded-xl border-zinc-300 text-sm" />
+                <label class="block text-sm font-medium sk-text-primary mb-1">From Email</label>
+                <KInput  type="email" v-model="emailForm.mail_from_address" placeholder="toko@domain.com" class="w-full rounded-xl sk-border text-sm" />
               </div>
               <div>
-                <label class="block text-sm font-medium text-zinc-700 mb-1">From Name</label>
-                <KInput  v-model="emailForm.mail_from_name" placeholder="Nama Toko" class="w-full rounded-xl border-zinc-300 text-sm" />
+                <label class="block text-sm font-medium sk-text-primary mb-1">From Name</label>
+                <KInput  v-model="emailForm.mail_from_name" placeholder="Nama Toko" class="w-full rounded-xl sk-border text-sm" />
               </div>
             </div>
 
-            <div class="flex justify-end pt-3 border-t border-zinc-100">
-              <KButton  type="submit" :disabled="emailForm.processing" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md hover:shadow-lg transition-all">
+            <div class="flex justify-end pt-3 border-t sk-border-light">
+              <KButton  type="submit" :disabled="emailForm.processing" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white sk-bg-primary hover:sk-bg-primary shadow-md hover:shadow-lg transition-all">
                 {{ emailForm.processing ? 'Menyimpan...' : 'Simpan Pengaturan Email' }}
               </KButton>
             </div>
@@ -350,15 +350,15 @@
       <!-- PEMBAYARAN — Tenant owns their payment gateway -->
       <template #pembayaran>
         <div class="space-y-6 mt-6">
-          <form @submit.prevent="submitPayment" class="bg-white rounded-2xl border border-zinc-200 shadow-sm p-6 space-y-5">
+          <form @submit.prevent="submitPayment" class="sk-bg-card rounded-2xl border sk-border shadow-sm p-6 space-y-5">
             <div>
-              <h3 class="text-lg font-bold text-zinc-900">Konfigurasi Pembayaran Toko</h3>
-              <p class="text-sm text-zinc-500 mt-0.5">Gateway pembayaran customer toko (Midtrans / Xendit). TERPISAH dari gateway platform ServiceKU. Kredensial disimpan di database toko Anda sendiri.</p>
+              <h3 class="text-lg font-bold sk-text-primary">Konfigurasi Pembayaran Toko</h3>
+              <p class="text-sm sk-text-muted mt-0.5">Gateway pembayaran customer toko (Midtrans / Xendit). TERPISAH dari gateway platform ServiceKU. Kredensial disimpan di database toko Anda sendiri.</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label class="text-sm font-semibold text-zinc-700">Gateway</label>
-                <KSelect v-model="paymentForm.payment_gateway" class="w-full rounded-xl border-zinc-300 text-sm mt-1">
+                <label class="text-sm font-semibold sk-text-primary">Gateway</label>
+                <KSelect v-model="paymentForm.payment_gateway" class="w-full rounded-xl sk-border text-sm mt-1">
                   <option value="manual">Manual (Transfer Bank)</option>
                   <option value="midtrans">Midtrans</option>
                   <option value="xendit">Xendit</option>
@@ -368,23 +368,23 @@
 
             <!-- Midtrans fields -->
             <template v-if="paymentForm.payment_gateway === 'midtrans'">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-zinc-100">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t sk-border-light">
                 <div class="md:col-span-2">
-                  <label class="text-sm font-semibold text-zinc-700">Midtrans Server Key</label>
-                  <KInput v-model="paymentForm.midtrans_server_key" type="password" :placeholder="tenantPayment?.midtrans_server_key ? 'Tersimpan — kosongkan untuk mempertahankan' : 'Server Key'" class="w-full rounded-xl border-zinc-300 text-sm mt-1" />
+                  <label class="text-sm font-semibold sk-text-primary">Midtrans Server Key</label>
+                  <KInput v-model="paymentForm.midtrans_server_key" type="password" :placeholder="tenantPayment?.midtrans_server_key ? 'Tersimpan — kosongkan untuk mempertahankan' : 'Server Key'" class="w-full rounded-xl sk-border text-sm mt-1" />
                 </div>
                 <div>
-                  <label class="text-sm font-semibold text-zinc-700">Client Key</label>
-                  <KInput v-model="paymentForm.midtrans_client_key" placeholder="Midtrans Client Key" class="w-full rounded-xl border-zinc-300 text-sm mt-1" />
+                  <label class="text-sm font-semibold sk-text-primary">Client Key</label>
+                  <KInput v-model="paymentForm.midtrans_client_key" placeholder="Midtrans Client Key" class="w-full rounded-xl sk-border text-sm mt-1" />
                 </div>
                 <div>
-                  <label class="text-sm font-semibold text-zinc-700">Merchant ID</label>
-                  <KInput v-model="paymentForm.midtrans_merchant_id" placeholder="G123456" class="w-full rounded-xl border-zinc-300 text-sm mt-1" />
+                  <label class="text-sm font-semibold sk-text-primary">Merchant ID</label>
+                  <KInput v-model="paymentForm.midtrans_merchant_id" placeholder="G123456" class="w-full rounded-xl sk-border text-sm mt-1" />
                 </div>
                 <div>
                   <label class="flex items-center gap-2 mt-1">
                     <input type="checkbox" v-model="paymentForm.midtrans_is_production" true-value="true" false-value="false" class="rounded" />
-                    <span class="text-sm text-zinc-700">Production Mode</span>
+                    <span class="text-sm sk-text-primary">Production Mode</span>
                   </label>
                 </div>
               </div>
@@ -392,30 +392,30 @@
 
             <!-- Xendit -->
             <template v-if="paymentForm.payment_gateway === 'xendit'">
-              <div class="pt-2 border-t border-zinc-100">
-                <label class="text-sm font-semibold text-zinc-700">Xendit API Key</label>
-                <KInput v-model="paymentForm.xendit_api_key" type="password" :placeholder="tenantPayment?.xendit_api_key ? 'Tersimpan — kosongkan untuk mempertahankan' : 'xnd_...'" class="w-full rounded-xl border-zinc-300 text-sm mt-1" />
+              <div class="pt-2 border-t sk-border-light">
+                <label class="text-sm font-semibold sk-text-primary">Xendit API Key</label>
+                <KInput v-model="paymentForm.xendit_api_key" type="password" :placeholder="tenantPayment?.xendit_api_key ? 'Tersimpan — kosongkan untuk mempertahankan' : 'xnd_...'" class="w-full rounded-xl sk-border text-sm mt-1" />
               </div>
             </template>
 
             <!-- Bank Transfer Manual -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2 border-t border-zinc-100">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2 border-t sk-border-light">
               <div>
-                <label class="text-sm font-semibold text-zinc-700">Bank 1</label>
-                <KInput v-model="paymentForm.bank_name_1" placeholder="BCA" class="w-full rounded-xl border-zinc-300 text-sm mt-1" />
-                <KInput v-model="paymentForm.bank_account_number_1" placeholder="No. Rekening" class="w-full rounded-xl border-zinc-300 text-sm mt-2" />
-                <KInput v-model="paymentForm.bank_account_name_1" placeholder="Atas Nama" class="w-full rounded-xl border-zinc-300 text-sm mt-2" />
+                <label class="text-sm font-semibold sk-text-primary">Bank 1</label>
+                <KInput v-model="paymentForm.bank_name_1" placeholder="BCA" class="w-full rounded-xl sk-border text-sm mt-1" />
+                <KInput v-model="paymentForm.bank_account_number_1" placeholder="No. Rekening" class="w-full rounded-xl sk-border text-sm mt-2" />
+                <KInput v-model="paymentForm.bank_account_name_1" placeholder="Atas Nama" class="w-full rounded-xl sk-border text-sm mt-2" />
               </div>
               <div>
-                <label class="text-sm font-semibold text-zinc-700">Bank 2</label>
-                <KInput v-model="paymentForm.bank_name_2" placeholder="Mandiri" class="w-full rounded-xl border-zinc-300 text-sm mt-1" />
-                <KInput v-model="paymentForm.bank_account_number_2" placeholder="No. Rekening" class="w-full rounded-xl border-zinc-300 text-sm mt-2" />
-                <KInput v-model="paymentForm.bank_account_name_2" placeholder="Atas Nama" class="w-full rounded-xl border-zinc-300 text-sm mt-2" />
+                <label class="text-sm font-semibold sk-text-primary">Bank 2</label>
+                <KInput v-model="paymentForm.bank_name_2" placeholder="Mandiri" class="w-full rounded-xl sk-border text-sm mt-1" />
+                <KInput v-model="paymentForm.bank_account_number_2" placeholder="No. Rekening" class="w-full rounded-xl sk-border text-sm mt-2" />
+                <KInput v-model="paymentForm.bank_account_name_2" placeholder="Atas Nama" class="w-full rounded-xl sk-border text-sm mt-2" />
               </div>
             </div>
 
-            <div class="flex justify-end pt-3 border-t border-zinc-100">
-              <KButton type="submit" :disabled="paymentForm.processing" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700">
+            <div class="flex justify-end pt-3 border-t sk-border-light">
+              <KButton type="submit" :disabled="paymentForm.processing" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white sk-bg-primary hover:sk-bg-primary">
                 {{ paymentForm.processing ? 'Menyimpan...' : 'Simpan Pembayaran' }}
               </KButton>
             </div>
@@ -429,7 +429,7 @@
           <Skeleton v-if="!currentPlan" type="stat" :count="3" />
           <template v-else>
             <div class="bg-gradient-to-br from-indigo-900 to-indigo-800 p-8 rounded-3xl shadow-xl text-white relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -mr-20 -mt-20"></div>
+                <div class="absolute top-0 right-0 w-64 h-64 sk-bg-card/5 rounded-full blur-3xl -mr-20 -mt-20"></div>
                 <div class="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-6">
                     <div>
                         <p class="text-indigo-200 font-semibold mb-1 text-sm tracking-wider uppercase">Paket Langganan Saat Ini</p>
@@ -443,97 +443,97 @@
             </div>
 
             <!-- UPGRADE-06: Subscription Usage + Add-ons -->
-            <div v-if="tenantEntitlement" class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm">
-              <h3 class="text-lg font-bold text-zinc-900 mb-4">📊 Penggunaan & Add-ons</h3>
+            <div v-if="tenantEntitlement" class="sk-bg-card p-6 rounded-2xl border sk-border shadow-sm">
+              <h3 class="text-lg font-bold sk-text-primary mb-4">📊 Penggunaan & Add-ons</h3>
               <div class="grid grid-cols-2 gap-3 mb-4">
-                <div class="p-3 bg-zinc-50 rounded-xl">
-                  <p class="text-xs text-zinc-500">User</p>
-                  <p class="text-lg font-bold" :class="tenantEntitlement.limits.users.over_limit ? 'text-red-600' : 'text-zinc-900'">
-                    {{ tenantEntitlement.limits.users.used }}<span class="text-sm font-normal text-zinc-400"> / {{ tenantEntitlement.limits.users.limit }}</span>
+                <div class="p-3 sk-bg-hover rounded-xl">
+                  <p class="text-xs sk-text-muted">User</p>
+                  <p class="text-lg font-bold" :class="tenantEntitlement.limits.users.over_limit ? 'sk-text-danger' : 'sk-text-primary'">
+                    {{ tenantEntitlement.limits.users.used }}<span class="text-sm font-normal sk-text-muted"> / {{ tenantEntitlement.limits.users.limit }}</span>
                   </p>
                 </div>
-                <div class="p-3 bg-zinc-50 rounded-xl">
-                  <p class="text-xs text-zinc-500">Cabang</p>
-                  <p class="text-lg font-bold" :class="tenantEntitlement.limits.branches.over_limit ? 'text-red-600' : 'text-zinc-900'">
-                    {{ tenantEntitlement.limits.branches.used }}<span class="text-sm font-normal text-zinc-400"> / {{ tenantEntitlement.limits.branches.limit }}</span>
+                <div class="p-3 sk-bg-hover rounded-xl">
+                  <p class="text-xs sk-text-muted">Cabang</p>
+                  <p class="text-lg font-bold" :class="tenantEntitlement.limits.branches.over_limit ? 'sk-text-danger' : 'sk-text-primary'">
+                    {{ tenantEntitlement.limits.branches.used }}<span class="text-sm font-normal sk-text-muted"> / {{ tenantEntitlement.limits.branches.limit }}</span>
                   </p>
                 </div>
               </div>
               <div v-if="tenantAddons?.length" class="space-y-1">
-                <p class="text-xs font-medium text-zinc-500 mb-2">Add-on Aktif:</p>
-                <span v-for="a in tenantAddons.filter(x => x.status === 'active')" :key="a.id" class="inline-block mr-1.5 mb-1.5 px-2.5 py-1 text-xs rounded-full bg-indigo-50 text-indigo-700 font-medium">
+                <p class="text-xs font-medium sk-text-muted mb-2">Add-on Aktif:</p>
+                <span v-for="a in tenantAddons.filter(x => x.status === 'active')" :key="a.id" class="inline-block mr-1.5 mb-1.5 px-2.5 py-1 text-xs rounded-full sk-bg-primary-soft sk-text-primary-brand font-medium">
                   +{{ a.key }}{{ a.quantity > 1 ? ' x'+a.quantity : '' }}
                 </span>
               </div>
-              <p v-else class="text-xs text-zinc-400">Belum ada add-on tambahan.</p>
+              <p v-else class="text-xs sk-text-muted">Belum ada add-on tambahan.</p>
             </div>
 
-            <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm max-w-xl">
-              <h3 class="text-lg font-bold text-zinc-900 mb-4">Gunakan Kode Voucher / Promo</h3>
+            <div class="sk-bg-card p-6 rounded-2xl border sk-border shadow-sm max-w-xl">
+              <h3 class="text-lg font-bold sk-text-primary mb-4">Gunakan Kode Voucher / Promo</h3>
               <form @submit.prevent="applyVoucher" class="flex items-end gap-3">
                 <div class="flex-1 space-y-1.5">
-                  <KInput  v-model="voucherCode" placeholder="Masukkan kode voucher discount" class="w-full rounded-xl border border-zinc-300 px-4 py-2.5 text-sm bg-white text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all uppercase placeholder-normal" />
-                  <p v-if="!selectedPlanId" class="text-xs text-amber-600">Pilih paket di bawah terlebih dahulu sebelum pakai voucher.</p>
+                  <KInput  v-model="voucherCode" placeholder="Masukkan kode voucher discount" class="w-full rounded-xl border sk-border px-4 py-2.5 text-sm sk-bg-card sk-text-primary focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all uppercase placeholder-normal" />
+                  <p v-if="!selectedPlanId" class="text-xs sk-text-warning">Pilih paket di bawah terlebih dahulu sebelum pakai voucher.</p>
                 </div>
-                <KButton  type="submit" :disabled="!voucherCode || !selectedPlanId" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                <KButton  type="submit" :disabled="!voucherCode || !selectedPlanId" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white sk-bg-primary hover:sk-bg-primary shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed">
                     Terapkan
                 </KButton>
               </form>
-              <div v-if="voucherDiscount" class="mt-4 p-4 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-between">
+              <div v-if="voucherDiscount" class="mt-4 p-4 sk-bg-success-soft border sk-border-primary rounded-xl flex items-center justify-between">
                 <div class="flex items-center gap-2">
-                  <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                  <span class="text-sm font-semibold text-emerald-800">Voucher <strong>{{ voucherDiscount.code }}</strong> diterapkan — diskon {{ voucherDiscount.discount_label }}</span>
+                  <svg class="w-5 h-5 sk-text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  <span class="text-sm font-semibold sk-text-success">Voucher <strong>{{ voucherDiscount.code }}</strong> diterapkan — diskon {{ voucherDiscount.discount_label }}</span>
                 </div>
-                <KButton  @click="clearVoucher" class="text-xs font-bold text-red-600 hover:text-red-700">Hapus</KButton>
+                <KButton  @click="clearVoucher" class="text-xs font-bold sk-text-danger hover:sk-text-danger">Hapus</KButton>
               </div>
             </div>
 
             <!-- Selected Plan Payment Bar -->
-            <div v-if="selectedPlanId && selectedPlanId !== currentPlan?.id" class="bg-indigo-50 border border-indigo-200 p-5 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div v-if="selectedPlanId && selectedPlanId !== currentPlan?.id" class="sk-bg-primary-soft border sk-border-primary p-5 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
-                <p class="text-sm text-indigo-600 font-semibold">Paket Dipilih: <strong>{{ selectedPlanName }}</strong></p>
+                <p class="text-sm sk-text-primary-brand font-semibold">Paket Dipilih: <strong>{{ selectedPlanName }}</strong></p>
                 <p class="text-2xl font-black text-indigo-900">Rp {{ formatNumber(selectedPlanPrice) }}</p>
-                <p v-if="voucherDiscount" class="text-xs text-emerald-700 mt-1">Harga setelah voucher: <strong>Rp {{ formatNumber(voucherDiscount.final_price) }}</strong></p>
-                <p v-if="selectedPlanExtraMonths" class="text-xs text-indigo-700 mt-1">🎁 Bonus {{ selectedPlanExtraMonths }} bulan dari voucher</p>
+                <p v-if="voucherDiscount" class="text-xs sk-text-success mt-1">Harga setelah voucher: <strong>Rp {{ formatNumber(voucherDiscount.final_price) }}</strong></p>
+                <p v-if="selectedPlanExtraMonths" class="text-xs sk-text-primary-brand mt-1">🎁 Bonus {{ selectedPlanExtraMonths }} bulan dari voucher</p>
               </div>
-              <KButton  @click="initiatePayment" :disabled="paymentLoading" class="px-6 py-3 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 shadow-md hover:shadow-lg transition-all disabled:opacity-50">
+              <KButton  @click="initiatePayment" :disabled="paymentLoading" class="px-6 py-3 rounded-xl text-sm font-bold text-white sk-bg-primary hover:sk-bg-primary shadow-md hover:shadow-lg transition-all disabled:opacity-50">
                 {{ paymentLoading ? 'Memproses...' : '💳 Bayar Sekarang' }}
               </KButton>
             </div>
 
             <div v-if="plans?.length">
-                <h3 class="text-xl font-bold text-zinc-900 mb-6">Pilihan Paket Langganan</h3>
+                <h3 class="text-xl font-bold sk-text-primary mb-6">Pilihan Paket Langganan</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  <div v-for="plan in plans" :key="plan.id" class="bg-white p-8 rounded-3xl border border-zinc-200 shadow-sm hover:shadow-xl transition-all relative flex flex-col justify-between" :class="{'border-indigo-500 shadow-indigo-100 ring-2 ring-indigo-200': selectedPlanId === plan.id, 'border-emerald-400 bg-emerald-50/30': currentPlan?.id === plan.id}">
+                  <div v-for="plan in plans" :key="plan.id" class="sk-bg-card p-8 rounded-3xl border sk-border shadow-sm hover:shadow-xl transition-all relative flex flex-col justify-between" :class="{'border-indigo-500 shadow-indigo-100 ring-2 ring-indigo-200': selectedPlanId === plan.id, 'border-emerald-400 sk-bg-success-soft/30': currentPlan?.id === plan.id}">
                     <div v-if="currentPlan?.id === plan.id" class="absolute top-0 right-0 bg-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-bl-xl rounded-tr-2xl">Paket Saat Ini</div>
                     <div v-else-if="selectedPlanId === plan.id" class="absolute top-0 right-0 bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-bl-xl rounded-tr-2xl">Dipilih</div>
                     
                     <div>
-                        <h4 class="text-xl font-bold text-zinc-900 mb-2">{{ plan.name }}</h4>
-                        <p class="text-3xl font-black text-zinc-900 mb-2">
+                        <h4 class="text-xl font-bold sk-text-primary mb-2">{{ plan.name }}</h4>
+                        <p class="text-3xl font-black sk-text-primary mb-2">
                         Rp {{ formatNumber(plan.effective_price ?? plan.price ?? 0) }}
-                        <span class="text-sm font-normal text-zinc-500">/bln</span>
+                        <span class="text-sm font-normal sk-text-muted">/bln</span>
                         </p>
                         <p v-if="plan.is_promo_active && plan.discount_percent" class="text-sm text-rose-600 font-bold mb-1 line-through">Rp {{ formatNumber(plan.price) }}</p>
-                        <p class="text-sm text-zinc-600 font-medium mb-6 min-h-[40px]">{{ plan.description ?? 'Fasilitas premium untuk bisnis Anda.' }}</p>
+                        <p class="text-sm sk-text-secondary font-medium mb-6 min-h-[40px]">{{ plan.description ?? 'Fasilitas premium untuk bisnis Anda.' }}</p>
                         
                         <div class="space-y-3 mb-8">
                             <div v-for="(feat, i) in (plan.features || plan.max_users ? ['max_users', 'max_branches'].filter(k => plan[k]) : [])" :key="i" class="flex items-center gap-3">
-                                <div class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                                <div class="w-6 h-6 rounded-full sk-bg-success-soft sk-text-success flex items-center justify-center">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
                                 </div>
-                                <span class="text-sm font-semibold text-zinc-700">{{ plan.max_users ?? '—' }} Pengguna</span>
+                                <span class="text-sm font-semibold sk-text-primary">{{ plan.max_users ?? '—' }} Pengguna</span>
                             </div>
                             <div class="flex items-center gap-3">
-                                <div class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center">
+                                <div class="w-6 h-6 rounded-full sk-bg-success-soft sk-text-success flex items-center justify-center">
                                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
                                 </div>
-                                <span class="text-sm font-semibold text-zinc-700">{{ plan.max_branches ?? '—' }} Cabang</span>
+                                <span class="text-sm font-semibold sk-text-primary">{{ plan.max_branches ?? '—' }} Cabang</span>
                             </div>
                         </div>
                     </div>
 
-                    <KButton  @click="selectPlan(plan)" :disabled="currentPlan?.id === plan.id" class="w-full py-3 rounded-xl text-sm font-bold text-center transition-all" :class="currentPlan?.id === plan.id ? 'bg-emerald-100 text-emerald-600 cursor-default' : selectedPlanId === plan.id ? 'bg-indigo-100 text-indigo-600' : 'bg-zinc-900 hover:bg-zinc-800 text-white shadow-md'">
+                    <KButton  @click="selectPlan(plan)" :disabled="currentPlan?.id === plan.id" class="w-full py-3 rounded-xl text-sm font-bold text-center transition-all" :class="currentPlan?.id === plan.id ? 'sk-bg-success-soft sk-text-success cursor-default' : selectedPlanId === plan.id ? 'sk-bg-primary-soft sk-text-primary-brand' : 'bg-zinc-900 hover:bg-zinc-800 text-white shadow-md'">
                         {{ currentPlan?.id === plan.id ? '✅ Paket Aktif' : selectedPlanId === plan.id ? '✓ Dipilih — Klik Bayar di Atas' : 'Pilih Paket Ini' }}
                     </KButton>
                   </div>
@@ -549,39 +549,39 @@
           <Skeleton v-if="!demoStats" type="stat" :count="4" />
           <div v-else class="space-y-6">
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-6">
-              <div class="bg-white p-5 rounded-2xl border border-zinc-200 shadow-sm">
-                <p class="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1">Pelanggan Demo</p>
-                <h3 class="text-3xl font-black text-zinc-900">{{ demoStats?.customers_count ?? 0 }}</h3>
+              <div class="sk-bg-card p-5 rounded-2xl border sk-border shadow-sm">
+                <p class="text-xs font-bold sk-text-muted uppercase tracking-wider mb-1">Pelanggan Demo</p>
+                <h3 class="text-3xl font-black sk-text-primary">{{ demoStats?.customers_count ?? 0 }}</h3>
               </div>
-              <div class="bg-white p-5 rounded-2xl border border-zinc-200 shadow-sm">
-                <p class="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1">Produk Demo</p>
-                <h3 class="text-3xl font-black text-zinc-900">{{ demoStats?.products_count ?? 0 }}</h3>
+              <div class="sk-bg-card p-5 rounded-2xl border sk-border shadow-sm">
+                <p class="text-xs font-bold sk-text-muted uppercase tracking-wider mb-1">Produk Demo</p>
+                <h3 class="text-3xl font-black sk-text-primary">{{ demoStats?.products_count ?? 0 }}</h3>
               </div>
-              <div class="bg-white p-5 rounded-2xl border border-zinc-200 shadow-sm">
-                <p class="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1">Servis Demo</p>
-                <h3 class="text-3xl font-black text-zinc-900">{{ demoStats?.services_count ?? 0 }}</h3>
+              <div class="sk-bg-card p-5 rounded-2xl border sk-border shadow-sm">
+                <p class="text-xs font-bold sk-text-muted uppercase tracking-wider mb-1">Servis Demo</p>
+                <h3 class="text-3xl font-black sk-text-primary">{{ demoStats?.services_count ?? 0 }}</h3>
               </div>
-              <div class="bg-white p-5 rounded-2xl border border-zinc-200 shadow-sm flex flex-col justify-center items-start">
-                <p class="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Status Mode Demo</p>
+              <div class="sk-bg-card p-5 rounded-2xl border sk-border shadow-sm flex flex-col justify-center items-start">
+                <p class="text-xs font-bold sk-text-muted uppercase tracking-wider mb-2">Status Mode Demo</p>
                 <Badge :variant="demoStats?.demo_mode ? 'green' : 'red'">{{ demoStats?.demo_mode ? 'Demo Aktif' : 'Demo Nonaktif' }}</Badge>
               </div>
             </div>
 
-            <div class="bg-amber-50 border border-amber-200 p-6 rounded-2xl max-w-3xl">
+            <div class="sk-bg-warning-soft border sk-border-primary p-6 rounded-2xl max-w-3xl">
                 <div class="flex items-start gap-4">
-                    <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center text-amber-600 flex-shrink-0">
+                    <div class="w-10 h-10 rounded-xl sk-bg-warning-soft flex items-center justify-center sk-text-warning flex-shrink-0">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     </div>
                     <div>
                         <h3 class="text-lg font-bold text-amber-900 mb-1">Mode Simulasi (Demo)</h3>
-                        <p class="text-sm text-amber-800 mb-6">Gunakan mode ini untuk mencoba fitur aplikasi tanpa mengubah data asli Anda. Data demo dapat dibuat dan dihapus kapan saja.</p>
+                        <p class="text-sm sk-text-warning mb-6">Gunakan mode ini untuk mencoba fitur aplikasi tanpa mengubah data asli Anda. Data demo dapat dibuat dan dihapus kapan saja.</p>
                         
                         <div class="flex flex-wrap gap-3">
                             <Link v-if="!demoStats?.demo_data_generated" :href="route('demo.generate')" method="post" as="button" class="px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-amber-600 hover:bg-amber-700 shadow-sm transition-all">Buat Data Demo Simulasi</Link>
                             
-                            <Link :href="route('demo.toggle')" method="post" as="button" class="px-5 py-2.5 rounded-xl text-sm font-bold bg-white text-zinc-900 border border-zinc-200 hover:bg-zinc-50 shadow-sm transition-all">{{ demoStats?.demo_mode ? 'Nonaktifkan' : 'Aktifkan' }} Mode Demo</Link>
+                            <Link :href="route('demo.toggle')" method="post" as="button" class="px-5 py-2.5 rounded-xl text-sm font-bold sk-bg-card sk-text-primary border sk-border hover:sk-bg-hover shadow-sm transition-all">{{ demoStats?.demo_mode ? 'Nonaktifkan' : 'Aktifkan' }} Mode Demo</Link>
                             
-                            <Link :href="route('demo.reset')" method="post" as="button" class="px-5 py-2.5 rounded-xl text-sm font-bold bg-red-50 text-red-600 border border-red-200 hover:bg-red-100 shadow-sm transition-all">Reset Data Demo</Link>
+                            <Link :href="route('demo.reset')" method="post" as="button" class="px-5 py-2.5 rounded-xl text-sm font-bold sk-bg-danger-soft sk-text-danger border sk-border-primary hover:sk-bg-danger-soft shadow-sm transition-all">Reset Data Demo</Link>
                         </div>
                     </div>
                 </div>
@@ -594,7 +594,7 @@
       <template #custom-fields>
         <div class="space-y-6 mt-6">
           <Skeleton v-if="!customFields" type="table" :count="5" />
-          <div v-else class="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden">
+          <div v-else class="sk-bg-card rounded-2xl border sk-border shadow-sm overflow-hidden">
             <KTable
               :columns="customFieldColumns"
               :rows="customFields?.data ?? customFields ?? []"
@@ -604,16 +604,16 @@
               @empty-action="openCustomFieldModal()"
             >
               <template #cell-name="{ row }">
-                <span class="font-bold text-zinc-900">{{ row.name }}</span>
+                <span class="font-bold sk-text-primary">{{ row.name }}</span>
               </template>
               <template #cell-type="{ row }">
                 <Badge variant="blue">{{ row.type }}</Badge>
               </template>
               <template #cell-ordering="{ row }">
-                <span class="font-medium text-zinc-600">{{ row.ordering ?? 0 }}</span>
+                <span class="font-medium sk-text-secondary">{{ row.ordering ?? 0 }}</span>
               </template>
               <template #cell-action="{ row }">
-                <KButton  @click="deleteCustomField(row)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-50 text-red-600 hover:bg-red-100 transition-all border border-red-200">Hapus</KButton>
+                <KButton  @click="deleteCustomField(row)" class="px-3 py-1.5 rounded-lg text-xs font-semibold sk-bg-danger-soft sk-text-danger hover:sk-bg-danger-soft transition-all border sk-border-primary">Hapus</KButton>
               </template>
             </KTable>
           </div>
@@ -626,11 +626,11 @@
     <Drawer :open="showCustomFieldDrawer" title="Tambah Kolom Form Kustom" @close="showCustomFieldDrawer = false" width="420px">
       <form @submit.prevent="submitCustomField" class="space-y-4">
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Nama Kolom / Label *</label>
+          <label class="text-xs font-semibold sk-text-muted">Nama Kolom / Label *</label>
           <KInput  v-model="customFieldForm.name" required placeholder="e.g. Nomor IMEI 2 / Kondisi Dus" class="input text-sm" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Tipe Input *</label>
+          <label class="text-xs font-semibold sk-text-muted">Tipe Input *</label>
           <KSelect  v-model="customFieldForm.type" required class="input text-sm">
             <option value="text">Teks Singkat (Text)</option>
             <option value="textarea">Teks Panjang (Textarea)</option>
@@ -639,7 +639,7 @@
           </KSelect>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Urutan Tampilan</label>
+          <label class="text-xs font-semibold sk-text-muted">Urutan Tampilan</label>
           <KInput  v-model="customFieldForm.ordering" type="number" min="0" class="input text-sm" />
         </div>
         <div class="flex justify-end gap-2 pt-3">
@@ -664,8 +664,8 @@
         <div class="space-y-2 max-h-80 overflow-y-auto pr-1">
           <div v-if="masterDrawerItems.length === 0" class="text-center py-6 text-xs text-muted">Belum ada data</div>
           <div v-for="item in masterDrawerItems" :key="item.id" class="flex items-center justify-between p-2.5 rounded-xl border" style="borderColor: var(--border-color); background: var(--bg-hover);">
-            <span class="text-sm font-medium text-zinc-900">{{ item.name }}</span>
-            <KButton  type="button" @click="deleteMasterData(item)" class="text-xs text-red-500 hover:underline font-semibold cursor-pointer">Hapus</KButton>
+            <span class="text-sm font-medium sk-text-primary">{{ item.name }}</span>
+            <KButton  type="button" @click="deleteMasterData(item)" class="text-xs sk-text-danger hover:underline font-semibold cursor-pointer">Hapus</KButton>
           </div>
         </div>
       </div>

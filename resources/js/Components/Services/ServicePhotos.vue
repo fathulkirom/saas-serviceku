@@ -2,10 +2,10 @@
     <div class="space-y-5">
         <!-- PHOTOS -->
         <div v-if="service.photos?.length" class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-card);">
-            <h3 class="text-sm font-bold mb-4 text-zinc-900">📸 Foto Perangkat</h3>
+            <h3 class="text-sm font-bold mb-4 sk-text-primary">📸 Foto Perangkat</h3>
             <div class="grid grid-cols-4 gap-3">
                 <div v-for="photo in service.photos" :key="photo.id" class="relative group cursor-pointer" @click="previewPhoto = photo.photo_url">
-                    <img :src="photo.photo_url" class="w-full h-24 object-cover rounded-lg border border-zinc-200" />
+                    <img :src="photo.photo_url" class="w-full h-24 object-cover rounded-lg border sk-border" />
                     <div class="absolute inset-0 rounded-lg bg-black/0 group-hover:bg-black/10 transition-all"></div>
                 </div>
             </div>
@@ -13,13 +13,13 @@
 
         <!-- UPLOAD PHOTO -->
         <div v-if="driveConnected && isActive" class="rounded-xl border p-5" style="border-color: var(--border-color); background: var(--bg-card);">
-            <h3 class="text-sm font-bold mb-4 text-zinc-900">📤 Upload Foto Tambahan</h3>
+            <h3 class="text-sm font-bold mb-4 sk-text-primary">📤 Upload Foto Tambahan</h3>
             <form @submit.prevent="uploadPhotos">
                 <KInput  type="file" @change="onAdditionalPhotos" accept="image/*" multiple
-                    class="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" />
+                    class="block w-full text-sm file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-sm file:font-semibold file:sk-bg-info-soft file:sk-text-info hover:file:sk-bg-info-soft" />
                 <div v-if="additionalPreviews.length" class="mt-3 flex flex-wrap gap-2">
                     <div v-for="(preview, idx) in additionalPreviews" :key="idx" class="relative">
-                        <img :src="preview" class="h-16 w-16 object-cover rounded-lg border border-zinc-200" />
+                        <img :src="preview" class="h-16 w-16 object-cover rounded-lg border sk-border" />
                     </div>
                 </div>
                 <KButton v-if="additionalFiles.length" type="submit" variant="action-indigo" size="md" extra-class="mt-3" :disabled="processing === 'upload_photos'">

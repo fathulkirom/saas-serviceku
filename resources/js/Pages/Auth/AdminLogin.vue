@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen flex items-center justify-center relative overflow-hidden bg-zinc-50">
+    <div class="min-h-screen flex items-center justify-center relative overflow-hidden sk-bg-hover">
         <!-- Background Decor -->
         <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
             <!-- Subtle grid background -->
@@ -13,30 +13,30 @@
                 <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-zinc-900 shadow-md mb-4">
                     <span class="text-xl font-black text-white">SK</span>
                 </div>
-                <h1 class="text-2xl font-black tracking-tight text-zinc-900">Admin Panel</h1>
-                <p class="text-zinc-500 text-sm mt-1 font-medium">ServiceKU Central Management</p>
+                <h1 class="text-2xl font-black tracking-tight sk-text-primary">Admin Panel</h1>
+                <p class="sk-text-muted text-sm mt-1 font-medium">ServiceKU Central Management</p>
             </div>
 
-            <div class="bg-white p-8 rounded-2xl border border-zinc-200 shadow-xl shadow-zinc-200/40 animate-slide-up">
-                <div v-if="$page.props.flash?.error" class="mb-6 p-4 bg-red-50 border border-red-100 rounded-xl flex items-start gap-3">
-                    <svg class="w-5 h-5 text-red-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="sk-bg-card p-8 rounded-2xl border sk-border shadow-xl shadow-zinc-200/40 animate-slide-up">
+                <div v-if="$page.props.flash?.error" class="mb-6 p-4 sk-bg-danger-soft border border-red-100 rounded-xl flex items-start gap-3">
+                    <svg class="w-5 h-5 sk-text-danger shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <p class="text-sm font-semibold text-red-800">{{ $page.props.flash.error }}</p>
+                    <p class="text-sm font-semibold sk-text-danger">{{ $page.props.flash.error }}</p>
                 </div>
 
                 <form @submit.prevent="submit" class="space-y-5">
                     <div>
-                        <label class="block text-sm font-bold text-zinc-900 mb-2">Email</label>
+                        <label class="block text-sm font-bold sk-text-primary mb-2">Email</label>
                         <KInput  type="email" v-model="form.email" required autofocus
-                            class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
+                            class="w-full px-4 py-3 rounded-xl border sk-border sk-bg-card text-sm font-semibold sk-text-primary focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
                             placeholder="admin@serviceku.com" />
-                        <p v-if="form.errors.email" class="mt-1.5 text-xs font-semibold text-red-600">{{ form.errors.email }}</p>
+                        <p v-if="form.errors.email" class="mt-1.5 text-xs font-semibold sk-text-danger">{{ form.errors.email }}</p>
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-zinc-900 mb-2">Password</label>
+                        <label class="block text-sm font-bold sk-text-primary mb-2">Password</label>
                         <KInput  type="password" v-model="form.password" required
-                            class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
+                            class="w-full px-4 py-3 rounded-xl border sk-border sk-bg-card text-sm font-semibold sk-text-primary focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
                             placeholder="••••••••" />
                     </div>
                     <div class="pt-2">
@@ -53,7 +53,7 @@
             </div>
 
             <div class="text-center mt-8">
-                <a href="/" class="text-sm font-bold text-zinc-500 hover:text-zinc-900 transition-colors inline-flex items-center gap-1">
+                <a href="/" class="text-sm font-bold sk-text-muted hover:sk-text-primary transition-colors inline-flex items-center gap-1">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                     Kembali ke Beranda
                 </a>

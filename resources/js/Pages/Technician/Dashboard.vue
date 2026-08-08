@@ -3,28 +3,28 @@
         <div class="flex flex-col gap-6">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                    <h2 class="text-2xl font-bold tracking-tight text-zinc-900">Dashboard Teknisi</h2>
-                    <p class="text-sm text-zinc-500 mt-1">Work order aktif Anda.</p>
+                    <h2 class="text-2xl font-bold tracking-tight sk-text-primary">Dashboard Teknisi</h2>
+                    <p class="text-sm sk-text-muted mt-1">Work order aktif Anda.</p>
                 </div>
             </div>
 
             <!-- Counts -->
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="bg-white rounded-2xl border border-zinc-200 shadow-sm p-5 text-center">
-                    <p class="text-3xl font-black text-indigo-600">{{ waiting?.length ?? 0 }}</p>
-                    <p class="text-xs font-semibold text-zinc-500 mt-1">Menunggu</p>
+                <div class="sk-bg-card rounded-2xl border sk-border shadow-sm p-5 text-center">
+                    <p class="text-3xl font-black sk-text-primary-brand">{{ waiting?.length ?? 0 }}</p>
+                    <p class="text-xs font-semibold sk-text-muted mt-1">Menunggu</p>
                 </div>
-                <div class="bg-white rounded-2xl border border-zinc-200 shadow-sm p-5 text-center">
-                    <p class="text-3xl font-black text-blue-600">{{ inProgress?.length ?? 0 }}</p>
-                    <p class="text-xs font-semibold text-zinc-500 mt-1">Dikerjakan</p>
+                <div class="sk-bg-card rounded-2xl border sk-border shadow-sm p-5 text-center">
+                    <p class="text-3xl font-black sk-text-info">{{ inProgress?.length ?? 0 }}</p>
+                    <p class="text-xs font-semibold sk-text-muted mt-1">Dikerjakan</p>
                 </div>
-                <div class="bg-white rounded-2xl border border-zinc-200 shadow-sm p-5 text-center">
+                <div class="sk-bg-card rounded-2xl border sk-border shadow-sm p-5 text-center">
                     <p class="text-3xl font-black text-purple-600">{{ waitingPart?.length ?? 0 }}</p>
-                    <p class="text-xs font-semibold text-zinc-500 mt-1">Tunggu Part</p>
+                    <p class="text-xs font-semibold sk-text-muted mt-1">Tunggu Part</p>
                 </div>
-                <div class="bg-white rounded-2xl border border-zinc-200 shadow-sm p-5 text-center">
-                    <p class="text-3xl font-black text-emerald-600">{{ qc?.length ?? 0 }}</p>
-                    <p class="text-xs font-semibold text-zinc-500 mt-1">QC / Selesai</p>
+                <div class="sk-bg-card rounded-2xl border sk-border shadow-sm p-5 text-center">
+                    <p class="text-3xl font-black sk-text-success">{{ qc?.length ?? 0 }}</p>
+                    <p class="text-xs font-semibold sk-text-muted mt-1">QC / Selesai</p>
                 </div>
             </div>
 

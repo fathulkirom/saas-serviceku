@@ -9,7 +9,7 @@
         @click="$emit('execute', action.id)"
         :disabled="actionLoading[action.id]"
         class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg transition-all whitespace-nowrap disabled:opacity-50"
-        :class="action.danger ? 'hover:bg-red-50' : 'hover:bg-indigo-50'"
+        :class="action.danger ? 'hover:sk-bg-danger-soft' : 'hover:sk-bg-primary-soft'"
         :style="actionStyle(action)"
       >
         <div v-if="actionLoading[action.id]" class="sk-animate-spin w-3 h-3 border-2 border-current border-t-transparent rounded-full"></div>

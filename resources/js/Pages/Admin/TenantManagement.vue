@@ -6,7 +6,7 @@
                     <h2 class="text-2xl font-black text-slate-100 tracking-tight">Manajemen Tenant</h2>
                     <p class="text-sm text-slate-400 mt-1 font-medium">Kelola semua tenant dan status langganan</p>
                 </div>
-                <Link :href="route('admin.tenant.create')" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5">
+                <Link :href="route('admin.tenant.create')" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white sk-bg-primary hover:sk-bg-primary transition-all shadow-sm hover:shadow-md hover:-translate-y-0.5">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
                     Tambah Tenant
                 </Link>
@@ -51,7 +51,7 @@
                     </KSelect>
                 </div>
                 <div class="flex gap-2">
-                    <KButton  type="submit" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white transition-all duration-200 hover:-translate-y-0.5 bg-indigo-600 hover:bg-indigo-700 shadow-sm flex items-center gap-2">
+                    <KButton  type="submit" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white transition-all duration-200 hover:-translate-y-0.5 sk-bg-primary hover:sk-bg-primary shadow-sm flex items-center gap-2">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                         Cari
                     </KButton>

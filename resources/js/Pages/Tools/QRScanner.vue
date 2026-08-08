@@ -2,36 +2,36 @@
     <AuthenticatedLayout>
         <template #header>
             <div>
-                <h2 class="text-2xl font-bold tracking-tight text-zinc-900">QR Scanner</h2>
-                <p class="text-sm text-zinc-500 mt-1">Pindai QR code pada perangkat atau nota pelanggan</p>
+                <h2 class="text-2xl font-bold tracking-tight sk-text-primary">QR Scanner</h2>
+                <p class="text-sm sk-text-muted mt-1">Pindai QR code pada perangkat atau nota pelanggan</p>
             </div>
         </template>
         <div class="max-w-xl mx-auto mt-6">
-            <div class="bg-white rounded-2xl border border-zinc-200 shadow-sm p-8 text-center">
+            <div class="sk-bg-card rounded-2xl border sk-border shadow-sm p-8 text-center">
                 <div class="mb-6">
-                    <video ref="video" class="w-full max-w-sm mx-auto rounded-2xl border border-zinc-200 bg-zinc-900 shadow-inner" style="min-height: 300px;"></video>
+                    <video ref="video" class="w-full max-w-sm mx-auto rounded-2xl border sk-border bg-zinc-900 shadow-inner" style="min-height: 300px;"></video>
                 </div>
-                <p class="text-sm font-medium text-zinc-600 mb-6">Arahkan kamera ke QR code pada sticker device</p>
+                <p class="text-sm font-medium sk-text-secondary mb-6">Arahkan kamera ke QR code pada sticker device</p>
                 <div class="flex gap-3 justify-center">
-                    <KButton  @click="startScan" class="px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors shadow-sm focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1">
+                    <KButton  @click="startScan" class="px-5 py-2.5 rounded-xl text-sm font-bold text-white sk-bg-primary hover:sk-bg-primary transition-colors shadow-sm focus:ring-2 focus:ring-indigo-500 focus:ring-offset-1">
                         Mulai Scan
                     </KButton>
-                    <KButton  @click="stopScan" class="px-5 py-2.5 rounded-xl text-sm font-bold text-zinc-700 bg-white border border-zinc-300 hover:bg-zinc-50 transition-colors shadow-sm">
+                    <KButton  @click="stopScan" class="px-5 py-2.5 rounded-xl text-sm font-bold sk-text-primary sk-bg-card border sk-border hover:sk-bg-hover transition-colors shadow-sm">
                         Berhenti
                     </KButton>
                 </div>
-                <div v-if="result" class="mt-6 p-5 bg-emerald-50 border border-emerald-200 rounded-2xl flex flex-col items-center">
-                    <p class="text-sm font-bold text-emerald-800 mb-2">Hasil Scan: <span class="font-mono bg-white px-2 py-1 rounded border border-emerald-100 ml-1">{{ result }}</span></p>
+                <div v-if="result" class="mt-6 p-5 sk-bg-success-soft border sk-border-primary rounded-2xl flex flex-col items-center">
+                    <p class="text-sm font-bold sk-text-success mb-2">Hasil Scan: <span class="font-mono sk-bg-card px-2 py-1 rounded border border-emerald-100 ml-1">{{ result }}</span></p>
                     <a v-if="isServiceCode" :href="route('services.show', result)" class="mt-2 inline-flex items-center gap-1.5 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold rounded-xl transition-colors shadow-sm">
                         Buka Detail Servis
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                     </a>
                 </div>
-                <div v-if="error" class="mt-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3 text-left">
-                    <div class="shrink-0 w-8 h-8 rounded-full bg-red-100 flex items-center justify-center text-red-600">
+                <div v-if="error" class="mt-6 p-4 sk-bg-danger-soft border sk-border-primary rounded-xl flex items-center gap-3 text-left">
+                    <div class="shrink-0 w-8 h-8 rounded-full sk-bg-danger-soft flex items-center justify-center sk-text-danger">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
                     </div>
-                    <p class="text-sm font-medium text-red-800 flex-1">{{ error }}</p>
+                    <p class="text-sm font-medium sk-text-danger flex-1">{{ error }}</p>
                 </div>
             </div>
         </div>

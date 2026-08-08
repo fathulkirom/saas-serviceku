@@ -1,6 +1,6 @@
 <template>
     <KDialog :model-value="show" @update:model-value="show = $event">
-        <h3 class="text-base font-bold mb-4 text-zinc-900">Assign Teknisi</h3>
+        <h3 class="text-base font-bold mb-4 sk-text-primary">Assign Teknisi</h3>
         <KSelect v-model="assignTechnicianId" size="lg" extra-class="mb-4">
             <option value="" disabled>-- Pilih Teknisi --</option>
             <option v-for="u in users" :key="u.id" :value="u.id">{{ u.name }} ({{ u.role }})</option>

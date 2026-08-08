@@ -44,12 +44,12 @@
                             </div>
                             <div class="p-6">
                                 <div class="space-y-2">
-                                    <label for="customer_id" class="block text-xs font-bold uppercase tracking-wider mb-2" :style="{ color: 'var(--text-muted)' }">Cari / Pilih Pelanggan <span class="text-red-500">*</span></label>
+                                    <label for="customer_id" class="block text-xs font-bold uppercase tracking-wider mb-2" :style="{ color: 'var(--text-muted)' }">Cari / Pilih Pelanggan <span class="sk-text-danger">*</span></label>
                                     <KSelect  ref="customerSelectEl" v-model="form.customer_id" id="customer_id" class="w-full rounded-xl text-sm text-sm px-4 py-3 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500  transition-all" :style="{ borderColor: 'var(--border-color)', background: 'var(--bg-card)', color: 'var(--text-primary)' }" required>
                                         <option value="">-- Pilih Nama Pelanggan --</option>
                                         <option v-for="c in customerOptions" :key="c.id" :value="c.id">{{ c.name }} {{ c.phone ? ' (' + c.phone + ')' : '' }}</option>
                                     </KSelect>
-                                    <p v-if="form.errors.customer_id" class="text-xs text-red-500 font-medium">{{ form.errors.customer_id }}</p>
+                                    <p v-if="form.errors.customer_id" class="text-xs sk-text-danger font-medium">{{ form.errors.customer_id }}</p>
                                 </div>
                                 <div v-if="selectedCustomer" class="rounded-xl p-4 text-sm mt-4 animate-in slide-in-from-top-2" :style="{ background: 'var(--bg-hover)', borderColor: 'var(--border-color)' }">
                                     <p class="font-bold text-base" :style="{ color: 'var(--text-primary)' }">{{ selectedCustomer.name }}</p>
@@ -85,7 +85,7 @@
                                     </KSelect>
                                 </div>
                                 <div class="md:col-span-2">
-                                    <label class="block text-xs font-bold uppercase tracking-wider mb-2" :style="{ color: 'var(--text-muted)' }">Tipe / Model <span class="text-red-500">*</span></label>
+                                    <label class="block text-xs font-bold uppercase tracking-wider mb-2" :style="{ color: 'var(--text-muted)' }">Tipe / Model <span class="sk-text-danger">*</span></label>
                                     <KInput  ref="tipeUnitInputEl" type="text" v-model="form.tipe_unit" placeholder="Contoh: iPhone 13 Pro 256GB" class="w-full rounded-xl text-sm text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500  transition-all" :style="{ borderColor: 'var(--border-color)', background: 'var(--bg-card)', color: 'var(--text-primary)' }" required />
                                     <p v-if="form.errors.tipe_unit" class="text-xs font-medium mt-1" :style="{ color: 'var(--color-danger-text)' }">{{ form.errors.tipe_unit }}</p>
                                 </div>
@@ -94,7 +94,7 @@
                                     <div class="relative">
                                       <KInput  type="text" v-model="form.imei_sn" placeholder="Nomor IMEI / SN" class="w-full rounded-xl text-sm text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500  transition-all" :style="{ borderColor: 'var(--border-color)', background: 'var(--bg-card)', color: 'var(--text-primary)' }" />
                                       <span v-if="isLookingUpIMEI" class="absolute right-3 top-1/2 -translate-y-1/2 animate-spin text-indigo-500 text-xs">⏳</span>
-                                      <span v-else-if="imeiLookupResult?.customer" class="absolute right-3 top-1/2 -translate-y-1/2 text-green-500 text-xs font-bold">✅ Ditemukan</span>
+                                      <span v-else-if="imeiLookupResult?.customer" class="absolute right-3 top-1/2 -translate-y-1/2 sk-text-success text-xs font-bold">✅ Ditemukan</span>
                                     </div>
                                 </div>
                                 <!-- IMEI Lookup: Blacklist Warning -->
@@ -141,7 +141,7 @@
                             </div>
                             <div class="p-6 space-y-5">
                                 <div>
-                                    <label class="block text-xs font-bold uppercase tracking-wider mb-2" :style="{ color: 'var(--text-muted)' }">Deskripsi Keluhan / Masalah <span class="text-red-500">*</span></label>
+                                    <label class="block text-xs font-bold uppercase tracking-wider mb-2" :style="{ color: 'var(--text-muted)' }">Deskripsi Keluhan / Masalah <span class="sk-text-danger">*</span></label>
                                     <KTextarea  ref="problemDescriptionEl" v-model="form.problem_description" rows="3" class="w-full rounded-xl text-sm text-sm px-4 py-3 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500  transition-all resize-none" :style="{ borderColor: 'var(--border-color)', background: 'var(--bg-card)', color: 'var(--text-primary)' }" placeholder="Jelaskan secara detail keluhan pelanggan..." required></KTextarea>
                                     <p v-if="form.errors.problem_description" class="text-xs font-medium mt-1" :style="{ color: 'var(--color-danger-text)' }">{{ form.errors.problem_description }}</p>
                                 </div>
@@ -228,7 +228,7 @@
                                 <div v-if="photoPreviews.length" class="mt-4 grid grid-cols-4 gap-2">
                                     <div v-for="(preview, idx) in photoPreviews" :key="idx" class="relative group">
                                         <img :src="preview" class="w-full aspect-square object-cover rounded-lg shadow-sm" :style="{ borderColor: 'var(--border-color)' }" />
-                                        <KButton  type="button" @click="removePhoto(idx)" class="absolute -top-1.5 -right-1.5 w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-md">
+                                        <KButton  type="button" @click="removePhoto(idx)" class="absolute -top-1.5 -right-1.5 w-6 h-6 sk-bg-danger text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow-md">
                                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                                         </KButton>
                                     </div>
@@ -265,11 +265,11 @@
                             <h3 class="text-xl font-bold mb-6" :style="{ color: 'var(--text-primary)' }">Tambah Pelanggan Baru</h3>
                             <div class="space-y-4">
                                 <div>
-                                    <label class="block text-xs font-bold uppercase tracking-wider mb-2" :style="{ color: 'var(--text-muted)' }">Nama Pelanggan <span class="text-red-500">*</span></label>
+                                    <label class="block text-xs font-bold uppercase tracking-wider mb-2" :style="{ color: 'var(--text-muted)' }">Nama Pelanggan <span class="sk-text-danger">*</span></label>
                                     <KInput  ref="newCustomerNameEl" type="text" v-model="newCustomerForm.name" placeholder="Nama lengkap..." class="w-full rounded-xl text-sm text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500  transition-all" :style="{ borderColor: 'var(--border-color)', background: 'var(--bg-card)', color: 'var(--text-primary)' }" required />
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold uppercase tracking-wider mb-2" :style="{ color: 'var(--text-muted)' }">No. WhatsApp / Telepon <span class="text-red-500">*</span></label>
+                                    <label class="block text-xs font-bold uppercase tracking-wider mb-2" :style="{ color: 'var(--text-muted)' }">No. WhatsApp / Telepon <span class="sk-text-danger">*</span></label>
                                     <KInput  type="text" v-model="newCustomerForm.phone" placeholder="08xxxxxxxxxx" class="w-full rounded-xl text-sm text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500  transition-all" :style="{ borderColor: 'var(--border-color)', background: 'var(--bg-card)', color: 'var(--text-primary)' }" required />
                                 </div>
                                 <div>
@@ -284,7 +284,7 @@
                         </div>
                         <div class="p-6 pt-0 flex gap-3">
                             <KButton  type="button" @click="showAddCustomerModal = false" class="flex-1 px-4 py-2.5 rounded-xl text-sm font-bold transition-colors" :style="{ color: 'var(--text-primary)', background: 'var(--bg-card)', borderColor: 'var(--border-color)' }">Batal</KButton>
-                            <KButton  type="submit" :disabled="savingCustomer || !newCustomerForm.name" class="flex-1 px-4 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors disabled:opacity-50 flex justify-center items-center gap-2">
+                            <KButton  type="submit" :disabled="savingCustomer || !newCustomerForm.name" class="flex-1 px-4 py-2.5 rounded-xl text-sm font-bold text-white sk-bg-primary hover:sk-bg-primary transition-colors disabled:opacity-50 flex justify-center items-center gap-2">
                                 <svg v-if="savingCustomer" class="animate-spin w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                                 Simpan
                             </KButton>

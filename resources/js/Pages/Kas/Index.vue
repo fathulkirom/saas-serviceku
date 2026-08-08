@@ -1,21 +1,21 @@
 <template>
   <AuthenticatedLayout>
-    <div class="flex flex-col min-h-[calc(100vh-64px)] bg-zinc-50">
+    <div class="flex flex-col min-h-[calc(100vh-64px)] sk-bg-hover">
       <!-- Header CRM Style -->
-      <div class="px-6 sm:px-8 py-6 bg-white border-b border-zinc-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 sticky top-0 z-20">
+      <div class="px-6 sm:px-8 py-6 sk-bg-card border-b sk-border flex flex-col sm:flex-row sm:items-center justify-between gap-4 sticky top-0 z-20">
         <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center border border-emerald-100">
-                <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <div class="w-12 h-12 sk-bg-success-soft rounded-xl flex items-center justify-center border border-emerald-100">
+                <svg class="w-6 h-6 sk-text-success" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
             <div>
-                <h1 class="text-2xl font-bold text-zinc-900 tracking-tight">{{ pageTitle }}</h1>
-                <p class="text-sm text-zinc-500 font-medium mt-0.5">{{ subtitle }}</p>
+                <h1 class="text-2xl font-bold sk-text-primary tracking-tight">{{ pageTitle }}</h1>
+                <p class="text-sm sk-text-muted font-medium mt-0.5">{{ subtitle }}</p>
             </div>
         </div>
         
         <!-- Action Buttons -->
         <div class="flex flex-wrap items-center gap-2">
-          <KButton  v-if="activeTab === 'shift'" @click="openShiftModal()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
+          <KButton  v-if="activeTab === 'shift'" @click="openShiftModal()" class="inline-flex items-center gap-1.5 px-4 py-2 sk-bg-primary hover:sk-bg-primary text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
             Buka / Tutup Shift Kas
           </KButton>
@@ -39,7 +39,7 @@
       <template #shift>
         <div class="space-y-6 mt-6">
           <Skeleton v-if="!registers" type="table" :count="5" />
-          <div v-else class="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden">
+          <div v-else class="sk-bg-card rounded-2xl border sk-border shadow-sm overflow-hidden">
             <KTable
               :columns="shiftColumns"
               :rows="registers?.data ?? []"
@@ -49,34 +49,34 @@
               @empty-action="openShiftModal()"
             >
               <template #cell-user_name="{ row }">
-                <span class="font-bold text-zinc-900">{{ row.user?.name ?? '-' }}</span>
+                <span class="font-bold sk-text-primary">{{ row.user?.name ?? '-' }}</span>
               </template>
               <template #cell-branch_name="{ row }">
-                <span class="text-zinc-600">{{ row.branch?.name ?? '-' }}</span>
+                <span class="sk-text-secondary">{{ row.branch?.name ?? '-' }}</span>
               </template>
               <template #cell-opening_balance="{ row }">
-                <span class="font-semibold text-zinc-900">Rp {{ formatNumber(row.opening_balance) }}</span>
+                <span class="font-semibold sk-text-primary">Rp {{ formatNumber(row.opening_balance) }}</span>
               </template>
               <template #cell-closing_balance="{ row }">
-                <span class="font-bold text-zinc-900">Rp {{ formatNumber(row.closing_balance) }}</span>
+                <span class="font-bold sk-text-primary">Rp {{ formatNumber(row.closing_balance) }}</span>
               </template>
               <template #cell-status="{ row }">
                 <Badge v-if="row.status === 'open'" variant="green" dot>Aktif (Open)</Badge>
                 <Badge v-else variant="default">Tutup (Closed)</Badge>
               </template>
               <template #cell-opened_at="{ row }">
-                <span class="text-zinc-500">{{ formatDate(row.opened_at) }}</span>
+                <span class="sk-text-muted">{{ formatDate(row.opened_at) }}</span>
               </template>
               <template #cell-closed_at="{ row }">
-                <span class="text-zinc-500">{{ row.closed_at ? formatDate(row.closed_at) : '-' }}</span>
+                <span class="sk-text-muted">{{ row.closed_at ? formatDate(row.closed_at) : '-' }}</span>
               </template>
               <template #cell-action="{ row }">
-                <KButton  v-if="row.status === 'open'" @click="openCloseShiftModal(row)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-50 text-red-600 hover:bg-red-100 transition-all shadow-sm border border-red-200">
+                <KButton  v-if="row.status === 'open'" @click="openCloseShiftModal(row)" class="px-3 py-1.5 rounded-lg text-xs font-semibold sk-bg-danger-soft sk-text-danger hover:sk-bg-danger-soft transition-all shadow-sm border sk-border-primary">
                   Tutup Shift
                 </KButton>
               </template>
             </KTable>
-            <div class="p-4 border-t border-zinc-200 bg-zinc-50/50">
+            <div class="p-4 border-t sk-border sk-bg-hover">
               <Pagination :meta="registers" />
             </div>
           </div>
@@ -87,7 +87,7 @@
       <template #setoran>
         <div class="space-y-6 mt-6">
           <Skeleton v-if="!deposits" type="table" :count="5" />
-          <div v-else class="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden">
+          <div v-else class="sk-bg-card rounded-2xl border sk-border shadow-sm overflow-hidden">
             <KTable
               :columns="depositColumns"
               :rows="deposits?.data ?? []"
@@ -97,16 +97,16 @@
               @empty-action="openDepositModal()"
             >
               <template #cell-amount="{ row }">
-                <span class="font-black text-emerald-600">Rp {{ formatNumber(row.amount) }}</span>
+                <span class="font-black sk-text-success">Rp {{ formatNumber(row.amount) }}</span>
               </template>
               <template #cell-deposit_date="{ row }">
-                <span class="text-zinc-900 font-medium">{{ formatDate(row.deposit_date) }}</span>
+                <span class="sk-text-primary font-medium">{{ formatDate(row.deposit_date) }}</span>
               </template>
               <template #cell-note="{ row }">
-                <span class="text-zinc-500">{{ row.note ?? '-' }}</span>
+                <span class="sk-text-muted">{{ row.note ?? '-' }}</span>
               </template>
             </KTable>
-            <div class="p-4 border-t border-zinc-200 bg-zinc-50/50">
+            <div class="p-4 border-t sk-border sk-bg-hover">
               <Pagination :meta="deposits" />
             </div>
           </div>
@@ -117,7 +117,7 @@
       <template #komisi>
         <div class="space-y-6 mt-6">
           <Skeleton v-if="!commissions" type="table" :count="5" />
-          <div v-else class="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden">
+          <div v-else class="sk-bg-card rounded-2xl border sk-border shadow-sm overflow-hidden">
             <KTable
               :columns="commissionColumns"
               :rows="commissions?.data ?? []"
@@ -125,19 +125,19 @@
               :emptyDescription="'Data komisi teknisi per servis akan muncul setelah servis selesai.'"
             >
               <template #cell-customer_name="{ row }">
-                <span class="font-medium text-zinc-900">{{ row.service?.customer?.name ?? '-' }}</span>
+                <span class="font-medium sk-text-primary">{{ row.service?.customer?.name ?? '-' }}</span>
               </template>
               <template #cell-technician_name="{ row }">
-                <span class="font-bold text-zinc-900">{{ row.technician?.name ?? '-' }}</span>
+                <span class="font-bold sk-text-primary">{{ row.technician?.name ?? '-' }}</span>
               </template>
               <template #cell-commission_amount="{ row }">
-                <span class="font-black text-indigo-600">Rp {{ formatNumber(row.commission_amount) }}</span>
+                <span class="font-black sk-text-primary-brand">Rp {{ formatNumber(row.commission_amount) }}</span>
               </template>
               <template #cell-status="{ row }">
                 <Badge :status="row.status">{{ row.status === 'paid' ? 'Lunas / Dibayar' : 'Belum Dibayar' }}</Badge>
               </template>
               <template #cell-created_at="{ row }">
-                <span class="text-zinc-500">{{ formatDate(row.created_at) }}</span>
+                <span class="sk-text-muted">{{ formatDate(row.created_at) }}</span>
               </template>
               <template #cell-action="{ row }">
                 <KButton  v-if="row.status !== 'paid'" @click="payCommission(row)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 text-white hover:bg-emerald-700 transition-all shadow-sm">
@@ -145,7 +145,7 @@
                 </KButton>
               </template>
             </KTable>
-            <div class="p-4 border-t border-zinc-200 bg-zinc-50/50">
+            <div class="p-4 border-t sk-border sk-bg-hover">
               <Pagination :meta="commissions" />
             </div>
           </div>
@@ -156,7 +156,7 @@
       <template #rekonsiliasi>
         <div class="space-y-6 mt-6">
           <Skeleton v-if="!reconciliations" type="table" :count="5" />
-          <div v-else class="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden">
+          <div v-else class="sk-bg-card rounded-2xl border sk-border shadow-sm overflow-hidden">
             <KTable
               :columns="reconciliationColumns"
               :rows="reconciliations?.data ?? []"
@@ -166,13 +166,13 @@
               @empty-action="openReconciliationModal()"
             >
               <template #cell-customer_name="{ row }">
-                <span class="font-medium text-zinc-900">{{ row.sale?.customer?.name ?? '-' }}</span>
+                <span class="font-medium sk-text-primary">{{ row.sale?.customer?.name ?? '-' }}</span>
               </template>
               <template #cell-bank_name="{ row }">
-                <span class="font-bold text-xs px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 border border-blue-100">{{ row.bank_name ?? 'Bank' }}</span>
+                <span class="font-bold text-xs px-2.5 py-1 rounded-md sk-bg-info-soft sk-text-info border border-blue-100">{{ row.bank_name ?? 'Bank' }}</span>
               </template>
               <template #cell-amount="{ row }">
-                <span class="font-black text-zinc-900">Rp {{ formatNumber(row.amount) }}</span>
+                <span class="font-black sk-text-primary">Rp {{ formatNumber(row.amount) }}</span>
               </template>
               <template #cell-status="{ row }">
                 <Badge :status="row.status">{{ row.status }}</Badge>
@@ -180,11 +180,11 @@
               <template #cell-action="{ row }">
                 <div v-if="row.status === 'pending'" class="flex items-center justify-end gap-2">
                   <KButton  @click="updateReconcileStatus(row, 'verified')" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700 transition-all shadow-sm">Verifikasi</KButton>
-                  <KButton  @click="updateReconcileStatus(row, 'rejected')" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-red-600 bg-red-50 hover:bg-red-100 border border-red-200 transition-all shadow-sm">Tolak</KButton>
+                  <KButton  @click="updateReconcileStatus(row, 'rejected')" class="px-3 py-1.5 rounded-lg text-xs font-semibold sk-text-danger sk-bg-danger-soft hover:sk-bg-danger-soft border sk-border-primary transition-all shadow-sm">Tolak</KButton>
                 </div>
               </template>
             </KTable>
-            <div class="p-4 border-t border-zinc-200 bg-zinc-50/50">
+            <div class="p-4 border-t sk-border sk-bg-hover">
               <Pagination :meta="reconciliations" />
             </div>
           </div>
@@ -197,15 +197,15 @@
     <Drawer :open="showShiftDrawer" :title="closingShift ? 'Tutup Shift Kasir' : 'Buka Shift Kasir Baru'" @close="showShiftDrawer = false" width="420px">
       <form @submit.prevent="submitShift" class="space-y-4">
         <div v-if="!closingShift" class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Modal Kas Awal (Rp) *</label>
+          <label class="text-xs font-semibold sk-text-muted">Modal Kas Awal (Rp) *</label>
           <KInput  v-model="shiftForm.opening_balance" type="number" min="0" required placeholder="e.g. 500000" class="input text-sm" />
         </div>
         <div v-else class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Total Saldo Kas Akhir (Rp) *</label>
+          <label class="text-xs font-semibold sk-text-muted">Total Saldo Kas Akhir (Rp) *</label>
           <KInput  v-model="shiftForm.closing_balance" type="number" min="0" required placeholder="Total uang fisik di laci kas" class="input text-sm" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Catatan Kasir</label>
+          <label class="text-xs font-semibold sk-text-muted">Catatan Kasir</label>
           <KTextarea  v-model="shiftForm.note" rows="2" placeholder="Catatan pecahan atau serah terima..." class="input text-sm"></KTextarea>
         </div>
         <div class="flex justify-end gap-2 pt-3">
@@ -221,15 +221,15 @@
     <Drawer :open="showDepositDrawer" title="Catat Setoran Harian" @close="showDepositDrawer = false" width="420px">
       <form @submit.prevent="submitDeposit" class="space-y-4">
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Nominal Setoran (Rp) *</label>
+          <label class="text-xs font-semibold sk-text-muted">Nominal Setoran (Rp) *</label>
           <KInput  v-model="depositForm.amount" type="number" min="1000" required placeholder="e.g. 2500000" class="input text-sm" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Tanggal Setoran *</label>
+          <label class="text-xs font-semibold sk-text-muted">Tanggal Setoran *</label>
           <KInput  v-model="depositForm.deposit_date" type="date" required class="input text-sm" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Catatan / Bukti Transfer</label>
+          <label class="text-xs font-semibold sk-text-muted">Catatan / Bukti Transfer</label>
           <KTextarea  v-model="depositForm.note" rows="2" placeholder="Disetor via BCA Mandiri / Tunai oleh..." class="input text-sm"></KTextarea>
         </div>
         <div class="flex justify-end gap-2 pt-3">
@@ -245,19 +245,19 @@
     <Drawer :open="showReconcileDrawer" title="Tambah Rekonsiliasi Bank" @close="showReconcileDrawer = false" width="420px">
       <form @submit.prevent="submitReconciliation" class="space-y-4">
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Nama Bank / QRIS *</label>
+          <label class="text-xs font-semibold sk-text-muted">Nama Bank / QRIS *</label>
           <KInput  v-model="reconcileForm.bank_name" required placeholder="e.g. Bank BCA / Mandiri / QRIS" class="input text-sm" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Jumlah Transaksi (Rp) *</label>
+          <label class="text-xs font-semibold sk-text-muted">Jumlah Transaksi (Rp) *</label>
           <KInput  v-model="reconcileForm.amount" type="number" min="1" required placeholder="0" class="input text-sm" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Nomor Referensi Mutasi</label>
+          <label class="text-xs font-semibold sk-text-muted">Nomor Referensi Mutasi</label>
           <KInput  v-model="reconcileForm.reference_number" placeholder="No. Resi / Ref..." class="input text-sm" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Catatan</label>
+          <label class="text-xs font-semibold sk-text-muted">Catatan</label>
           <KTextarea  v-model="reconcileForm.notes" rows="2" class="input text-sm"></KTextarea>
         </div>
         <div class="flex justify-end gap-2 pt-3">

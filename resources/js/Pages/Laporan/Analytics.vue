@@ -20,15 +20,15 @@
           </div>
           <div class="p-4 rounded-xl border" :style="{ background: 'var(--bg-card)', borderColor: 'var(--border-color)' }">
             <p class="text-xs" :style="{ color: 'var(--text-muted)' }">Selesai</p>
-            <p class="text-xl font-bold text-emerald-600">{{ serviceStats?.completed || 0 }}</p>
+            <p class="text-xl font-bold sk-text-success">{{ serviceStats?.completed || 0 }}</p>
           </div>
           <div class="p-4 rounded-xl border" :style="{ background: 'var(--bg-card)', borderColor: 'var(--border-color)' }">
             <p class="text-xs" :style="{ color: 'var(--text-muted)' }">Aktif</p>
-            <p class="text-xl font-bold text-blue-600">{{ serviceStats?.active || 0 }}</p>
+            <p class="text-xl font-bold sk-text-info">{{ serviceStats?.active || 0 }}</p>
           </div>
           <div class="p-4 rounded-xl border" :style="{ background: 'var(--bg-card)', borderColor: 'var(--border-color)' }">
             <p class="text-xs" :style="{ color: 'var(--text-muted)' }">Cancel</p>
-            <p class="text-xl font-bold text-red-500">{{ serviceStats?.cancelled || 0 }}</p>
+            <p class="text-xl font-bold sk-text-danger">{{ serviceStats?.cancelled || 0 }}</p>
           </div>
         </div>
 
@@ -48,8 +48,8 @@
               <tbody>
                 <tr v-for="t in trends" :key="t.month" class="border-t" :style="{ borderColor: 'var(--border-light)' }">
                   <td class="py-2 font-medium" :style="{ color: 'var(--text-primary)' }">{{ t.month }}</td>
-                  <td class="py-2 text-right text-emerald-600">Rp {{ formatNumber(t.revenue) }}</td>
-                  <td class="py-2 text-right text-red-500">Rp {{ formatNumber(t.expenses) }}</td>
+                  <td class="py-2 text-right sk-text-success">Rp {{ formatNumber(t.revenue) }}</td>
+                  <td class="py-2 text-right sk-text-danger">Rp {{ formatNumber(t.expenses) }}</td>
                   <td class="py-2 text-right" :style="{ color: 'var(--text-secondary)' }">{{ t.services }}</td>
                 </tr>
               </tbody>
@@ -66,7 +66,7 @@
             <div v-for="b in branchRevenue" :key="b.branch_id" class="px-4 py-3 flex items-center justify-between">
               <span class="text-sm font-semibold" :style="{ color: 'var(--text-primary)' }">{{ b.branch?.name || 'Cabang ' + b.branch_id }}</span>
               <div class="text-right">
-                <p class="text-sm font-bold text-emerald-600">Rp {{ formatNumber(b.revenue) }}</p>
+                <p class="text-sm font-bold sk-text-success">Rp {{ formatNumber(b.revenue) }}</p>
                 <p class="text-xs" :style="{ color: 'var(--text-muted)' }">{{ b.transactions }} transaksi</p>
               </div>
             </div>

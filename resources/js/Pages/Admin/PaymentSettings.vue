@@ -22,7 +22,7 @@
                             <label class="block text-sm font-medium text-slate-300 mb-2">Gateway</label>
                             <div class="space-y-2">
                                 <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-slate-800/50"
-                                    :class="form.payment_gateway === 'manual' ? 'border-indigo-500 bg-indigo-50' : 'border-slate-700'">
+                                    :class="form.payment_gateway === 'manual' ? 'border-indigo-500 sk-bg-primary-soft' : 'border-slate-700'">
                                     <KRadio  v-model="form.payment_gateway" value="manual" name="payment_gateway" class="mr-3" />
                                     <div>
                                         <p class="font-medium text-slate-100">💰 Manual Transfer</p>
@@ -30,7 +30,7 @@
                                     </div>
                                 </label>
                                 <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-slate-800/50"
-                                    :class="form.payment_gateway === 'midtrans' ? 'border-indigo-500 bg-indigo-50' : 'border-slate-700'">
+                                    :class="form.payment_gateway === 'midtrans' ? 'border-indigo-500 sk-bg-primary-soft' : 'border-slate-700'">
                                     <KRadio  v-model="form.payment_gateway" value="midtrans" name="payment_gateway" class="mr-3" />
                                     <div>
                                         <p class="font-medium text-slate-100">🔵 Midtrans</p>
@@ -38,7 +38,7 @@
                                     </div>
                                 </label>
                                 <label class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-slate-800/50"
-                                    :class="form.payment_gateway === 'xendit' ? 'border-indigo-500 bg-indigo-50' : 'border-slate-700'">
+                                    :class="form.payment_gateway === 'xendit' ? 'border-indigo-500 sk-bg-primary-soft' : 'border-slate-700'">
                                     <KRadio  v-model="form.payment_gateway" value="xendit" name="payment_gateway" class="mr-3" />
                                     <div>
                                         <p class="font-medium text-slate-100">🟠 Xendit</p>
@@ -99,7 +99,7 @@
 
                         <div class="flex justify-end mt-6 pt-4 border-t">
                             <KButton  type="submit" :disabled="form.processing"
-                                class="px-6 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 text-sm">
+                                class="px-6 py-2 sk-bg-primary text-white rounded-md hover:sk-bg-primary disabled:opacity-50 text-sm">
                                 Simpan Pengaturan
                             </KButton>
                         </div>
@@ -157,7 +157,7 @@
                             <KTextarea  v-model="form.payment_instructions" rows="4" name="payment_instructions" class="mt-1 block w-full rounded-md border-slate-600 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 text-sm"></KTextarea>
                         </div>
                         <KButton  type="submit" :disabled="form.processing"
-                            class="w-full px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 disabled:opacity-50 text-sm">
+                            class="w-full px-4 py-2 sk-bg-primary text-white rounded-md hover:sk-bg-primary disabled:opacity-50 text-sm">
                             Simpan Rekening
                         </KButton>
                     </form>

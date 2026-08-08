@@ -82,15 +82,15 @@ const filters = reactive({
 });
 
 const levelClass = (l) => ({
-    info: 'bg-blue-100 text-blue-800',
+    info: 'sk-bg-info-soft text-blue-800',
     warning: 'bg-yellow-100 text-yellow-800',
-    error: 'bg-red-100 text-red-800',
-    critical: 'bg-red-100 text-red-800 font-bold',
+    error: 'sk-bg-danger-soft sk-text-danger',
+    critical: 'sk-bg-danger-soft sk-text-danger font-bold',
 }[l] || 'bg-slate-800 text-slate-200');
 
 const typeClass = (t) => ({
     system: 'bg-slate-800 text-slate-200',
-    tenant: 'bg-indigo-100 text-indigo-800',
+    tenant: 'sk-bg-primary-soft sk-text-primary-brand',
     security: 'bg-purple-100 text-purple-800',
 }[t] || 'bg-slate-800 text-slate-200');
 

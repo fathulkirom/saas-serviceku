@@ -1,7 +1,7 @@
 <template>
     <KDialog :model-value="show" @update:model-value="show = $event">
-        <h3 class="text-base font-bold mb-2 text-zinc-900">Batalkan Servis?</h3>
-        <p class="text-sm mb-4 text-zinc-500">Servis #{{ service.id }} akan dibatalkan. Tindakan ini tidak dapat dibatalkan.</p>
+        <h3 class="text-base font-bold mb-2 sk-text-primary">Batalkan Servis?</h3>
+        <p class="text-sm mb-4 sk-text-muted">Servis #{{ service.id }} akan dibatalkan. Tindakan ini tidak dapat dibatalkan.</p>
         <div class="flex gap-2">
             <KButton variant="modal-secondary" @click="show = false">Tidak</KButton>
             <KButton variant="modal-primary-danger" shadow :disabled="processing === 'cancel'" @click="executeCancel">{{ processing === 'cancel' ? 'Memproses...' : 'Ya, Batalkan' }}</KButton>

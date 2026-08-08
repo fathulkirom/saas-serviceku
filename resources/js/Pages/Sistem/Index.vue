@@ -3,23 +3,23 @@
     <template #header>
       <PageHeader :title="pageTitle" :subtitle="subtitle">
         <KButton  v-if="activeTab === 'pengguna'" @click="openUserModal()"
-          class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white transition-all shadow-sm hover:shadow-md">
+          class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold sk-bg-primary hover:sk-bg-primary text-white transition-all shadow-sm hover:shadow-md">
           + Tambah Pengguna
         </KButton>
         <KButton  v-if="activeTab === 'cabang'" @click="openBranchModal()"
-          class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white transition-all shadow-sm hover:shadow-md">
+          class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold sk-bg-primary hover:sk-bg-primary text-white transition-all shadow-sm hover:shadow-md">
           + Tambah Cabang
         </KButton>
         <KButton  v-if="activeTab === 'shift'" @click="openShiftModal()"
-          class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white transition-all shadow-sm hover:shadow-md">
+          class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold sk-bg-primary hover:sk-bg-primary text-white transition-all shadow-sm hover:shadow-md">
           + Tambah Shift Kerja
         </KButton>
         <KButton  v-if="activeTab === 'absensi'" @click="openAttendanceModal()"
-          class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white transition-all shadow-sm hover:shadow-md">
+          class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold sk-bg-primary hover:sk-bg-primary text-white transition-all shadow-sm hover:shadow-md">
           + Catat Absensi Manual
         </KButton>
         <KButton  v-if="canManageDelegations && activeTab === 'delegasi'" @click="openDelegationModal()"
-          class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-700 text-white transition-all shadow-sm hover:shadow-md">
+          class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold sk-bg-primary hover:sk-bg-primary text-white transition-all shadow-sm hover:shadow-md">
           + Beri Delegasi
         </KButton>
       </PageHeader>
@@ -45,7 +45,7 @@
                   :style="{ background: 'var(--primary)' }">{{ getInitials(row.name) }}</div>
                 <div>
                   <span class="font-medium text-sm">{{ row.name }}</span>
-                  <p class="text-[11px] text-zinc-500">{{ row.email }}</p>
+                  <p class="text-[11px] sk-text-muted">{{ row.email }}</p>
                 </div>
               </div>
             </template>
@@ -61,7 +61,7 @@
                     <Badge variant="indigo">{{ b.name }}</Badge>
                   </span>
                 </template>
-                <span v-else-if="!row.branch" class="text-[11px] text-zinc-400">Global</span>
+                <span v-else-if="!row.branch" class="text-[11px] sk-text-muted">Global</span>
               </div>
             </template>
             <template #cell-active="{ row }">
@@ -71,7 +71,7 @@
               <div class="flex items-center gap-1 justify-end">
                 <KButton  @click="openMenuAccessModal(row)" class="text-xs px-2 py-1 rounded border font-medium transition-colors"
                   style="borderColor: var(--border-color); color: #8e44ad;">Akses Menu</KButton>
-                <KButton  @click="openUserModal(row)" class="text-xs px-2 py-1 rounded border font-medium transition-colors border-zinc-200 text-indigo-600">Edit</KButton>
+                <KButton  @click="openUserModal(row)" class="text-xs px-2 py-1 rounded border font-medium transition-colors sk-border sk-text-primary-brand">Edit</KButton>
                 <KButton  @click="toggleUser(row)" class="text-xs px-2 py-1 rounded border font-medium transition-colors"
                   :style="{ borderColor: row.active ? '#fca5a5' : '#86efac', color: row.active ? '#ef4444' : '#10b981' }">{{ row.active ? 'Nonaktifkan' : 'Aktifkan' }}</KButton>
               </div>
@@ -97,7 +97,7 @@
           >
             <template #cell-name="{ row }">
               <span class="font-medium text-sm">{{ row.name }}</span>
-              <p class="text-[11px] text-zinc-500">{{ row.address || '-' }}</p>
+              <p class="text-[11px] sk-text-muted">{{ row.address || '-' }}</p>
             </template>
             <template #cell-users_count="{ row }">
               {{ formatNumber(row.users_count ?? 0) }} orang
@@ -113,7 +113,7 @@
             </template>
             <template #cell-action="{ row }">
               <div class="flex items-center justify-end gap-1">
-                <KButton  @click="openBranchModal(row)" class="px-2.5 py-1 rounded text-xs font-medium border border-zinc-200 text-indigo-600">Edit</KButton>
+                <KButton  @click="openBranchModal(row)" class="px-2.5 py-1 rounded text-xs font-medium border sk-border sk-text-primary-brand">Edit</KButton>
               </div>
             </template>
           </KTable>
@@ -144,8 +144,8 @@
             </template>
             <template #cell-action="{ row }">
               <div class="flex items-center justify-end gap-1">
-                <KButton  @click="openShiftModal(row)" class="px-2.5 py-1 rounded text-xs font-medium border border-zinc-200 text-indigo-600">Edit</KButton>
-                <KButton  @click="deleteShift(row)" class="px-2.5 py-1 rounded text-xs font-medium text-red-600 border border-red-200 hover:bg-red-50">Hapus</KButton>
+                <KButton  @click="openShiftModal(row)" class="px-2.5 py-1 rounded text-xs font-medium border sk-border sk-text-primary-brand">Edit</KButton>
+                <KButton  @click="deleteShift(row)" class="px-2.5 py-1 rounded text-xs font-medium sk-text-danger border sk-border-primary hover:sk-bg-danger-soft">Hapus</KButton>
               </div>
             </template>
           </KTable>
@@ -180,7 +180,7 @@
               </Badge>
             </template>
             <template #cell-action="{ row }">
-              <KSelect  @change="updateAttendanceStatus(row, $event.target.value)" class="text-xs py-1 px-2 rounded border font-semibold bg-white border-zinc-200">
+              <KSelect  @change="updateAttendanceStatus(row, $event.target.value)" class="text-xs py-1 px-2 rounded border font-semibold sk-bg-card sk-border">
                 <option disabled selected>Ubah Status</option>
                 <option value="present">Hadir</option>
                 <option value="late">Terlambat</option>
@@ -224,13 +224,13 @@
               <Badge :variant="row.active ? 'green' : 'red'">{{ row.active ? 'Aktif' : row.revoked_at ? 'Dicabut' : 'Kadaluarsa' }}</Badge>
             </template>
             <template #cell-expires_at="{ row }">
-              <span class="text-xs text-zinc-600">{{ row.expires_at ? formatDate(row.expires_at) : 'Tanpa batas' }}</span>
+              <span class="text-xs sk-text-secondary">{{ row.expires_at ? formatDate(row.expires_at) : 'Tanpa batas' }}</span>
             </template>
             <template #cell-action="{ row }">
               <div class="flex items-center gap-1 justify-end">
                 <KButton v-if="row.active" @click="revokeDelegation(row)" class="text-xs px-2 py-1 rounded border font-medium transition-colors"
                   style="borderColor: '#fca5a5'; color: '#ef4444';">Cabut</KButton>
-                <span v-else class="text-[11px] text-zinc-400">—</span>
+                <span v-else class="text-[11px] sk-text-muted">—</span>
               </div>
             </template>
           </KTable>
@@ -242,7 +242,7 @@
     <Drawer :open="showDelegationDrawer" title="Beri Delegasi Akses (Sementara)" @close="showDelegationDrawer = false" width="460px">
       <form @submit.prevent="submitDelegation" class="space-y-4">
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Karyawan (penerima) *</label>
+          <label class="text-xs font-semibold sk-text-muted">Karyawan (penerima) *</label>
           <KSelect v-model="delegationForm.user_id" class="input text-sm" required>
             <option value="" disabled>Pilih karyawan</option>
             <option v-for="u in users?.data ?? []" :key="u.id" :value="u.id">
@@ -251,14 +251,14 @@
           </KSelect>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Capability yang didelegasikan *</label>
+          <label class="text-xs font-semibold sk-text-muted">Capability yang didelegasikan *</label>
           <KSelect v-model="delegationForm.permission" class="input text-sm" required>
             <option value="" disabled>Pilih capability</option>
             <option v-for="(label, key) in delegationCapabilities" :key="key" :value="key">{{ label }}</option>
           </KSelect>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Cabang (kosongkan = semua cabang yang terjangkau)</label>
+          <label class="text-xs font-semibold sk-text-muted">Cabang (kosongkan = semua cabang yang terjangkau)</label>
           <KSelect v-model="delegationForm.branch_id" class="input text-sm">
             <option value="">Semua cabang</option>
             <option v-for="b in branchesForSelect" :key="b.id" :value="b.id">{{ b.name }}</option>
@@ -266,16 +266,16 @@
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div class="space-y-1">
-            <label class="text-xs font-semibold text-zinc-500">Mulai (opsional)</label>
+            <label class="text-xs font-semibold sk-text-muted">Mulai (opsional)</label>
             <KInput type="datetime-local" v-model="delegationForm.starts_at" class="input text-sm" />
           </div>
           <div class="space-y-1">
-            <label class="text-xs font-semibold text-zinc-500">Berakhir (opsional)</label>
+            <label class="text-xs font-semibold sk-text-muted">Berakhir (opsional)</label>
             <KInput type="datetime-local" v-model="delegationForm.expires_at" class="input text-sm" />
           </div>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Alasan (opsional)</label>
+          <label class="text-xs font-semibold sk-text-muted">Alasan (opsional)</label>
           <KInput type="textarea" v-model="delegationForm.reason" class="input text-sm" placeholder="Mis: CS cuti, bantu kasir hari ini" />
         </div>
         <div class="flex items-center justify-end gap-2 pt-2">
@@ -289,33 +289,33 @@
     <Drawer :open="showUserDrawer" :title="editingUser ? 'Edit Pengguna' : 'Tambah Pengguna Baru'" @close="showUserDrawer = false" width="420px">
       <form @submit.prevent="submitUser" class="space-y-4">
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Nama *</label>
+          <label class="text-xs font-semibold sk-text-muted">Nama *</label>
           <KInput  v-model="userForm.name" required class="input text-sm" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Email *</label>
+          <label class="text-xs font-semibold sk-text-muted">Email *</label>
           <KInput  v-model="userForm.email" type="email" required class="input text-sm" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Password {{ editingUser ? '(Opsional)' : '*' }}</label>
+          <label class="text-xs font-semibold sk-text-muted">Password {{ editingUser ? '(Opsional)' : '*' }}</label>
           <KInput  v-model="userForm.password" type="password" :required="!editingUser" class="input text-sm" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Role *</label>
+          <label class="text-xs font-semibold sk-text-muted">Role *</label>
           <KSelect  v-model="userForm.role" required class="input text-sm">
             <option value="" disabled>Pilih Role</option>
             <option v-for="r in roleOptions" :key="r.value" :value="r.value">{{ r.label }}</option>
           </KSelect>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Cabang Utama (Home)</label>
+          <label class="text-xs font-semibold sk-text-muted">Cabang Utama (Home)</label>
           <KSelect  v-model="userForm.branch_id" class="input text-sm">
             <option value="">Pilih Cabang</option>
             <option v-for="b in branchesForSelect" :key="b.id" :value="b.id">{{ b.name }}</option>
           </KSelect>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Akses Cabang Tambahan</label>
+          <label class="text-xs font-semibold sk-text-muted">Akses Cabang Tambahan</label>
           <div class="space-y-1.5 border rounded-xl p-2.5" style="borderColor: var(--border-light); background: var(--bg-hover);">
             <label v-for="b in branchesForSelect" :key="b.id" class="flex items-center gap-2 cursor-pointer">
               <KCheckbox
@@ -324,9 +324,9 @@
                 @change="toggleAdditionalBranch(b.id)"
                 class="w-4 h-4 rounded"
               />
-              <span class="text-xs text-zinc-700">{{ b.name }}</span>
+              <span class="text-xs sk-text-primary">{{ b.name }}</span>
             </label>
-            <p v-if="!branchesForSelect.length" class="text-[11px] text-zinc-400">Tidak ada cabang lain.</p>
+            <p v-if="!branchesForSelect.length" class="text-[11px] sk-text-muted">Tidak ada cabang lain.</p>
           </div>
         </div>
         <div class="flex justify-end gap-2 pt-3">
@@ -342,15 +342,15 @@
     <Drawer :open="showBranchDrawer" :title="editingBranch ? 'Edit Cabang Toko' : 'Tambah Cabang Toko'" @close="showBranchDrawer = false" width="420px">
       <form @submit.prevent="submitBranch" class="space-y-4">
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Nama Cabang *</label>
+          <label class="text-xs font-semibold sk-text-muted">Nama Cabang *</label>
           <KInput  v-model="branchForm.name" required placeholder="e.g. Cabang Bandung Center" class="input text-sm" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Alamat Lengkap</label>
+          <label class="text-xs font-semibold sk-text-muted">Alamat Lengkap</label>
           <KTextarea  v-model="branchForm.address" rows="2" placeholder="Jl. Merdeka No. 45..." class="input text-sm"></KTextarea>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">No. Telepon Cabang</label>
+          <label class="text-xs font-semibold sk-text-muted">No. Telepon Cabang</label>
           <KInput  v-model="branchForm.phone" placeholder="022-xxxxxxx" class="input text-sm" />
         </div>
         <div class="flex items-center gap-2 pt-2">
@@ -370,16 +370,16 @@
     <Drawer :open="showShiftDrawer" :title="editingShift ? 'Edit Shift Kerja' : 'Tambah Shift Kerja'" @close="showShiftDrawer = false" width="420px">
       <form @submit.prevent="submitShift" class="space-y-4">
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Nama Shift *</label>
+          <label class="text-xs font-semibold sk-text-muted">Nama Shift *</label>
           <KInput  v-model="shiftForm.name" required placeholder="e.g. Shift Pagi / Shift Malam" class="input text-sm" />
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div class="space-y-1">
-            <label class="text-xs font-semibold text-zinc-500">Jam Mulai *</label>
+            <label class="text-xs font-semibold sk-text-muted">Jam Mulai *</label>
             <KInput  v-model="shiftForm.start_time" type="time" required class="input text-sm" />
           </div>
           <div class="space-y-1">
-            <label class="text-xs font-semibold text-zinc-500">Jam Selesai *</label>
+            <label class="text-xs font-semibold sk-text-muted">Jam Selesai *</label>
             <KInput  v-model="shiftForm.end_time" type="time" required class="input text-sm" />
           </div>
         </div>
@@ -396,14 +396,14 @@
     <Drawer :open="showAttendanceDrawer" title="Catat Absensi Karyawan Manual" @close="showAttendanceDrawer = false" width="420px">
       <form @submit.prevent="submitAttendance" class="space-y-4">
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Pilih Karyawan *</label>
+          <label class="text-xs font-semibold sk-text-muted">Pilih Karyawan *</label>
           <KSelect  v-model="attendanceForm.user_id" required class="input text-sm">
             <option value="" disabled>-- Pilih Karyawan --</option>
             <option v-for="u in attendanceUsers" :key="u.id" :value="u.id">{{ u.name }} ({{ u.role }})</option>
           </KSelect>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Status Kehadiran *</label>
+          <label class="text-xs font-semibold sk-text-muted">Status Kehadiran *</label>
           <KSelect  v-model="attendanceForm.status" required class="input text-sm">
             <option value="present">Hadir</option>
             <option value="late">Terlambat</option>
@@ -413,7 +413,7 @@
           </KSelect>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Waktu Masuk *</label>
+          <label class="text-xs font-semibold sk-text-muted">Waktu Masuk *</label>
           <KInput  v-model="attendanceForm.check_in" type="datetime-local" required class="input text-sm" />
         </div>
         <div class="flex justify-end gap-2 pt-3">
@@ -432,14 +432,14 @@
         <div class="space-y-2 max-h-80 overflow-y-auto pr-1">
           <div v-for="menu in availableMenus" :key="menu.id" class="flex items-center justify-between p-2.5 rounded-xl border" style="borderColor: var(--border-color); background: var(--bg-hover);">
             <div>
-              <p class="text-xs font-bold text-zinc-900">{{ menu.label }}</p>
-              <p class="text-[10px] text-zinc-500">{{ menu.group }}</p>
+              <p class="text-xs font-bold sk-text-primary">{{ menu.label }}</p>
+              <p class="text-[10px] sk-text-muted">{{ menu.group }}</p>
             </div>
             <KCheckbox  :value="menu.id" v-model="selectedMenuIds" class="w-4 h-4 rounded accent-purple-600 cursor-pointer" />
           </div>
         </div>
-        <div class="flex justify-between items-center pt-3 border-t border-zinc-200">
-          <KButton  type="button" @click="resetMenuAccess" class="text-xs text-red-500 font-semibold hover:underline cursor-pointer">Reset Default Role</KButton>
+        <div class="flex justify-between items-center pt-3 border-t sk-border">
+          <KButton  type="button" @click="resetMenuAccess" class="text-xs sk-text-danger font-semibold hover:underline cursor-pointer">Reset Default Role</KButton>
           <div class="flex gap-2">
             <KButton  type="button" @click="showMenuAccessDrawer = false" class="btn-secondary text-xs">Batal</KButton>
             <KButton  type="button" @click="saveMenuAccess" class="btn-primary text-xs">Simpan Akses</KButton>

@@ -45,7 +45,7 @@
                   <span v-if="s.purchase_count"> · {{ s.purchase_count }}x pembelian · Rp {{ formatNumber(s.total_purchased) }}</span>
                 </p>
               </div>
-              <span class="text-xs px-2 py-0.5 rounded" :class="s.is_active ? 'bg-emerald-100 text-emerald-700' : 'bg-zinc-200 text-zinc-500'">
+              <span class="text-xs px-2 py-0.5 rounded" :class="s.is_active ? 'sk-bg-success-soft sk-text-success' : 'bg-zinc-200 sk-text-muted'">
                 {{ s.is_active ? 'Aktif' : 'Nonaktif' }}
               </span>
             </div>

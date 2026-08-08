@@ -6,7 +6,7 @@
       <span v-if="lastRefreshed">· Diperbarui {{ timeAgo }}</span>
     </div>
     <div class="flex items-center gap-2">
-      <button @click="$emit('refresh')" :disabled="isRefreshing" class="hover:text-indigo-600 transition-colors">
+      <button @click="$emit('refresh')" :disabled="isRefreshing" class="hover:sk-text-primary-brand transition-colors">
         Refresh
       </button>
     </div>

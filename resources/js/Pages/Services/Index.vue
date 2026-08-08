@@ -93,8 +93,8 @@
                                         <div class="w-12 h-12 rounded-full flex items-center justify-center" :style="{ background: 'var(--bg-hover)', borderColor: 'var(--border-light)' }">
                                             <svg class="w-6 h-6" :style="{ color: 'var(--text-muted)' }" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg>
                                         </div>
-                                        <p class="text-sm font-medium text-zinc-500">Tidak ada data tiket servis.</p>
-                                        <Link :href="route('services.create')" class="mt-2 text-sm font-bold text-indigo-600 hover:text-indigo-700">
+                                        <p class="text-sm font-medium sk-text-muted">Tidak ada data tiket servis.</p>
+                                        <Link :href="route('services.create')" class="mt-2 text-sm font-bold sk-text-primary-brand hover:sk-text-primary-brand">
                                             + Buat Tiket Baru
                                         </Link>
                                     </div>
@@ -151,16 +151,16 @@
                                 
                                 <td class="px-5 py-4 text-right">
                                     <div class="flex items-center justify-end gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
-                                        <KButton  @click.stop="router.visit(route('services.show', service.id))" class="w-8 h-8 rounded-lg flex items-center justify-center text-zinc-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors" title="Detail">
+                                        <KButton  @click.stop="router.visit(route('services.show', service.id))" class="w-8 h-8 rounded-lg flex items-center justify-center sk-text-muted hover:sk-text-primary-brand hover:sk-bg-primary-soft transition-colors" title="Detail">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                         </KButton>
-                                        <KButton  @click.stop="router.visit(route('services.edit', service.id))" class="w-8 h-8 rounded-lg flex items-center justify-center text-zinc-400 hover:text-amber-600 hover:bg-amber-50 transition-colors" title="Edit">
+                                        <KButton  @click.stop="router.visit(route('services.edit', service.id))" class="w-8 h-8 rounded-lg flex items-center justify-center sk-text-muted hover:sk-text-warning hover:sk-bg-warning-soft transition-colors" title="Edit">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                         </KButton>
-                                        <a :href="route('services.print-receipt', service.id)" target="_blank" @click.stop class="w-8 h-8 rounded-lg flex items-center justify-center text-zinc-400 hover:text-zinc-900 hover:bg-zinc-100 transition-colors" title="Cetak Tanda Terima">
+                                        <a :href="route('services.print-receipt', service.id)" target="_blank" @click.stop class="w-8 h-8 rounded-lg flex items-center justify-center sk-text-muted hover:sk-text-primary hover:sk-bg-hover transition-colors" title="Cetak Tanda Terima">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
                                         </a>
-                                        <KButton  v-if="canCancel(service)" @click.stop="confirmCancel(service)" class="w-8 h-8 rounded-lg flex items-center justify-center text-zinc-400 hover:text-red-600 hover:bg-red-50 transition-colors" title="Batalkan">
+                                        <KButton  v-if="canCancel(service)" @click.stop="confirmCancel(service)" class="w-8 h-8 rounded-lg flex items-center justify-center sk-text-muted hover:sk-text-danger hover:sk-bg-danger-soft transition-colors" title="Batalkan">
                                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                         </KButton>
                                     </div>
@@ -323,14 +323,14 @@ const statusLabel = (status) => ({
 }[status] || status);
 
 const statusClass = (status) => ({
-    menunggu_alokasi: 'bg-amber-50 text-amber-700 border-amber-200',
-    diterima: 'bg-blue-50 text-blue-700 border-blue-200',
-    dikerjakan: 'bg-indigo-50 text-indigo-700 border-indigo-200',
-    siap_diambil: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+    menunggu_alokasi: 'sk-bg-warning-soft sk-text-warning sk-border-primary',
+    diterima: 'sk-bg-info-soft sk-text-info border-blue-200',
+    dikerjakan: 'sk-bg-primary-soft sk-text-primary-brand sk-border-primary',
+    siap_diambil: 'sk-bg-success-soft sk-text-success sk-border-primary',
     indent: 'bg-purple-50 text-purple-700 border-purple-200',
-    selesai: 'bg-zinc-100 text-zinc-700 border-zinc-200',
-    cancel: 'bg-red-50 text-red-700 border-red-200',
-}[status] || 'bg-zinc-100 text-zinc-600 border-zinc-200');
+    selesai: 'sk-bg-hover sk-text-primary sk-border',
+    cancel: 'sk-bg-danger-soft sk-text-danger sk-border-primary',
+}[status] || 'sk-bg-hover sk-text-secondary sk-border');
 
 const countByStatus = (key) => {
     if (key === 'all') return allServices.value.length;

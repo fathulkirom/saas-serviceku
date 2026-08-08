@@ -3,57 +3,57 @@
         <!-- Step 1: Pilih Paket -->
         <div v-if="step === 'plan'" class="w-full max-w-[600px] mx-auto">
             <div class="text-center mb-8">
-                <h2 class="text-2xl font-black text-zinc-900 mb-2 tracking-tight">Pilih Paket Langganan</h2>
-                <p class="text-sm font-medium text-zinc-500">Mulai trial gratis atau pilih paket yang paling sesuai dengan kebutuhan toko Anda.</p>
+                <h2 class="text-2xl font-black sk-text-primary mb-2 tracking-tight">Pilih Paket Langganan</h2>
+                <p class="text-sm font-medium sk-text-muted">Mulai trial gratis atau pilih paket yang paling sesuai dengan kebutuhan toko Anda.</p>
             </div>
 
             <div class="grid gap-5">
                 <div v-for="p in plans" :key="p.id"
                     @click="selectPlan(p)"
-                    class="p-5 rounded-2xl border-2 cursor-pointer transition-all duration-200 bg-white"
+                    class="p-5 rounded-2xl border-2 cursor-pointer transition-all duration-200 sk-bg-card"
                     :class="selectedPlan?.id === p.id
                         ? 'border-zinc-900 shadow-md ring-4 ring-zinc-900/5'
-                        : 'border-zinc-200 hover:border-zinc-400 hover:shadow-sm'">
+                        : 'sk-border hover:border-zinc-400 hover:shadow-sm'">
 
                     <div class="flex justify-between items-start">
                         <div>
-                            <h3 class="text-lg font-bold text-zinc-900">{{ p.name }}</h3>
+                            <h3 class="text-lg font-bold sk-text-primary">{{ p.name }}</h3>
                             <div class="flex items-baseline gap-2 mt-1">
                                 <template v-if="p.is_promo_active">
-                                    <span class="text-xs font-semibold text-zinc-400 line-through">Rp {{ formatNumber(p.price) }}</span>
-                                    <span class="text-2xl font-black text-zinc-900 tracking-tight">Rp {{ formatNumber(p.promo_price) }}</span>
-                                    <span class="px-2 py-0.5 text-[10px] font-black bg-red-50 text-red-600 rounded-md tracking-wider">DISKON {{ p.discount_percent }}%</span>
+                                    <span class="text-xs font-semibold sk-text-muted line-through">Rp {{ formatNumber(p.price) }}</span>
+                                    <span class="text-2xl font-black sk-text-primary tracking-tight">Rp {{ formatNumber(p.promo_price) }}</span>
+                                    <span class="px-2 py-0.5 text-[10px] font-black sk-bg-danger-soft sk-text-danger rounded-md tracking-wider">DISKON {{ p.discount_percent }}%</span>
                                 </template>
                                 <template v-else-if="p.slug === 'trial'">
-                                    <span class="text-2xl font-black text-emerald-600 tracking-tight">Gratis</span>
+                                    <span class="text-2xl font-black sk-text-success tracking-tight">Gratis</span>
                                 </template>
                                 <template v-else>
-                                    <span class="text-2xl font-black text-zinc-900 tracking-tight">Rp {{ formatNumber(p.price) }}</span>
+                                    <span class="text-2xl font-black sk-text-primary tracking-tight">Rp {{ formatNumber(p.price) }}</span>
                                 </template>
-                                <span class="text-xs font-bold text-zinc-400">/bln</span>
+                                <span class="text-xs font-bold sk-text-muted">/bln</span>
                             </div>
                         </div>
-                        <span v-if="p.slug === 'trial'" class="px-2.5 py-1 text-[10px] font-black tracking-wider bg-emerald-50 text-emerald-700 rounded-full whitespace-nowrap uppercase">
+                        <span v-if="p.slug === 'trial'" class="px-2.5 py-1 text-[10px] font-black tracking-wider sk-bg-success-soft sk-text-success rounded-full whitespace-nowrap uppercase">
                             Trial {{ p.trial_days }} Hari
                         </span>
                     </div>
 
-                    <p v-if="p.description" class="text-sm font-medium text-zinc-500 mt-3">{{ p.description }}</p>
+                    <p v-if="p.description" class="text-sm font-medium sk-text-muted mt-3">{{ p.description }}</p>
 
                     <div class="flex flex-wrap gap-2 mt-4">
                         <span v-for="(level, key) in featureSummary(p.features)" :key="key"
                             class="px-2.5 py-1 text-[10px] font-bold tracking-wide rounded-md border"
-                            :class="level === 'full' ? 'bg-indigo-50 text-indigo-700 border-indigo-100' : 'bg-zinc-50 text-zinc-500 border-zinc-200'">
+                            :class="level === 'full' ? 'sk-bg-primary-soft sk-text-primary-brand sk-border-primary' : 'sk-bg-hover sk-text-muted sk-border'">
                             {{ featureLabels[key] || key }}
                         </span>
                     </div>
 
-                    <div class="mt-5 pt-4 border-t border-zinc-100">
+                    <div class="mt-5 pt-4 border-t sk-border-light">
                         <KButton  type="button"
                             class="w-full py-2.5 text-sm font-bold rounded-xl transition-colors flex items-center justify-center gap-2"
                             :class="selectedPlan?.id === p.id
                                 ? 'bg-zinc-900 text-white'
-                                : 'bg-zinc-100 text-zinc-600 group-hover:bg-zinc-200'">
+                                : 'sk-bg-hover sk-text-secondary group-hover:bg-zinc-200'">
                             <svg v-if="selectedPlan?.id === p.id" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
                             {{ selectedPlan?.id === p.id ? 'Paket Dipilih' : 'Pilih Paket Ini' }}
                         </KButton>
@@ -65,20 +65,20 @@
         <!-- Step 2: Form Registrasi -->
         <div v-else class="w-full">
             <div class="mb-8">
-                <KButton  @click="step = 'plan'" class="text-xs font-bold text-zinc-500 hover:text-zinc-900 mb-4 flex items-center gap-1 transition-colors uppercase tracking-wider">
+                <KButton  @click="step = 'plan'" class="text-xs font-bold sk-text-muted hover:sk-text-primary mb-4 flex items-center gap-1 transition-colors uppercase tracking-wider">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                     Ganti Paket
                 </KButton>
-                <h2 class="text-2xl font-black text-zinc-900 tracking-tight">Lengkapi Data Toko</h2>
-                <div class="mt-2 p-3 bg-zinc-50 border border-zinc-200 rounded-xl flex items-center gap-2">
+                <h2 class="text-2xl font-black sk-text-primary tracking-tight">Lengkapi Data Toko</h2>
+                <div class="mt-2 p-3 sk-bg-hover border sk-border rounded-xl flex items-center gap-2">
                     <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    <p class="text-sm font-medium text-zinc-700">
-                        Paket terpilih: <span class="font-bold text-zinc-900">{{ selectedPlan?.name }}</span>
+                    <p class="text-sm font-medium sk-text-primary">
+                        Paket terpilih: <span class="font-bold sk-text-primary">{{ selectedPlan?.name }}</span>
                         <template v-if="selectedPlan?.slug === 'trial'">
-                            <span class="text-emerald-600 font-bold ml-1">(Gratis {{ selectedPlan.trial_days }} hari)</span>
+                            <span class="sk-text-success font-bold ml-1">(Gratis {{ selectedPlan.trial_days }} hari)</span>
                         </template>
                         <template v-else>
-                            <span class="text-zinc-500 ml-1">
+                            <span class="sk-text-muted ml-1">
                                 (Rp {{ formatNumber(selectedPlan?.effective_price || selectedPlan?.price) }}/bln)
                             </span>
                         </template>
@@ -88,94 +88,94 @@
 
             <form @submit.prevent="submit" class="space-y-5">
                 <div>
-                    <label class="block text-sm font-bold text-zinc-900 mb-2">Nama Toko</label>
+                    <label class="block text-sm font-bold sk-text-primary mb-2">Nama Toko</label>
                     <KInput  v-model="form.tenant_name" type="text" required
-                        class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
+                        class="w-full px-4 py-3 rounded-xl border sk-border sk-bg-card text-sm font-semibold sk-text-primary focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
                         placeholder="Contoh: Servis Maju Jaya" />
-                    <p v-if="form.errors.tenant_name" class="mt-1.5 text-xs font-semibold text-red-600">{{ form.errors.tenant_name }}</p>
+                    <p v-if="form.errors.tenant_name" class="mt-1.5 text-xs font-semibold sk-text-danger">{{ form.errors.tenant_name }}</p>
                 </div>
                 
                 <div>
-                    <label class="block text-sm font-bold text-zinc-900 mb-2">Nama Pemilik</label>
+                    <label class="block text-sm font-bold sk-text-primary mb-2">Nama Pemilik</label>
                     <KInput  v-model="form.name" type="text" required
-                        class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
+                        class="w-full px-4 py-3 rounded-xl border sk-border sk-bg-card text-sm font-semibold sk-text-primary focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
                         placeholder="Nama lengkap pemilik" />
-                    <p v-if="form.errors.name" class="mt-1.5 text-xs font-semibold text-red-600">{{ form.errors.name }}</p>
+                    <p v-if="form.errors.name" class="mt-1.5 text-xs font-semibold sk-text-danger">{{ form.errors.name }}</p>
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div>
-                        <label class="block text-sm font-bold text-zinc-900 mb-2">Email</label>
+                        <label class="block text-sm font-bold sk-text-primary mb-2">Email</label>
                         <KInput  v-model="form.email" type="email" required
-                            class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
+                            class="w-full px-4 py-3 rounded-xl border sk-border sk-bg-card text-sm font-semibold sk-text-primary focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
                             placeholder="owner@email.com" />
-                        <p v-if="form.errors.email" class="mt-1.5 text-xs font-semibold text-red-600">{{ form.errors.email }}</p>
+                        <p v-if="form.errors.email" class="mt-1.5 text-xs font-semibold sk-text-danger">{{ form.errors.email }}</p>
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-zinc-900 mb-2">No. Telepon / WhatsApp</label>
+                        <label class="block text-sm font-bold sk-text-primary mb-2">No. Telepon / WhatsApp</label>
                         <KInput  v-model="form.phone" type="text"
-                            class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
+                            class="w-full px-4 py-3 rounded-xl border sk-border sk-bg-card text-sm font-semibold sk-text-primary focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
                             placeholder="0812..." />
-                        <p v-if="form.errors.phone" class="mt-1.5 text-xs font-semibold text-red-600">{{ form.errors.phone }}</p>
+                        <p v-if="form.errors.phone" class="mt-1.5 text-xs font-semibold sk-text-danger">{{ form.errors.phone }}</p>
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-bold text-zinc-900 mb-2">Tipe Bisnis</label>
+                    <label class="block text-sm font-bold sk-text-primary mb-2">Tipe Bisnis</label>
                     <KSelect  v-model="form.business_type"
-                        class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm">
+                        class="w-full px-4 py-3 rounded-xl border sk-border sk-bg-card text-sm font-semibold sk-text-primary focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm">
                         <option v-if="filteredBusinessTypes.length === 0" value="">Pilih tipe bisnis...</option>
                         <option v-for="(label, key) in filteredBusinessTypes" :key="key" :value="key">{{ label }}</option>
                     </KSelect>
-                    <p v-if="form.errors.business_type" class="mt-1.5 text-xs font-semibold text-red-600">{{ form.errors.business_type }}</p>
-                    <p v-if="!filteredBusinessTypes.length" class="mt-1.5 text-xs font-medium text-zinc-500">Semua tipe bisnis didukung untuk paket ini.</p>
+                    <p v-if="form.errors.business_type" class="mt-1.5 text-xs font-semibold sk-text-danger">{{ form.errors.business_type }}</p>
+                    <p v-if="!filteredBusinessTypes.length" class="mt-1.5 text-xs font-medium sk-text-muted">Semua tipe bisnis didukung untuk paket ini.</p>
                 </div>
 
                 <!-- Voucher Code -->
                 <div>
-                    <label class="block text-sm font-bold text-zinc-900 mb-2">Kode Promo <span class="text-xs font-medium text-zinc-400 font-normal">(opsional)</span></label>
+                    <label class="block text-sm font-bold sk-text-primary mb-2">Kode Promo <span class="text-xs font-medium sk-text-muted font-normal">(opsional)</span></label>
                     <div class="flex gap-2">
                         <KInput  v-model="voucherCode" type="text"
-                            class="flex-1 px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-bold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm uppercase tracking-wider"
+                            class="flex-1 px-4 py-3 rounded-xl border sk-border sk-bg-card text-sm font-bold sk-text-primary focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm uppercase tracking-wider"
                             placeholder="Masukkan kode promo"
                             @input="voucherStatus = null" />
                         <KButton  type="button" @click="applyVoucher"
-                            class="px-6 py-3 rounded-xl bg-white border border-zinc-300 text-zinc-900 text-sm font-bold shadow-sm hover:bg-zinc-50 transition-colors disabled:opacity-50"
+                            class="px-6 py-3 rounded-xl sk-bg-card border sk-border sk-text-primary text-sm font-bold shadow-sm hover:sk-bg-hover transition-colors disabled:opacity-50"
                             :disabled="voucherLoading || !voucherCode">
                             {{ voucherLoading ? '...' : 'Gunakan' }}
                         </KButton>
                     </div>
                     <!-- Voucher Success -->
-                    <div v-if="voucherStatus?.valid" class="mt-3 p-4 bg-emerald-50 border border-emerald-100 rounded-xl">
-                        <p class="text-sm font-bold text-emerald-800 flex items-center gap-2">
+                    <div v-if="voucherStatus?.valid" class="mt-3 p-4 sk-bg-success-soft border border-emerald-100 rounded-xl">
+                        <p class="text-sm font-bold sk-text-success flex items-center gap-2">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                             {{ voucherStatus.message }}
                         </p>
-                        <p v-if="voucherStatus.discount > 0" class="text-xs font-medium text-emerald-600 mt-2">
-                            Harga: <span class="line-through">Rp {{ formatNumber(voucherStatus.original_price) }}</span> → <strong class="text-emerald-700">Rp {{ formatNumber(voucherStatus.final_price) }}</strong>
+                        <p v-if="voucherStatus.discount > 0" class="text-xs font-medium sk-text-success mt-2">
+                            Harga: <span class="line-through">Rp {{ formatNumber(voucherStatus.original_price) }}</span> → <strong class="sk-text-success">Rp {{ formatNumber(voucherStatus.final_price) }}</strong>
                         </p>
-                        <p v-if="voucherStatus.extra_months" class="text-xs font-bold text-emerald-600 mt-1">
+                        <p v-if="voucherStatus.extra_months" class="text-xs font-bold sk-text-success mt-1">
                             🎁 + {{ voucherStatus.extra_months }} bulan gratis langganan
                         </p>
                     </div>
                     <!-- Voucher Error -->
-                    <div v-else-if="voucherStatus?.message" class="mt-3 p-3 bg-red-50 border border-red-100 rounded-xl">
-                        <p class="text-sm font-bold text-red-800">✕ {{ voucherStatus.message }}</p>
+                    <div v-else-if="voucherStatus?.message" class="mt-3 p-3 sk-bg-danger-soft border border-red-100 rounded-xl">
+                        <p class="text-sm font-bold sk-text-danger">✕ {{ voucherStatus.message }}</p>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t border-zinc-100">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-4 border-t sk-border-light">
                     <div>
-                        <label class="block text-sm font-bold text-zinc-900 mb-2">Password Akun</label>
+                        <label class="block text-sm font-bold sk-text-primary mb-2">Password Akun</label>
                         <KInput  v-model="form.password" type="password" required minlength="8"
-                            class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
+                            class="w-full px-4 py-3 rounded-xl border sk-border sk-bg-card text-sm font-semibold sk-text-primary focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
                             placeholder="Minimal 8 karakter" />
-                        <p v-if="form.errors.password" class="mt-1.5 text-xs font-semibold text-red-600">{{ form.errors.password }}</p>
+                        <p v-if="form.errors.password" class="mt-1.5 text-xs font-semibold sk-text-danger">{{ form.errors.password }}</p>
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-zinc-900 mb-2">Konfirmasi Password</label>
+                        <label class="block text-sm font-bold sk-text-primary mb-2">Konfirmasi Password</label>
                         <KInput  v-model="form.password_confirmation" type="password" required minlength="8"
-                            class="w-full px-4 py-3 rounded-xl border border-zinc-300 bg-white text-sm font-semibold text-zinc-900 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
+                            class="w-full px-4 py-3 rounded-xl border sk-border sk-bg-card text-sm font-semibold sk-text-primary focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all shadow-sm"
                             placeholder="Ulangi password" />
                     </div>
                 </div>
@@ -192,8 +192,8 @@
                     </KButton>
                     
                     <div class="text-center mt-6">
-                        <p class="text-sm font-medium text-zinc-500">Sudah memiliki akun? 
-                            <Link :href="route('login')" class="text-indigo-600 hover:text-indigo-700 font-bold ml-1">Masuk ke Dasbor</Link>
+                        <p class="text-sm font-medium sk-text-muted">Sudah memiliki akun? 
+                            <Link :href="route('login')" class="sk-text-primary-brand hover:sk-text-primary-brand font-bold ml-1">Masuk ke Dasbor</Link>
                         </p>
                     </div>
                 </div>

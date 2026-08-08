@@ -60,7 +60,7 @@
       <h4 class="sk-section-title mb-3">Akses</h4>
       <div class="space-y-2">
         <div class="flex items-center gap-2 text-xs" v-for="(val, key) in featureAccess" :key="key">
-          <span :class="val ? 'text-emerald-500' : 'text-zinc-300'" class="text-xs">●</span>
+          <span :class="val ? 'sk-text-success' : 'sk-text-muted'" class="text-xs">●</span>
           <span :style="{ color: 'var(--text-secondary)' }">{{ featureLabels[key] || key }}</span>
         </div>
       </div>

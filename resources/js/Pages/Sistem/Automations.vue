@@ -62,7 +62,7 @@ function toggleRule(rule) {
   router.post(route('tenant.automation.toggle', rule.id), {}, { preserveScroll: true })
 }
 
-const statusBadge = (s) => s ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-200' : 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400'
+const statusBadge = (s) => s ? 'sk-bg-success-soft sk-text-success dark:bg-green-900 dark:text-green-200' : 'sk-bg-hover sk-text-muted dark:bg-gray-800 dark:sk-text-muted'
 const actionLabel = (a) => ({
   send_whatsapp: '📱 WhatsApp', send_email: '📧 Email', upload_gdrive: '📁 Google Drive',
   create_timeline: '📝 Timeline', generate_pdf: '📄 PDF', assign_user: '👤 Assign User',
@@ -81,10 +81,10 @@ const actionLabel = (a) => ({
 
     <!-- Stats -->
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-      <KCard class="text-center"><div class="text-2xl font-bold text-primary-600">{{ rules.length }}</div><div class="text-xs text-gray-500 mt-1">Total Rules</div></KCard>
-      <KCard class="text-center"><div class="text-2xl font-bold text-green-600">{{ rules.filter(r => r.is_active).length }}</div><div class="text-xs text-gray-500 mt-1">Active</div></KCard>
-      <KCard class="text-center"><div class="text-2xl font-bold text-amber-600">{{ rules.filter(r => r.delay_minutes > 0).length }}</div><div class="text-xs text-gray-500 mt-1">Delayed</div></KCard>
-      <KCard class="text-center"><div class="text-2xl font-bold text-gray-600">{{ rules.filter(r => r.is_template).length }}</div><div class="text-xs text-gray-500 mt-1">Templates</div></KCard>
+      <KCard class="text-center"><div class="text-2xl font-bold text-primary-600">{{ rules.length }}</div><div class="text-xs sk-text-muted mt-1">Total Rules</div></KCard>
+      <KCard class="text-center"><div class="text-2xl font-bold sk-text-success">{{ rules.filter(r => r.is_active).length }}</div><div class="text-xs sk-text-muted mt-1">Active</div></KCard>
+      <KCard class="text-center"><div class="text-2xl font-bold sk-text-warning">{{ rules.filter(r => r.delay_minutes > 0).length }}</div><div class="text-xs sk-text-muted mt-1">Delayed</div></KCard>
+      <KCard class="text-center"><div class="text-2xl font-bold sk-text-secondary">{{ rules.filter(r => r.is_template).length }}</div><div class="text-xs sk-text-muted mt-1">Templates</div></KCard>
     </div>
 
     <!-- Rules List -->
@@ -93,20 +93,20 @@ const actionLabel = (a) => ({
         <div class="flex items-start justify-between gap-4">
           <div class="flex-1 min-w-0">
             <div class="flex items-center gap-2 mb-1">
-              <h3 class="font-semibold text-gray-900 dark:text-white truncate">{{ rule.name }}</h3>
+              <h3 class="font-semibold sk-text-primary dark:text-white truncate">{{ rule.name }}</h3>
               <KBadge :class="statusBadge(rule.is_active)">{{ rule.is_active ? 'Active' : 'Inactive' }}</KBadge>
               <KBadge v-if="rule.is_template" class="bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-200">Template</KBadge>
             </div>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">
-              Event: <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">{{ rule.event }}</code>
-              <span v-if="rule.workflow_key" class="ml-2">Workflow: <code class="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs">{{ rule.workflow_key }}</code></span>
+            <p class="text-xs sk-text-muted dark:sk-text-muted mb-2">
+              Event: <code class="sk-bg-hover dark:bg-gray-800 px-1 rounded text-xs">{{ rule.event }}</code>
+              <span v-if="rule.workflow_key" class="ml-2">Workflow: <code class="sk-bg-hover dark:bg-gray-800 px-1 rounded text-xs">{{ rule.workflow_key }}</code></span>
             </p>
             <div class="flex items-center gap-2 text-xs">
               <KBadge variant="outline" size="xs">IF</KBadge>
-              <span class="text-gray-400">{{ rule.conditions ? 'conditions defined' : 'always' }}</span>
+              <span class="sk-text-muted">{{ rule.conditions ? 'conditions defined' : 'always' }}</span>
               <KBadge variant="outline" size="xs" class="ml-2">THEN</KBadge>
-              <KBadge class="bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200" size="xs">{{ actionLabel(rule.action_type) }}</KBadge>
-              <span v-if="rule.delay_minutes > 0" class="text-amber-600 text-xs">⏱️ +{{ rule.delay_minutes }} min</span>
+              <KBadge class="sk-bg-info-soft sk-text-info dark:bg-blue-900 dark:text-blue-200" size="xs">{{ actionLabel(rule.action_type) }}</KBadge>
+              <span v-if="rule.delay_minutes > 0" class="sk-text-warning text-xs">⏱️ +{{ rule.delay_minutes }} min</span>
             </div>
           </div>
           <div class="flex gap-1 shrink-0">
@@ -121,41 +121,41 @@ const actionLabel = (a) => ({
     <KDialog :open="showCreateDialog" @close="showCreateDialog = false" :title="editingRule ? 'Edit Rule' : 'New Automation Rule'" size="lg">
       <form @submit.prevent="save" class="space-y-4">
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Rule Name</label>
+          <label class="block text-sm font-medium sk-text-primary dark:text-gray-300 mb-1">Rule Name</label>
           <KInput v-model="form.name" placeholder="e.g., Kirim WhatsApp saat Service Selesai" required class="w-full" />
         </div>
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Event</label>
+            <label class="block text-sm font-medium sk-text-primary dark:text-gray-300 mb-1">Event</label>
             <KSelect v-model="form.event" :options="eventOptions.map(e => ({ value: e, label: e }))" required />
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Workflow</label>
+            <label class="block text-sm font-medium sk-text-primary dark:text-gray-300 mb-1">Workflow</label>
             <KSelect v-model="form.workflow_key" :options="[{value: null, label: 'All'}, ...workflows.map(w => ({value: w.key, label: w.label}))]" />
           </div>
         </div>
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Action</label>
+            <label class="block text-sm font-medium sk-text-primary dark:text-gray-300 mb-1">Action</label>
             <KSelect v-model="form.action_type" :options="actionOptions.map(a => ({value: a, label: actionLabel(a)}))" required />
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Delay (minutes)</label>
+            <label class="block text-sm font-medium sk-text-primary dark:text-gray-300 mb-1">Delay (minutes)</label>
             <KInput v-model="form.delay_minutes" type="number" min="0" placeholder="0 = immediate" />
           </div>
         </div>
         <!-- Recipient for WhatsApp/Email -->
         <div v-if="['send_whatsapp', 'send_email'].includes(form.action_type)">
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Recipient</label>
+          <label class="block text-sm font-medium sk-text-primary dark:text-gray-300 mb-1">Recipient</label>
           <KSelect v-model="form.action_config.recipient" :options="[{value: 'customer', label: 'Customer'}, {value: 'technician', label: 'Technician'}, {value: 'owner', label: 'Owner'}, {value: 'branch', label: 'Branch'}]" />
         </div>
         <div v-if="['send_whatsapp', 'send_email'].includes(form.action_type)">
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Message Template</label>
+          <label class="block text-sm font-medium sk-text-primary dark:text-gray-300 mb-1">Message Template</label>
           <KInput v-model="form.action_config.message" placeholder="Use {customer_name}, {id}, {status}, {tracking_code}, {date}" class="w-full" />
         </div>
         <div class="flex items-center gap-2">
           <input type="checkbox" v-model="form.is_active" id="active" class="rounded" />
-          <label for="active" class="text-sm text-gray-700 dark:text-gray-300">Active</label>
+          <label for="active" class="text-sm sk-text-primary dark:text-gray-300">Active</label>
         </div>
         <div class="flex justify-end gap-2 pt-4 border-t dark:border-gray-700">
           <KButton variant="outline" type="button" @click="showCreateDialog = false">Cancel</KButton>

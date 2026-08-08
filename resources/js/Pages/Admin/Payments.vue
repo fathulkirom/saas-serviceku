@@ -48,7 +48,7 @@
                 </thead>
                 <tbody class="bg-slate-900">
                     <tr v-for="p in payments.data" :key="p.id" class="hover:bg-slate-800/50">
-                        <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-indigo-600">{{ p.invoice_number }}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-mono sk-text-primary-brand">{{ p.invoice_number }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-100">{{ p.tenant?.tenant_name || '-' }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-400">{{ p.plan_slug }}</td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-slate-100">Rp {{ formatNumber(p.amount) }}</td>
@@ -61,11 +61,11 @@
                         <td class="px-6 py-4 whitespace-nowrap text-sm">
                             <div class="flex gap-2">
                                 <KButton  v-if="p.status === 'pending'" @click="confirmPayment(p.id)"
-                                    class="text-emerald-400 hover:text-green-800 text-xs font-medium">
+                                    class="text-emerald-400 hover:sk-text-success text-xs font-medium">
                                     Konfirmasi
                                 </KButton>
                                 <KButton  v-if="p.status === 'pending'" @click="cancelPayment(p.id)"
-                                    class="text-red-400 hover:text-red-800 text-xs font-medium">
+                                    class="text-red-400 hover:sk-text-danger text-xs font-medium">
                                     Batal
                                 </KButton>
                             </div>
@@ -107,8 +107,8 @@ const statusLabel = (status) => ({
 
 const statusClass = (status) => ({
     pending: 'bg-yellow-100 text-yellow-800',
-    success: 'bg-green-100 text-green-800',
-    failed: 'bg-red-100 text-red-800',
+    success: 'sk-bg-success-soft sk-text-success',
+    failed: 'sk-bg-danger-soft sk-text-danger',
     expired: 'bg-slate-800 text-slate-200',
     refunded: 'bg-orange-100 text-orange-800',
 }[status] || 'bg-slate-800 text-slate-200');
