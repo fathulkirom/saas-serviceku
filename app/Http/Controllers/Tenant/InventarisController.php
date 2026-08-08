@@ -135,4 +135,30 @@ class InventarisController extends Controller
 
         return $query;
     }
+
+    /** #10 Inventory: quick stock adjustment with reason (stock opname). */
+    public function adjustStock(Request $request, Product $product)
+    {
+        $validated = $request->validate([
+            'new_quantity' => 'required|integer|min:0',
+            'reason'       => 'nullable|string|max:255',
+        ]);
+
+        $previous = $product->stock_quantity;
+        $product->update(['stock_quantity' => $validated['new_quantity']]);
+        $product->updateStockStatus();
+
+        \App\Models\Tenant\StockAdjustment::create([
+            'product_id'        => $product->id,
+            'branch_id'         => auth()->user()->branch_id,
+            'user_id'           => auth()->id(),
+            'previous_quantity' => $previous,
+            'new_quantity'      => $validated['new_quantity'],
+            'difference'        => $validated['new_quantity'] - $previous,
+            'reason'            => $validated['reason'] ?? 'Stock opname',
+            'notes'             => null,
+        ]);
+
+        return back()->with('success', "Stok '{$product->name}' disesuaikan: {$previous} → {$validated['new_quantity']}.");
+    }
 }

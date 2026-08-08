@@ -78,6 +78,7 @@
                   <span class="font-bold text-zinc-900">
                     {{ formatNumber(row.stock_quantity ?? 0) }} <span class="text-zinc-500 font-normal text-xs">{{ row.unit?.name || 'pcs' }}</span>
                   </span>
+                  <button @click="openAdjust(row)" class="ml-1 text-[10px] px-1.5 py-0.5 rounded text-zinc-400 hover:text-indigo-600 hover:bg-indigo-50 transition-colors" title="Sesuaikan stok">✎</button>
               </div>
             </template>
             <template #cell-price="{ row }">

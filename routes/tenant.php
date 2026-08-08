@@ -281,6 +281,9 @@ Route::middleware([
     Route::post('/external-partners', [ExternalRepairController::class, 'storePartner'])->name('external-partners.store')->middleware('check.plan.feature:services');
     Route::post('/services/{service}/external-repair', [ExternalRepairController::class, 'store'])->name('external-repairs.store')->middleware('check.plan.feature:services');
     Route::put('/external-repairs/{repair}', [ExternalRepairController::class, 'update'])->name('external-repairs.update')->middleware('check.plan.feature:services');
+
+    // #10 Inventory: stock adjustment (stock opname)
+    Route::post('/inventaris/adjust-stock/{product}', [InventarisController::class, 'adjustStock'])->name('inventaris.adjust-stock')->middleware('check.plan.feature:inventaris');
     Route::post('/service-parts/{part}/edit', [OperationalDashboardController::class, 'editRequest'])->name('service-parts.edit')->middleware('check.plan.feature:services');
     Route::post('/service-parts/{part}/priority', [OperationalDashboardController::class, 'setPriority'])->name('service-parts.priority')->middleware('check.plan.feature:services');
     // Sprint 7.4B — Daily Operations Hardening
