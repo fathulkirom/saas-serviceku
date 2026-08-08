@@ -29,24 +29,6 @@ class PartBooking extends Model
     public function use(): void { $this->update(['status' => 'used']); }
 }
 
-class ServiceReopen extends Model
-{
-    protected $fillable = ['service_id', 'reason', 'status', 'requested_by', 'approved_by'];
-
-    public function service() { return $this->belongsTo(Service::class); }
-    public function requester() { return $this->belongsTo(User::class, 'requested_by'); }
-    public function approver() { return $this->belongsTo(User::class, 'approved_by'); }
-
-    public function approve(int $userId): void
-    {
-        \DB::transaction(function () use ($userId) {
-            $this->update(['status' => 'approved', 'approved_by' => $userId]);
-            $this->service->unlock();
-        });
-        event(new \App\Events\Entity\ServiceReopened($this));
-    }
-}
-
 class PriceChangeRequest extends Model
 {
     protected $fillable = ['service_id', 'item_type', 'old_price', 'new_price', 'reason', 'status', 'requested_by', 'approved_by'];
