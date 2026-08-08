@@ -3,6 +3,7 @@
 @import '../js/Enterprise/Theme/tokens.css';
 @import '../js/Enterprise/Theme/typography.css';
 @import '../js/Enterprise/Theme/animations.css';
+@import './design-tokens.css'; /* FRONTEND-REDESIGN-01: Unified design tokens */
 
 @tailwind base;
 @tailwind components;
