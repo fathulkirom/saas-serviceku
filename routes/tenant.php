@@ -28,6 +28,7 @@ use App\Http\Controllers\Tenant\DamagedStockController;
 use App\Http\Controllers\Tenant\DemoController;
 use App\Http\Controllers\Tenant\DocumentController;
 use App\Http\Controllers\Tenant\DriveController;
+use App\Http\Controllers\Tenant\EmergencyPurchaseController;
 use App\Http\Controllers\Tenant\EventLogController;
 use App\Http\Controllers\Tenant\ExpenseController;
 use App\Http\Controllers\Tenant\FinanceController;
@@ -258,6 +259,10 @@ Route::middleware([
     Route::get('/inventaris/operational', [OperationalDashboardController::class, 'warehouse'])->name('inventaris.operational')->middleware('check.plan.feature:inventaris');
     Route::get('/dashboard/cs-stats', [OperationalDashboardController::class, 'cs'])->name('dashboard.cs-stats')->middleware('check.plan.feature:services');
     Route::get('/dashboard/owner-kpi', [OperationalDashboardController::class, 'owner'])->name('dashboard.owner-kpi')->middleware(['check.plan.feature:dashboard', 'permission:finance.view']);
+
+    // BR-010: Emergency Purchase — pembelian sparepart darurat
+    Route::get('/inventaris/emergency-purchases', [EmergencyPurchaseController::class, 'index'])->name('inventaris.emergency-purchases')->middleware('check.plan.feature:inventaris');
+    Route::post('/inventaris/emergency-purchases', [EmergencyPurchaseController::class, 'store'])->name('inventaris.emergency-purchases.store')->middleware('check.plan.feature:inventaris');
     Route::post('/service-parts/{part}/edit', [OperationalDashboardController::class, 'editRequest'])->name('service-parts.edit')->middleware('check.plan.feature:services');
     Route::post('/service-parts/{part}/priority', [OperationalDashboardController::class, 'setPriority'])->name('service-parts.priority')->middleware('check.plan.feature:services');
     // Sprint 7.4B — Daily Operations Hardening
