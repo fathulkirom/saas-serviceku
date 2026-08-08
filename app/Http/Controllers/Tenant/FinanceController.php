@@ -117,6 +117,31 @@ class FinanceController extends Controller
         ]);
     }
 
+    /** v2.x: Export daily summary as CSV. */
+    public function exportDaily(Request $request)
+    {
+        $month = $request->get('month', now()->format('Y-m'));
+        $branchId = auth()->user()->branch_id;
+
+        $headers = ['Content-Type' => 'text/csv', 'Content-Disposition' => "attachment; filename=laporan-keuangan-{$month}.csv"];
+        $callback = function () use ($branchId, $month) {
+            $out = fopen('php://output', 'w');
+            fputcsv($out, ['Tanggal', 'Pemasukan', 'Pengeluaran', 'Net', 'Transaksi', 'Servis Selesai']);
+            for ($d = 1; $d <= 31; $d++) {
+                $date = sprintf('%s-%02d', $month, $d);
+                $income = Sale::where('branch_id', $branchId)->where('status', Sale::STATUS_PAID)->whereDate('created_at', $date)->sum('total');
+                $expense = Expense::where('branch_id', $branchId)->whereDate('date', $date)->sum('amount');
+                $txCount = Sale::where('branch_id', $branchId)->whereDate('created_at', $date)->count();
+                $svcDone = Service::where('branch_id', $branchId)->where('status', 'selesai')->whereDate('created_at', $date)->count();
+                if ($income > 0 || $expense > 0) {
+                    fputcsv($out, [$date, $income, $expense, $income - $expense, $txCount, $svcDone]);
+                }
+            }
+            fclose($out);
+        };
+        return response()->stream($callback, 200, $headers);
+    }
+
     private function shouldRestrictToTodayCompletedTransactions($user): bool
     {
         if (!$user) {

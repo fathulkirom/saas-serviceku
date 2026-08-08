@@ -293,6 +293,9 @@ Route::middleware([
     // v1.2: Multi-Branch Analytics
     Route::get('/laporan/analytics', [\App\Http\Controllers\Tenant\AnalyticsController::class, 'index'])->name('analytics.index')->middleware('check.plan.feature:reports');
 
+    // v2.x: Export Reports
+    Route::get('/keuangan/export', [FinanceController::class, 'exportDaily'])->name('keuangan.export')->middleware('check.plan.feature:reports');
+
     // v1.4: API Tokens (gated by 'api' feature)
     Route::get('/pengaturan/api-tokens', [\App\Http\Controllers\Tenant\ApiTokenController::class, 'index'])->name('api-tokens.index')->middleware('check.plan.feature:settings');
     Route::post('/pengaturan/api-tokens', [\App\Http\Controllers\Tenant\ApiTokenController::class, 'store'])->name('api-tokens.store')->middleware('check.plan.feature:settings');
