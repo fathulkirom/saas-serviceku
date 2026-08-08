@@ -31,6 +31,7 @@ use App\Http\Controllers\Tenant\DriveController;
 use App\Http\Controllers\Tenant\EmergencyPurchaseController;
 use App\Http\Controllers\Tenant\EventLogController;
 use App\Http\Controllers\Tenant\ExpenseController;
+use App\Http\Controllers\Tenant\ExternalRepairController;
 use App\Http\Controllers\Tenant\FinanceController;
 use App\Http\Controllers\Tenant\ImportController;
 use App\Http\Controllers\Tenant\IndentController;
@@ -274,6 +275,12 @@ Route::middleware([
     Route::post('/sistem/technician-bonus/config', [TechnicianBonusController::class, 'saveConfig'])->name('technician-bonus.config')->middleware('check.plan.feature:settings');
     Route::post('/sistem/technician-bonus/{record}/approve', [TechnicianBonusController::class, 'approve'])->name('technician-bonus.approve')->middleware('check.plan.feature:settings');
     Route::post('/sistem/technician-bonus/approve-batch', [TechnicianBonusController::class, 'approveBatch'])->name('technician-bonus.approve-batch')->middleware('check.plan.feature:settings');
+
+    // BR-018: External Repair Partner
+    Route::get('/services/external-repairs', [ExternalRepairController::class, 'index'])->name('external-repairs.index')->middleware('check.plan.feature:services');
+    Route::post('/external-partners', [ExternalRepairController::class, 'storePartner'])->name('external-partners.store')->middleware('check.plan.feature:services');
+    Route::post('/services/{service}/external-repair', [ExternalRepairController::class, 'store'])->name('external-repairs.store')->middleware('check.plan.feature:services');
+    Route::put('/external-repairs/{repair}', [ExternalRepairController::class, 'update'])->name('external-repairs.update')->middleware('check.plan.feature:services');
     Route::post('/service-parts/{part}/edit', [OperationalDashboardController::class, 'editRequest'])->name('service-parts.edit')->middleware('check.plan.feature:services');
     Route::post('/service-parts/{part}/priority', [OperationalDashboardController::class, 'setPriority'])->name('service-parts.priority')->middleware('check.plan.feature:services');
     // Sprint 7.4B — Daily Operations Hardening
