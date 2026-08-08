@@ -4,15 +4,15 @@
             <!-- PAGE HEADER -->
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-2">
                 <div>
-                    <h2 class="text-2xl font-bold tracking-tight text-zinc-900">Daftar Servis</h2>
-                    <p class="text-sm text-zinc-500 mt-1">Kelola seluruh tiket servis dan perbaikan unit pelanggan.</p>
+                    <h2 class="text-2xl font-bold tracking-tight" :style="{ color: 'var(--text-primary)' }">Daftar Servis</h2>
+                    <p class="text-sm mt-1" :style="{ color: 'var(--text-muted)' }">Kelola seluruh tiket servis dan perbaikan unit pelanggan.</p>
                 </div>
                 <div class="flex items-center gap-2">
-                    <KButton  @click="clearFilters" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-zinc-50 border border-zinc-200 text-zinc-700 text-sm font-bold rounded-xl transition-colors shadow-sm">
+                    <KButton  @click="clearFilters" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 text-sm font-bold rounded-xl transition-colors shadow-sm" :style="{ background: 'var(--bg-card)', borderColor: 'var(--border-color)', color: 'var(--text-primary)' }">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                         Refresh
                     </KButton>
-                    <Link :href="route('services.create')" class="inline-flex items-center gap-2 px-4 py-2 bg-zinc-900 hover:bg-zinc-800 text-white text-sm font-bold rounded-xl transition-colors shadow-sm">
+                    <Link :href="route('services.create')" class="inline-flex items-center gap-2 px-4 py-2 text-white text-sm font-bold rounded-xl transition-colors shadow-sm" style="background: var(--color-primary)">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                         Buat Tiket Baru
                     </Link>
@@ -20,26 +20,26 @@
             </div>
 
             <!-- SEARCH & FILTERS -->
-            <div class="bg-white rounded-2xl border border-zinc-200 shadow-sm p-5">
+            <div class="rounded-2xl shadow-sm p-5" :style="{ background: 'var(--bg-card)', borderColor: 'var(--border-color)' }">
                 <div class="flex flex-col md:flex-row md:items-end gap-4">
                     <div class="flex-1 min-w-[200px]">
-                        <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Cari Pelanggan</label>
+                        <label class="block text-xs font-bold uppercase tracking-wider mb-2" :style="{ color: 'var(--text-muted)' }">Cari Pelanggan</label>
                         <div class="relative">
-                            <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                            <KInput  type="text" v-model="filters.customer_name" placeholder="Nama pelanggan..." class="w-full rounded-xl border border-zinc-300 text-sm pl-10 pr-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white" />
+                            <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4" :style="{ color: 'var(--text-muted)' }" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                            <KInput  type="text" v-model="filters.customer_name" placeholder="Nama pelanggan..." class="w-full rounded-xl text-sm pl-10 pr-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" :style="{ borderColor: 'var(--border-color)', background: 'var(--bg-card)', color: 'var(--text-primary)' }" />
                         </div>
                     </div>
                     <div class="flex-1 min-w-[150px]">
-                        <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">No. Telepon / WA</label>
-                        <KInput  type="text" v-model="filters.phone" placeholder="0812..." class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white" />
+                        <label class="block text-xs font-bold uppercase tracking-wider mb-2" :style="{ color: 'var(--text-muted)' }">No. Telepon / WA</label>
+                        <KInput  type="text" v-model="filters.phone" placeholder="0812..." class="w-full rounded-xl text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" :style="{ borderColor: 'var(--border-color)', background: 'var(--bg-card)', color: 'var(--text-primary)' }" />
                     </div>
                     <div class="flex-1 min-w-[150px]">
-                        <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Nomor Tiket (SR)</label>
-                        <KInput  type="text" v-model="filters.sr_code" placeholder="SR1000..." class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white" />
+                        <label class="block text-xs font-bold uppercase tracking-wider mb-2" :style="{ color: 'var(--text-muted)' }">Nomor Tiket (SR)</label>
+                        <KInput  type="text" v-model="filters.sr_code" placeholder="SR1000..." class="w-full rounded-xl text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" :style="{ borderColor: 'var(--border-color)', background: 'var(--bg-card)', color: 'var(--text-primary)' }" />
                     </div>
                     <div class="flex-1 min-w-[200px]">
-                        <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Status Servis</label>
-                        <KSelect  v-model="activeFilter" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white">
+                        <label class="block text-xs font-bold uppercase tracking-wider mb-2" :style="{ color: 'var(--text-muted)' }">Status Servis</label>
+                        <KSelect  v-model="activeFilter" class="w-full rounded-xl text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" :style="{ borderColor: 'var(--border-color)', background: 'var(--bg-card)', color: 'var(--text-primary)' }">
                             <option v-for="opt in filterOptions" :key="opt.value" :value="opt.value">
                                 {{ opt.label }} ({{ countByStatus(opt.value) }})
                             </option>
@@ -49,34 +49,34 @@
             </div>
 
             <!-- BULK ACTIONS BAR -->
-            <div v-if="selectedIds.length > 0" class="flex items-center justify-between p-4 rounded-2xl bg-indigo-50 text-indigo-900 border border-indigo-200 shadow-sm animate-in slide-in-from-top-2">
+            <div v-if="selectedIds.length > 0" class="flex items-center justify-between p-4 rounded-2xl shadow-sm animate-in slide-in-from-top-2" :style="{ background: 'var(--color-primary-soft)', color: 'var(--color-primary-text)', borderColor: 'var(--color-primary-soft)' }">
                 <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center shrink-0">
+                    <div class="w-8 h-8 rounded-full flex items-center justify-center shrink-0" :style="{ background: 'var(--color-primary-soft)', color: 'var(--color-primary-text)' }">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     </div>
                     <span class="text-sm font-bold">{{ selectedIds.length }} baris dipilih</span>
                 </div>
                 <div class="flex items-center gap-2">
-                    <KButton  v-if="selectedAcceptableIds.length > 0" @click="bulkUpdateStatus('diterima')" class="px-4 py-2 text-sm font-bold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition-colors shadow-sm">
+                    <KButton  v-if="selectedAcceptableIds.length > 0" @click="bulkUpdateStatus('diterima')" class="px-4 py-2 text-sm font-bold text-white rounded-xl transition-colors shadow-sm" style="background: var(--color-primary)">
                         Terima Tiket ({{ selectedAcceptableIds.length }})
                     </KButton>
-                    <KButton  v-if="selectedCancelableIds.length > 0" @click="bulkUpdateStatus('cancel')" class="px-4 py-2 text-sm font-bold bg-red-600 hover:bg-red-700 text-white rounded-xl transition-colors shadow-sm">
+                    <KButton  v-if="selectedCancelableIds.length > 0" @click="bulkUpdateStatus('cancel')" class="px-4 py-2 text-sm font-bold text-white rounded-xl transition-colors shadow-sm" style="background: var(--color-danger)">
                         Batalkan ({{ selectedCancelableIds.length }})
                     </KButton>
-                    <KButton  @click="selectedIds = []" class="px-4 py-2 text-sm font-bold text-indigo-700 bg-white border border-indigo-200 hover:bg-indigo-50 rounded-xl transition-colors shadow-sm">
+                    <KButton  @click="selectedIds = []" class="px-4 py-2 text-sm font-bold rounded-xl transition-colors shadow-sm" :style="{ color: 'var(--color-primary-text)', background: 'var(--bg-card)', borderColor: 'var(--color-primary-soft)' }">
                         Batal Pilihan
                     </KButton>
                 </div>
             </div>
 
             <!-- DATA TABLE -->
-            <div class="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden">
+            <div class="rounded-2xl shadow-sm overflow-hidden" :style="{ background: 'var(--bg-card)', borderColor: 'var(--border-color)' }">
                 <div class="overflow-x-auto">
                     <table class="w-full text-sm text-left">
-                        <thead class="text-xs font-bold text-zinc-500 uppercase bg-zinc-50/50 border-b border-zinc-200 tracking-wider">
+                        <thead class="text-xs font-bold uppercase tracking-wider" :style="{ color: 'var(--text-muted)', background: 'var(--bg-hover)', borderBottom: '1px solid var(--border-color)' }">
                             <tr>
                                 <th scope="col" class="px-5 py-4 w-10 text-center">
-                                    <KCheckbox  :checked="allSelected" @change="toggleAll" class="w-4 h-4 rounded border-zinc-300 text-indigo-600 focus:ring-indigo-600 cursor-pointer" :disabled="selectableServiceIds.length === 0" />
+                                    <KCheckbox  :checked="allSelected" @change="toggleAll" class="w-4 h-4 rounded cursor-pointer" :style="{ borderColor: 'var(--border-color)' }" :disabled="selectableServiceIds.length === 0" />
                                 </th>
                                 <th scope="col" class="px-5 py-4">Tiket</th>
                                 <th scope="col" class="px-5 py-4">Pelanggan</th>
@@ -86,12 +86,12 @@
                                 <th scope="col" class="px-5 py-4 text-right">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-zinc-100">
+                        <tbody class="divide-y" :style="{ borderColor: 'var(--border-light)' }">
                             <tr v-if="paginatedServices.length === 0">
                                 <td colspan="7" class="px-6 py-20 text-center">
                                     <div class="flex flex-col items-center justify-center space-y-3">
-                                        <div class="w-12 h-12 rounded-full bg-zinc-50 border border-zinc-100 flex items-center justify-center">
-                                            <svg class="w-6 h-6 text-zinc-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg>
+                                        <div class="w-12 h-12 rounded-full flex items-center justify-center" :style="{ background: 'var(--bg-hover)', borderColor: 'var(--border-light)' }">
+                                            <svg class="w-6 h-6" :style="{ color: 'var(--text-muted)' }" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg>
                                         </div>
                                         <p class="text-sm font-medium text-zinc-500">Tidak ada data tiket servis.</p>
                                         <Link :href="route('services.create')" class="mt-2 text-sm font-bold text-indigo-600 hover:text-indigo-700">
@@ -102,33 +102,33 @@
                             </tr>
                             
                             <tr v-for="service in paginatedServices" :key="service.id" 
-                                class="hover:bg-zinc-50/50 transition-colors cursor-pointer group"
+                                class="transition-colors cursor-pointer group"
                                 @click="router.visit(route('services.show', service.id))">
                                 
                                 <td class="px-5 py-4 text-center" @click.stop>
-                                    <KCheckbox  :value="service.id" v-model="selectedIds" class="w-4 h-4 rounded border-zinc-300 text-indigo-600 focus:ring-indigo-600 cursor-pointer" :disabled="!canBulkActOnService(service)" />
+                                    <KCheckbox  :value="service.id" v-model="selectedIds" class="w-4 h-4 rounded cursor-pointer" :style="{ borderColor: 'var(--border-color)' }" :disabled="!canBulkActOnService(service)" />
                                 </td>
                                 
                                 <td class="px-5 py-4 whitespace-nowrap">
-                                    <div class="font-mono text-sm font-bold text-zinc-900 bg-zinc-100 px-2.5 py-1 rounded-md inline-block border border-zinc-200">SR{{ 1000 + service.id }}</div>
-                                    <div class="text-[11px] font-medium text-zinc-400 mt-1.5 ml-1">{{ formatDate(service.created_at) }}</div>
+                                    <div class="font-mono text-sm font-bold px-2.5 py-1 rounded-md inline-block" :style="{ color: 'var(--text-primary)', background: 'var(--bg-hover)', borderColor: 'var(--border-color)' }">SR{{ 1000 + service.id }}</div>
+                                    <div class="text-[11px] font-medium mt-1.5 ml-1" :style="{ color: 'var(--text-muted)' }">{{ formatDate(service.created_at) }}</div>
                                 </td>
                                 
                                 <td class="px-5 py-4">
                                     <div class="flex items-center gap-3">
-                                        <div class="w-9 h-9 rounded-full bg-zinc-100 border border-zinc-200 flex items-center justify-center text-xs font-bold text-zinc-600 shrink-0">
+                                        <div class="w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold shrink-0" :style="{ background: 'var(--bg-hover)', borderColor: 'var(--border-color)', color: 'var(--text-secondary)' }">
                                             {{ getInitials(service.customer?.name) }}
                                         </div>
                                         <div class="min-w-0">
-                                            <p class="text-sm font-bold text-zinc-900 truncate">{{ service.customer?.name || '-' }}</p>
-                                            <p class="text-xs font-mono font-medium text-zinc-500 mt-0.5">{{ service.customer?.phone || '-' }}</p>
+                                            <p class="text-sm font-bold truncate" :style="{ color: 'var(--text-primary)' }">{{ service.customer?.name || '-' }}</p>
+                                            <p class="text-xs font-mono font-medium mt-0.5" :style="{ color: 'var(--text-muted)' }">{{ service.customer?.phone || '-' }}</p>
                                         </div>
                                     </div>
                                 </td>
                                 
                                 <td class="px-5 py-4">
-                                    <p class="text-sm font-bold text-zinc-900">{{ service.tipe_unit || 'Unknown Unit' }}</p>
-                                    <p class="text-xs text-zinc-500 truncate max-w-[200px] mt-0.5 leading-relaxed" :title="service.problem_description">{{ service.problem_description || '-' }}</p>
+                                    <p class="text-sm font-bold" :style="{ color: 'var(--text-primary)' }">{{ service.tipe_unit || 'Unknown Unit' }}</p>
+                                    <p class="text-xs truncate max-w-[200px] mt-0.5 leading-relaxed" :style="{ color: 'var(--text-muted)' }" :title="service.problem_description">{{ service.problem_description || '-' }}</p>
                                 </td>
                                 
                                 <td class="px-5 py-4">
@@ -139,13 +139,13 @@
                                 
                                 <td class="px-5 py-4">
                                     <div class="flex items-center gap-2.5">
-                                        <div v-if="service.technician" class="w-7 h-7 rounded-full bg-indigo-50 border border-indigo-100 flex items-center justify-center text-[10px] font-bold text-indigo-700 shrink-0">
+                                        <div v-if="service.technician" class="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold shrink-0" :style="{ background: 'var(--color-primary-soft)', borderColor: 'var(--color-primary-soft)', color: 'var(--color-primary-text)' }">
                                             {{ getInitials(service.technician.name) }}
                                         </div>
-                                        <div v-else class="w-7 h-7 rounded-full border border-dashed border-zinc-300 flex items-center justify-center text-zinc-400 shrink-0">
+                                        <div v-else class="w-7 h-7 rounded-full border border-dashed flex items-center justify-center shrink-0" :style="{ borderColor: 'var(--border-color)', color: 'var(--text-muted)' }">
                                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                                         </div>
-                                        <span class="text-xs font-medium text-zinc-700 truncate max-w-[120px]">{{ service.technician?.name || 'Belum Dialokasi' }}</span>
+                                        <span class="text-xs font-medium truncate max-w-[120px]" :style="{ color: 'var(--text-primary)' }">{{ service.technician?.name || 'Belum Dialokasi' }}</span>
                                     </div>
                                 </td>
                                 
@@ -170,7 +170,7 @@
                     </table>
                 </div>
                 <!-- PAGINATION -->
-                <div class="border-t border-zinc-200 bg-zinc-50/50 p-4">
+                <div class="border-t p-4" :style="{ borderColor: 'var(--border-color)', background: 'var(--bg-hover)' }">
                     <Pagination :meta="services" :per-page="services.per_page" />
                 </div>
             </div>
@@ -179,18 +179,18 @@
         <!-- MODALS -->
         <Teleport to="body">
             <!-- CANCEL MODAL -->
-            <div v-if="showCancelModal" class="fixed inset-0 z-50 flex items-center justify-center bg-zinc-900/40 backdrop-blur-sm" @click.self="showCancelModal = false">
-                <div class="bg-white w-full max-w-sm mx-4 rounded-2xl shadow-xl border border-zinc-200 overflow-hidden animate-in zoom-in-95 duration-200">
+            <div v-if="showCancelModal" class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm" :style="{ background: 'rgba(0,0,0,0.4)' }" @click.self="showCancelModal = false">
+                <div class="w-full max-w-sm mx-4 rounded-2xl shadow-xl overflow-hidden animate-in zoom-in-95 duration-200" :style="{ background: 'var(--bg-card)', borderColor: 'var(--border-color)' }">
                     <div class="p-6 text-center">
-                        <div class="w-14 h-14 rounded-full bg-red-50 border border-red-100 flex items-center justify-center mx-auto mb-4">
-                            <svg class="w-7 h-7 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
+                        <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" :style="{ background: 'var(--color-danger-soft)', borderColor: 'var(--color-danger-soft)' }">
+                            <svg class="w-7 h-7" :style="{ color: 'var(--color-danger-text)' }" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/></svg>
                         </div>
-                        <h3 class="text-xl font-bold text-zinc-900">Batalkan Tiket Servis?</h3>
-                        <p class="text-sm text-zinc-500 mt-2">Tiket <strong>SR{{ 1000 + (cancelTarget?.id || 0) }}</strong> ({{ cancelTarget?.customer?.name }}).<br>Aksi ini tidak dapat dibatalkan.</p>
+                        <h3 class="text-xl font-bold" :style="{ color: 'var(--text-primary)' }">Batalkan Tiket Servis?</h3>
+                        <p class="text-sm mt-2" :style="{ color: 'var(--text-muted)' }">Tiket <strong>SR{{ 1000 + (cancelTarget?.id || 0) }}</strong> ({{ cancelTarget?.customer?.name }}).<br>Aksi ini tidak dapat dibatalkan.</p>
                     </div>
                     <div class="p-6 pt-0 flex gap-3">
-                        <KButton  class="flex-1 px-4 py-2.5 rounded-xl text-sm font-bold text-zinc-700 bg-white border border-zinc-300 hover:bg-zinc-50 transition-colors" @click="showCancelModal = false">Batal</KButton>
-                        <KButton  class="flex-1 px-4 py-2.5 rounded-xl text-sm font-bold text-white bg-red-600 hover:bg-red-700 transition-colors flex justify-center items-center gap-2" @click="executeCancel" :disabled="processingAction === 'cancel'">
+                        <KButton  class="flex-1 px-4 py-2.5 rounded-xl text-sm font-bold transition-colors" :style="{ color: 'var(--text-primary)', background: 'var(--bg-card)', borderColor: 'var(--border-color)' }" @click="showCancelModal = false">Batal</KButton>
+                        <KButton  class="flex-1 px-4 py-2.5 rounded-xl text-sm font-bold text-white transition-colors flex justify-center items-center gap-2" style="background: var(--color-danger)" @click="executeCancel" :disabled="processingAction === 'cancel'">
                             <svg v-if="processingAction === 'cancel'" class="animate-spin w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                             Ya, Batalkan
                         </KButton>
@@ -199,23 +199,23 @@
             </div>
             
             <!-- ALOKASI MODAL -->
-            <div v-if="showAlokasiModal" class="fixed inset-0 z-50 flex items-center justify-center bg-zinc-900/40 backdrop-blur-sm" @click.self="showAlokasiModal = false">
-                <div class="bg-white w-full max-w-sm mx-4 rounded-2xl shadow-xl border border-zinc-200 overflow-hidden animate-in zoom-in-95 duration-200">
+            <div v-if="showAlokasiModal" class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm" :style="{ background: 'rgba(0,0,0,0.4)' }" @click.self="showAlokasiModal = false">
+                <div class="w-full max-w-sm mx-4 rounded-2xl shadow-xl overflow-hidden animate-in zoom-in-95 duration-200" :style="{ background: 'var(--bg-card)', borderColor: 'var(--border-color)' }">
                     <div class="p-6">
-                        <h3 class="text-xl font-bold text-zinc-900 mb-1">Alokasi Teknisi</h3>
-                        <p class="text-sm text-zinc-500 mb-5">Tiket <strong>SR{{ 1000 + (alokasiTarget?.id || 0) }}</strong> — {{ alokasiTarget?.customer?.name }}</p>
+                        <h3 class="text-xl font-bold mb-1" :style="{ color: 'var(--text-primary)' }">Alokasi Teknisi</h3>
+                        <p class="text-sm mb-5" :style="{ color: 'var(--text-muted)' }">Tiket <strong>SR{{ 1000 + (alokasiTarget?.id || 0) }}</strong> — {{ alokasiTarget?.customer?.name }}</p>
                         
                         <div class="space-y-2">
-                            <label class="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1">Pilih Teknisi</label>
-                            <KSelect  v-model="selectedTechnicianId" class="w-full rounded-xl border border-zinc-300 text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all text-zinc-900 bg-white">
+                            <label class="block text-xs font-bold uppercase tracking-wider mb-1" :style="{ color: 'var(--text-muted)' }">Pilih Teknisi</label>
+                            <KSelect  v-model="selectedTechnicianId" class="w-full rounded-xl text-sm px-4 py-2.5 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all" :style="{ borderColor: 'var(--border-color)', background: 'var(--bg-card)', color: 'var(--text-primary)' }">
                                 <option value="" disabled>-- Pilih Teknisi --</option>
                                 <option v-for="user in userList" :key="user.id" :value="user.id">{{ user.name }}</option>
                             </KSelect>
                         </div>
                     </div>
                     <div class="p-6 pt-0 flex gap-3">
-                        <KButton  class="flex-1 px-4 py-2.5 rounded-xl text-sm font-bold text-zinc-700 bg-white border border-zinc-300 hover:bg-zinc-50 transition-colors" @click="showAlokasiModal = false">Batal</KButton>
-                        <KButton  class="flex-1 px-4 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-colors disabled:opacity-50 flex justify-center items-center gap-2" @click="executeAlokasi" :disabled="!selectedTechnicianId || processingAction === 'alokasi'">
+                        <KButton  class="flex-1 px-4 py-2.5 rounded-xl text-sm font-bold transition-colors" :style="{ color: 'var(--text-primary)', background: 'var(--bg-card)', borderColor: 'var(--border-color)' }" @click="showAlokasiModal = false">Batal</KButton>
+                        <KButton  class="flex-1 px-4 py-2.5 rounded-xl text-sm font-bold text-white transition-colors disabled:opacity-50 flex justify-center items-center gap-2" style="background: var(--color-primary)" @click="executeAlokasi" :disabled="!selectedTechnicianId || processingAction === 'alokasi'">
                             <svg v-if="processingAction === 'alokasi'" class="animate-spin w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                             Simpan
                         </KButton>
