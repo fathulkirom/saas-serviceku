@@ -173,3 +173,35 @@ body {
   animation: shimmer 1.5s infinite;
   border-radius: var(--radius-sm);
 }
+
+/* ── Semantic Utility Classes (sk- = ServiceKU token) ── */
+.sk-bg-app       { background: var(--bg-app); }
+.sk-bg-card      { background: var(--bg-card); }
+.sk-bg-hover     { background: var(--bg-hover); }
+.sk-bg-input     { background: var(--bg-input); }
+.sk-bg-topbar    { background: var(--bg-topbar); }
+.sk-bg-inverse   { background: var(--bg-inverse, #0F172A); }
+.sk-bg-primary   { background: var(--color-primary); }
+.sk-bg-primary-soft { background: var(--color-primary-soft); }
+.sk-bg-success   { background: var(--color-success); }
+.sk-bg-success-soft { background: var(--color-success-soft); }
+.sk-bg-warning   { background: var(--color-warning); }
+.sk-bg-warning-soft { background: var(--color-warning-soft); }
+.sk-bg-danger    { background: var(--color-danger); }
+.sk-bg-danger-soft { background: var(--color-danger-soft); }
+.sk-bg-info      { background: var(--color-info); }
+.sk-bg-info-soft { background: var(--color-info-soft); }
+
+.sk-text-primary    { color: var(--text-primary); }
+.sk-text-secondary  { color: var(--text-secondary); }
+.sk-text-muted      { color: var(--text-muted); }
+.sk-text-inverse    { color: var(--text-inverse); }
+.sk-text-primary-brand { color: var(--color-primary-text); }
+.sk-text-success    { color: var(--color-success-text); }
+.sk-text-warning    { color: var(--color-warning-text); }
+.sk-text-danger     { color: var(--color-danger-text); }
+.sk-text-info       { color: var(--color-info-text); }
+
+.sk-border          { border-color: var(--border-color); }
+.sk-border-light    { border-color: var(--border-light); }
+.sk-border-primary  { border-color: var(--color-primary-soft); }

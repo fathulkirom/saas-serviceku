@@ -15,7 +15,7 @@ const columnKeys = Object.keys(props.columns)
 
 function countInColumn(key) { return (props.services[key] || []).length }
 
-const statusColor = (s) => ({ 'menunggu_alokasi': 'bg-gray-100', 'diterima': 'bg-blue-50', 'diagnosa': 'bg-purple-50', 'dikerjakan': 'bg-amber-50', 'menunggu_konfirmasi_pelanggan': 'bg-red-50', 'menunggu_konfirmasi_internal': 'bg-orange-50', 'indent': 'bg-pink-50', 'onpartner': 'bg-teal-50', 'siap_diambil': 'bg-green-50' }[s] || 'bg-gray-50')
+const statusColor = (s) => ({ 'menunggu_alokasi': 'bg-gray-100', 'diterima': 'sk-bg-info-soft', 'diagnosa': 'bg-purple-50', 'dikerjakan': 'sk-bg-warning-soft', 'menunggu_konfirmasi_pelanggan': 'sk-bg-danger-soft', 'menunggu_konfirmasi_internal': 'bg-orange-50', 'indent': 'bg-pink-50', 'onpartner': 'bg-teal-50', 'siap_diambil': 'sk-bg-success-soft' }[s] || 'bg-gray-50')
 </script>
 
 <template>
@@ -28,18 +28,18 @@ const statusColor = (s) => ({ 'menunggu_alokasi': 'bg-gray-100', 'diterima': 'bg
         :class="statusColor(key)">
         <div class="flex items-center justify-between mb-3 sticky top-0">
           <h3 class="text-sm font-bold text-gray-700">{{ columns[key] }}</h3>
-          <span class="text-xs bg-white rounded-full px-2 py-0.5 font-semibold shadow-sm">{{ countInColumn(key) }}</span>
+          <span class="text-xs sk-bg-card rounded-full px-2 py-0.5 font-semibold shadow-sm">{{ countInColumn(key) }}</span>
         </div>
 
         <div class="space-y-2 flex-1 overflow-y-auto">
           <div v-for="s in (services[key] || [])" :key="s.id"
-            class="bg-white rounded-lg border border-gray-200 p-3 shadow-sm cursor-pointer hover:shadow-md transition-shadow text-sm"
+            class="sk-bg-card rounded-lg border border-gray-200 p-3 shadow-sm cursor-pointer hover:shadow-md transition-shadow text-sm"
             @click="router.visit(route('services.show', s.id))">
             <div class="font-semibold text-gray-900">#{{ s.id }}</div>
             <div class="text-xs text-gray-500 mt-0.5">{{ s.customer?.name || 'Walk-in' }}</div>
             <div class="text-xs text-gray-400 truncate mt-1">{{ s.problem_description }}</div>
             <div v-if="s.technician" class="flex items-center gap-1 mt-2 text-xs text-gray-500">
-              <span class="w-5 h-5 rounded-full bg-indigo-100 flex items-center justify-center text-[10px] font-bold text-indigo-600">{{ s.technician.name?.charAt(0) }}</span>
+              <span class="w-5 h-5 rounded-full sk-bg-primary-soft flex items-center justify-center text-[10px] font-bold sk-text-primary-brand">{{ s.technician.name?.charAt(0) }}</span>
               {{ s.technician.name }}
             </div>
           </div>

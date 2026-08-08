@@ -1,15 +1,15 @@
 <template>
   <AuthenticatedLayout>
-    <div class="flex flex-col min-h animate-fade-in-[calc(100vh-64px)] bg-zinc-50">
+    <div class="flex flex-col min-h animate-fade-in-[calc(100vh-64px)] sk-bg-hover">
       <!-- Header CRM Style -->
-      <div class="px-6 sm:px-8 py-6 bg-white border-b border-zinc-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 sticky top-0 z-20">
+      <div class="px-6 sm:px-8 py-6 sk-bg-card border-b sk-border flex flex-col sm:flex-row sm:items-center justify-between gap-4 sticky top-0 z-20">
         <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center border border-blue-100">
-                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <div class="w-12 h-12 sk-bg-info-soft rounded-xl flex items-center justify-center border border-blue-100">
+                <svg class="w-6 h-6 sk-text-info" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
             <div>
-                <h1 class="text-2xl font-bold text-zinc-900 tracking-tight">{{ pageTitle }}</h1>
-                <p class="text-sm text-zinc-500 font-medium mt-0.5">{{ subtitle }}</p>
+                <h1 class="text-2xl font-bold sk-text-primary tracking-tight">{{ pageTitle }}</h1>
+                <p class="text-sm sk-text-muted font-medium mt-0.5">{{ subtitle }}</p>
             </div>
         </div>
         
@@ -20,7 +20,7 @@
             Transaksi Baru
           </Link>
 
-          <KButton  v-if="activeTab === 'pengeluaran'" @click="openExpenseModal()" class="inline-flex items-center gap-1.5 px-4 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
+          <KButton  v-if="activeTab === 'pengeluaran'" @click="openExpenseModal()" class="inline-flex items-center gap-1.5 px-4 py-2 sk-bg-danger hover:sk-bg-danger text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
             Catat Pengeluaran
           </KButton>
@@ -46,17 +46,17 @@
 
         <!-- Daily Close Summary -->
         <div v-if="dailySummary" class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
-          <div class="p-3 bg-white rounded-xl border border-zinc-200 shadow-sm">
-            <p class="text-xs text-zinc-500">Pemasukan Hari Ini</p>
-            <p class="text-lg font-bold text-emerald-600">Rp {{ formatNumber(dailySummary.income) }}</p>
+          <div class="p-3 sk-bg-card rounded-xl border sk-border shadow-sm">
+            <p class="text-xs sk-text-muted">Pemasukan Hari Ini</p>
+            <p class="text-lg font-bold sk-text-success">Rp {{ formatNumber(dailySummary.income) }}</p>
           </div>
-          <div class="p-3 bg-white rounded-xl border border-zinc-200 shadow-sm">
-            <p class="text-xs text-zinc-500">Pengeluaran Hari Ini</p>
-            <p class="text-lg font-bold text-red-500">Rp {{ formatNumber(dailySummary.expense) }}</p>
+          <div class="p-3 sk-bg-card rounded-xl border sk-border shadow-sm">
+            <p class="text-xs sk-text-muted">Pengeluaran Hari Ini</p>
+            <p class="text-lg font-bold sk-text-danger">Rp {{ formatNumber(dailySummary.expense) }}</p>
           </div>
-          <div class="p-3 bg-white rounded-xl border border-zinc-200 shadow-sm">
-            <p class="text-xs text-zinc-500">Saldo Hari Ini</p>
-            <p class="text-lg font-bold" :class="dailySummary.income - dailySummary.expense >= 0 ? 'text-blue-600' : 'text-red-600'">
+          <div class="p-3 sk-bg-card rounded-xl border sk-border shadow-sm">
+            <p class="text-xs sk-text-muted">Saldo Hari Ini</p>
+            <p class="text-lg font-bold" :class="dailySummary.income - dailySummary.expense >= 0 ? 'sk-text-info' : 'sk-text-danger'">
               Rp {{ formatNumber(dailySummary.income - dailySummary.expense) }}
             </p>
           </div>
@@ -67,55 +67,55 @@
         <div class="space-y-6 mt-6">
           <Skeleton v-if="!sales" type="stat" :count="3" />
           <div v-else class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm relative overflow-hidden group">
-                <div class="absolute right-0 top-0 w-24 h-24 bg-emerald-50 rounded-full blur-2xl -mr-8 -mt-8"></div>
+            <div class="sk-bg-card p-6 rounded-2xl border sk-border shadow-sm relative overflow-hidden group">
+                <div class="absolute right-0 top-0 w-24 h-24 sk-bg-success-soft rounded-full blur-2xl -mr-8 -mt-8"></div>
                 <div class="relative z-10 flex items-center justify-between">
                     <div>
-                        <p class="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1">Servis Selesai</p>
-                        <h3 class="text-3xl font-black text-zinc-900">{{ salesStats?.completed ?? 0 }}</h3>
+                        <p class="text-xs font-bold sk-text-muted uppercase tracking-wider mb-1">Servis Selesai</p>
+                        <h3 class="text-3xl font-black sk-text-primary">{{ salesStats?.completed ?? 0 }}</h3>
                     </div>
-                    <div class="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600">
+                    <div class="w-12 h-12 rounded-xl sk-bg-success-soft border border-emerald-100 flex items-center justify-center sk-text-success">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                     </div>
                 </div>
             </div>
             
-            <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm relative overflow-hidden group">
-                <div class="absolute right-0 top-0 w-24 h-24 bg-amber-50 rounded-full blur-2xl -mr-8 -mt-8"></div>
+            <div class="sk-bg-card p-6 rounded-2xl border sk-border shadow-sm relative overflow-hidden group">
+                <div class="absolute right-0 top-0 w-24 h-24 sk-bg-warning-soft rounded-full blur-2xl -mr-8 -mt-8"></div>
                 <div class="relative z-10 flex items-center justify-between">
                     <div>
-                        <p class="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1">Draft & DP</p>
-                        <h3 class="text-3xl font-black text-zinc-900">{{ salesStats?.draft ?? 0 }}</h3>
+                        <p class="text-xs font-bold sk-text-muted uppercase tracking-wider mb-1">Draft & DP</p>
+                        <h3 class="text-3xl font-black sk-text-primary">{{ salesStats?.draft ?? 0 }}</h3>
                     </div>
-                    <div class="w-12 h-12 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center text-amber-600">
+                    <div class="w-12 h-12 rounded-xl sk-bg-warning-soft border border-amber-100 flex items-center justify-center sk-text-warning">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm relative overflow-hidden group">
-                <div class="absolute right-0 top-0 w-24 h-24 bg-blue-50 rounded-full blur-2xl -mr-8 -mt-8"></div>
+            <div class="sk-bg-card p-6 rounded-2xl border sk-border shadow-sm relative overflow-hidden group">
+                <div class="absolute right-0 top-0 w-24 h-24 sk-bg-info-soft rounded-full blur-2xl -mr-8 -mt-8"></div>
                 <div class="relative z-10 flex items-center justify-between">
                     <div>
-                        <p class="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-1">Nota Lunas</p>
-                        <h3 class="text-3xl font-black text-zinc-900">{{ salesStats?.paid ?? 0 }}</h3>
+                        <p class="text-xs font-bold sk-text-muted uppercase tracking-wider mb-1">Nota Lunas</p>
+                        <h3 class="text-3xl font-black sk-text-primary">{{ salesStats?.paid ?? 0 }}</h3>
                     </div>
-                    <div class="w-12 h-12 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600">
+                    <div class="w-12 h-12 rounded-xl sk-bg-info-soft border border-blue-100 flex items-center justify-center sk-text-info">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     </div>
                 </div>
             </div>
           </div>
 
-          <div class="bg-white p-4 rounded-2xl border border-zinc-200 shadow-sm flex flex-wrap items-center gap-3">
-              <KSelect  v-model="salesFilters.status" @change="applySalesFilter" class="w-40 text-sm font-medium rounded-xl border border-zinc-300 px-4 py-2 bg-white text-zinc-700 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all">
+          <div class="sk-bg-card p-4 rounded-2xl border sk-border shadow-sm flex flex-wrap items-center gap-3">
+              <KSelect  v-model="salesFilters.status" @change="applySalesFilter" class="w-40 text-sm font-medium rounded-xl border sk-border px-4 py-2 sk-bg-card sk-text-primary focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all">
                 <option value="">Semua Status</option>
                 <option value="lunas">Lunas</option>
                 <option value="draft">Draft</option>
                 <option value="dp">DP</option>
                 <option value="unpaid">Belum Bayar</option>
               </KSelect>
-              <KSelect  v-model="salesFilters.sale_type" @change="applySalesFilter" class="w-40 text-sm font-medium rounded-xl border border-zinc-300 px-4 py-2 bg-white text-zinc-700 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all">
+              <KSelect  v-model="salesFilters.sale_type" @change="applySalesFilter" class="w-40 text-sm font-medium rounded-xl border sk-border px-4 py-2 sk-bg-card sk-text-primary focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all">
                 <option value="">Semua Tipe</option>
                 <option value="service">Servis</option>
                 <option value="product">Produk</option>
@@ -126,15 +126,15 @@
                   v-model="salesFilters.search"
                   @keyup.enter="applySalesFilter"
                   placeholder="Cari nama pelanggan..."
-                  class="w-full rounded-xl border border-zinc-300 px-4 py-2 pl-10 text-sm bg-white text-zinc-700 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all" />
-                <svg class="absolute left-3.5 top-2.5 w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                  class="w-full rounded-xl border sk-border px-4 py-2 pl-10 text-sm sk-bg-card sk-text-primary focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all" />
+                <svg class="absolute left-3.5 top-2.5 w-4 h-4 sk-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
               </div>
-              <KButton  @click="resetSalesFilter" class="px-4 py-2 rounded-xl text-sm font-semibold border border-zinc-200 text-zinc-600 hover:bg-zinc-50 transition-all bg-white shadow-sm">
+              <KButton  @click="resetSalesFilter" class="px-4 py-2 rounded-xl text-sm font-semibold border sk-border sk-text-secondary hover:sk-bg-hover transition-all sk-bg-card shadow-sm">
                 Reset
               </KButton>
           </div>
 
-          <div class="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden">
+          <div class="sk-bg-card rounded-2xl border sk-border shadow-sm overflow-hidden">
             <KTable
               :columns="salesColumns"
               :rows="sales?.data ?? []"
@@ -144,36 +144,36 @@
               @empty-action="router.visit(route('sales.create'))"
             >
               <template #cell-id="{ row }">
-                <span class="font-mono text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-md">#{{ row.id }}</span>
+                <span class="font-mono text-xs font-bold sk-text-primary-brand sk-bg-primary-soft px-2 py-1 rounded-md">#{{ row.id }}</span>
               </template>
               <template #cell-customer="{ row }">
                 <div class="flex items-center gap-3 py-1">
-                  <div class="w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center text-zinc-600 font-bold text-xs shrink-0">
+                  <div class="w-8 h-8 rounded-full sk-bg-hover flex items-center justify-center sk-text-secondary font-bold text-xs shrink-0">
                     {{ (row.customer?.name ?? 'U').charAt(0).toUpperCase() }}
                   </div>
-                  <span class="font-bold text-zinc-900">{{ row.customer?.name ?? 'Pelanggan Umum' }}</span>
+                  <span class="font-bold sk-text-primary">{{ row.customer?.name ?? 'Pelanggan Umum' }}</span>
                 </div>
               </template>
               <template #cell-total="{ row }">
-                <span class="font-bold text-zinc-900">Rp {{ formatNumber(row.total) }}</span>
+                <span class="font-bold sk-text-primary">Rp {{ formatNumber(row.total) }}</span>
               </template>
               <template #cell-status="{ row }">
                 <Badge :status="row.status">{{ row.status }}</Badge>
               </template>
               <template #cell-created_at="{ row }">
-                <span class="text-zinc-500">{{ formatDate(row.created_at) }}</span>
+                <span class="sk-text-muted">{{ formatDate(row.created_at) }}</span>
               </template>
               <template #cell-action="{ row }">
                 <div class="flex items-center justify-end gap-2">
                   <KButton  v-if="row.status === 'draft'" @click="payDraft(row)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600 text-white hover:bg-emerald-700 transition-all shadow-sm">Bayar</KButton>
-                  <Link :href="route('sales.show', row.id)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 transition-all">Detail</Link>
-                  <a :href="route('sales.print', row.id)" target="_blank" class="p-1.5 rounded-lg text-zinc-400 hover:bg-zinc-50 hover:text-zinc-600 transition-all" title="Cetak Nota">
+                  <Link :href="route('sales.show', row.id)" class="px-3 py-1.5 rounded-lg text-xs font-semibold sk-bg-card border sk-border sk-text-primary hover:sk-bg-hover transition-all">Detail</Link>
+                  <a :href="route('sales.print', row.id)" target="_blank" class="p-1.5 rounded-lg sk-text-muted hover:sk-bg-hover hover:sk-text-secondary transition-all" title="Cetak Nota">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
                   </a>
                 </div>
               </template>
             </KTable>
-            <div class="p-4 border-t border-zinc-200 bg-zinc-50/50">
+            <div class="p-4 border-t sk-border sk-bg-hover">
               <Pagination :meta="sales" />
             </div>
           </div>
@@ -185,8 +185,8 @@
         <div class="space-y-6 mt-6">
           <Skeleton v-if="!expenses" type="table" :count="5" />
           <template v-else>
-            <div class="bg-white p-4 rounded-2xl border border-zinc-200 shadow-sm flex flex-wrap items-center gap-3">
-                <KSelect  v-model="expenseFilters.category_id" @change="applyExpenseFilter" class="w-48 text-sm font-medium rounded-xl border border-zinc-300 px-4 py-2 bg-white text-zinc-700 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all">
+            <div class="sk-bg-card p-4 rounded-2xl border sk-border shadow-sm flex flex-wrap items-center gap-3">
+                <KSelect  v-model="expenseFilters.category_id" @change="applyExpenseFilter" class="w-48 text-sm font-medium rounded-xl border sk-border px-4 py-2 sk-bg-card sk-text-primary focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all">
                   <option value="">Semua Kategori</option>
                   <option v-for="cat in expenseCategories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
                 </KSelect>
@@ -196,15 +196,15 @@
                     v-model="expenseFilters.search"
                     @keyup.enter="applyExpenseFilter"
                     placeholder="Cari deskripsi pengeluaran..."
-                    class="w-full rounded-xl border border-zinc-300 px-4 py-2 pl-10 text-sm bg-white text-zinc-700 focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all" />
-                  <svg class="absolute left-3.5 top-2.5 w-4 h-4 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    class="w-full rounded-xl border sk-border px-4 py-2 pl-10 text-sm sk-bg-card sk-text-primary focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 outline-none transition-all" />
+                  <svg class="absolute left-3.5 top-2.5 w-4 h-4 sk-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                 </div>
-                <KButton  @click="resetExpenseFilter" class="px-4 py-2 rounded-xl text-sm font-semibold border border-zinc-200 text-zinc-600 hover:bg-zinc-50 transition-all bg-white shadow-sm">
+                <KButton  @click="resetExpenseFilter" class="px-4 py-2 rounded-xl text-sm font-semibold border sk-border sk-text-secondary hover:sk-bg-hover transition-all sk-bg-card shadow-sm">
                   Reset
                 </KButton>
             </div>
 
-            <div class="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden">
+            <div class="sk-bg-card rounded-2xl border sk-border shadow-sm overflow-hidden">
               <KTable
                 :columns="expenseColumns"
                 :rows="expenses?.data ?? []"
@@ -214,19 +214,19 @@
                 @empty-action="openExpenseModal()"
               >
                 <template #cell-description="{ row }">
-                  <span class="font-bold text-zinc-900">{{ row.description }}</span>
+                  <span class="font-bold sk-text-primary">{{ row.description }}</span>
                 </template>
                 <template #cell-amount="{ row }">
-                  <span class="font-bold text-red-600">Rp {{ formatNumber(row.amount) }}</span>
+                  <span class="font-bold sk-text-danger">Rp {{ formatNumber(row.amount) }}</span>
                 </template>
                 <template #cell-category="{ row }">
                   <Badge variant="purple">{{ row.category?.name ?? '-' }}</Badge>
                 </template>
                 <template #cell-expense_date="{ row }">
-                  <span class="text-zinc-500">{{ formatDate(row.expense_date) }}</span>
+                  <span class="sk-text-muted">{{ formatDate(row.expense_date) }}</span>
                 </template>
               </KTable>
-              <div class="p-4 border-t border-zinc-200 bg-zinc-50/50">
+              <div class="p-4 border-t sk-border sk-bg-hover">
                 <Pagination :meta="expenses" />
               </div>
             </div>
@@ -238,7 +238,7 @@
       <template #pembelian>
         <div class="space-y-6 mt-6">
           <Skeleton v-if="!purchases" type="table" :count="5" />
-          <div v-else class="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden">
+          <div v-else class="sk-bg-card rounded-2xl border sk-border shadow-sm overflow-hidden">
             <KTable
               :columns="purchaseColumns"
               :rows="purchases?.data ?? []"
@@ -248,25 +248,25 @@
               @empty-action="openPurchaseDrawer()"
             >
               <template #cell-reference_number="{ row }">
-                <span class="font-mono text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded-md">{{ row.reference_number ?? '-' }}</span>
+                <span class="font-mono text-xs font-bold sk-text-primary-brand sk-bg-primary-soft px-2 py-1 rounded-md">{{ row.reference_number ?? '-' }}</span>
               </template>
               <template #cell-supplier_name="{ row }">
-                <span class="font-bold text-zinc-900">{{ row.supplier?.name ?? '-' }}</span>
+                <span class="font-bold sk-text-primary">{{ row.supplier?.name ?? '-' }}</span>
               </template>
               <template #cell-total="{ row }">
-                <span class="font-bold text-zinc-900">Rp {{ formatNumber(row.total) }}</span>
+                <span class="font-bold sk-text-primary">Rp {{ formatNumber(row.total) }}</span>
               </template>
               <template #cell-type="{ row }">
                 <Badge :variant="row.type === 'cash' ? 'green' : 'purple'">{{ row.type === 'cash' ? 'Cash' : 'PO' }}</Badge>
               </template>
               <template #cell-created_at="{ row }">
-                <span class="text-zinc-500">{{ formatDate(row.created_at) }}</span>
+                <span class="sk-text-muted">{{ formatDate(row.created_at) }}</span>
               </template>
               <template #cell-action="{ row }">
-                <KButton  @click="openPurchaseDetail(row)" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-white border border-zinc-200 text-zinc-700 hover:bg-zinc-50 transition-all shadow-sm">Detail</KButton>
+                <KButton  @click="openPurchaseDetail(row)" class="px-3 py-1.5 rounded-lg text-xs font-semibold sk-bg-card border sk-border sk-text-primary hover:sk-bg-hover transition-all shadow-sm">Detail</KButton>
               </template>
             </KTable>
-            <div class="p-4 border-t border-zinc-200 bg-zinc-50/50">
+            <div class="p-4 border-t sk-border sk-bg-hover">
               <Pagination :meta="purchases" />
             </div>
           </div>
@@ -277,7 +277,7 @@
       <template #retur>
         <div class="space-y-6 mt-6">
           <Skeleton v-if="!returns" type="table" :count="5" />
-          <div v-else class="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden">
+          <div v-else class="sk-bg-card rounded-2xl border sk-border shadow-sm overflow-hidden">
             <KTable
               :columns="returnColumns"
               :rows="returns?.data ?? []"
@@ -287,16 +287,16 @@
               @empty-action="openReturnDrawer()"
             >
               <template #cell-reason="{ row }">
-                <span class="font-bold text-zinc-900">{{ row.reason ?? '-' }}</span>
+                <span class="font-bold sk-text-primary">{{ row.reason ?? '-' }}</span>
               </template>
               <template #cell-status="{ row }">
                 <Badge :status="row.status">{{ row.status }}</Badge>
               </template>
               <template #cell-created_at="{ row }">
-                <span class="text-zinc-500">{{ formatDate(row.created_at) }}</span>
+                <span class="sk-text-muted">{{ formatDate(row.created_at) }}</span>
               </template>
               <template #cell-action="{ row }">
-                <KSelect  @change="updateReturnStatus(row, $event.target.value)" class="text-xs py-1.5 px-3 rounded-lg border border-zinc-300 font-semibold bg-white text-zinc-700 outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500">
+                <KSelect  @change="updateReturnStatus(row, $event.target.value)" class="text-xs py-1.5 px-3 rounded-lg border sk-border font-semibold sk-bg-card sk-text-primary outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500">
                   <option disabled selected>Ubah Status</option>
                   <option value="dikirim">Dikirim</option>
                   <option value="diproses_supplier">Diproses Supplier</option>
@@ -305,7 +305,7 @@
                 </KSelect>
               </template>
             </KTable>
-            <div class="p-4 border-t border-zinc-200 bg-zinc-50/50">
+            <div class="p-4 border-t sk-border sk-bg-hover">
               <Pagination :meta="returns" />
             </div>
           </div>
@@ -318,22 +318,22 @@
     <Drawer :open="showExpenseDrawer" title="Catat Pengeluaran Operasional Baru" @close="showExpenseDrawer = false" width="450px">
       <form @submit.prevent="submitExpense" class="space-y-4">
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Deskripsi Pengeluaran *</label>
+          <label class="text-xs font-semibold sk-text-muted">Deskripsi Pengeluaran *</label>
           <KInput  v-model="expenseForm.description" required placeholder="e.g. Bayar Listrik / Beli Kertas Thermal" class="input text-sm" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Jumlah Nominal (Rp) *</label>
+          <label class="text-xs font-semibold sk-text-muted">Jumlah Nominal (Rp) *</label>
           <KInput  v-model="expenseForm.amount" type="number" min="100" required placeholder="0" class="input text-sm" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Kategori *</label>
+          <label class="text-xs font-semibold sk-text-muted">Kategori *</label>
           <KSelect  v-model="expenseForm.category_id" required class="input text-sm">
             <option value="" disabled>-- Pilih Kategori --</option>
             <option v-for="cat in expenseCategories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
           </KSelect>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Tanggal Pengeluaran *</label>
+          <label class="text-xs font-semibold sk-text-muted">Tanggal Pengeluaran *</label>
           <KInput  v-model="expenseForm.expense_date" type="date" required class="input text-sm" />
         </div>
         <div class="flex justify-end gap-2 pt-3">
@@ -350,14 +350,14 @@
       <form @submit.prevent="submitPurchase" class="space-y-4">
         <div class="grid grid-cols-2 gap-3">
           <div class="space-y-1">
-            <label class="text-xs font-semibold text-zinc-500">Tipe *</label>
+            <label class="text-xs font-semibold sk-text-muted">Tipe *</label>
             <KSelect  v-model="purchaseForm.type" required class="input text-sm">
               <option value="po">PO (Purchase Order)</option>
               <option value="cash">Cash Langsung</option>
             </KSelect>
           </div>
           <div class="space-y-1">
-            <label class="text-xs font-semibold text-zinc-500">Supplier</label>
+            <label class="text-xs font-semibold sk-text-muted">Supplier</label>
             <KSelect  v-model="purchaseForm.supplier_id" class="input text-sm">
               <option value="">-- Pilih / Kosongkan --</option>
               <option v-for="s in suppliers" :key="s.id" :value="s.id">{{ s.name }}</option>
@@ -365,12 +365,12 @@
           </div>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Nama Supplier Baru (jika tidak ada di daftar)</label>
+          <label class="text-xs font-semibold sk-text-muted">Nama Supplier Baru (jika tidak ada di daftar)</label>
           <KInput  v-model="purchaseForm.supplier_name" type="text" class="input text-sm" placeholder="e.g. PT Sumber Jaya" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Item Pembelian *</label>
-          <div v-for="(item, i) in purchaseForm.items" :key="i" class="space-y-2 rounded-lg border p-3 border-zinc-200">
+          <label class="text-xs font-semibold sk-text-muted">Item Pembelian *</label>
+          <div v-for="(item, i) in purchaseForm.items" :key="i" class="space-y-2 rounded-lg border p-3 sk-border">
             <div class="grid grid-cols-2 gap-2">
               <div class="col-span-2">
                 <KSelect  v-model="item.product_id" required class="input text-sm">
@@ -381,12 +381,12 @@
               <KInput  v-model="item.quantity" type="number" min="1" required class="input text-sm" placeholder="Qty" />
               <KInput  v-model="item.unit_price" type="number" min="0" required class="input text-sm" placeholder="Harga Satuan" />
             </div>
-            <KButton  type="button" v-if="purchaseForm.items.length > 1" @click="removePurchaseItem(i)" class="text-xs font-semibold text-red-500 hover:underline">− Hapus item</KButton>
+            <KButton  type="button" v-if="purchaseForm.items.length > 1" @click="removePurchaseItem(i)" class="text-xs font-semibold sk-text-danger hover:underline">− Hapus item</KButton>
           </div>
-          <KButton  type="button" @click="addPurchaseItem" class="text-xs font-bold text-blue-600 hover:underline mt-1">+ Tambah item</KButton>
+          <KButton  type="button" @click="addPurchaseItem" class="text-xs font-bold sk-text-info hover:underline mt-1">+ Tambah item</KButton>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Catatan</label>
+          <label class="text-xs font-semibold sk-text-muted">Catatan</label>
           <KTextarea  v-model="purchaseForm.note" rows="2" class="input text-sm" placeholder="Catatan pembelian..."></KTextarea>
         </div>
         <div class="flex justify-end gap-2 pt-3">
@@ -403,40 +403,40 @@
       <div v-if="selectedPurchase" class="space-y-4">
         <div class="grid grid-cols-2 gap-3">
           <div class="space-y-1">
-            <label class="text-xs font-semibold text-zinc-500">No. Referensi</label>
-            <div class="text-sm font-bold font-mono text-indigo-600">{{ selectedPurchase.reference_number }}</div>
+            <label class="text-xs font-semibold sk-text-muted">No. Referensi</label>
+            <div class="text-sm font-bold font-mono sk-text-primary-brand">{{ selectedPurchase.reference_number }}</div>
           </div>
           <div class="space-y-1">
-            <label class="text-xs font-semibold text-zinc-500">Supplier</label>
+            <label class="text-xs font-semibold sk-text-muted">Supplier</label>
             <div class="text-sm">{{ selectedPurchase.supplier?.name ?? '-' }}</div>
           </div>
         </div>
         <div class="grid grid-cols-2 gap-3">
           <div class="space-y-1">
-            <label class="text-xs font-semibold text-zinc-500">Tipe</label>
+            <label class="text-xs font-semibold sk-text-muted">Tipe</label>
             <Badge :variant="selectedPurchase.type === 'cash' ? 'green' : 'purple'">{{ selectedPurchase.type === 'cash' ? 'Cash' : 'PO' }}</Badge>
           </div>
           <div class="space-y-1">
-            <label class="text-xs font-semibold text-zinc-500">Tanggal</label>
+            <label class="text-xs font-semibold sk-text-muted">Tanggal</label>
             <div class="text-sm">{{ formatDate(selectedPurchase.created_at) }}</div>
           </div>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Item</label>
-          <div class="rounded-lg border divide-y border-zinc-200">
+          <label class="text-xs font-semibold sk-text-muted">Item</label>
+          <div class="rounded-lg border divide-y sk-border">
             <div v-for="it in (selectedPurchase.items ?? [])" :key="it.id" class="flex items-center justify-between px-3 py-2 text-sm">
-              <span>{{ it.product?.name ?? '-' }} <span class="text-xs text-zinc-500">x{{ it.quantity }}</span></span>
+              <span>{{ it.product?.name ?? '-' }} <span class="text-xs sk-text-muted">x{{ it.quantity }}</span></span>
               <span class="font-semibold">Rp {{ formatNumber(it.unit_price ?? 0) }}</span>
             </div>
-            <div v-if="!(selectedPurchase.items ?? []).length" class="px-3 py-2 text-xs text-zinc-500">Tidak ada item.</div>
+            <div v-if="!(selectedPurchase.items ?? []).length" class="px-3 py-2 text-xs sk-text-muted">Tidak ada item.</div>
           </div>
         </div>
-        <div class="flex items-center justify-between border-t pt-3 border-zinc-200">
-          <span class="text-xs font-semibold text-zinc-500">Total</span>
+        <div class="flex items-center justify-between border-t pt-3 sk-border">
+          <span class="text-xs font-semibold sk-text-muted">Total</span>
           <span class="text-lg font-bold">Rp {{ formatNumber(selectedPurchase.total) }}</span>
         </div>
         <div class="space-y-1" v-if="selectedPurchase.note">
-          <label class="text-xs font-semibold text-zinc-500">Catatan</label>
+          <label class="text-xs font-semibold sk-text-muted">Catatan</label>
           <div class="text-sm">{{ selectedPurchase.note }}</div>
         </div>
       </div>
@@ -447,14 +447,14 @@
       <form @submit.prevent="submitReturn" class="space-y-4">
         <div class="grid grid-cols-2 gap-3">
           <div class="space-y-1">
-            <label class="text-xs font-semibold text-zinc-500">Supplier *</label>
+            <label class="text-xs font-semibold sk-text-muted">Supplier *</label>
             <KSelect  v-model="returnForm.supplier_id" required class="input text-sm">
               <option value="" disabled>-- Pilih Supplier --</option>
               <option v-for="s in suppliers" :key="s.id" :value="s.id">{{ s.name }}</option>
             </KSelect>
           </div>
           <div class="space-y-1">
-            <label class="text-xs font-semibold text-zinc-500">Referensi Pembelian</label>
+            <label class="text-xs font-semibold sk-text-muted">Referensi Pembelian</label>
             <KSelect  v-model="returnForm.purchase_id" class="input text-sm">
               <option value="">-- Pilih / Kosongkan --</option>
               <option v-for="p in (purchases?.data ?? [])" :key="p.id" :value="p.id">{{ p.reference_number }} ({{ p.supplier?.name ?? '-' }})</option>
@@ -462,12 +462,12 @@
           </div>
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Alasan Retur</label>
+          <label class="text-xs font-semibold sk-text-muted">Alasan Retur</label>
           <KInput  v-model="returnForm.reason" type="text" class="input text-sm" placeholder="e.g. Barang rusak / salah kirim" />
         </div>
         <div class="space-y-1">
-          <label class="text-xs font-semibold text-zinc-500">Item Retur *</label>
-          <div v-for="(item, i) in returnForm.items" :key="i" class="space-y-2 rounded-lg border p-3 border-zinc-200">
+          <label class="text-xs font-semibold sk-text-muted">Item Retur *</label>
+          <div v-for="(item, i) in returnForm.items" :key="i" class="space-y-2 rounded-lg border p-3 sk-border">
             <div class="grid grid-cols-2 gap-2">
               <div class="col-span-2">
                 <KSelect  v-model="item.product_id" required class="input text-sm">
@@ -485,10 +485,10 @@
                 <option value="expired">Expired</option>
                 <option value="lain">Lainnya</option>
               </KSelect>
-              <KButton  type="button" v-if="returnForm.items.length > 1" @click="removeReturnItem(i)" class="text-xs font-semibold text-red-500 hover:underline">− Hapus</KButton>
+              <KButton  type="button" v-if="returnForm.items.length > 1" @click="removeReturnItem(i)" class="text-xs font-semibold sk-text-danger hover:underline">− Hapus</KButton>
             </div>
           </div>
-          <KButton  type="button" @click="addReturnItem" class="text-xs font-bold text-blue-600 hover:underline mt-1">+ Tambah item</KButton>
+          <KButton  type="button" @click="addReturnItem" class="text-xs font-bold sk-text-info hover:underline mt-1">+ Tambah item</KButton>
         </div>
         <div class="flex justify-end gap-2 pt-3">
           <KButton  type="button" @click="showReturnDrawer = false" class="btn-secondary text-xs">Batal</KButton>
