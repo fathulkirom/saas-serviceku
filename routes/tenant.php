@@ -78,6 +78,7 @@ use App\Http\Controllers\Tenant\SopController;
 use App\Http\Controllers\Tenant\StockAllocationController;
 use App\Http\Controllers\Tenant\SystemController;
 use App\Http\Controllers\Tenant\TaxController;
+use App\Http\Controllers\Tenant\TechnicianBonusController;
 use App\Http\Controllers\Tenant\TechnicianWorkflowController;
 use App\Http\Controllers\Tenant\TenantProfileController;
 use App\Http\Controllers\Tenant\UniversalSearchController;
@@ -267,6 +268,12 @@ Route::middleware([
     Route::get('/services/complaints', [ServiceComplaintController::class, 'index'])->name('services.complaints')->middleware('check.plan.feature:services');
     Route::post('/services/{service}/complaint', [ServiceComplaintController::class, 'store'])->name('services.complaint.store')->middleware('check.plan.feature:services');
     Route::put('/services/complaints/{complaint}', [ServiceComplaintController::class, 'update'])->name('services.complaint.update')->middleware('check.plan.feature:services');
+
+    // BR-015: Technician Bonus & Compensation
+    Route::get('/sistem/technician-bonus', [TechnicianBonusController::class, 'index'])->name('technician-bonus.index')->middleware('check.plan.feature:settings');
+    Route::post('/sistem/technician-bonus/config', [TechnicianBonusController::class, 'saveConfig'])->name('technician-bonus.config')->middleware('check.plan.feature:settings');
+    Route::post('/sistem/technician-bonus/{record}/approve', [TechnicianBonusController::class, 'approve'])->name('technician-bonus.approve')->middleware('check.plan.feature:settings');
+    Route::post('/sistem/technician-bonus/approve-batch', [TechnicianBonusController::class, 'approveBatch'])->name('technician-bonus.approve-batch')->middleware('check.plan.feature:settings');
     Route::post('/service-parts/{part}/edit', [OperationalDashboardController::class, 'editRequest'])->name('service-parts.edit')->middleware('check.plan.feature:services');
     Route::post('/service-parts/{part}/priority', [OperationalDashboardController::class, 'setPriority'])->name('service-parts.priority')->middleware('check.plan.feature:services');
     // Sprint 7.4B — Daily Operations Hardening
