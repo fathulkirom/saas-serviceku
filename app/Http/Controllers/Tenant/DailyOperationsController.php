@@ -60,30 +60,56 @@ class DailyOperationsController extends Controller
         return back()->with('error', 'Service belum bisa dikunci.');
     }
 
-    // ======== SERVICE REOPEN ========
+    // ======== SERVICE REOPEN (BR-020) ========
     public function requestReopen(Request $request, Service $service)
     {
-        // PILOT-READY-01 (BR-020): reopen is an owner/admin/manager operation.
         $user = auth()->user();
         abort_unless(in_array($user->role, ['owner', 'admin', 'manager'], true), 403, 'Tidak berwenang meminta reopen.');
 
-        $data = $request->validate(['reason' => 'required|string']);
-        ServiceReopen::create([
-            'service_id' => $service->id,
-            'reason' => $data['reason'],
-            'requested_by' => auth()->id(),
+        $data = $request->validate([
+            'reason' => 'required|string|max:500',
+            'type'   => 'required|in:administrative,rework',
         ]);
-        return back()->with('success', 'Reopen requested.');
+
+        // Guard: don't allow reopening a service that already has a pending reopen.
+        $existing = ServiceReopen::where('service_id', $service->id)
+            ->where('status', 'pending')->exists();
+        if ($existing) {
+            return back()->with('error', 'Service ini sudah memiliki permintaan reopen yang pending.');
+        }
+
+        // Capture snapshot before any changes.
+        $snapshot = $service->only(['id', 'status', 'total_cost', 'service_charge', 'technician_id', 'resolution']);
+
+        ServiceReopen::create([
+            'service_id'       => $service->id,
+            'reason'           => $data['reason'],
+            'type'             => $data['type'],
+            'requested_by'     => auth()->id(),
+            'service_snapshot' => $snapshot,
+        ]);
+
+        $typeLabel = $data['type'] === 'rework' ? 'Pekerjaan Ulang' : 'Administratif';
+        return back()->with('success', "Permintaan reopen ({$typeLabel}) diajukan. Menunggu approval.");
     }
 
     public function approveReopen(ServiceReopen $reopen)
     {
-        // PILOT-READY-01 (BR-020): approval is owner/admin/manager only.
         $user = auth()->user();
         abort_unless(in_array($user->role, ['owner', 'admin', 'manager'], true), 403, 'Tidak berwenang menyetujui reopen.');
 
         $reopen->approve(auth()->id());
-        return back()->with('success', 'Reopen disetujui. Service dapat diedit kembali.');
+        return back()->with('success', 'Reopen disetujui. Service dapat diedit kembali. Riwayat sebelum reopen tetap tersimpan.');
+    }
+
+    public function rejectReopen(Request $request, ServiceReopen $reopen)
+    {
+        $user = auth()->user();
+        abort_unless(in_array($user->role, ['owner', 'admin', 'manager'], true), 403, 'Tidak berwenang.');
+
+        $data = $request->validate(['rejection_reason' => 'required|string|max:500']);
+        $reopen->reject(auth()->id(), $data['rejection_reason']);
+        return back()->with('success', 'Permintaan reopen ditolak.');
     }
 
     // ======== PRICE CHANGE APPROVAL ========

@@ -309,6 +309,7 @@ Route::middleware([
     Route::post('/services/{service}/lock', [DailyOperationsController::class, 'lockService'])->name('services.lock')->middleware('check.plan.feature:services');
     Route::post('/services/{service}/reopen', [DailyOperationsController::class, 'requestReopen'])->name('services.reopen')->middleware('check.plan.feature:services');
     Route::post('/service-reopens/{reopen}/approve', [DailyOperationsController::class, 'approveReopen'])->name('service-reopens.approve')->middleware('check.plan.feature:services');
+    Route::post('/service-reopens/{reopen}/reject', [DailyOperationsController::class, 'rejectReopen'])->name('service-reopens.reject')->middleware('check.plan.feature:services');
     Route::post('/services/{service}/price-change', [DailyOperationsController::class, 'requestPriceChange'])->name('services.price-change')->middleware('check.plan.feature:services');
     Route::post('/price-changes/{change}/approve', [DailyOperationsController::class, 'approvePrice'])->name('price-changes.approve')->middleware('check.plan.feature:services');
     // Sprint 7.5 — Retail, POS & Sales
