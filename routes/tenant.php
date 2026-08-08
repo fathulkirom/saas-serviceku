@@ -59,8 +59,7 @@ use App\Http\Controllers\Tenant\SaleInvoiceController;
 use App\Http\Controllers\Tenant\SalePaymentController;
 use App\Http\Controllers\Tenant\SaleStoreController;
 use App\Http\Controllers\Tenant\SearchController;
-use App\Http\Controllers\Tenant\ServiceChecklistController;
-use App\Http\Controllers\Tenant\ServiceClaimController;
+use App\Http\Controllers\Tenant\ServiceChecklistController;use App\Http\Controllers\Tenant\ServiceComplaintController;use App\Http\Controllers\Tenant\ServiceClaimController;
 use App\Http\Controllers\Tenant\ServiceController;
 use App\Http\Controllers\Tenant\ServiceDeliveryController;
 use App\Http\Controllers\Tenant\ServiceDocumentController;
@@ -263,6 +262,11 @@ Route::middleware([
     // BR-010: Emergency Purchase — pembelian sparepart darurat
     Route::get('/inventaris/emergency-purchases', [EmergencyPurchaseController::class, 'index'])->name('inventaris.emergency-purchases')->middleware('check.plan.feature:inventaris');
     Route::post('/inventaris/emergency-purchases', [EmergencyPurchaseController::class, 'store'])->name('inventaris.emergency-purchases.store')->middleware('check.plan.feature:inventaris');
+
+    // BR-014: Cross-Branch Complaint — komplain lintas cabang
+    Route::get('/services/complaints', [ServiceComplaintController::class, 'index'])->name('services.complaints')->middleware('check.plan.feature:services');
+    Route::post('/services/{service}/complaint', [ServiceComplaintController::class, 'store'])->name('services.complaint.store')->middleware('check.plan.feature:services');
+    Route::put('/services/complaints/{complaint}', [ServiceComplaintController::class, 'update'])->name('services.complaint.update')->middleware('check.plan.feature:services');
     Route::post('/service-parts/{part}/edit', [OperationalDashboardController::class, 'editRequest'])->name('service-parts.edit')->middleware('check.plan.feature:services');
     Route::post('/service-parts/{part}/priority', [OperationalDashboardController::class, 'setPriority'])->name('service-parts.priority')->middleware('check.plan.feature:services');
     // Sprint 7.4B — Daily Operations Hardening
