@@ -63,6 +63,16 @@
                     <Link :href="route('admin.sync-tenant-stats', tenant.id)" method="post" as="button" class="px-4 py-2 bg-indigo-100 text-indigo-700 rounded-md text-sm hover:bg-indigo-200">
                         Sync Stats
                     </Link>
+                    <!-- BR-019: Ganti Plan (Super Admin only) -->
+                    <div v-if="isSuperAdmin" class="flex items-center gap-1.5 ml-2 pl-2 border-l border-slate-700">
+                        <KSelect  v-model="changePlanId" class="text-xs rounded-md border-slate-600 bg-slate-800 text-slate-200 py-1 px-2">
+                            <option value="">Ganti Plan...</option>
+                            <option v-for="p in availablePlans" :key="p.id" :value="p.id">{{ p.name }}</option>
+                        </KSelect>
+                        <KButton  :disabled="!changePlanId || changePlanForm.processing" @click="submitChangePlan" class="px-3 py-1.5 bg-purple-600 text-white rounded-md text-xs hover:bg-purple-700 disabled:opacity-50 whitespace-nowrap">
+                            {{ changePlanForm.processing ? '...' : 'Ganti' }}
+                        </KButton>
+                    </div>
                 </div>
 
                 <!-- UPGRADE-05: Subscription + Entitlement -->
@@ -230,7 +240,7 @@ import KButton from '@/Components/KButton.vue';
 import KInput from '@/Components/KInput.vue';
 
 import { useForm, Link, router, usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 
 const page = usePage();
@@ -244,6 +254,7 @@ const props = defineProps({
     entitlement: { type: Object, default: null },
     subscriptionEvents: { type: Array, default: () => [] },
     addons: { type: Array, default: () => [] },
+    availablePlans: { type: Array, default: () => [] },
 });
 
 const formatNumber = (num) => new Intl.NumberFormat('id-ID').format(num || 0);
@@ -279,5 +290,26 @@ const resetPassword = () => {
     if (confirm('Apakah Anda yakin ingin me-reset password owner untuk tenant ini? Password baru akan digenerate secara acak dan ditampilkan di pesan sukses.')) {
         router.post(route('admin.tenant.reset-password', props.tenant.id));
     }
+};
+
+// BR-019: Change Plan (Super Admin)
+const changePlanId = ref('');
+const changePlanForm = useForm({ plan_id: '' });
+const submitChangePlan = () => {
+    if (!changePlanId.value) return;
+    const newPlan = props.availablePlans.find(p => p.id === changePlanId.value);
+    const tiers = { trial: 0, basic: 1, pro: 2, enterprise: 3 };
+    const oldTier = tiers[props.tenant.plan?.slug] ?? 0;
+    const newTier = tiers[newPlan?.slug] ?? 0;
+    const isDowngrade = newTier < oldTier;
+    const msg = isDowngrade
+        ? `⚠️ Downgrade ke ${newPlan?.name}: user/cabang berlebih akan disuspend (data TETAP utuh). Lanjutkan?`
+        : `Upgrade ke ${newPlan?.name}?`;
+    if (!confirm(msg)) return;
+    changePlanForm.plan_id = changePlanId.value;
+    changePlanForm.post(route('admin.tenant.change-plan', props.tenant.id), {
+        preserveScroll: true,
+        onSuccess: () => { changePlanId.value = ''; },
+    });
 };
 </script>

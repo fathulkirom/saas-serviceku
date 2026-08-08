@@ -96,6 +96,7 @@ class TenantManagementController extends Controller
                 ->latest('created_at')->take(20)->get(),
             'addons' => \App\Models\TenantAddon::where('tenant_id', $tenant->id)
                 ->with('tenant')->orderBy('created_at', 'desc')->get(),
+            'availablePlans' => Plan::where('is_active', true)->get(['id', 'name', 'slug']),
         ]);
     }
 
@@ -318,28 +319,39 @@ class TenantManagementController extends Controller
         return back()->with('success', "✅ Paket {$tenant->tenant_name} diperpanjang {$months} bulan hingga {$newEnd->format('d M Y')}.");
     }
 
+    /**
+     * UPGRADE-07 / BR-019: Change tenant plan with proper upgrade/downgrade
+     * handling. Downgrade NEVER deletes data — excess users are suspended,
+     * excess branches locked, removed modules become read-only.
+     */
     public function changePlan(Request $request, Tenant $tenant)
     {
         $validated = $request->validate(['plan_id' => 'required|exists:plans,id']);
         $newPlan = Plan::findOrFail($validated['plan_id']);
+        $oldSlug = $tenant->plan?->slug ?? 'trial';
+        $newSlug = $newPlan->slug;
 
-        // Tentukan status: trial plan → trial, lainnya → active
-        $isTrialPlan = $newPlan->slug === 'trial';
-        $tenant->update([
-            'plan_id' => $newPlan->id,
-            'subscription_status' => $isTrialPlan ? 'trial' : 'active',
-            'is_active' => true,
-            'subscribed_at' => $isTrialPlan ? null : now(),
-            'subscription_ends_at' => $isTrialPlan
-                ? null
-                : now()->addDays($newPlan->trial_days ?: 30),
-            'trial_ends_at' => $isTrialPlan
-                ? now()->addDays($newPlan->trial_days ?? 14)
-                : null,
-        ]);
-        SystemLog::info("Plan changed for {$tenant->tenant_name}: {$newPlan->name} (status: {$tenant->subscription_status})");
+        $subscription = new \App\Services\SubscriptionService($tenant);
+        $actorId = auth()->id();
 
-        return back()->with('success', "✅ Plan {$tenant->tenant_name} diubah ke <strong>{$newPlan->name}</strong> — status: <strong>" . ($isTrialPlan ? 'Trial' : 'Active') . '</strong>.');
+        // Determine direction: same plan → no-op, higher tier → upgrade, lower → downgrade.
+        $tiers = ['trial' => 0, 'basic' => 1, 'pro' => 2, 'enterprise' => 3];
+        $oldTier = $tiers[$oldSlug] ?? 0;
+        $newTier = $tiers[$newSlug] ?? 0;
+
+        if ($newTier > $oldTier || $oldSlug === 'trial') {
+            $subscription->upgradePlan($newSlug, $actorId, "Upgrade ke {$newPlan->name}");
+            \App\Services\SubscriptionInvoiceService::forPlanChange($tenant, $newPlan);
+            $msg = "Plan {$tenant->tenant_name} di-upgrade ke <strong>{$newPlan->name}</strong>.";
+        } elseif ($newTier < $oldTier) {
+            $subscription->downgradePlan($newSlug, $actorId, "Downgrade ke {$newPlan->name}");
+            $msg = "Plan {$tenant->tenant_name} di-downgrade ke <strong>{$newPlan->name}</strong>. User/cabang berlebih disuspend — data tetap utuh.";
+        } else {
+            $subscription->upgradePlan($newSlug, $actorId);
+            $msg = "Plan {$tenant->tenant_name} diubah ke <strong>{$newPlan->name}</strong>.";
+        }
+
+        return back()->with('success', "✅ {$msg}");
     }
 
     public function loginAs(Tenant $tenant)
