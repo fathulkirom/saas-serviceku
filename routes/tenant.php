@@ -285,6 +285,11 @@ Route::middleware([
     // #10 Inventory: stock adjustment (stock opname)
     Route::post('/inventaris/adjust-stock/{product}', [InventarisController::class, 'adjustStock'])->name('inventaris.adjust-stock')->middleware('check.plan.feature:inventaris');
 
+    // v1.2: Supplier Management
+    Route::get('/inventaris/suppliers', [\App\Http\Controllers\Tenant\SupplierController::class, 'index'])->name('suppliers.index')->middleware('check.plan.feature:inventaris');
+    Route::post('/inventaris/suppliers', [\App\Http\Controllers\Tenant\SupplierController::class, 'store'])->name('suppliers.store')->middleware('check.plan.feature:inventaris');
+    Route::put('/inventaris/suppliers/{supplier}', [\App\Http\Controllers\Tenant\SupplierController::class, 'update'])->name('suppliers.update')->middleware('check.plan.feature:inventaris');
+
     // v1.4: API Tokens (gated by 'api' feature)
     Route::get('/pengaturan/api-tokens', [\App\Http\Controllers\Tenant\ApiTokenController::class, 'index'])->name('api-tokens.index')->middleware('check.plan.feature:settings');
     Route::post('/pengaturan/api-tokens', [\App\Http\Controllers\Tenant\ApiTokenController::class, 'store'])->name('api-tokens.store')->middleware('check.plan.feature:settings');
