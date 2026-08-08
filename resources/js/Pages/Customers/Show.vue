@@ -330,7 +330,7 @@
                                             <Link :href="route('sales.show', s.id)" class="text-sm font-bold sk-text-primary hover:sk-text-primary-brand transition-colors">Invoice #{{ s.id }}</Link>
                                             <div class="flex items-center gap-2 mt-0.5">
                                                 <span class="text-xs sk-text-muted">{{ formatDateTime(s.created_at) }}</span>
-                                                <span class="w-1 h-1 rounded-full bg-zinc-300"></span>
+                                                <span class="w-1 h-1 rounded-full sk-border"></span>
                                                 <span class="text-xs font-medium sk-text-secondary capitalize">{{ s.sale_type }}</span>
                                             </div>
                                         </div>

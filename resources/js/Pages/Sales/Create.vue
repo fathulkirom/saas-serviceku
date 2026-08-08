@@ -84,7 +84,7 @@
             <div class="relative group">
               <KSelect 
                 v-model="form.customer_id"
-                class="w-full pl-11 pr-4 py-3 sk-bg-card border sk-border rounded-xl text-sm font-bold text-zinc-800 hover:border-indigo-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all appearance-none cursor-pointer">
+                class="w-full pl-11 pr-4 py-3 sk-bg-card border sk-border rounded-xl text-sm font-bold sk-text-primary hover:border-indigo-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 transition-all appearance-none cursor-pointer">
                 <option :value="null">Walk-in Customer (Umum)</option>
                 <option v-for="c in customers" :key="c.id" :value="c.id">{{ c.name }} {{ c.phone ? `(${c.phone})` : '' }}</option>
               </KSelect>
@@ -208,7 +208,7 @@
               :disabled="!canSubmit"
               :class="[
                 'w-full py-4 rounded-xl text-white font-black text-lg transition-all flex justify-center items-center gap-2',
-                canSubmit ? 'sk-bg-primary hover:bg-indigo-500 hover:-translate-y-1 shadow-lg shadow-indigo-500/30' : 'bg-zinc-200 cursor-not-allowed sk-text-muted'
+                canSubmit ? 'sk-bg-primary hover:bg-indigo-500 hover:-translate-y-1 shadow-lg shadow-indigo-500/30' : 'sk-bg-hover cursor-not-allowed sk-text-muted'
               ]">
               <CheckCircleIcon class="w-6 h-6" v-if="!form.processing && canSubmit" />
               <Loader2Icon class="w-6 h-6 animate-spin" v-else-if="form.processing" />

@@ -4,13 +4,13 @@
         <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
             <!-- Subtle grid background -->
             <div class="absolute inset-0 opacity-[0.03]" style="background-image: radial-gradient(#000 1px, transparent 1px); background-size: 24px 24px;"></div>
-            <div class="absolute -top-40 -right-40 w-96 h-96 bg-zinc-300/20 rounded-full blur-[100px]"></div>
+            <div class="absolute -top-40 -right-40 w-96 h-96 sk-border/20 rounded-full blur-[100px]"></div>
             <div class="absolute -bottom-40 -left-40 w-96 h-96 bg-indigo-500/10 rounded-full blur-[100px]"></div>
         </div>
 
         <div class="w-full max-w-[400px] relative z-10 px-4 py-12">
             <div class="text-center mb-8 animate-fade-in">
-                <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-zinc-900 shadow-md mb-4">
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl sk-bg-inverse shadow-md mb-4">
                     <span class="text-xl font-black text-white">SK</span>
                 </div>
                 <h1 class="text-2xl font-black tracking-tight sk-text-primary">Admin Panel</h1>
@@ -41,7 +41,7 @@
                     </div>
                     <div class="pt-2">
                         <KButton  type="submit" :disabled="form.processing"
-                            class="w-full flex items-center justify-center px-6 py-3 rounded-xl bg-zinc-900 text-white text-sm font-bold shadow-md hover:bg-zinc-800 focus:ring-2 focus:ring-offset-2 focus:ring-zinc-900 transition-all disabled:opacity-70">
+                            class="w-full flex items-center justify-center px-6 py-3 rounded-xl sk-bg-inverse text-white text-sm font-bold shadow-md hover:sk-bg-inverse focus:ring-2 focus:ring-offset-2 focus:ring-zinc-900 transition-all disabled:opacity-70">
                             <svg v-if="form.processing" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
                                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
                                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />

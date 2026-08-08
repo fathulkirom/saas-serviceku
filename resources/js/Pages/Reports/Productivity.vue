@@ -3,7 +3,7 @@
     <div class="flex flex-col min-h-[calc(100vh-64px)] sk-bg-hover">
         <div class="px-6 sm:px-8 py-6 sk-bg-card border-b sk-border flex flex-col sm:flex-row sm:items-center justify-between gap-4 sticky top-0 z-20">
             <div class="flex items-center gap-4">
-                <Link :href="route('reports.index')" class="w-10 h-10 sk-bg-hover rounded-xl flex items-center justify-center sk-text-secondary hover:bg-zinc-200 transition-all">
+                <Link :href="route('reports.index')" class="w-10 h-10 sk-bg-hover rounded-xl flex items-center justify-center sk-text-secondary hover:sk-bg-hover transition-all">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                 </Link>
                 <div>
@@ -32,7 +32,7 @@
                                 <h3 class="text-base font-bold sk-text-primary leading-tight">{{ t.name }}</h3>
                                 <div class="flex items-center gap-2 mt-1">
                                     <span class="text-xs font-medium sk-text-muted">{{ t.role }}</span>
-                                    <span class="w-1 h-1 rounded-full bg-zinc-300"></span>
+                                    <span class="w-1 h-1 rounded-full sk-border"></span>
                                     <span class="text-xs font-bold capitalize" :class="t.level === 'senior' ? 'sk-text-success' : t.level === 'junior' ? 'sk-text-info' : 'sk-text-secondary'">{{ t.level }}</span>
                                 </div>
                             </div>

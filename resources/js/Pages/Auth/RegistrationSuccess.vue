@@ -50,7 +50,7 @@
             </div>
 
             <Link :href="'http://' + domain + '/login'"
-                class="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-zinc-900 text-white text-base font-black shadow-md hover:bg-zinc-800 transition-all">
+                class="w-full flex items-center justify-center gap-2 px-6 py-4 rounded-xl sk-bg-inverse text-white text-base font-black shadow-md hover:sk-bg-inverse transition-all">
                 Mulai Kelola Toko 🚀
             </Link>
 

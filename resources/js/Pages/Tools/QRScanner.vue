@@ -9,7 +9,7 @@
         <div class="max-w-xl mx-auto mt-6">
             <div class="sk-bg-card rounded-2xl border sk-border shadow-sm p-8 text-center">
                 <div class="mb-6">
-                    <video ref="video" class="w-full max-w-sm mx-auto rounded-2xl border sk-border bg-zinc-900 shadow-inner" style="min-height: 300px;"></video>
+                    <video ref="video" class="w-full max-w-sm mx-auto rounded-2xl border sk-border sk-bg-inverse shadow-inner" style="min-height: 300px;"></video>
                 </div>
                 <p class="text-sm font-medium sk-text-secondary mb-6">Arahkan kamera ke QR code pada sticker device</p>
                 <div class="flex gap-3 justify-center">

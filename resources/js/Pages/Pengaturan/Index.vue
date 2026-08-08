@@ -152,7 +152,7 @@
                     <div class="w-8 h-8 rounded-lg sk-bg-primary-soft sk-text-primary-brand flex items-center justify-center font-bold text-sm">{{ deviceCategories.length }}</div>
                   </div>
                   <div v-if="deviceCategories.length" class="space-y-2 mb-4">
-                    <p v-for="item in deviceCategories.slice(0, 4)" :key="item.id" class="text-sm sk-text-secondary font-medium truncate flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-zinc-300"></span>{{ item.name }}</p>
+                    <p v-for="item in deviceCategories.slice(0, 4)" :key="item.id" class="text-sm sk-text-secondary font-medium truncate flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full sk-border"></span>{{ item.name }}</p>
                   </div>
                   <p v-else class="text-sm sk-text-muted italic mb-4">Belum ada data</p>
                 </div>
@@ -166,7 +166,7 @@
                     <div class="w-8 h-8 rounded-lg sk-bg-primary-soft sk-text-primary-brand flex items-center justify-center font-bold text-sm">{{ brands.length }}</div>
                   </div>
                   <div v-if="brands.length" class="space-y-2 mb-4">
-                    <p v-for="item in brands.slice(0, 4)" :key="item.id" class="text-sm sk-text-secondary font-medium truncate flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-zinc-300"></span>{{ item.name }}</p>
+                    <p v-for="item in brands.slice(0, 4)" :key="item.id" class="text-sm sk-text-secondary font-medium truncate flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full sk-border"></span>{{ item.name }}</p>
                   </div>
                   <p v-else class="text-sm sk-text-muted italic mb-4">Belum ada data</p>
                 </div>
@@ -180,7 +180,7 @@
                     <div class="w-8 h-8 rounded-lg sk-bg-primary-soft sk-text-primary-brand flex items-center justify-center font-bold text-sm">{{ units.length }}</div>
                   </div>
                   <div v-if="units.length" class="space-y-2 mb-4">
-                    <p v-for="item in units.slice(0, 4)" :key="item.id" class="text-sm sk-text-secondary font-medium truncate flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-zinc-300"></span>{{ item.name }}</p>
+                    <p v-for="item in units.slice(0, 4)" :key="item.id" class="text-sm sk-text-secondary font-medium truncate flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full sk-border"></span>{{ item.name }}</p>
                   </div>
                   <p v-else class="text-sm sk-text-muted italic mb-4">Belum ada data</p>
                 </div>
@@ -194,7 +194,7 @@
                     <div class="w-8 h-8 rounded-lg sk-bg-primary-soft sk-text-primary-brand flex items-center justify-center font-bold text-sm">{{ equipment.length }}</div>
                   </div>
                   <div v-if="equipment.length" class="space-y-2 mb-4">
-                    <p v-for="item in equipment.slice(0, 4)" :key="item.id" class="text-sm sk-text-secondary font-medium truncate flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-zinc-300"></span>{{ item.name }}</p>
+                    <p v-for="item in equipment.slice(0, 4)" :key="item.id" class="text-sm sk-text-secondary font-medium truncate flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full sk-border"></span>{{ item.name }}</p>
                   </div>
                   <p v-else class="text-sm sk-text-muted italic mb-4">Belum ada data</p>
                 </div>
@@ -208,7 +208,7 @@
                     <div class="w-8 h-8 rounded-lg sk-bg-primary-soft sk-text-primary-brand flex items-center justify-center font-bold text-sm">{{ laborServices.length }}</div>
                   </div>
                   <div v-if="laborServices.length" class="space-y-2 mb-4">
-                    <p v-for="item in laborServices.slice(0, 4)" :key="item.id" class="text-sm sk-text-secondary font-medium truncate flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-zinc-300"></span>{{ item.name }}</p>
+                    <p v-for="item in laborServices.slice(0, 4)" :key="item.id" class="text-sm sk-text-secondary font-medium truncate flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full sk-border"></span>{{ item.name }}</p>
                   </div>
                   <p v-else class="text-sm sk-text-muted italic mb-4">Belum ada data</p>
                 </div>
@@ -223,7 +223,7 @@
                   <div class="flex flex-col gap-2 mb-6">
                     <div class="flex items-center gap-2">
                         <span v-if="driveConnected" class="w-3 h-3 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"></span>
-                        <span v-else class="w-3 h-3 rounded-full bg-zinc-300"></span>
+                        <span v-else class="w-3 h-3 rounded-full sk-border"></span>
                         <span class="text-sm font-bold" :class="driveConnected ? 'sk-text-success' : 'sk-text-muted'">{{ driveConnected ? 'Terhubung' : 'Belum Terhubung' }}</span>
                     </div>
                     <p v-if="driveInfo?.email" class="text-sm sk-text-secondary font-medium break-all">{{ driveInfo.email }}</p>
@@ -273,7 +273,7 @@
 
                 <div class="flex items-center gap-3 pt-6">
                   <KCheckbox  v-model="waForm.is_active" id="wa_active" class="w-5 h-5 rounded sk-border sk-text-primary-brand focus:ring-indigo-500" />
-                  <label for="wa_active" class="text-sm font-bold text-zinc-800 cursor-pointer">Aktifkan Kirim Notifikasi WhatsApp Otomatis</label>
+                  <label for="wa_active" class="text-sm font-bold sk-text-primary cursor-pointer">Aktifkan Kirim Notifikasi WhatsApp Otomatis</label>
                 </div>
 
                 <div class="flex justify-end pt-4">
@@ -298,7 +298,7 @@
               </div>
               <label class="relative inline-flex items-center cursor-pointer">
                 <input type="checkbox" v-model="emailForm.mail_enabled" true-value="true" false-value="false" class="sr-only peer">
-                <div class="w-11 h-6 bg-zinc-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:sk-bg-card after:sk-border after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:sk-bg-primary"></div>
+                <div class="w-11 h-6 sk-bg-hover peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-indigo-300 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:sk-bg-card after:sk-border after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:sk-bg-primary"></div>
                 <span class="ml-3 text-sm font-medium sk-text-primary">{{ emailForm.mail_enabled === 'true' ? 'Aktif' : 'Nonaktif' }}</span>
               </label>
             </div>
@@ -533,7 +533,7 @@
                         </div>
                     </div>
 
-                    <KButton  @click="selectPlan(plan)" :disabled="currentPlan?.id === plan.id" class="w-full py-3 rounded-xl text-sm font-bold text-center transition-all" :class="currentPlan?.id === plan.id ? 'sk-bg-success-soft sk-text-success cursor-default' : selectedPlanId === plan.id ? 'sk-bg-primary-soft sk-text-primary-brand' : 'bg-zinc-900 hover:bg-zinc-800 text-white shadow-md'">
+                    <KButton  @click="selectPlan(plan)" :disabled="currentPlan?.id === plan.id" class="w-full py-3 rounded-xl text-sm font-bold text-center transition-all" :class="currentPlan?.id === plan.id ? 'sk-bg-success-soft sk-text-success cursor-default' : selectedPlanId === plan.id ? 'sk-bg-primary-soft sk-text-primary-brand' : 'sk-bg-inverse hover:sk-bg-inverse text-white shadow-md'">
                         {{ currentPlan?.id === plan.id ? '✅ Paket Aktif' : selectedPlanId === plan.id ? '✓ Dipilih — Klik Bayar di Atas' : 'Pilih Paket Ini' }}
                     </KButton>
                   </div>

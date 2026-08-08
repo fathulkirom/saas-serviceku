@@ -88,7 +88,7 @@ const warningCount = computed(() => props.checklist.filter(c => c.status === 'wa
           <h3 class="text-xs font-bold sk-text-muted uppercase tracking-wider mb-2 px-1">{{ group.name }}</h3>
           <div class="space-y-1">
             <div v-for="item in group.items" :key="item.key"
-              class="flex items-center justify-between p-3 rounded-lg border transition-colors hover:sk-bg-hover dark:hover:bg-gray-800/50 cursor-pointer"
+              class="flex items-center justify-between p-3 rounded-lg border transition-colors hover:sk-bg-hover dark:hover:sk-bg-inverse/50 cursor-pointer"
               :class="statusColor(item.status)"
               @click="item.url && item.url !== '#' ? router.visit(item.url) : null">
               <div class="flex items-center gap-3">
@@ -129,7 +129,7 @@ const warningCount = computed(() => props.checklist.filter(c => c.status === 'wa
     <KCard v-if="dataIssues.some(d => d.count > 0)" class="!p-6">
       <h2 class="text-lg font-bold sk-text-primary dark:text-white mb-4">Data Consistency</h2>
       <div class="space-y-2">
-        <div v-for="(item, i) in dataIssues.filter(d => d.count > 0)" :key="i" class="flex justify-between text-sm p-2 rounded-lg sk-bg-hover dark:bg-gray-800/50">
+        <div v-for="(item, i) in dataIssues.filter(d => d.count > 0)" :key="i" class="flex justify-between text-sm p-2 rounded-lg sk-bg-hover dark:sk-bg-inverse/50">
           <span :class="severityColor(item.severity)">{{ item.label }}</span>
           <span class="font-semibold">{{ item.count }}</span>
         </div>

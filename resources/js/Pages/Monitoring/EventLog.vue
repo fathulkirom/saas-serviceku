@@ -75,7 +75,7 @@ const severityColors = {
       <div class="overflow-x-auto">
         <table class="w-full text-sm">
           <thead>
-            <tr class="text-left sk-text-muted dark:sk-text-muted sk-bg-hover dark:bg-gray-800/50">
+            <tr class="text-left sk-text-muted dark:sk-text-muted sk-bg-hover dark:sk-bg-inverse/50">
               <th class="px-4 py-3 font-medium">Event</th>
               <th class="px-4 py-3 font-medium">Entity</th>
               <th class="px-4 py-3 font-medium">Severity</th>
@@ -86,11 +86,11 @@ const severityColors = {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="e in events" :key="e.id" class="border-b border-gray-50 dark:border-gray-800 hover:sk-bg-hover dark:hover:bg-gray-800/50">
+            <tr v-for="e in events" :key="e.id" class="border-b border-gray-50 dark:border-gray-800 hover:sk-bg-hover dark:hover:sk-bg-inverse/50">
               <td class="px-4 py-3">
                 <KBadge size="xs" variant="outline">{{ e.event_key }}</KBadge>
               </td>
-              <td class="px-4 py-3 sk-text-secondary dark:text-gray-300">
+              <td class="px-4 py-3 sk-text-secondary dark:sk-text-muted">
                 {{ e.entity_type?.split('\\').pop() || '-' }}<span v-if="e.entity_id" class="sk-text-muted"> #{{ e.entity_id }}</span>
               </td>
               <td class="px-4 py-3">

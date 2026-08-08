@@ -27,7 +27,7 @@
                                 <label class="block text-sm font-bold sk-text-primary mb-2">Kode Voucher <span class="sk-text-danger">*</span></label>
                                 <div class="flex gap-3">
                                     <KInput  v-model="form.code" type="text" class="w-full px-4 py-3 rounded-xl border sk-border sk-bg-card sk-text-primary font-mono tracking-widest uppercase focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all shadow-sm" placeholder="KOSONGKAN UNTUK AUTO-GENERATE" />
-                                    <KButton  type="button" @click="generateCode" class="px-5 py-3 sk-bg-hover hover:bg-zinc-200 sk-text-primary text-sm font-bold rounded-xl border sk-border transition-colors whitespace-nowrap flex items-center gap-2">
+                                    <KButton  type="button" @click="generateCode" class="px-5 py-3 sk-bg-hover hover:sk-bg-hover sk-text-primary text-sm font-bold rounded-xl border sk-border transition-colors whitespace-nowrap flex items-center gap-2">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                                         Generate
                                     </KButton>
@@ -146,7 +146,7 @@
                         <Link :href="route('admin.vouchers.index')" class="px-6 py-2.5 sk-text-primary text-sm font-bold hover:sk-text-primary transition-colors">
                             Batal
                         </Link>
-                        <KButton  type="submit" class="flex items-center gap-2 px-8 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white text-sm font-bold rounded-xl shadow-md transition-all disabled:opacity-70" :disabled="form.processing">
+                        <KButton  type="submit" class="flex items-center gap-2 px-8 py-2.5 sk-bg-inverse hover:sk-bg-inverse text-white text-sm font-bold rounded-xl shadow-md transition-all disabled:opacity-70" :disabled="form.processing">
                             <svg v-if="form.processing" class="animate-spin w-4 h-4 text-white" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
                             <svg v-else class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                             {{ form.processing ? 'Menyimpan...' : (isEditing ? 'Simpan Perubahan' : 'Buat Voucher') }}

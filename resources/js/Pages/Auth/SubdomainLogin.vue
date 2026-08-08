@@ -73,7 +73,7 @@
             <div class="pt-2">
                 <KButton 
                     type="submit"
-                    class="w-full flex items-center justify-center px-6 py-3 rounded-xl bg-zinc-900 text-white text-sm font-bold shadow-md hover:bg-zinc-800 focus:ring-2 focus:ring-offset-2 focus:ring-zinc-900 transition-all disabled:opacity-70"
+                    class="w-full flex items-center justify-center px-6 py-3 rounded-xl sk-bg-inverse text-white text-sm font-bold shadow-md hover:sk-bg-inverse focus:ring-2 focus:ring-offset-2 focus:ring-zinc-900 transition-all disabled:opacity-70"
                     :disabled="form.processing">
                     <svg v-if="form.processing" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
                         <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />

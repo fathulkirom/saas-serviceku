@@ -107,7 +107,7 @@
                                             </span>
                                             <span class="text-[10px] font-mono sk-text-success mt-1 font-bold">{{ customer.card_number || 'ACS' + customer.id }}</span>
                                         </div>
-                                        <KButton  v-else @click="registerMember(customer)" class="px-3 py-1.5 rounded-lg text-xs font-semibold sk-bg-hover sk-text-secondary hover:bg-zinc-200 hover:sk-text-primary transition-colors border sk-border">
+                                        <KButton  v-else @click="registerMember(customer)" class="px-3 py-1.5 rounded-lg text-xs font-semibold sk-bg-hover sk-text-secondary hover:sk-bg-hover hover:sk-text-primary transition-colors border sk-border">
                                             + Terbitkan
                                         </KButton>
                                     </td>
@@ -117,7 +117,7 @@
                                                 <span class="font-bold sk-text-primary">{{ customer.services_count || 0 }}</span>
                                                 <span class="sk-text-muted">Servis</span>
                                             </div>
-                                            <div class="w-px h-6 bg-zinc-200"></div>
+                                            <div class="w-px h-6 sk-bg-hover"></div>
                                             <div class="flex flex-col items-center" title="Total Poin">
                                                 <span class="font-bold sk-text-primary-brand">{{ customer.points || 0 }}</span>
                                                 <span class="sk-text-muted">Poin</span>

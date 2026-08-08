@@ -3,7 +3,7 @@
     <div class="flex flex-col min-h-[calc(100vh-64px)] sk-bg-hover">
         <div class="px-6 sm:px-8 py-6 sk-bg-card border-b sk-border flex flex-col sm:flex-row sm:items-center justify-between gap-4 sticky top-0 z-20">
             <div class="flex items-center gap-4">
-                <Link :href="route('reports.index')" class="w-10 h-10 sk-bg-hover rounded-xl flex items-center justify-center sk-text-secondary hover:bg-zinc-200 transition-all">
+                <Link :href="route('reports.index')" class="w-10 h-10 sk-bg-hover rounded-xl flex items-center justify-center sk-text-secondary hover:sk-bg-hover transition-all">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                 </Link>
                 <div>
@@ -13,7 +13,7 @@
             </div>
             <div class="flex sk-bg-hover p-1 rounded-xl">
                 <KButton  v-for="p in periods" :key="p.key" @click="changePeriod(p.key)" class="px-4 py-2 text-sm font-bold rounded-lg transition-all"
-                    :class="period === p.key ? 'sk-bg-card sk-text-primary-brand shadow-sm' : 'sk-text-muted hover:sk-text-primary hover:bg-zinc-200'">
+                    :class="period === p.key ? 'sk-bg-card sk-text-primary-brand shadow-sm' : 'sk-text-muted hover:sk-text-primary hover:sk-bg-hover'">
                     {{ p.label }}
                 </KButton>
             </div>

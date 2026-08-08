@@ -69,12 +69,12 @@ const varLabel = (v) => '{' + '{' + v + '}' + '}'
         <KInput v-if="form.channel === 'email'" v-model="form.subject" label="Subject" />
         <div>
           <label class="block text-sm font-medium mb-1">Body</label>
-          <textarea v-model="form.body" rows="6" class="w-full px-3 py-2 border sk-border rounded-lg text-sm dark:bg-gray-800 dark:border-gray-700" required></textarea>
+          <textarea v-model="form.body" rows="6" class="w-full px-3 py-2 border sk-border rounded-lg text-sm dark:sk-bg-inverse dark:sk-border" required></textarea>
           <div class="flex flex-wrap gap-1 mt-1">
-            <button v-for="v in variables" :key="v" type="button" @click="insertVar(v)" class="text-xs px-2 py-0.5 sk-bg-hover hover:bg-zinc-200 rounded-full dark:bg-gray-700 dark:hover:bg-gray-600">{{ varLabel(v) }}</button>
+            <button v-for="v in variables" :key="v" type="button" @click="insertVar(v)" class="text-xs px-2 py-0.5 sk-bg-hover hover:sk-bg-hover rounded-full dark:bg-gray-700 dark:hover:bg-gray-600">{{ varLabel(v) }}</button>
           </div>
         </div>
-        <div class="flex justify-end gap-2 pt-4 border-t dark:border-gray-700">
+        <div class="flex justify-end gap-2 pt-4 border-t dark:sk-border">
           <KButton variant="outline" type="button" @click="showDialog = false">Batal</KButton>
           <KButton type="submit" :disabled="form.processing">Simpan</KButton>
         </div>

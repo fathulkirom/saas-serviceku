@@ -66,7 +66,7 @@
                     <span class="font-bold sk-text-primary">{{ row.name }}</span>
                     <div class="flex items-center gap-2 mt-0.5">
                         <span class="text-xs sk-text-muted font-mono">{{ row.sku || 'No SKU' }}</span>
-                        <span class="w-1 h-1 rounded-full bg-zinc-300"></span>
+                        <span class="w-1 h-1 rounded-full sk-border"></span>
                         <span class="text-xs sk-text-muted">{{ row.category?.name || 'Uncategorized' }}</span>
                     </div>
                 </div>

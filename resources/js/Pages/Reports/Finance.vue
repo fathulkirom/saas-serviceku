@@ -3,7 +3,7 @@
     <div class="flex flex-col min-h-[calc(100vh-64px)] sk-bg-hover">
         <div class="px-6 sm:px-8 py-6 sk-bg-card border-b sk-border flex flex-col sm:flex-row sm:items-center justify-between gap-4 sticky top-0 z-20">
             <div class="flex items-center gap-4">
-                <Link :href="route('reports.index')" class="w-10 h-10 sk-bg-hover rounded-xl flex items-center justify-center sk-text-secondary hover:bg-zinc-200 transition-all">
+                <Link :href="route('reports.index')" class="w-10 h-10 sk-bg-hover rounded-xl flex items-center justify-center sk-text-secondary hover:sk-bg-hover transition-all">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
                 </Link>
                 <div>
@@ -70,7 +70,7 @@
                 <div class="sk-bg-card rounded-2xl border sk-border shadow-sm overflow-hidden flex flex-col h-[500px]">
                     <div class="px-6 py-5 border-b sk-border sk-bg-hover flex items-center justify-between">
                         <h3 class="text-lg font-bold sk-text-primary">Rincian Pengeluaran</h3>
-                        <span class="text-sm font-bold sk-text-muted bg-zinc-200 px-3 py-1 rounded-full">{{ expenses.length }} Data</span>
+                        <span class="text-sm font-bold sk-text-muted sk-bg-hover px-3 py-1 rounded-full">{{ expenses.length }} Data</span>
                     </div>
                     <div class="flex-1 overflow-y-auto p-2">
                         <div v-for="e in expenses" :key="e.id" class="flex justify-between items-center p-4 hover:sk-bg-hover rounded-xl transition-all border-b sk-border-light last:border-0 group">
@@ -99,7 +99,7 @@
                 <div class="sk-bg-card rounded-2xl border sk-border shadow-sm overflow-hidden flex flex-col h-[500px]">
                     <div class="px-6 py-5 border-b sk-border sk-bg-hover flex items-center justify-between">
                         <h3 class="text-lg font-bold sk-text-primary">Riwayat Setoran Kasir</h3>
-                        <span class="text-sm font-bold sk-text-muted bg-zinc-200 px-3 py-1 rounded-full">{{ deposits.length }} Data</span>
+                        <span class="text-sm font-bold sk-text-muted sk-bg-hover px-3 py-1 rounded-full">{{ deposits.length }} Data</span>
                     </div>
                     <div class="flex-1 overflow-y-auto p-2">
                         <div v-for="d in deposits" :key="d.id" class="flex justify-between items-center p-4 hover:sk-bg-hover rounded-xl transition-all border-b sk-border-light last:border-0 group">

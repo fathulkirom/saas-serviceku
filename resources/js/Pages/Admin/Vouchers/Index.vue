@@ -5,7 +5,7 @@
                 <h1 class="text-2xl font-bold sk-text-primary tracking-tight">Voucher & Promo</h1>
                 <p class="text-sm sk-text-muted mt-1">Kelola kode diskon untuk pendaftaran baru & perpanjangan tenant</p>
             </div>
-            <Link :href="route('admin.vouchers.create')" class="inline-flex items-center gap-2 px-5 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white text-sm font-bold rounded-xl shadow-sm hover:shadow-md transition-all">
+            <Link :href="route('admin.vouchers.create')" class="inline-flex items-center gap-2 px-5 py-2.5 sk-bg-inverse hover:sk-bg-inverse text-white text-sm font-bold rounded-xl shadow-sm hover:shadow-md transition-all">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 Buat Voucher Baru
             </Link>

@@ -52,8 +52,8 @@
                         <KButton  type="button"
                             class="w-full py-2.5 text-sm font-bold rounded-xl transition-colors flex items-center justify-center gap-2"
                             :class="selectedPlan?.id === p.id
-                                ? 'bg-zinc-900 text-white'
-                                : 'sk-bg-hover sk-text-secondary group-hover:bg-zinc-200'">
+                                ? 'sk-bg-inverse text-white'
+                                : 'sk-bg-hover sk-text-secondary group-hover:sk-bg-hover'">
                             <svg v-if="selectedPlan?.id === p.id" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
                             {{ selectedPlan?.id === p.id ? 'Paket Dipilih' : 'Pilih Paket Ini' }}
                         </KButton>
@@ -182,7 +182,7 @@
 
                 <div class="pt-6">
                     <KButton  type="submit"
-                        class="w-full flex items-center justify-center px-6 py-4 rounded-xl bg-zinc-900 text-white text-base font-black tracking-wide shadow-md hover:bg-zinc-800 focus:ring-2 focus:ring-offset-2 focus:ring-zinc-900 transition-all disabled:opacity-70"
+                        class="w-full flex items-center justify-center px-6 py-4 rounded-xl sk-bg-inverse text-white text-base font-black tracking-wide shadow-md hover:sk-bg-inverse focus:ring-2 focus:ring-offset-2 focus:ring-zinc-900 transition-all disabled:opacity-70"
                         :disabled="form.processing">
                         <svg v-if="form.processing" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
