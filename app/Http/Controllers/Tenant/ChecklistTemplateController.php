@@ -7,7 +7,6 @@ use App\Models\Tenant\ChecklistTemplate;
 use App\Models\Tenant\ChecklistItem;
 use Illuminate\Http\Request;
 
-/** @deprecated Use consolidated controller instead. See FinanceController, CashController, InventarisController, ServiceToolsController, SystemController, DocumentController, SettingController. */
 class ChecklistTemplateController extends Controller
 {
     public function index()

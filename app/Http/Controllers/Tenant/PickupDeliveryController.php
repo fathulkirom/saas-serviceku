@@ -7,7 +7,6 @@ use App\Models\Tenant\PickupDelivery;
 use App\Models\Tenant\ActivityLog;
 use Illuminate\Http\Request;
 
-/** @deprecated Use consolidated controller instead. See FinanceController, CashController, InventarisController, ServiceToolsController, SystemController, DocumentController, SettingController. */
 class PickupDeliveryController extends Controller
 {
     public function index()

@@ -8,7 +8,6 @@ use App\Models\Tenant\KnowledgeBase;
 use App\Models\Tenant\MasterData;
 use Illuminate\Http\Request;
 
-/** @deprecated Use consolidated controller instead. See FinanceController, CashController, InventarisController, ServiceToolsController, SystemController, DocumentController, SettingController. */
 class KnowledgeBaseController extends Controller
 {
     public function index()

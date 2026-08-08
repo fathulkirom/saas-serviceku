@@ -7,7 +7,6 @@ use App\Models\Tenant\ActivityLog;
 use App\Models\Tenant\QuickReply;
 use Illuminate\Http\Request;
 
-/** @deprecated Use consolidated controller instead. See FinanceController, CashController, InventarisController, ServiceToolsController, SystemController, DocumentController, SettingController. */
 class QuickReplyController extends Controller
 {
     public function index()

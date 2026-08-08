@@ -9,7 +9,6 @@ use App\Models\Tenant\SopReadLog;
 use App\Models\Tenant\User;
 use Illuminate\Http\Request;
 
-/** @deprecated Use consolidated controller instead. See FinanceController, CashController, InventarisController, ServiceToolsController, SystemController, DocumentController, SettingController. */
 class SopController extends Controller
 {
     public function index()

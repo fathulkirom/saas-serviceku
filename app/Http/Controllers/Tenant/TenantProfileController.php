@@ -11,7 +11,6 @@ use App\Models\Tenant\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-/** @deprecated Use consolidated controller instead. See FinanceController, CashController, InventarisController, ServiceToolsController, SystemController, DocumentController, SettingController. */
 class TenantProfileController extends Controller
 {
     /**

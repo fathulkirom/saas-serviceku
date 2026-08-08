@@ -8,7 +8,6 @@ use App\Models\Tenant\ActivityLog;
 use App\Services\GoogleDrivePhotoService;
 use Illuminate\Http\Request;
 
-/** @deprecated Use consolidated controller instead. See FinanceController, CashController, InventarisController, ServiceToolsController, SystemController, DocumentController, SettingController. */
 class ExpenseController extends Controller
 {
     public function index()

@@ -10,7 +10,6 @@ use App\Models\GoogleDriveToken;
 use App\Services\GoogleDrivePhotoService;
 use Illuminate\Http\Request;
 
-/** @deprecated Use SettingController instead. Settings forms are in Pengaturan/Index tab page. */
 class SettingsController extends Controller
 {
     public function index()

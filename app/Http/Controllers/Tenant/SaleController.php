@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Tenant\Sale;
 use Illuminate\Http\Request;
 
-/** @deprecated Use consolidated controller instead. See FinanceController. */
 class SaleController extends Controller
 {
     public function index(Request $request)
