@@ -1,78 +1,106 @@
 <template>
   <AuthenticatedLayout>
-    <div class="flex flex-col min-h-[calc(100vh-64px)] bg-zinc-50">
-      <!-- Header CRM Style -->
-      <div class="px-6 sm:px-8 py-6 bg-white border-b border-zinc-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 sticky top-0 z-20">
-        <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center border border-orange-100">
-                <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
-            </div>
-            <div>
-                <h1 class="text-2xl font-bold text-zinc-900 tracking-tight">Dashboard Kurir</h1>
-                <p class="text-sm text-zinc-500 font-medium mt-0.5">Halo, {{ $page.props.auth.user.name }}! Kelola pengiriman dan pengambilan. — {{ currentDate }}</p>
-            </div>
+    <div class="flex flex-col min-h animate-fade-in" :style="{ background: 'var(--bg-app)' }">
+      <!-- Header -->
+      <div class="px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sticky top-0 z-20" :style="{ background: 'var(--bg-topbar)', borderBottom: '1px solid var(--border-color)' }">
+        <div>
+          <h1 class="text-xl font-extrabold tracking-tight" :style="{ color: 'var(--text-primary)' }">Dashboard Kurir</h1>
+          <p class="text-sm mt-0.5" :style="{ color: 'var(--text-muted)' }">Halo, {{ $page.props.auth.user.name }}! Kelola pengiriman dan pengambilan. — {{ currentDate }}</p>
         </div>
-        
-        <!-- Action Buttons -->
         <div class="flex flex-wrap items-center gap-2">
-          <Link :href="route('services.index', { status: 'selesai' })" class="inline-flex items-center gap-1.5 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white text-sm font-semibold rounded-xl shadow-sm hover:shadow-md transition-all">
+          <Link :href="route('services.index', { status: 'selesai' })" class="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl text-sm font-bold text-white transition-all shadow-sm hover:shadow-md" style="background: var(--color-warning)">
             Pengambilan
           </Link>
         </div>
       </div>
 
-      <div class="flex-1 p-6 sm:p-8 max-w-[1400px] mx-auto w-full">
+      <div class="flex-1 px-4 sm:px-6 lg:px-8 max-w-[1400px] mx-auto w-full py-6 space-y-5">
+        <!-- Priority Stats -->
         <Skeleton v-if="!stats" type="stat" :count="4" />
-        <div v-else class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-          <StatCard label="Siap Diambil" :value="stats.ready_for_pickup ?? 0" color="green" variant="glass" />
-          <StatCard label="Sedang Diproses" :value="stats.in_progress ?? 0" color="blue" variant="glass" />
-          <StatCard label="Selesai Hari Ini" :value="stats.completed_today ?? 0" color="green" variant="glass" />
-          <StatCard label="Menunggu Part" :value="stats.waiting_parts ?? 0" color="orange" variant="glass" />
+        <div v-else class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <div class="p-4 rounded-xl border animate-slide-up" :style="{ background: 'var(--bg-card)', borderColor: 'var(--border-color)' }">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg flex items-center justify-center text-lg" style="background: var(--color-success-soft)">📦</div>
+              <div>
+                <p class="text-xs font-semibold" :style="{ color: 'var(--text-muted)' }">Siap Diambil</p>
+                <p class="text-2xl font-extrabold" :style="{ color: 'var(--color-success-text)' }">{{ stats.ready_for_pickup ?? 0 }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="p-4 rounded-xl border animate-slide-up" :style="{ animationDelay: '50ms', background: 'var(--bg-card)', borderColor: 'var(--border-color)' }">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg flex items-center justify-center text-lg" style="background: var(--color-info-soft)">🔧</div>
+              <div>
+                <p class="text-xs font-semibold" :style="{ color: 'var(--text-muted)' }">Sedang Diproses</p>
+                <p class="text-2xl font-extrabold" :style="{ color: 'var(--color-info-text)' }">{{ stats.in_progress ?? 0 }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="p-4 rounded-xl border animate-slide-up" :style="{ animationDelay: '100ms', background: 'var(--bg-card)', borderColor: 'var(--border-color)' }">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg flex items-center justify-center text-lg" style="background: var(--color-success-soft)">✅</div>
+              <div>
+                <p class="text-xs font-semibold" :style="{ color: 'var(--text-muted)' }">Selesai Hari Ini</p>
+                <p class="text-2xl font-extrabold" :style="{ color: 'var(--color-success-text)' }">{{ stats.completed_today ?? 0 }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="p-4 rounded-xl border animate-slide-up" :style="{ animationDelay: '150ms', background: 'var(--bg-card)', borderColor: 'var(--border-color)' }">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg flex items-center justify-center text-lg" style="background: var(--color-warning-soft)">⏳</div>
+              <div>
+                <p class="text-xs font-semibold" :style="{ color: 'var(--text-muted)' }">Menunggu Part</p>
+                <p class="text-2xl font-extrabold" :style="{ color: 'var(--color-warning-text)' }">{{ stats.waiting_parts ?? 0 }}</p>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div class="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm mb-6">
-          <h3 class="text-sm font-bold text-zinc-900 mb-4">Aksi Cepat</h3>
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <Link :href="route('services.index', { status: 'siap_diambil' })" class="flex flex-col items-center justify-center gap-2 px-3 py-4 rounded-xl border border-emerald-100 bg-emerald-50/50 hover:bg-emerald-50 text-emerald-700 transition-all">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-              <span class="text-xs font-semibold">Siap Diambil</span>
+        <!-- Quick Actions -->
+        <div class="p-5 rounded-xl border" :style="{ background: 'var(--bg-card)', borderColor: 'var(--border-color)' }">
+          <h3 class="text-sm font-bold mb-3" :style="{ color: 'var(--text-primary)' }">Aksi Cepat</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <Link :href="route('services.index', { status: 'siap_diambil' })" class="flex flex-col items-center justify-center gap-2 px-3 py-4 rounded-xl border transition-all hover:-translate-y-0.5" :style="{ borderColor: 'var(--color-success-soft)', background: 'var(--color-success-soft)' }">
+              <span class="text-xl">📦</span>
+              <span class="text-xs font-bold" :style="{ color: 'var(--color-success-text)' }">Siap Diambil</span>
             </Link>
-            <Link :href="route('services.index')" class="flex flex-col items-center justify-center gap-2 px-3 py-4 rounded-xl border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 transition-all">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-              <span class="text-xs font-semibold">Semua Servis</span>
+            <Link :href="route('services.index')" class="flex flex-col items-center justify-center gap-2 px-3 py-4 rounded-xl border transition-all hover:-translate-y-0.5" :style="{ borderColor: 'var(--border-color)', background: 'var(--bg-card)' }">
+              <span class="text-xl">🔍</span>
+              <span class="text-xs font-semibold" :style="{ color: 'var(--text-secondary)' }">Semua Servis</span>
             </Link>
-            <Link :href="route('services.index', { status: 'selesai' })" class="flex flex-col items-center justify-center gap-2 px-3 py-4 rounded-xl border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 transition-all">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-              <span class="text-xs font-semibold">Riwayat Selesai</span>
+            <Link :href="route('services.index', { status: 'selesai' })" class="flex flex-col items-center justify-center gap-2 px-3 py-4 rounded-xl border transition-all hover:-translate-y-0.5" :style="{ borderColor: 'var(--border-color)', background: 'var(--bg-card)' }">
+              <span class="text-xl">📋</span>
+              <span class="text-xs font-semibold" :style="{ color: 'var(--text-secondary)' }">Riwayat Selesai</span>
             </Link>
-            <Link :href="route('services.index', { status: 'indent' })" class="flex flex-col items-center justify-center gap-2 px-3 py-4 rounded-xl border border-zinc-200 bg-white hover:bg-zinc-50 text-zinc-700 transition-all">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-              <span class="text-xs font-semibold">Inden Part</span>
+            <Link :href="route('services.index', { status: 'indent' })" class="flex flex-col items-center justify-center gap-2 px-3 py-4 rounded-xl border transition-all hover:-translate-y-0.5" :style="{ borderColor: 'var(--border-color)', background: 'var(--bg-card)' }">
+              <span class="text-xl">🔧</span>
+              <span class="text-xs font-semibold" :style="{ color: 'var(--text-secondary)' }">Inden Part</span>
             </Link>
           </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div class="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden">
-            <template v-if="!pickupServices">
-              <Skeleton type="table" :count="5" />
-            </template>
+        <!-- Tables -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <div class="rounded-xl border overflow-hidden" :style="{ background: 'var(--bg-card)', borderColor: 'var(--border-color)' }">
+            <div class="p-4 border-b" :style="{ borderColor: 'var(--border-light)' }">
+              <h3 class="text-sm font-bold" :style="{ color: 'var(--text-primary)' }">Pengiriman Aktif</h3>
+            </div>
+            <template v-if="!pickupServices"><Skeleton type="table" :count="5" /></template>
             <template v-else>
-              <KTable title="Pengiriman Aktif" :columns="courierPickupColumns" :rows="pickupServices"
-                emptyIcon="pickup_deliveries" emptyTitle="Tidak ada servis" emptyDescription="Tidak ada servis yang perlu diantar/diambil.">
+              <KTable title="" :columns="courierPickupColumns" :rows="pickupServices" emptyIcon="pickup_deliveries" emptyTitle="Tidak ada servis" emptyDescription="Tidak ada servis yang perlu diantar/diambil.">
                 <template #cell-status="{ row }">
                   <Badge :status="row.status">{{ statusLabel(row.status) }}</Badge>
                 </template>
               </KTable>
             </template>
           </div>
-          <div class="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden">
-            <template v-if="!completedServices">
-              <Skeleton type="table" :count="5" />
-            </template>
+          <div class="rounded-xl border overflow-hidden" :style="{ background: 'var(--bg-card)', borderColor: 'var(--border-color)' }">
+            <div class="p-4 border-b" :style="{ borderColor: 'var(--border-light)' }">
+              <h3 class="text-sm font-bold" :style="{ color: 'var(--text-primary)' }">Servis Selesai</h3>
+            </div>
+            <template v-if="!completedServices"><Skeleton type="table" :count="5" /></template>
             <template v-else>
-              <KTable title="Servis Selesai" :columns="completedColumns" :rows="completedServices"
-                emptyIcon="services" emptyTitle="Belum ada servis" emptyDescription="Belum ada servis selesai hari ini." />
+              <KTable title="" :columns="completedColumns" :rows="completedServices" emptyIcon="services" emptyTitle="Belum ada servis" emptyDescription="Belum ada servis selesai hari ini." />
             </template>
           </div>
         </div>
@@ -85,7 +113,6 @@
 import { computed } from 'vue';
 import { Link, usePage } from '@inertiajs/vue3';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import StatCard from '@/Components/StatCard.vue';
 import KTable from '@/Components/KTable.vue';
 import Badge from '@/Components/Badge.vue';
 import Skeleton from '@/Components/Skeleton.vue';
