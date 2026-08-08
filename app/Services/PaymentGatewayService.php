@@ -29,28 +29,36 @@ class PaymentGatewayService
     const GATEWAY_MANUAL = 'manual';
 
     /**
-     * Dapatkan konfigurasi gateway dari system settings.
+     * Get gateway config. Platform context → SystemSetting (central DB).
+     * Tenant context → tenant_settings (tenant DB) — each tenant owns their
+     * own payment gateway credentials. Platform subscription payments and
+     * tenant customer payments are COMPLETELY SEPARATE.
      */
     public static function getConfig(): array
     {
-        // PLATFORM-SYNC-01 (STEP 13): pre-fill bank + instructions so saving an
-        // untouched form preserves existing config; secrets are masked so the
-        // raw key is never shipped to the browser.
+        $isTenant = tenancy()->initialized;
+
+        // Reader function: tenant DB key-value vs central SystemSetting.
+        $get = fn(string $key, string $default = '') => $isTenant
+            ? (\Illuminate\Support\Facades\DB::table('tenant_settings')->where('key', $key)->value('value') ?? $default)
+            : SystemSetting::getValue($key, $default);
+
         return [
-            'gateway' => SystemSetting::getValue('payment_gateway', 'manual'),
-            'midtrans_merchant_id' => SystemSetting::getValue('midtrans_merchant_id', ''),
-            'midtrans_client_key' => SystemSetting::getValue('midtrans_client_key', ''),
-            'midtrans_server_key' => self::maskSecret(SystemSetting::getValue('midtrans_server_key', '')),
-            'midtrans_is_production' => SystemSetting::getValue('midtrans_is_production', 'false'),
-            'xendit_api_key' => self::maskSecret(SystemSetting::getValue('xendit_api_key', '')),
-            'payment_auto_confirm' => SystemSetting::getValue('payment_auto_confirm', 'false'),
-            'payment_instructions' => SystemSetting::getValue('payment_instructions', ''),
-            'bank_name_1' => SystemSetting::getValue('bank_name_1', ''),
-            'bank_account_name_1' => SystemSetting::getValue('bank_account_name_1', ''),
-            'bank_account_number_1' => SystemSetting::getValue('bank_account_number_1', ''),
-            'bank_name_2' => SystemSetting::getValue('bank_name_2', ''),
-            'bank_account_name_2' => SystemSetting::getValue('bank_account_name_2', ''),
-            'bank_account_number_2' => SystemSetting::getValue('bank_account_number_2', ''),
+            'gateway'                => $get('payment_gateway', 'manual'),
+            'midtrans_merchant_id'   => $get('midtrans_merchant_id'),
+            'midtrans_client_key'    => $get('midtrans_client_key'),
+            'midtrans_server_key'    => self::maskSecret($get('midtrans_server_key')),
+            'midtrans_is_production' => $get('midtrans_is_production', 'false'),
+            'xendit_api_key'         => self::maskSecret($get('xendit_api_key')),
+            'payment_auto_confirm'   => $get('payment_auto_confirm', 'false'),
+            'payment_instructions'   => $get('payment_instructions'),
+            'bank_name_1'            => $get('bank_name_1'),
+            'bank_account_name_1'    => $get('bank_account_name_1'),
+            'bank_account_number_1'  => $get('bank_account_number_1'),
+            'bank_name_2'            => $get('bank_name_2'),
+            'bank_account_name_2'    => $get('bank_account_name_2'),
+            'bank_account_number_2'  => $get('bank_account_number_2'),
+            '_source'                => $isTenant ? 'tenant' : 'platform',
         ];
     }
 

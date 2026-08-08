@@ -604,6 +604,7 @@ Route::middleware([
     // Pengaturan
     Route::get('/pengaturan', [SettingController::class, 'index'])->name('pengaturan.index');
     Route::post('/pengaturan/email', [SettingController::class, 'updateEmail'])->name('pengaturan.email');
+    Route::post('/pengaturan/payment', [SettingController::class, 'updatePaymentGateway'])->name('pengaturan.payment');
 
     // Sprint 7.2E — Enterprise Admin Panel (thin controllers → engine delegation)
     Route::middleware(['check.plan.feature:settings'])->group(function () {

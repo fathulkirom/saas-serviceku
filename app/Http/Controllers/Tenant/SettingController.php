@@ -148,6 +148,9 @@ class SettingController extends Controller
                 'from_address' => TenantSetting::getValue('mail_from_address', ''),
                 'from_name' => TenantSetting::getValue('mail_from_name', ''),
             ],
+
+            // Tenant payment gateway — tenant owns their gateway credentials.
+            'tenantPayment' => fn() => \App\Services\PaymentGatewayService::getConfig(),
         ]);
     }
 
@@ -180,5 +183,35 @@ class SettingController extends Controller
         \App\Services\MailConfigService::apply();
 
         return back()->with('success', 'Konfigurasi email toko berhasil disimpan.');
+    }
+
+    /** v2.x: Save tenant payment gateway config to tenant_settings. */
+    public function updatePaymentGateway(Request $request)
+    {
+        $validated = $request->validate([
+            'payment_gateway'          => 'required|in:manual,midtrans,xendit',
+            'midtrans_merchant_id'     => 'nullable|string|max:255',
+            'midtrans_client_key'      => 'nullable|string|max:255',
+            'midtrans_server_key'      => 'nullable|string|max:255',
+            'midtrans_is_production'   => 'nullable|in:true,false',
+            'xendit_api_key'           => 'nullable|string|max:255',
+            'payment_auto_confirm'     => 'nullable|in:true,false',
+            'payment_instructions'     => 'nullable|string',
+            'bank_name_1'              => 'nullable|string|max:100',
+            'bank_account_name_1'      => 'nullable|string|max:100',
+            'bank_account_number_1'    => 'nullable|string|max:50',
+            'bank_name_2'              => 'nullable|string|max:100',
+            'bank_account_name_2'      => 'nullable|string|max:100',
+            'bank_account_number_2'    => 'nullable|string|max:50',
+        ]);
+
+        foreach ($validated as $key => $value) {
+            if (in_array($key, ['midtrans_server_key', 'xendit_api_key']) && ($value === '' || $value === '••••••••')) {
+                continue; // preserve secret
+            }
+            \App\Models\Tenant\TenantSetting::setValue($key, $value);
+        }
+
+        return back()->with('success', 'Konfigurasi payment gateway toko disimpan.');
     }
 }

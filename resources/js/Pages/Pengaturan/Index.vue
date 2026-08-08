@@ -347,6 +347,82 @@
         </div>
       </template>
 
+      <!-- PEMBAYARAN — Tenant owns their payment gateway -->
+      <template #pembayaran>
+        <div class="space-y-6 mt-6">
+          <form @submit.prevent="submitPayment" class="bg-white rounded-2xl border border-zinc-200 shadow-sm p-6 space-y-5">
+            <div>
+              <h3 class="text-lg font-bold text-zinc-900">Konfigurasi Pembayaran Toko</h3>
+              <p class="text-sm text-zinc-500 mt-0.5">Gateway pembayaran customer toko (Midtrans / Xendit). TERPISAH dari gateway platform ServiceKU. Kredensial disimpan di database toko Anda sendiri.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label class="text-sm font-semibold text-zinc-700">Gateway</label>
+                <KSelect v-model="paymentForm.payment_gateway" class="w-full rounded-xl border-zinc-300 text-sm mt-1">
+                  <option value="manual">Manual (Transfer Bank)</option>
+                  <option value="midtrans">Midtrans</option>
+                  <option value="xendit">Xendit</option>
+                </KSelect>
+              </div>
+            </div>
+
+            <!-- Midtrans fields -->
+            <template v-if="paymentForm.payment_gateway === 'midtrans'">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-zinc-100">
+                <div class="md:col-span-2">
+                  <label class="text-sm font-semibold text-zinc-700">Midtrans Server Key</label>
+                  <KInput v-model="paymentForm.midtrans_server_key" type="password" :placeholder="tenantPayment?.midtrans_server_key ? 'Tersimpan — kosongkan untuk mempertahankan' : 'Server Key'" class="w-full rounded-xl border-zinc-300 text-sm mt-1" />
+                </div>
+                <div>
+                  <label class="text-sm font-semibold text-zinc-700">Client Key</label>
+                  <KInput v-model="paymentForm.midtrans_client_key" placeholder="Midtrans Client Key" class="w-full rounded-xl border-zinc-300 text-sm mt-1" />
+                </div>
+                <div>
+                  <label class="text-sm font-semibold text-zinc-700">Merchant ID</label>
+                  <KInput v-model="paymentForm.midtrans_merchant_id" placeholder="G123456" class="w-full rounded-xl border-zinc-300 text-sm mt-1" />
+                </div>
+                <div>
+                  <label class="flex items-center gap-2 mt-1">
+                    <input type="checkbox" v-model="paymentForm.midtrans_is_production" true-value="true" false-value="false" class="rounded" />
+                    <span class="text-sm text-zinc-700">Production Mode</span>
+                  </label>
+                </div>
+              </div>
+            </template>
+
+            <!-- Xendit -->
+            <template v-if="paymentForm.payment_gateway === 'xendit'">
+              <div class="pt-2 border-t border-zinc-100">
+                <label class="text-sm font-semibold text-zinc-700">Xendit API Key</label>
+                <KInput v-model="paymentForm.xendit_api_key" type="password" :placeholder="tenantPayment?.xendit_api_key ? 'Tersimpan — kosongkan untuk mempertahankan' : 'xnd_...'" class="w-full rounded-xl border-zinc-300 text-sm mt-1" />
+              </div>
+            </template>
+
+            <!-- Bank Transfer Manual -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2 border-t border-zinc-100">
+              <div>
+                <label class="text-sm font-semibold text-zinc-700">Bank 1</label>
+                <KInput v-model="paymentForm.bank_name_1" placeholder="BCA" class="w-full rounded-xl border-zinc-300 text-sm mt-1" />
+                <KInput v-model="paymentForm.bank_account_number_1" placeholder="No. Rekening" class="w-full rounded-xl border-zinc-300 text-sm mt-2" />
+                <KInput v-model="paymentForm.bank_account_name_1" placeholder="Atas Nama" class="w-full rounded-xl border-zinc-300 text-sm mt-2" />
+              </div>
+              <div>
+                <label class="text-sm font-semibold text-zinc-700">Bank 2</label>
+                <KInput v-model="paymentForm.bank_name_2" placeholder="Mandiri" class="w-full rounded-xl border-zinc-300 text-sm mt-1" />
+                <KInput v-model="paymentForm.bank_account_number_2" placeholder="No. Rekening" class="w-full rounded-xl border-zinc-300 text-sm mt-2" />
+                <KInput v-model="paymentForm.bank_account_name_2" placeholder="Atas Nama" class="w-full rounded-xl border-zinc-300 text-sm mt-2" />
+              </div>
+            </div>
+
+            <div class="flex justify-end pt-3 border-t border-zinc-100">
+              <KButton type="submit" :disabled="paymentForm.processing" class="px-6 py-2.5 rounded-xl text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700">
+                {{ paymentForm.processing ? 'Menyimpan...' : 'Simpan Pembayaran' }}
+              </KButton>
+            </div>
+          </form>
+        </div>
+      </template>
+
       <!-- TAGIHAN / VOUCHER -->
       <template #tagihan>
         <div class="space-y-8 mt-6">
@@ -649,6 +725,7 @@ const props = defineProps({
   customFields: { type: [Object, Array], default: null },
   waGateway: { type: Object, default: null },
   tenantMail: { type: Object, default: () => ({}) },
+  tenantPayment: { type: Object, default: () => ({}) },
   canManageCustomFields: { type: Boolean, default: false },
 });
 
@@ -714,6 +791,28 @@ const emailForm = useForm({
 
 function submitEmail() {
   emailForm.post(route('pengaturan.email'), { preserveScroll: true });
+}
+
+// Payment Gateway Form
+const paymentForm = useForm({
+  payment_gateway: props.tenantPayment?.gateway || 'manual',
+  midtrans_merchant_id: props.tenantPayment?.midtrans_merchant_id || '',
+  midtrans_client_key: props.tenantPayment?.midtrans_client_key || '',
+  midtrans_server_key: '',
+  midtrans_is_production: props.tenantPayment?.midtrans_is_production || 'false',
+  xendit_api_key: '',
+  payment_auto_confirm: props.tenantPayment?.payment_auto_confirm || 'false',
+  payment_instructions: props.tenantPayment?.payment_instructions || '',
+  bank_name_1: props.tenantPayment?.bank_name_1 || '',
+  bank_account_name_1: props.tenantPayment?.bank_account_name_1 || '',
+  bank_account_number_1: props.tenantPayment?.bank_account_number_1 || '',
+  bank_name_2: props.tenantPayment?.bank_name_2 || '',
+  bank_account_name_2: props.tenantPayment?.bank_account_name_2 || '',
+  bank_account_number_2: props.tenantPayment?.bank_account_number_2 || '',
+});
+
+function submitPayment() {
+  paymentForm.post(route('pengaturan.payment'), { preserveScroll: true });
 }
 
 // Custom Field Drawer
@@ -796,6 +895,7 @@ const tabs = computed(() => {
     { key: 'settings', label: 'Referensi' },
     { key: 'wa', label: 'WA Notifikasi' },
     { key: 'email', label: 'Email Toko' },
+    { key: 'pembayaran', label: 'Pembayaran' },
     { key: 'tagihan', label: 'Tagihan' },
     { key: 'demo', label: 'Demo' },
   ];
@@ -805,7 +905,7 @@ const tabs = computed(() => {
   return base;
 });
 
-const tabLabels = { profil: 'Profil', settings: 'Referensi', wa: 'WA Notifikasi', email: 'Email Toko', tagihan: 'Tagihan', demo: 'Demo', 'custom-fields': 'Kolom Kustom' };
+const tabLabels = { profil: 'Profil', settings: 'Referensi', wa: 'WA Notifikasi', email: 'Email Toko', pembayaran: 'Pembayaran', tagihan: 'Tagihan', demo: 'Demo', 'custom-fields': 'Kolom Kustom' };
 const pageTitle = computed(() => 'Pengaturan — ' + (tabLabels[activeTab.value] || 'Profil'));
 const subtitle = computed(() => currentDate.value);
 
