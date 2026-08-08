@@ -284,6 +284,20 @@ Route::middleware([
 
     // #10 Inventory: stock adjustment (stock opname)
     Route::post('/inventaris/adjust-stock/{product}', [InventarisController::class, 'adjustStock'])->name('inventaris.adjust-stock')->middleware('check.plan.feature:inventaris');
+
+    // v1.4: API Tokens (gated by 'api' feature)
+    Route::get('/pengaturan/api-tokens', [\App\Http\Controllers\Tenant\ApiTokenController::class, 'index'])->name('api-tokens.index')->middleware('check.plan.feature:settings');
+    Route::post('/pengaturan/api-tokens', [\App\Http\Controllers\Tenant\ApiTokenController::class, 'store'])->name('api-tokens.store')->middleware('check.plan.feature:settings');
+    Route::delete('/pengaturan/api-tokens/{token}', [\App\Http\Controllers\Tenant\ApiTokenController::class, 'destroy'])->name('api-tokens.destroy')->middleware('check.plan.feature:settings');
+
+    // v1.4: Public API (Bearer token)
+    Route::prefix('api/v1')->middleware(\App\Http\Middleware\ApiTokenAuth::class)->group(function () {
+        Route::get('/services', [\App\Http\Controllers\Tenant\TenantApiController::class, 'services']);
+        Route::get('/services/{service}', [\App\Http\Controllers\Tenant\TenantApiController::class, 'serviceShow']);
+        Route::get('/sales', [\App\Http\Controllers\Tenant\TenantApiController::class, 'sales']);
+        Route::get('/products', [\App\Http\Controllers\Tenant\TenantApiController::class, 'products']);
+        Route::get('/customers', [\App\Http\Controllers\Tenant\TenantApiController::class, 'customers']);
+    });
     Route::post('/service-parts/{part}/edit', [OperationalDashboardController::class, 'editRequest'])->name('service-parts.edit')->middleware('check.plan.feature:services');
     Route::post('/service-parts/{part}/priority', [OperationalDashboardController::class, 'setPriority'])->name('service-parts.priority')->middleware('check.plan.feature:services');
     // Sprint 7.4B — Daily Operations Hardening
